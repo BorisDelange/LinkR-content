@@ -13,13 +13,14 @@ temp <- function(){
   # Render UI                              #
   ##########################################
   
-  features <- DBI::dbGetQuery(r$db, "SELECT f1.id, f1.value AS feature_name, f2.value AS feature_type, f3.value AS display_order
+  features <- DBI::dbGetQuery(r$db, "SELECT f1.id, f1.value AS feature_name, f2.value AS feature_type, f3.value_num AS display_order
         FROM modules_elements_options f1
         LEFT JOIN modules_elements_options f2 ON f1.id = f2.link_id AND f2.category = 'aggregated' AND f2.name = 'feature_type'
         LEFT JOIN modules_elements_options f3 ON f1.id = f3.link_id AND f3.category = 'aggregated' AND f3.name = 'feature_display_order'
         WHERE f1.deleted IS FALSE AND f1.study_id = %study_id% AND f1.category = 'aggregated' AND f1.name = 'feature_name'") %>%
-    dplyr::mutate_at("display_order", as.integer) %>%
     dplyr::arrange(display_order)
+  
+  print(features)
   
   features_options <- DBI::dbGetQuery(r$db, "SELECT f1.id, f1.link_id, f1.value AS feature_option_name
         FROM modules_elements_options f1

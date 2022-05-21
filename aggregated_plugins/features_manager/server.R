@@ -279,17 +279,21 @@ observeEvent(input$new_feature_add_%group_id%_%study_id%, {
     req(tolower(new_name) %not_in% distinct_values)
     
     last_row <- get_last_row(r$db, "modules_elements_options")
-    sql <- glue::glue_sql("SELECT COALESCE(MAX(value), 0) AS display_order FROM modules_elements_options 
+    sql <- glue::glue_sql("SELECT COALESCE(MAX(value_num), 0) AS display_order FROM modules_elements_options 
             WHERE category = 'aggregated' AND name = 'feature_display_order' AND group_id = %group_id% AND study_id = %study_id%", .con = r$db)
-    last_display_order <- DBI::dbGetQuery(r$db, sql) %>% dplyr::pull(display_order) %>% as.numeric()
+    last_display_order <- DBI::dbGetQuery(r$db, sql) %>% dplyr::pull(display_order)
     
     # Insert new feature in database
     # One row for the feature, one row for its type
     
     sql <- glue::glue_sql("INSERT INTO modules_elements_options(id, group_id, study_id, link_id, category, name, value, creator_id, datetime, deleted)
             SELECT {last_row + 1}, %group_id%, %study_id%, {NA_integer_}, 'aggregated', 'feature_name', {new_name}, {r$user_id}, {as.character(Sys.time())}, FALSE
-      UNION SELECT {last_row + 2}, %group_id%, %study_id%, {last_row + 1}, 'aggregated', 'feature_type', {new_type}, {r$user_id}, {as.character(Sys.time())}, FALSE
-      UNION SELECT {last_row + 3}, %group_id%, %study_id%, {last_row + 1}, 'aggregated', 'feature_display_order', {last_display_order + 1}, {r$user_id}, {as.character(Sys.time())}, FALSE", .con = r$db)
+      UNION SELECT {last_row + 2}, %group_id%, %study_id%, {last_row + 1}, 'aggregated', 'feature_type', {new_type}, {r$user_id}, {as.character(Sys.time())}, FALSE", .con = r$db)
+    query <- DBI::dbSendStatement(r$db, sql)
+    DBI::dbClearResult(query)
+    
+    sql <- glue::glue_sql("INSERT INTO modules_elements_options(id, group_id, study_id, link_id, category, name, value_num, creator_id, datetime, deleted)
+            SELECT {last_row + 3}, %group_id%, %study_id%, {last_row + 1}, 'aggregated', 'feature_display_order', {last_display_order + 1}, {r$user_id}, {as.character(Sys.time())}, FALSE", .con = r$db)
     query <- DBI::dbSendStatement(r$db, sql)
     DBI::dbClearResult(query)
     
