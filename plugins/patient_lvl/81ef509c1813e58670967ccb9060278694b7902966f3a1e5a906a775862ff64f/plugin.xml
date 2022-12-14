@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<plugins>
+  <plugin>
+    <type>1</type>
+    <name>efgh</name>
+    <version>0.0.1</version>
+    <unique_id>81ef509c1813e58670967ccb9060278694b7902966f3a1e5a906a775862ff64f</unique_id>
+    <author>John Doe</author>
+    <image></image>
+    <description_fr></description_fr>
+    <description_en></description_en>
+  </plugin>
+</plugins>
