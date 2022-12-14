@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<plugins>
+  <plugin>
+    <type>1</type>
+    <name>ijkl</name>
+    <version>0.2.1</version>
+    <unique_id>13c71b40741d65497a74fde2ffecbbc2a9be31dffbfb09f0967b625c500a8592</unique_id>
+    <author>Jack Bauer</author>
+    <image></image>
+    <description_fr>Description fran&#xE7;aise</description_fr>
+    <description_en></description_en>
+  </plugin>
+  <plugin>
+    <type>1</type>
+    <name>abcd</name>
+    <version>1.2.1</version>
+    <unique_id>379850a7ccec76e018556c5e836004a51f191a7a5a8352e094432e0009584194</unique_id>
+    <author>Boris Delange</author>
+    <image></image>
+    <description_fr>### Pr&#xE9;sentation globale
+
+Ce plugin permet d'afficher un flowchart avec les donn&#xE9;es disponibles.
+
+### Exemple
+
+Voici un exemple de son utilisation...
+
+Blabla
+
+### Autre exemple
+
+Blabla</description_fr>
+    <description_en></description_en>
+  </plugin>
+  <plugin>
+    <type>1</type>
+    <name>efgh</name>
+    <version>0.0.1</version>
+    <unique_id>81ef509c1813e58670967ccb9060278694b7902966f3a1e5a906a775862ff64f</unique_id>
+    <author>John Doe</author>
+    <image></image>
+    <description_fr></description_fr>
+    <description_en></description_en>
+  </plugin>
+  <plugin>
+    <type>2</type>
+    <name>abcde</name>
+    <version>0.0.1</version>
+    <unique_id>38a2b7e92572065d43ec19678f83e0bda7c8fd77352206c430268a09c7c10ffb</unique_id>
+    <author>John Doe</author>
+    <image></image>
+    <description_fr></description_fr>
+    <description_en></description_en>
+  </plugin>
+</plugins>
