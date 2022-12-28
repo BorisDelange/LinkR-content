@@ -1,3 +1,4 @@
+
 ########## PATIENTS ##########
 patients <- function(){
   vroom::vroom("https://physionet.org/files/mimic-iv-demo/1.0/icu/icustays.csv.gz") %>% 
@@ -7,14 +8,14 @@ patients <- function(){
     dplyr::ungroup() %>%
     dplyr::inner_join(
       vroom::vroom("https://physionet.org/files/mimic-iv-demo/1.0/core/patients.csv.gz") %>% 
-        dplyr::select(patient_id = subject_id, gender, age = anchor_age, dod),
+        dplyr::select(patient_id = subject_id, gender, dod),
       by = "patient_id"
     ) %>%
     dplyr::mutate_at("patient_id", as.integer) %>%
     dplyr::mutate_at("dod", lubridate::ymd_hms)
 }
 
-import_datamart(output = output, r = r, datamart_id = %datamart_id%, data = patients(), type = "patients", save_as_csv = TRUE, rewrite = FALSE, language = "FR")
+import_datamart(output = output, r = r, d = d, datamart_id = %datamart_id%, data = patients(), type = "patients", save_as_csv = TRUE, rewrite = FALSE, i18n = r$i18n)
 
 ########## THESAURUS ##########
 thesaurus <- function(){
@@ -45,12 +46,18 @@ stays <- function(){
       thesaurus() %>% dplyr::select(item_id, unit_name = name),
       by = "unit_name"
     ) %>%
+    dplyr::inner_join(
+      vroom::vroom("https://physionet.org/files/mimic-iv-demo/1.0/core/patients.csv.gz") %>% 
+        dplyr::select(patient_id = subject_id, age = anchor_age),
+      by = "patient_id"
+    ) %>%
     dplyr::select(-unit_name) %>%
     dplyr::relocate(item_id, .after = "thesaurus_name") %>%
+    dplyr::relocate(age, .after = "stay_id") %>%
     dplyr::mutate_at(c("patient_id", "stay_id", "item_id"), as.integer)
 }
 
-import_datamart(output = output, r = r, datamart_id = %datamart_id%, data = stays(), type = "stays", save_as_csv = TRUE, rewrite = FALSE, language = "FR")
+import_datamart(output = output, r = r, d = d, datamart_id = %datamart_id%, data = stays(), type = "stays", save_as_csv = TRUE, rewrite = FALSE, i18n = r$i18n)
 
 ########## STAYS_VITALS ##########
 labs_vitals <- function(){
@@ -84,7 +91,7 @@ labs_vitals <- function(){
     dplyr::mutate_at("datetime_stop", lubridate::ymd_hms)
 }
 
-import_datamart(output = output, r = r, datamart_id = %datamart_id%, data = labs_vitals(), type = "labs_vitals", save_as_csv = TRUE, rewrite = FALSE, language = "FR")
+import_datamart(output = output, r = r, d = d, datamart_id = %datamart_id%, data = labs_vitals(), type = "labs_vitals", save_as_csv = TRUE, rewrite = FALSE, i18n = r$i18n)
 
 ########## ORDERS ##########
 orders <- function(){
@@ -98,4 +105,4 @@ orders <- function(){
     dplyr::mutate_at("concentration", as.numeric)
 }
 
-import_datamart(output = output, r = r, datamart_id = %datamart_id%, data = orders(), type = "orders", save_as_csv = TRUE, rewrite = FALSE, language = "FR")
+import_datamart(output = output, r = r, d = d, datamart_id = %datamart_id%, data = orders(), type = "orders", save_as_csv = TRUE, rewrite = FALSE, i18n = r$i18n)
