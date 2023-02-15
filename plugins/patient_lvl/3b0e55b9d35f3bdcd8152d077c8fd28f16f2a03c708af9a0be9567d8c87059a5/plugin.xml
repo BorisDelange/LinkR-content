@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<plugins>
+  <plugin>
+    <app_version>0.2.0</app_version>
+    <type>1</type>
+    <name>b</name>
+    <version>0.0.1</version>
+    <unique_id>3b0e55b9d35f3bdcd8152d077c8fd28f16f2a03c708af9a0be9567d8c87059a5</unique_id>
+    <author>John Doe</author>
+    <image>dygraphs3.png</image>
+    <description_fr>## Dygraphs
+
+Description fran&#xE7;aise</description_fr>
+    <description_en>## Dygraphs
+
+Description anglaise</description_en>
+  </plugin>
+</plugins>
