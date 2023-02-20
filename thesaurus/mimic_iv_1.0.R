@@ -43,7 +43,7 @@ thesaurus_import <-
   dplyr::select(item_id, name, display_name, unit)
 
 # Run import_thesaurus function
-import_thesaurus_new(output = output, ns = ns, r = r, category = "items", thesaurus_id = %thesaurus_id%, thesaurus = thesaurus_import, i18n = i18n)
+import_thesaurus(output = output, ns = ns, r = r, category = "items", thesaurus_id = %thesaurus_id%, thesaurus = thesaurus_import, i18n = i18n)
 
 # Import thesaurus mappings
-import_thesaurus_new(output = output, ns = ns, r = r, category = "items_mapping", thesaurus_id = %thesaurus_id%, thesaurus = thesaurus_mapping, i18n = i18n)
+import_thesaurus(output = output, ns = ns, r = r, category = "items_mapping", thesaurus_id = %thesaurus_id%, thesaurus = thesaurus_mapping, i18n = i18n)
