@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<plugins>
+  <plugin>
+    <app_version>0.2.0</app_version>
+    <type>2</type>
+    <version>0.0.1</version>
+    <unique_id>4ca7fe8f141d98fb88ab645c0b07d2388087803742c90d1d53d67d22a34e5029</unique_id>
+    <author>Frodon Sacquet</author>
+    <image></image>
+    <description_fr></description_fr>
+    <description_en></description_en>
+    <name_fr></name_fr>
+    <name_en></name_en>
+    <category_fr></category_fr>
+    <category_en></category_en>
+  </plugin>
+</plugins>
