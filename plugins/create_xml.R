@@ -4,8 +4,9 @@ plugins_dir <- paste0(getwd(), "/plugins")
 
 # XML file with all plugins
 
-plugins_tibble <- tibble::tibble(type = character(), name = character(), version = character(), unique_id = character(),
-  author = character(), image = character(), description_fr = character(), description_en = character())
+plugins_tibble <- tibble::tibble(app_version = character(), type = character(), version = character(), unique_id = character(),
+  author = character(), image = character(), description_fr = character(), description_en = character(),
+  name_fr = character(), name_en = character(), category_fr = character(), category_en = character())
 
 # Convert XML to tibble
 

@@ -1,29 +1,17 @@
 <?xml version="1.0"?>
 <plugins>
   <plugin>
-    <type>1</type>
-    <name>b</name>
-    <version>0.0.1</version>
-    <unique_id>3b0e55b9d35f3bdcd8152d077c8fd28f16f2a03c708af9a0be9567d8c87059a5</unique_id>
-    <author>John Doe</author>
-    <image>dygraphs3.png</image>
-    <description_fr>## Dygraphs
-
-Description fran&#xE7;aise</description_fr>
-    <description_en>## Dygraphs
-
-Description anglaise</description_en>
     <app_version>0.2.0</app_version>
-  </plugin>
-  <plugin>
     <type>2</type>
-    <name>Flowchart</name>
     <version>0.0.1</version>
-    <unique_id>46c36774dc3bb220d4e125a32aa9a6ff5cab3d9a7b8e4e2b5c795806ddc1f2cf</unique_id>
-    <author>John Doe</author>
+    <unique_id>4ca7fe8f141d98fb88ab645c0b07d2388087803742c90d1d53d67d22a34e5029</unique_id>
+    <author>Frodon Sacquet</author>
     <image></image>
-    <description_fr>Empty description</description_fr>
+    <description_fr></description_fr>
     <description_en></description_en>
-    <app_version>0.2.0</app_version>
+    <name_fr>Plugin 1</name_fr>
+    <name_en></name_en>
+    <category_fr></category_fr>
+    <category_en></category_en>
   </plugin>
 </plugins>
