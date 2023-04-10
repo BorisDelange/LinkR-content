@@ -1,9 +1,9 @@
-language,page,type,category,key,title,markdown_file,display_order,date
-fr,resources,pivot_item,learn_r,learn_r,Programmer en R,,2,2023-04-10
-fr,resources,pivot_item,health_data_warehouses,health_data_warehouses,Entrepôts de données de santé,,1,2023-04-10
-fr,resources,pivot_item,learn_sql,learn_sql,Programmer en SQL,,3,2023-04-10
-fr,resources,pivot_item,learn_python,learn_python,Programmer en Python,,4,2023-04-10
-fr,resources,card,health_data_warehouses,div1,Div 1,test_markdown,2,2023-04-10
-fr,resources,card,health_data_warehouses,div2,Div 2,,1,2023-04-10
-fr,tutorials,pivot_item,health_data_warehouses,health_data_warehouses,Entrepôts de données de santé,,1,2023-04-10
-fr,tutorials,card,health_data_warehouses,div1,Div 1,,1,2023-04-10
+language,page,type,category,key,title,markdown_file,display_order,datetime
+fr,resources,pivot_item,learn_r,learn_r,Programmer en R,,2,2023-04-10 08:00:00
+fr,resources,pivot_item,health_data_warehouses,health_data_warehouses,Entrepôts de données de santé,,1,2023-04-10 08:00:00
+fr,resources,pivot_item,learn_sql,learn_sql,Programmer en SQL,,3,2023-04-10 08:00:00
+fr,resources,pivot_item,learn_python,learn_python,Programmer en Python,,4,2023-04-10 08:00:00
+fr,resources,card,health_data_warehouses,div1,Div 1,test_markdown,2,2023-04-10 08:00:00
+fr,resources,card,health_data_warehouses,div2,Div 2,,1,2023-04-10 08:00:00
+fr,tutorials,pivot_item,health_data_warehouses,health_data_warehouses,Entrepôts de données de santé,,1,2023-04-10 08:00:00
+fr,tutorials,card,health_data_warehouses,div1,Div 1,,1,2023-04-10 08:00:00
