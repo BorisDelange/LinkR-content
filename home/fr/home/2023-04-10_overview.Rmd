@@ -2,7 +2,7 @@
 
 **LinkR** est une application web codée en *R - Shiny* visant à **faciliter l'utilisation** des données issues d'**entrepôts de données de santé** (EDS).
 
-En effet, manipuler les données d'EDS nécessité des connaissances en programmation (R, SQL).
+En effet, manipuler les données d'EDS nécessité des connaissances poussées en programmation (R, Python, SQL).
 
 L'application permet, grâce à une **interface graphique** simple d'utilisation, de **réaliser des études** sur des données issues d'EDS **sans connaissance en programmation**.
 
@@ -10,7 +10,7 @@ Pour autant, il est tout de même possible de manipuler les données avec **R, P
 
 L'application a vocation à s'**enrichir** progressivement par le développement et le partage de **plugins**.
 
-Le schéma de données est celui d'**OMOP**.
+Le schéma de données est celui d'[**OMOP**](https://ohdsi.github.io/CommonDataModel/cdm60.html).
 
 ### Mise en place
 
@@ -26,4 +26,4 @@ Chaque page de l'application comporte **une aide**, à laquelle vous accédez vi
 
 ### Signaler un bug
 
-Pour signaler un bug, rendez-vous sur ...
+Pour signaler un bug, rendez-vous sur ... `r fontawesome::fa("fas fa-book")`
