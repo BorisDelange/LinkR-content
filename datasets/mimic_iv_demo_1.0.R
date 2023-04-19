@@ -1,110 +1,80 @@
-# PERSON
+create_ids <- function(col_name = character(), data = tibble::tibble(), table_name = character(), new_cols = list(), col_left_join = character()){
 
-cat("PERSON\n\n")
+  new_cols[[col_name]] <<- 
+    data[[table_name]] %>%
+    dplyr::distinct(get(col_name)) %>%
+    dplyr::rename_at(1, ~col_name)
+  
+  if (length(col_left_join) > 0) new_cols[[col_name]] <<- 
+      new_cols[[col_name]] %>%
+      dplyr::left_join(
+        new_cols[[col_left_join]] %>%
+          dplyr::rename_at(1, ~col_name) %>%
+          dplyr::rename_at(2, ~paste0("new_", col_name)),
+        by = col_name
+      )
+    
+  else new_cols[[col_name]] <<- 
+      new_cols[[col_name]] %>% 
+      dplyr::mutate(!!paste0("new_", col_name) := 1:dplyr::n())
+}
 
-person <- vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/person.csv", col_types = "niiiiTiiiiiccicici")
+join_new_ids <- function(col_name = character(), data = tibble::tibble(), table_name = character()){
+  data[[table_name]] <<-
+    data[[table_name]] %>%
+    dplyr::left_join(new_cols[[col_name]], by = col_name) %>%
+    dplyr::relocate(!!paste0("new_", col_name), .before = !!col_name) %>%
+    dplyr::select(-!!col_name) %>%
+    dplyr::rename_at(paste0("new_", col_name), ~col_name)
+}
 
-person_ids <-
-  person %>%
-  dplyr::distinct(person_id) %>%
-  dplyr::mutate(new_person_id = 1:dplyr::n())
+new_cols <- list()
+data <- list()
 
-person <- 
-  person %>%
-  dplyr::left_join(person_ids, by = "person_id") %>%
-  dplyr::select(-person_id, person_id = new_person_id) %>%
-  dplyr::relocate(person_id)
+cols_left_join <- c(
+  "preceding_visit_occurrence_id" = "visit_occurrence_id",
+  "preceding_visit_detail_id" = "visit_detail_id"
+  )
 
-import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = person, type = "person", 
-  omop_version = "5.3", save_as_csv = TRUE, rewrite = FALSE)
+prefix <- "https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/"
 
-# CARE_SITE
+tables <- tibble::tribble(
+  ~table_name, ~col_types, ~ids_to_join, ~ids_to_create, 
+  "person", "niiiiTiiiiiccicici", "person_id", "person_id",
+  "care_site", "nciicc", "care_site_id", "care_site_id",
+  "visit_occurrence", "nniDTDTiiiciicicn", 
+    c("visit_occurrence_id", "person_id", "preceding_visit_occurrence_id"), c("visit_occurrence_id", "preceding_visit_occurrence_id"),
+  "visit_detail", "nniDTDTiiniinciccin",
+    c("visit_detail_id", "person_id", "care_site_id", "preceding_visit_detail_id", "visit_occurrence_id"),
+    c("visit_detail_id", "preceding_visit_detail_id")
+)
 
-cat("\n\nCARE_SITE\n\n")
-
-care_site <- vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/care_site.csv", col_types = "nciicc")
-
-care_site_ids <-
-  care_site %>%
-  dplyr::distinct(care_site_id) %>%
-  dplyr::mutate(new_care_site_id = 1:dplyr::n())
-
-care_site <-
-  care_site %>%
-  dplyr::left_join(care_site_ids, by = "care_site_id") %>%
-  dplyr::select(-care_site_id) %>%
-  dplyr::rename(care_site_id = new_care_site_id) %>%
-  dplyr::relocate(care_site_id)
-
-import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = care_site, type = "care_site", 
-  omop_version = "5.3", save_as_csv = TRUE, rewrite = FALSE)
-
-# VISIT_OCCURRENCE
-
-cat("\n\nVISIT_OCCURRENCE\n\n")
-
-visit_occurrence <- vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/visit_occurrence.csv", col_types = "nniDTDTiiiciicicn")
-
-visit_occurrence_ids <- 
-  visit_occurrence %>%
-  dplyr::distinct(visit_occurrence_id) %>%
-  dplyr::mutate(new_visit_occurrence_id = 1:dplyr::n())
-
-preceding_visit_occurrence_ids <-
-  visit_occurrence %>%
-  dplyr::distinct(preceding_visit_occurrence_id) %>%
-  dplyr::left_join(
-    visit_occurrence_ids %>% 
-      dplyr::select(preceding_visit_occurrence_id = visit_occurrence_id, new_preceding_visit_occurrence_id = new_visit_occurrence_id), by = "preceding_visit_occurrence_id")
-
-visit_occurrence <-
-  visit_occurrence %>%
-  dplyr::left_join(visit_occurrence_ids, by = "visit_occurrence_id") %>%
-  dplyr::left_join(person_ids, by = "person_id") %>%
-  dplyr::left_join(preceding_visit_occurrence_ids, by = "preceding_visit_occurrence_id") %>%
-  dplyr::select(-person_id, -visit_occurrence_id, -preceding_visit_occurrence_id) %>%
-  dplyr::rename(person_id = new_person_id, visit_occurrence_id = new_visit_occurrence_id, preceding_visit_occurrence_id = new_preceding_visit_occurrence_id) %>%
-  dplyr::relocate(visit_occurrence_id, person_id)
-
-import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = visit_occurrence, type = "visit_occurrence", 
-  omop_version = "5.3", save_as_csv = TRUE, rewrite = FALSE)
-
-# VISIT_DETAIL
-
-cat("\n\nVISIT_DETAIL\n\n")
-
-visit_detail <- vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/visit_detail.csv", col_types = "nniDTDTiiniinciccin")
-
-visit_detail_ids <- 
-  visit_detail %>%
-  dplyr::distinct(visit_detail_id) %>%
-  dplyr::mutate(new_visit_detail_id = 1:dplyr::n())
-
-preceding_visit_detail_ids <-
-  visit_detail %>%
-  dplyr::distinct(preceding_visit_detail_id) %>%
-  dplyr::left_join(
-    visit_detail_ids %>% 
-      dplyr::select(preceding_visit_detail_id = visit_detail_id, new_preceding_visit_detail_id = new_visit_detail_id), by = "preceding_visit_detail_id")
-
-visit_detail <-
-  visit_detail %>%
-  dplyr::left_join(visit_detail_ids, by = "visit_detail_id") %>%
-  dplyr::left_join(person_ids, by = "person_id") %>%
-  dplyr::left_join(care_site_ids, by = "care_site_id") %>%
-  dplyr::left_join(preceding_visit_detail_ids, by = "preceding_visit_detail_id") %>%
-  dplyr::left_join(visit_occurrence_ids, by = "visit_occurrence_id") %>%
-  dplyr::select(-visit_detail_id, -person_id, -care_site_id, -preceding_visit_detail_id, -visit_occurrence_id) %>%
-  dplyr::rename(visit_detail_id = new_visit_detail_id, person_id = new_person_id, care_site_id = new_care_site_id,
-    preceding_visit_detail_id = new_preceding_visit_detail_id, visit_occurrence_id = new_visit_occurrence_id) %>%
-  dplyr::relocate(visit_detail_id, person_id) %>%
-  dplyr::relocate(care_site_id, .after = "provider_id") %>%
-  dplyr::relocate(visit_detail_source_value, visit_detail_source_concept_id, .after = "care_site_id") %>%
-  dplyr::relocate(admitting_source_value, admitting_source_concept_id, discharge_to_source_value, 
-    discharge_to_concept_id, preceding_visit_detail_id, .after = "visit_detail_source_concept_id")
-
-import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = visit_detail, type = "visit_detail", 
-  omop_version = "5.3", save_as_csv = TRUE, rewrite = FALSE)
+for (i in 1:nrow(tables)){
+  table <- tables[i, ]
+  cat(paste0(toupper(table$table_name), "\n\n"))
+  data[[table$table_name]] <- vroom::vroom(paste0(prefix, table$table_name, ".csv"), col_types = table$col_types)
+  
+  ids_to_join <- table$ids_to_join %>% unlist()
+  ids_to_create <- table$ids_to_create %>% unlist()
+  
+  if (length(ids_to_join) > 0){
+    for (j in 1:length(ids_to_join)){
+      id_to_join <- ids_to_join[j]
+      
+      if (id_to_join %in% ids_to_create){
+        col_left_join <- character()
+        if (id_to_join %in% names(cols_left_join)) col_left_join <- cols_left_join[id_to_join]
+        
+        create_ids(col_name = id_to_join, data = data, table_name = table$table_name, new_cols = new_cols, col_left_join = col_left_join)
+      }
+      
+      join_new_ids(col_name = id_to_join, data = data, table_name = table$table_name) 
+    }
+  }
+  
+  # import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = data[[table$table_name]], 
+  #   type = data$table_name, omop_version = "5.3", save_as_csv = TRUE, rewrite = FALSE)
+}
 
 # MEASUREMENT
 
