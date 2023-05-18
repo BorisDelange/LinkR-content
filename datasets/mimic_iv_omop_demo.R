@@ -89,6 +89,9 @@ tables <- tibble::tribble(
   c("condition_era_id")
 )
 
+# Are all tables already saved as csv ?
+all_tables_saved_as_csv <- all(paste0(tables$table_name, ".csv") %in% list.files(paste0(r$app_folder, "/datasets/", %dataset_id%)))
+
 for (i in 1:nrow(tables)){
   table <- tables[i, ]
   if (i != 1) cat("\n\n")
@@ -124,7 +127,7 @@ for (i in 1:nrow(tables)){
     data
   }
   
-  if (table$table_name %in% c("person", "care_site", "visit_occurrence", "visit_detail")) get_data()
+  if (table$table_name %in% c("person", "care_site", "visit_occurrence", "visit_detail") & !all_tables_saved_as_csv) get_data()
   
   import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = get_data(), 
     type = table$table_name, omop_version = "5.3", save_as_csv = TRUE, rewrite = FALSE)
