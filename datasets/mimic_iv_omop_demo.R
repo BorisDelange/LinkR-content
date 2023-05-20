@@ -89,7 +89,7 @@ tables <- tibble::tribble(
   c("condition_era_id")
 )
 
-# Are all tables already saved as csv ?
+# Have all tables already been saved as csv ?
 all_tables_saved_as_csv <- all(paste0(tables$table_name, ".csv") %in% list.files(paste0(r$app_folder, "/datasets/", %dataset_id%)))
 
 for (i in 1:nrow(tables)){
