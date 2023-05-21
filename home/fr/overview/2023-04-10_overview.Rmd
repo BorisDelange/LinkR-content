@@ -4,6 +4,8 @@
 
 L'application est codée en R avec la librairie Shiny.
 
+Elle utilise le modèle de données commun [OMOP](https://ohdsi.github.io/CommonDataModel/).
+
 ### `r fontawesome::fa("users", fill = "steelblue")` À qui s'adresse l'application ?
 
 L'application s'adresse :
@@ -43,4 +45,5 @@ Vous pouvez [faire un don ici](https://interhop.org/dons/).
 ### `r fontawesome::fa("envelope", fill = "steelblue")` Contact
 
 Email : contact@email.com
+
 Discussions on github ?
