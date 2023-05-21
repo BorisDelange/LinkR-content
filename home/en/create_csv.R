@@ -15,14 +15,14 @@ tibble::tribble(
   
   "home", "card", "news", "news1", "News 1", "", 1L, "2023-04-10 08:00:00",
   "home", "card", "news", "news2", "News 2", "", 2L, "2023-04-10 08:00:00",
- 
+  
   
   # 2) Get started
   
   ## Pivot_items
   
   ## Cards
- 
+  
   
   # 3) Tutorials
   
@@ -46,4 +46,4 @@ tibble::tribble(
   "resources", "card", "health_data_warehouses", "div2", "Div 2", "", 1L, "2023-04-10 08:00:00"
   
 ) %>%
-  readr::write_csv("home/fr/tabs_and_cards.csv")
+  readr::write_csv("home/en/tabs_and_cards.csv")
