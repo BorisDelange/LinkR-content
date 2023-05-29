@@ -11,7 +11,7 @@ tibble::tribble(
   "home", "pivot_item", "versions", "versions", "Versions", "", 3L, "2023-04-10 08:00:00",
   
   ## Cards
-  "home", "card", "overview", "overview", "", "2023-04-10_overview.Md", 1L, "2023-05-29 08:00:00",
+  "home", "card", "overview", "overview", "", "2023-05-29_overview.Md", 1L, "2023-05-29 08:00:00",
   
   "home", "card", "news", "news1", "News 1", "", 1L, "2023-04-10 08:00:00",
   "home", "card", "news", "news2", "News 2", "", 2L, "2023-04-10 08:00:00",
