@@ -133,13 +133,7 @@ id,category,link_id,name,value,value_num,creator_id,datetime,deleted
 132,users_accesses,2,log,NA,1,1,2023-06-01 18:20:42,0
 133,users_accesses,2,all_users,NA,0,1,2023-06-01 18:20:42,0
 134,users_accesses,2,only_me,NA,1,1,2023-06-01 18:20:42,0
-135,last_db_save,NA,last_db_save,2023-06-01 18:54:15,NA,1,2023-06-01 18:54:15,0
-136,dataset,1,users_allowed_read_group,everybody,1,1,2023-06-01 18:32:28,0
-137,dataset,1,user_allowed_read,NA,1,1,2023-06-01 18:32:28,0
-138,dataset,1,show_only_aggregated_data,NA,0,1,2023-06-01 18:32:28,0
-139,dataset,1,activate_scripts_cache,NA,1,1,2023-06-01 18:32:28,0
-140,dataset,1,unique_id,d4a2859c423c6257a1d59afeebdcff1dc72e220dbbe47121625ad5e241aff161,NA,1,2023-06-01 18:32:28,0
-141,dataset,1,omop_version,6.0,NA,1,2023-06-01 18:32:28,0
+135,last_db_save,NA,last_db_save,2023-06-01 22:25:38,NA,1,2023-06-01 22:25:38,0
 142,study,1,users_allowed_read_group,everybody,1,1,2023-06-01 18:33:47,0
 144,study,1,version,0.0.1,NA,1,2023-06-01 18:33:47,0
 145,study,1,unique_id,18941d5908d0cc1a286f1b75fb44edae0a913bd457ad27fd28f4e34cbf172f18,NA,1,2023-06-01 18:33:47,0
@@ -153,8 +147,8 @@ id,category,link_id,name,value,value_num,creator_id,datetime,deleted
 153,study,1,user_allowed_read,NA,NA,1,2023-06-01 18:33:59,0
 154,last_db_restore,NA,last_db_restore,2023-06-01 18:48:25,NA,1,2023-06-01 18:48:25,0
 155,dataset,1,users_allowed_read_group,everybody,1,1,2023-06-01 18:49:56,0
-156,dataset,1,user_allowed_read,,1,1,2023-06-01 18:49:56,0
-157,dataset,1,show_only_aggregated_data,,0,1,2023-06-01 18:49:56,0
-158,dataset,1,activate_scripts_cache,,1,1,2023-06-01 18:49:56,0
+156,dataset,1,user_allowed_read,NA,1,1,2023-06-01 18:49:56,0
+157,dataset,1,show_only_aggregated_data,NA,0,1,2023-06-01 18:49:56,0
+158,dataset,1,activate_scripts_cache,NA,1,1,2023-06-01 18:49:56,0
 159,dataset,1,unique_id,62afbdc139a7426fb4e78026374710add88a0037c89b0410144febdd09e07e96,NA,1,2023-06-01 18:49:56,0
 160,dataset,1,omop_version,6.0,NA,1,2023-06-01 18:49:56,0

@@ -153,4 +153,3 @@ for (i in 1:nrow(tables)){
     type = table$table_name, omop_version = ""5.3"", save_as_csv = TRUE, rewrite = FALSE)
 }",1,2023-06-01 18:32:28,0
 5,subset,1,"add_persons_to_subset(output = output, m = m, persons = d$person %>% dplyr::select(person_id), subset_id = %subset_id%, i18n = i18n, ns = ns)",1,2023-06-01 18:33:47,0
-6,dataset,1,,1,2023-06-01 18:49:56,0
