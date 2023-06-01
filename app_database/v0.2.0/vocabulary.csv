@@ -1,4 +1,4 @@
 id,vocabulary_id,vocabulary_name,vocabulary_reference,vocabulary_version,vocabulary_concept_id,data_source_id,display_order,creator_id,datetime,deleted
-1,MIMIC-IV,MIMIC-IV,,,,1,NA,1,2023-06-01 18:21:28,0
-2,RxNorm,RxNorm,,,,1,NA,1,2023-06-01 18:21:37,0
-3,LOINC,LOINC,,,,1,NA,1,2023-06-01 18:21:43,0
+1,MIMIC-IV,MIMIC-IV,NA,NA,NA,1,NA,1,2023-06-01 18:21:28,0
+2,RxNorm,RxNorm,NA,NA,NA,1,NA,1,2023-06-01 18:21:37,0
+3,LOINC,LOINC,NA,NA,NA,1,NA,1,2023-06-01 18:21:43,0

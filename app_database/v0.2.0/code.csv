@@ -16,8 +16,8 @@ for (table_name in c(""concept"", ""concept_relationship"")){
   import_vocabulary_table(output = output, ns = ns, i18n = i18n, r = r, m = m, table_name = table_name, data = data, vocabulary_id = ""%vocabulary_id%"") %>% print()
   cat(""\n\n"") 
 }",1,2023-06-01 18:21:28,0
-2,vocabulary,2,,1,2023-06-01 18:21:37,0
-3,vocabulary,3,,1,2023-06-01 18:21:43,0
+2,vocabulary,2,NA,1,2023-06-01 18:21:37,0
+3,vocabulary,3,NA,1,2023-06-01 18:21:43,0
 4,dataset,1,"create_ids <- function(col_name = character(), data = tibble::tibble(), new_cols = list(), col_left_join = character()){
   
   new_cols[[col_name]] <<-
@@ -153,3 +153,4 @@ for (i in 1:nrow(tables)){
     type = table$table_name, omop_version = ""5.3"", save_as_csv = TRUE, rewrite = FALSE)
 }",1,2023-06-01 18:32:28,0
 5,subset,1,"add_persons_to_subset(output = output, m = m, persons = d$person %>% dplyr::select(person_id), subset_id = %subset_id%, i18n = i18n, ns = ns)",1,2023-06-01 18:33:47,0
+6,dataset,1,,1,2023-06-01 18:49:56,0
