@@ -151,4 +151,4 @@ id,category,link_id,name,value,value_num,creator_id,datetime,deleted
 157,dataset,1,show_only_aggregated_data,NA,0,1,2023-06-01 18:49:56,0
 158,dataset,1,activate_scripts_cache,NA,1,1,2023-06-01 18:49:56,0
 159,dataset,1,unique_id,62afbdc139a7426fb4e78026374710add88a0037c89b0410144febdd09e07e96,NA,1,2023-06-01 18:49:56,0
-160,dataset,1,omop_version,6.0,NA,1,2023-06-01 18:49:56,0
+160,dataset,1,omop_version,5.3,NA,1,2023-06-01 18:49:56,0
