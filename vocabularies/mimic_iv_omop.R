@@ -15,12 +15,3 @@ for (table_name in c("concept", "concept_relationship")){
   import_vocabulary_table(output = output, ns = ns, i18n = i18n, r = r, m = m, table_name = table_name, data = data, vocabulary_id = "%vocabulary_id%") %>% print()
   cat("\n\n") 
 }
-
-for (i in 1:nrow(vocabulary_concepts_row_details)){
-  row <- vocabulary_concepts_row_details[i, ]
-  # print(names(row$cols %>% unlist()))
-  cols <- row$cols %>% unlist()
-  for (name in names(cols)){
-    print(cols[[name]])
-  }
-}
