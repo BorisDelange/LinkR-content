@@ -5,7 +5,8 @@ home,pivot_item,versions,versions,Versions,,3,2023-04-10 08:00:00
 home,card,overview,overview,,2023-05-29_overview.Md,1,2023-05-29 08:00:00
 get_started,pivot_item,default_data,default_data,Données par défaut,,1,2023-06-05 00:00:00
 get_started,pivot_item,first_study,first_study,Votre première étude,,1,2023-06-05 00:00:00
-get_started,pivot_item,concepts_mapping,concepts_mapping,Alignement de concepts,,1,2023-06-05 00:00:00
-get_started,card,concepts_mapping,div1,Terminologies & concepts,2023-06-05_concepts_mapping_div1.Md,1,2023-06-05 00:00:00
-get_started,card,concepts_mapping,div2,Alignement de concepts dans LinkR,,2,2023-06-05 00:00:00
-get_started,card,concepts_mapping,div3,Exporter une terminologie,,3,2023-06-05 00:00:00
+get_started,pivot_item,vocabulary,vocabulary,Terminologies & concepts,,1,2023-06-05 00:00:00
+get_started,card,vocabulary,div1,1) Terminologies & concepts,2023-06-05_vocabulary_div1.Md,1,2023-06-05 00:00:00
+get_started,card,vocabulary,div2,2) Ajouter une terminologie dans LinkR,2023-06-05_vocabulary_div2.Md,2,2023-06-05 00:00:00
+get_started,card,vocabulary,div3,3) Alignement de concepts dans LinkR,2023-06-05_vocabulary_div3.Md,2,2023-06-05 00:00:00
+get_started,card,vocabulary,div4,4) Exporter une terminologie,2023-06-05_vocabulary_div4.Md,3,2023-06-05 00:00:00
