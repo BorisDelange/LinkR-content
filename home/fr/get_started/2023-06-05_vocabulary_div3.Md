@@ -1,6 +1,6 @@
-### <i class="fa fa-list"></i> Concepts
+### <i class="fa fa-list" style="color: steelblue;"></i> 1) Concepts
 
-Allez dans l'onglet `Terminologies` en haut de la page puis dans l'onglet `Concepts`.
+Allez dans l'onglet *Terminologies* en haut de la page puis dans l'onglet *Concepts*.
 
 En choisissant une terminologie, vous pouvez afficher les **concepts** composant cette terminologie.
 
@@ -8,27 +8,31 @@ Vous pouvez lez **trier** par nombre de patients ayant ce concept au moins une f
 
 En cliquant sur un concept, vous pouvez **afficher ses détails**, avec notamment la distribution des valeurs du concept dans le set de données.
 
-### <i class="fa fa-arrows-left-right"></i> Alignement de concepts
+### <i class="fa fa-arrows-left-right" style="color: steelblue;"></i> 2) Alignement de concepts
 
-Allez maintenant dans l'onglet `Alignement de concepts`.
+Rendez-vous dans l'onglet *Alignement de concepts*.
 
 Vous pouvez :
 
-- Ajouter de nouveaux alignements
-- Evaluer des alignements
-- Supprimer des alignements
+- <i class="fa fa-plus" style="color: steelblue;"></i> Ajouter de nouveaux alignements
+- <i class="fa fa-thumbs-up" style="color: steelblue;"></i> Evaluer des alignements
+- <i class="fa fa-trash" style="color: steelblue;"></i> Supprimer des alignements
 
-#### <i class="fa fa-plus"></i> Ajouter un alignement
+#### <i class="fa fa-plus" style="color: steelblue;"></i> Ajouter un alignement
 
-Pour ajouter un alignement, allez dans l'onglet `Ajouter` puis sélectionnez deux terminologies (elles peuvent être distinctes ou non).
+Pour ajouter un alignement, allez dans l'onglet *Ajouter* puis sélectionnez deux terminologies (elles peuvent être distinctes ou non).
 
-Classiquement, on aligne une terminologie **non-standard** à une terminologie **standard**. Dans ce cas, choisissez la terminologie non-standard à gauche.
+Classiquement, une terminologie **non-standard** est alignée à une terminologie **standard**. Dans ce cas, choisissez la terminologie non-standard à gauche.
 
-Vous pouvez filtrer la terminologie de gauche en cochant `Concepts non alignés uniquement`, afin de retirer les concepts déjà alignés. Cela concerne *tous les alignements de concepts*, qu'ils aient été importés ou qu'ils aient été ajoutés par les utilisateurs de LinkR.
+<i class="fa check" style="color: steelblue;"></i> **Terminologie de gauche**
+
+Vous pouvez filtrer la terminologie de gauche en cochant *Concepts non alignés uniquement*, afin de retirer les concepts déjà alignés. Cela concerne *tous les alignements de concepts*, qu'ils aient été importés ou qu'ils aient été ajoutés par les utilisateurs de LinkR.
 
 Le nombre de lignes pour la terminologie de gauche concerne le **set de données sélectionné**.
 
-Vous pouvez filtrer la terminologie de droite en cochant `N'afficher que les concepts utilisés`, afin de retirer les concepts qui n'ont jamais été utilisés dans **tous les sets de données** chargés sur l'application.
+<i class="fa check" style="color: steelblue;"></i> **Terminologie de droite**
+
+Vous pouvez filtrer la terminologie de droite en cochant *N'afficher que les concepts utilisés*, afin de retirer les concepts qui n'ont jamais été utilisés dans **tous les sets de données** chargés sur l'application.
 
 Le nombre de lignes pour la terminologie de droite concerne l'**ensemble des sets de données** chargés sur l'application.
 
@@ -42,7 +46,9 @@ Par exemple, la requête <a href = "" target = "_blank">"heart rate" dans Athena
 
 Dans LinkR, en sélectionnant la terminologie LOINC, en cherchant "heart rate" et en triant par le nombre de lignes ou de set de données, j'obtiens le **concept adéquat** en première position.
 
-Choisissez ensuite la relation entre le concept de gauche (concept 1) et le concept de droite (concept 2), via le menu déroulant `Le concept 1 par rapport au concept 2`.
+<i class="fa check" style="color: steelblue;"></i> **Relation entre les concepts**
+
+Choisissez ensuite la relation entre le concept de gauche (concept 1) et le concept de droite (concept 2), via le menu déroulant *Le concept 1 par rapport au concept 2*.
 
 Les relations suivantes sont disponibles :
 
@@ -51,16 +57,16 @@ Les relations suivantes sont disponibles :
 - **Est inclus dans** : le concept 1 est inclus dans le concept 2
 - **Inclut** : le concept 1 inclut le concept 2
 
-#### <i class="fafa-thumbs-up"></i> Evaluer des alignements
+#### <i class="fa fa-thumbs-up" style="color: steelblue;"></i> Evaluer des alignements
 
-Pour évaluer des alignements, allez dans l'onglet `Evaluer & éditer`.
+Pour évaluer des alignements, allez dans l'onglet *Evaluer & éditer*.
 
 Vous pouvez :
 
 - filtrer les alignements que vous n'avez pas encore évalués
 - afficher le détail de l'alignement de concept sélectionné
 
-Cliquez sur le **pouce vers le haut** pour valider un alignement conforme, sur le **pouce vers le bas** pour l'invalider.
+Cliquez sur <i class="fa thumbs-up"></i> pour valider un alignement conforme et sur <i class="fa thumbs-down"></i> pour l'invalider.
 
 Les alignements qui comportent plus d'évaluations négatives que positives ou aucune évaluation positive ne seront pas utilisés dans l'application.
 
@@ -68,10 +74,10 @@ Les **alignements validés** (avec au moins une évaluation positive et plus d'�
 
 N'oubliez pas de **sauvegarder** vos évaluations.
 
-#### <i class="fa fa-trash"></i> Supprimer des alignements
+#### <i class="fa fa-trash" style="color: steelblue;"></i> Supprimer des alignements
 
-Pour supprimer des alignements, rendez-vous dans l'onglet `Evaluer & éditer`.
+Pour supprimer des alignements, rendez-vous dans l'onglet *Evaluer & éditer*.
 
-Si vous n'avez pas coché `Afficher le détail de l'alignement sélectionné`, vous pouvez sélectionner plusieurs alignements pour les supprimer, en cliquant sur `Supprimer la sélection`.
+Si vous n'avez pas coché *Afficher le détail de l'alignement sélectionné*, vous pouvez sélectionner plusieurs alignements pour les supprimer, en cliquant sur *Supprimer la sélection*.
 
-Vous pouvez également supprimer les alignements via l'icône dans le tableau.
+Vous pouvez également supprimer les alignements via l'icône <i class="fa trash-can"></i> dans le tableau.
