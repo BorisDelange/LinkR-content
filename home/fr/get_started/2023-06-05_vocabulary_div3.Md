@@ -24,13 +24,13 @@ Pour ajouter un alignement, allez dans l'onglet *Ajouter* puis sélectionnez deu
 
 Classiquement, une terminologie **non-standard** est alignée à une terminologie **standard**. Dans ce cas, choisissez la terminologie non-standard à gauche.
 
-<i class="fa fa-check" style="color: steelblue;"></i> **Terminologie de gauche**
+<i class="fa fa-check" style="color: steelblue;"></i> ***Terminologie de gauche***
 
 Vous pouvez filtrer la terminologie de gauche en cochant *Concepts non alignés uniquement*, afin de retirer les concepts déjà alignés. Cela concerne *tous les alignements de concepts*, qu'ils aient été importés ou qu'ils aient été ajoutés par les utilisateurs de LinkR.
 
 Le nombre de lignes pour la terminologie de gauche concerne le **set de données sélectionné**.
 
-<i class="fa fa-check" style="color: steelblue;"></i> **Terminologie de droite**
+<i class="fa fa-check" style="color: steelblue;"></i> ***Terminologie de droite***
 
 Vous pouvez filtrer la terminologie de droite en cochant *N'afficher que les concepts utilisés*, afin de retirer les concepts qui n'ont jamais été utilisés dans **tous les sets de données** chargés sur l'application.
 
@@ -46,7 +46,7 @@ Par exemple, la requête <a href = "" target = "_blank">"heart rate" dans Athena
 
 Dans LinkR, en sélectionnant la terminologie LOINC, en cherchant "heart rate" et en triant par le nombre de lignes ou de set de données, j'obtiens le **concept adéquat** en première position.
 
-<i class="fa fa-check" style="color: steelblue;"></i> **Relation entre les concepts**
+<i class="fa fa-check" style="color: steelblue;"></i> ***Relation entre les concepts***
 
 Choisissez ensuite la relation entre le concept de gauche (concept 1) et le concept de droite (concept 2), via le menu déroulant *Le concept 1 par rapport au concept 2*.
 
