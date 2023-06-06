@@ -32,7 +32,7 @@ Le nombre de lignes pour la terminologie de gauche concerne le **set de données
 
 <i class="fa fa-check" style="color: steelblue;"></i> ***Terminologie de droite***
 
-Vous pouvez filtrer la terminologie de droite en cochant *N'afficher que les concepts utilisés*, afin de retirer les concepts qui n'ont jamais été utilisés dans **tous les sets de données** chargés sur l'application.
+Vous pouvez filtrer la terminologie de droite en cochant *N'afficher que les concepts utilisés*, afin de retirer les concepts qui n'ont jamais été utilisés dans **aucun set de données** chargé sur l'application.
 
 Le nombre de lignes pour la terminologie de droite concerne l'**ensemble des sets de données** chargés sur l'application.
 
@@ -42,7 +42,7 @@ L'intérêt est de pouvoir identifier rapidement les **concepts fréquemment uti
 
 En effet, il est parfois difficile d'identifier le **concept standard** correspondant au concept que l'on veut aligner.
 
-Par exemple, la requête <a href = "" target = "_blank">"heart rate" dans Athena</a>, en filtrant sur la terminologie LOINC, affiche **plusieurs milliers** de résultats. Il est difficile de savoir lequel choisir.
+Par exemple, la requête <a href = "https://athena.ohdsi.org/search-terms/terms?vocabulary=LOINC&page=1&pageSize=15&query=heart+rate" target = "_blank">"heart rate" dans Athena</a>, en filtrant sur la terminologie LOINC, affiche **plusieurs milliers** de résultats. Il est difficile de savoir lequel choisir.
 
 Dans LinkR, en sélectionnant la terminologie LOINC, en cherchant "heart rate" et en triant par le nombre de lignes ou de set de données, j'obtiens le **concept adéquat** en première position.
 
@@ -66,7 +66,7 @@ Vous pouvez :
 - filtrer les alignements que vous n'avez pas encore évalués
 - afficher le détail de l'alignement de concept sélectionné
 
-Cliquez sur <i class="fa thumbs-up"></i> pour valider un alignement conforme et sur <i class="fa thumbs-down"></i> pour l'invalider.
+Cliquez sur <i class="fa fa-thumbs-up"></i> pour valider un alignement conforme et sur <i class="fa fa-thumbs-down"></i> pour l'invalider.
 
 Les alignements qui comportent plus d'évaluations négatives que positives ou aucune évaluation positive ne seront pas utilisés dans l'application.
 
@@ -80,4 +80,4 @@ Pour supprimer des alignements, rendez-vous dans l'onglet *Evaluer & éditer*.
 
 Si vous n'avez pas coché *Afficher le détail de l'alignement sélectionné*, vous pouvez sélectionner plusieurs alignements pour les supprimer, en cliquant sur *Supprimer la sélection*.
 
-Vous pouvez également supprimer les alignements via l'icône <i class="fa trash-can"></i> dans le tableau.
+Vous pouvez également supprimer les alignements via l'icône <i class="fa fa-trash-can"></i> dans le tableau.
