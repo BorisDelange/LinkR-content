@@ -22,13 +22,13 @@ tibble::tribble(
   ## Pivot_items
   "get_started", "pivot_item", "default_data", "default_data", "Données par défaut", "", 1L, "2023-06-05 00:00:00",
   "get_started", "pivot_item", "first_study", "first_study", "Votre première étude", "", 1L, "2023-06-05 00:00:00",
-  "get_started", "pivot_item", "vocabulary", "vocabulary", "Terminologies & concepts", "", 1L, "2023-06-05 00:00:00",
+  # "get_started", "pivot_item", "vocabulary", "vocabulary", "Terminologies & concepts", "", 1L, "2023-06-05 00:00:00",
   
   ## Cards
-  "get_started", "card", "vocabulary", "div1", "1) Terminologies & concepts", "2023-06-05_vocabulary_div1.Md", 1L, "2023-06-05 00:00:00",
-  "get_started", "card", "vocabulary", "div2", "2) Ajouter une terminologie dans LinkR", "2023-06-05_vocabulary_div2.Md", 2L, "2023-06-05 00:00:00",
-  "get_started", "card", "vocabulary", "div3", "3) Alignement de concepts dans LinkR", "2023-06-05_vocabulary_div3.Md", 3L, "2023-06-05 00:00:00",
-  "get_started", "card", "vocabulary", "div4", "4) Exporter une terminologie", "2023-06-05_vocabulary_div4.Md", 4L, "2023-06-05 00:00:00",
+  # "get_started", "card", "vocabulary", "div1", "1) Terminologies & concepts", "2023-06-05_vocabulary_div1.Md", 1L, "2023-06-05 00:00:00",
+  # "get_started", "card", "vocabulary", "div2", "2) Ajouter une terminologie dans LinkR", "2023-06-05_vocabulary_div2.Md", 2L, "2023-06-05 00:00:00",
+  # "get_started", "card", "vocabulary", "div3", "3) Alignement de concepts dans LinkR", "2023-06-05_vocabulary_div3.Md", 3L, "2023-06-05 00:00:00",
+  # "get_started", "card", "vocabulary", "div4", "4) Exporter une terminologie", "2023-06-05_vocabulary_div4.Md", 4L, "2023-06-05 00:00:00",
   
   # 3) Tutorials
   
