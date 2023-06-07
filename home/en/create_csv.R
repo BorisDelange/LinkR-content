@@ -28,4 +28,4 @@ tibble::tribble(
   # 4) Resources
   
 ) %>%
-  readr::write_csv("home/fr/tabs_and_cards.csv")
+  readr::write_csv("home/en/tabs_and_cards.csv")
