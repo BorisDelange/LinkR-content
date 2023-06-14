@@ -133,18 +133,18 @@ id,category,link_id,name,value,value_num,creator_id,datetime,deleted
 132,users_accesses,2,log,NA,1,1,2023-06-01 18:20:42,0
 133,users_accesses,2,all_users,NA,0,1,2023-06-01 18:20:42,0
 134,users_accesses,2,only_me,NA,1,1,2023-06-01 18:20:42,0
-135,last_db_save,NA,last_db_save,2023-06-01 22:25:38,NA,1,2023-06-01 22:25:38,0
-142,study,1,users_allowed_read_group,everybody,1,1,2023-06-01 18:33:47,0
-144,study,1,version,0.0.1,NA,1,2023-06-01 18:33:47,0
-145,study,1,unique_id,18941d5908d0cc1a286f1b75fb44edae0a913bd457ad27fd28f4e34cbf172f18,NA,1,2023-06-01 18:33:47,0
-146,study,1,author,Alan Turing,NA,1,2023-06-01 18:33:47,0
-147,study,1,description_fr,NA,NA,1,2023-06-01 18:33:47,0
-148,study,1,description_en,NA,NA,1,2023-06-01 18:33:47,0
-149,study,1,category_fr,NA,NA,1,2023-06-01 18:33:47,0
-150,study,1,category_en,NA,NA,1,2023-06-01 18:33:47,0
-151,study,1,name_fr,Prédiction de la mortalité,NA,1,2023-06-01 18:33:47,0
-152,study,1,name_en,Mortality prediction,NA,1,2023-06-01 18:33:47,0
-153,study,1,user_allowed_read,NA,NA,1,2023-06-01 18:33:59,0
+135,last_db_save,NA,last_db_save,2023-06-14 20:49:14,NA,1,2023-06-14 20:49:14,0
+142,study,1,users_allowed_read_group,everybody,1,1,2023-06-01 18:33:47,1
+144,study,1,version,0.0.1,NA,1,2023-06-01 18:33:47,1
+145,study,1,unique_id,18941d5908d0cc1a286f1b75fb44edae0a913bd457ad27fd28f4e34cbf172f18,NA,1,2023-06-01 18:33:47,1
+146,study,1,author,Alan Turing,NA,1,2023-06-01 18:33:47,1
+147,study,1,description_fr,NA,NA,1,2023-06-01 18:33:47,1
+148,study,1,description_en,NA,NA,1,2023-06-01 18:33:47,1
+149,study,1,category_fr,NA,NA,1,2023-06-01 18:33:47,1
+150,study,1,category_en,NA,NA,1,2023-06-01 18:33:47,1
+151,study,1,name_fr,Prédiction de la mortalité,NA,1,2023-06-01 18:33:47,1
+152,study,1,name_en,Mortality prediction,NA,1,2023-06-01 18:33:47,1
+153,study,1,user_allowed_read,NA,NA,1,2023-06-01 18:33:59,1
 154,last_db_restore,NA,last_db_restore,2023-06-01 18:48:25,NA,1,2023-06-01 18:48:25,0
 155,dataset,1,users_allowed_read_group,everybody,1,1,2023-06-01 18:49:56,0
 156,dataset,1,user_allowed_read,NA,1,1,2023-06-01 18:49:56,0
@@ -152,3 +152,14 @@ id,category,link_id,name,value,value_num,creator_id,datetime,deleted
 158,dataset,1,activate_scripts_cache,NA,1,1,2023-06-01 18:49:56,0
 159,dataset,1,unique_id,62afbdc139a7426fb4e78026374710add88a0037c89b0410144febdd09e07e96,NA,1,2023-06-01 18:49:56,0
 160,dataset,1,omop_version,5.3,NA,1,2023-06-01 18:49:56,0
+161,study,2,users_allowed_read_group,everybody,1,1,2023-06-14 20:46:20,0
+163,study,2,version,0.0.1,NA,1,2023-06-14 20:46:20,0
+164,study,2,unique_id,d1c37e5daa58d8b250f1c4a5372e6382016f3da40160859c996ec59a5e1f9314,NA,1,2023-06-14 20:46:20,0
+165,study,2,author,Alan Turing,NA,1,2023-06-14 20:46:20,0
+166,study,2,description_fr,,NA,1,2023-06-14 20:46:20,0
+167,study,2,description_en,,NA,1,2023-06-14 20:46:20,0
+168,study,2,category_fr,,NA,1,2023-06-14 20:46:20,0
+169,study,2,category_en,,NA,1,2023-06-14 20:46:20,0
+170,study,2,name_fr,Prédiciton de la mortalité,NA,1,2023-06-14 20:46:20,0
+171,study,2,name_en,Mortality prediction,NA,1,2023-06-14 20:46:20,0
+172,study,2,user_allowed_read,,NA,1,2023-06-14 20:46:33,0

@@ -1,2 +1,3 @@
 id,name,description,study_id,creator_id,datetime,deleted
 1,Tous les patients,NA,1,1,2023-06-01 18:33:47,0
+2,All patients,,2,1,2023-06-14 20:46:20,0
