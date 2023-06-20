@@ -131,4 +131,4 @@ for (i in 1:nrow(tables)){
   
   import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = get_data(), 
     type = table$table_name, omop_version = "5.3", save_as_csv = TRUE, rewrite = FALSE)
-} 
+}
