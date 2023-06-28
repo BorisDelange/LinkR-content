@@ -27,18 +27,32 @@ Voici un exemple d''utilisation de ce plugin.
     <app_version>0.2.0</app_version>
     <type>2</type>
     <version>0.0.1</version>
-    <unique_id>8cdaf1946e2301cb007a5b7c84ac3cbc8c64cf06131ba5c6755dc047385be050</unique_id>
-    <author>Alan Turing</author>
-    <image></image>
-    <description_fr>Une '
-Deux ''</description_fr>
-    <description_en>Trois '''
-Quatre ''''</description_en>
-    <name_fr>Plugin 1</name_fr>
-    <name_en>Plugin 1</name_en>
+    <unique_id>dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21</unique_id>
+    <author>Boris Delange</author>
+    <image>logo.png</image>
+    <description_fr>## Description
+
+Ce plugin utilise la librairie R [`ggplot2`](https://ggplot2.tidyverse.org/), permettant de cr&#xE9;er des graphiques &#xE0; partir des donn&#xE9;es.
+
+## Utilisation
+
+...
+
+## Figures disponibles
+
+### Diagrammes en barres (bar charts)
+
+...
+
+### Histogrammes (histograms)
+
+...</description_fr>
+    <description_en></description_en>
+    <name_fr>ggplot2</name_fr>
+    <name_en>ggplot2</name_en>
     <category_fr></category_fr>
     <category_en></category_en>
-    <creation_datetime>2023-06-14 17:33:37</creation_datetime>
-    <update_datetime>2023-06-14 18:59:22</update_datetime>
+    <creation_datetime>2023-06-28 22:01:19</creation_datetime>
+    <update_datetime>2023-06-28 22:18:58</update_datetime>
   </plugin>
 </plugins>

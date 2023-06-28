@@ -1,1 +1,0 @@
-print("Une apostrophe ' Deux ''")
