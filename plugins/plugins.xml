@@ -4,26 +4,9 @@
     <app_version>0.2.0</app_version>
     <type>2</type>
     <version>0.0.1</version>
-    <unique_id>c7a498b28eacc100aa2643b185379e3e759dc7039be0bb5bf76a7162810e03bc</unique_id>
-    <author>Alan Turing</author>
-    <image>ggplot2.png</image>
-    <description_fr></description_fr>
-    <description_en></description_en>
-    <name_fr>Plugin 2</name_fr>
-    <name_en>Plugin 2</name_en>
-    <category_fr></category_fr>
-    <category_en></category_en>
-    <creation_datetime>2023-07-04 12:22:33</creation_datetime>
-    <update_datetime>2023-07-04 13:32:40</update_datetime>
-    <images>ggplot2 copy.png;;;ggplot2 image 2.png;;;ggplot2.png;;;windows.png</images>
-  </plugin>
-  <plugin>
-    <app_version>0.2.0</app_version>
-    <type>2</type>
-    <version>0.0.1</version>
     <unique_id>dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21</unique_id>
     <author>Boris Delange</author>
-    <image>logo.png</image>
+    <image>ggplot2.png</image>
     <description_fr>## Description
 
 Ce plugin utilise la librairie R [`ggplot2`](https://ggplot2.tidyverse.org/), permettant de cr&#xE9;er des graphiques &#xE0; partir des donn&#xE9;es.
@@ -47,7 +30,7 @@ Ce plugin utilise la librairie R [`ggplot2`](https://ggplot2.tidyverse.org/), pe
     <category_fr></category_fr>
     <category_en></category_en>
     <creation_datetime>2023-06-28 22:01:19</creation_datetime>
-    <update_datetime>2023-07-03 21:41:32</update_datetime>
-    <images></images>
+    <update_datetime>2023-07-04 14:55:25</update_datetime>
+    <images>ggplot2.png</images>
   </plugin>
 </plugins>
