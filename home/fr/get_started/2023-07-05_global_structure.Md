@@ -1,6 +1,6 @@
 ### <i class="fa fa-check" style="color: steelblue;"></i> Menu principal
 
-<img title = "Main menu" alt="Main menu" src="main_menu.png">
+![Main Menu](https://raw.githubusercontent.com/BorisDelange/LinkR-content/main/home/fr/get_started/main_menu.png)
 
 Cette partie comprend les liens vers les **pages principales** de l'application, qui sont :
 
