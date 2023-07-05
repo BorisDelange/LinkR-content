@@ -22,15 +22,19 @@ tibble::tribble(
   # 2) Get started
   
   ## Pivot_items
+  "get_started", "pivot_item", "app_structure", "app_structure", "Structure de l'application", "", 1L, "2023-07-05 00:00:00",
   "get_started", "pivot_item", "default_data", "default_data", "Données par défaut", "", 1L, "2023-06-05 00:00:00",
   "get_started", "pivot_item", "first_study", "first_study", "Votre première étude", "", 1L, "2023-06-05 00:00:00",
   # "get_started", "pivot_item", "vocabulary", "vocabulary", "Terminologies & concepts", "", 1L, "2023-06-05 00:00:00",
   
   ## Cards
-  # "get_started", "card", "vocabulary", "div1", "1) Terminologies & concepts", "2023-06-05_vocabulary_div1.Md", 1L, "2023-06-05 00:00:00",
-  # "get_started", "card", "vocabulary", "div2", "2) Ajouter une terminologie dans LinkR", "2023-06-05_vocabulary_div2.Md", 2L, "2023-06-05 00:00:00",
-  # "get_started", "card", "vocabulary", "div3", "3) Alignement de concepts dans LinkR", "2023-06-05_vocabulary_div3.Md", 3L, "2023-06-05 00:00:00",
-  # "get_started", "card", "vocabulary", "div4", "4) Exporter une terminologie", "2023-06-05_vocabulary_div4.Md", 4L, "2023-06-05 00:00:00",
+  "get_started", "card", "app_structure", "div1", "1) Structure globale", "2023-07-05_global_structure.Md", 1L, "2023-07-05 00:00:00",
+  "get_started", "card", "app_structure", "div2", "2) Accueil", "", 1L, "2023-07-05 00:00:00",
+  "get_started", "card", "app_structure", "div3", "3) Données", "", 1L, "2023-07-05 00:00:00",
+  "get_started", "card", "app_structure", "div4", "4) Terminologies", "", 1L, "2023-07-05 00:00:00",
+  "get_started", "card", "app_structure", "div5", "5) Messages", "", 1L, "2023-07-05 00:00:00",
+  "get_started", "card", "app_structure", "div6", "6) Scripts & plugins", "", 1L, "2023-07-05 00:00:00",
+  "get_started", "card", "app_structure", "div7", "7) Paramètres", "", 1L, "2023-07-05 00:00:00",
   
   # 3) Tutorials
   

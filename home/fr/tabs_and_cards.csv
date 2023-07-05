@@ -3,5 +3,13 @@ home,pivot_item,overview,overview,Présentation,,1,2023-04-10 08:00:00
 home,pivot_item,news,news,News,,2,2023-04-10 08:00:00
 home,pivot_item,versions,versions,Versions,,3,2023-04-10 08:00:00
 home,card,overview,overview,,2023-05-29_overview.Md,1,2023-05-29 08:00:00
+get_started,pivot_item,app_structure,app_structure,Structure de l'application,,1,2023-07-05 00:00:00
 get_started,pivot_item,default_data,default_data,Données par défaut,,1,2023-06-05 00:00:00
 get_started,pivot_item,first_study,first_study,Votre première étude,,1,2023-06-05 00:00:00
+get_started,card,app_structure,div1,1) Structure globale,2023-07-05_global_structure.Md,1,2023-07-05 00:00:00
+get_started,card,app_structure,div2,2) Accueil,,1,2023-07-05 00:00:00
+get_started,card,app_structure,div3,3) Données,,1,2023-07-05 00:00:00
+get_started,card,app_structure,div4,4) Terminologies,,1,2023-07-05 00:00:00
+get_started,card,app_structure,div5,5) Messages,,1,2023-07-05 00:00:00
+get_started,card,app_structure,div6,6) Scripts & plugins,,1,2023-07-05 00:00:00
+get_started,card,app_structure,div7,7) Paramètres,,1,2023-07-05 00:00:00
