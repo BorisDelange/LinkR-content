@@ -29,12 +29,12 @@ tibble::tribble(
   
   ## Cards
   "get_started", "card", "app_structure", "div1", "1) Structure globale", "2023-07-05_global_structure.Md", 1L, "2023-07-05 00:00:00",
-  "get_started", "card", "app_structure", "div2", "2) Accueil", "", 1L, "2023-07-05 00:00:00",
-  "get_started", "card", "app_structure", "div3", "3) Données", "", 1L, "2023-07-05 00:00:00",
-  "get_started", "card", "app_structure", "div4", "4) Terminologies", "", 1L, "2023-07-05 00:00:00",
-  "get_started", "card", "app_structure", "div5", "5) Messages", "", 1L, "2023-07-05 00:00:00",
-  "get_started", "card", "app_structure", "div6", "6) Scripts & plugins", "", 1L, "2023-07-05 00:00:00",
-  "get_started", "card", "app_structure", "div7", "7) Paramètres", "", 1L, "2023-07-05 00:00:00",
+  "get_started", "card", "app_structure", "div2", "2) Accueil", "", 2L, "2023-07-05 00:00:00",
+  "get_started", "card", "app_structure", "div3", "3) Données", "", 3L, "2023-07-05 00:00:00",
+  "get_started", "card", "app_structure", "div4", "4) Terminologies", "", 4L, "2023-07-05 00:00:00",
+  "get_started", "card", "app_structure", "div5", "5) Messages", "", 5L, "2023-07-05 00:00:00",
+  "get_started", "card", "app_structure", "div6", "6) Scripts & plugins", "", 6L, "2023-07-05 00:00:00",
+  "get_started", "card", "app_structure", "div7", "7) Paramètres", "", 7L, "2023-07-05 00:00:00",
   
   # 3) Tutorials
   
