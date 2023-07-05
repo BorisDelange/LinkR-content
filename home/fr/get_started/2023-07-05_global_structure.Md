@@ -1,6 +1,6 @@
 ### <i class="fa fa-check" style="color: steelblue;"></i> Menu principal
 
-![Main Menu](main_menu.png)
+<img title = "Main menu" alt="Main menu" src="main_menu.png">
 
 Cette partie comprend les liens vers les **pages principales** de l'application, qui sont :
 
