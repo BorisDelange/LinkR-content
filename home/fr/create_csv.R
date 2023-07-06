@@ -28,9 +28,9 @@ tibble::tribble(
   # "get_started", "pivot_item", "vocabulary", "vocabulary", "Terminologies & concepts", "", 1L, "2023-06-05 00:00:00",
   
   ## Cards
-  "get_started", "card", "app_structure", "div1", "1) Structure globale", "2023-07-05_global_structure_v2.Md", 1L, "2023-07-05 00:00:01",
-  "get_started", "card", "app_structure", "div2", "2) Accueil", "", 2L, "2023-07-05 00:00:00",
-  "get_started", "card", "app_structure", "div3", "3) Données", "", 3L, "2023-07-05 00:00:00",
+  "get_started", "card", "app_structure", "div1", "1) Structure globale", "2023-07-06_global_structure.Md", 1L, "2023-07-06 00:00:00",
+  "get_started", "card", "app_structure", "div2", "2) Accueil", "2023-07-06_home.Md", 2L, "2023-07-06 00:00:00",
+  "get_started", "card", "app_structure", "div3", "3) Données", "2023-07-06_data.Md", 3L, "2023-07-06 00:00:00",
   "get_started", "card", "app_structure", "div4", "4) Terminologies", "", 4L, "2023-07-05 00:00:00",
   "get_started", "card", "app_structure", "div5", "5) Messages", "", 5L, "2023-07-05 00:00:00",
   "get_started", "card", "app_structure", "div6", "6) Scripts & plugins", "", 6L, "2023-07-05 00:00:00",
