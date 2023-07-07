@@ -31,8 +31,8 @@ tibble::tribble(
   "get_started", "card", "app_structure", "div1", "1) Structure globale", "2023-07-06_global_structure.Md", 1L, "2023-07-06 00:00:00",
   "get_started", "card", "app_structure", "div2", "2) Accueil", "2023-07-06_home.Md", 2L, "2023-07-06 00:00:00",
   "get_started", "card", "app_structure", "div3", "3) Données", "2023-07-06_data.Md", 3L, "2023-07-06 00:00:00",
-  "get_started", "card", "app_structure", "div4", "4) Terminologies", "", 4L, "2023-07-06 00:00:00",
-  "get_started", "card", "app_structure", "div5", "5) Messages", "", 5L, "2023-07-05 00:00:00",
+  "get_started", "card", "app_structure", "div4", "4) Terminologies", "2023-07-06_vocabularies.Md", 4L, "2023-07-06 00:00:00",
+  "get_started", "card", "app_structure", "div5", "5) Messages", "2023-07-07_messages.Md", 5L, "2023-07-07 00:00:00",
   "get_started", "card", "app_structure", "div6", "6) Scripts & plugins", "", 6L, "2023-07-05 00:00:00",
   "get_started", "card", "app_structure", "div7", "7) Paramètres", "", 7L, "2023-07-05 00:00:00",
   
