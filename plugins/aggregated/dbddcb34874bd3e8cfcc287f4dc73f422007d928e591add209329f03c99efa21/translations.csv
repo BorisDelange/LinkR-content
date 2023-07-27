@@ -10,3 +10,9 @@ hide_params,Hide parameters,Masquer les paramètres
 x_label,X-axis label,Texte de l'axe des X
 y_label,Y-axis label,Texte de l'axe des Y
 theme,Theme,Thème
+stat,Stat,Stat
+bins,Bins,Barres
+bin_width,Bin width,Largeur des barres
+num_of_bins,Number of bins,Nombre de barres
+bins_value,Value,Valeur
+palette,Palette,Palette
