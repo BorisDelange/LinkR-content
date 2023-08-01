@@ -14,5 +14,19 @@ stat,Stat,Stat
 bins,Bins,Barres
 bin_width,Bin width,Largeur des barres
 num_of_bins,Number of bins,Nombre de barres
-bins_value,Value,Valeur
+value,Value,Valeur
 palette,Palette,Palette
+histogram,Histogram,Histogramme
+scatter_plot,Scatter plot,Diagramme de dispersion
+none,None,Aucune
+group_data,Group data,Grouper les données
+group_by,Group by,Grouper par
+person,Patient,Patient
+duration,Duration,Durée
+minutes,Minutes,Minutes
+hours,Hours,Heures
+days,Days,Jours
+summarize_fct,Summarize function,Fonction d'agrégat
+min,Min,Minimum
+max,Max,Maximum
+mean,Mean,Moyenne
