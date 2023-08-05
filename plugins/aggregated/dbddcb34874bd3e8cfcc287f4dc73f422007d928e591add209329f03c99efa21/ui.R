@@ -18,21 +18,19 @@ inputs_values <- list()
 # Get saved params for this widget
 sql <- glue::glue_sql("SELECT * FROM aggregated_widgets_options WHERE widget_id = %widget_id%", .con = r$db)
 widget_options <- DBI::dbGetQuery(m$db, sql)
-if (nrow(widget_options) > 0){
-    for (input_name in inputs){
-        widget_option <- widget_options %>% dplyr::filter(name == input_name)
-        
-        if (nrow(widget_option) > 0){
-            if (input_name %in% spin_buttons) inputs_values[[input_name]] <- widget_option$value_num
-            else inputs_values[[input_name]] <- widget_option$value
-        }
-        else {
-            if (input_name %in% spin_buttons) inputs_values[[input_name]] <- ""
-            else inputs_values[[input_name]] <- NA_integer_
-        }
+
+for (input_name in inputs){
+    widget_option <- widget_options %>% dplyr::filter(name == input_name)
+    
+    if (nrow(widget_option) > 0){
+        if (input_name %in% spin_buttons) inputs_values[[input_name]] <- widget_option$value_num
+        else inputs_values[[input_name]] <- widget_option$value
+    }
+    else {
+        if (input_name %in% spin_buttons) inputs_values[[input_name]] <- NA_integer_
+        else inputs_values[[input_name]] <- ""
     }
 }
-print(widget_options)
 
 splitLayout(
     cellWidths = c("50%", "50%"),
@@ -44,12 +42,13 @@ splitLayout(
         conditionalPanel(
             condition = "input.hide_params_%widget_id% == false || input.hide_params_%widget_id% == null", ns = ns,
             shiny.fluent::Pivot(
+                id = ns("pivot_%widget_id%"),
                 onLinkClick = htmlwidgets::JS(paste0("item => Shiny.setInputValue('", id, "-current_tab_%widget_id%', item.props.id)")),
                 shiny.fluent::PivotItem(id = "plot_parameters_%widget_id%", itemKey = "plot_parameters", headerText = i18np$t("plot_parameters")),
                 shiny.fluent::PivotItem(id = "variables_%widget_id%", itemKey = "variables", headerText = i18np$t("variables"))
             ),
             conditionalPanel(
-                condition = "input.current_tab_%widget_id% == 'plot_parameters_%widget_id%'", ns = ns, br(),
+                condition = "input.current_tab_%widget_id% == 'plot_parameters_%widget_id%' || input.current_tab_%widget_id% == null", ns = ns, br(),
                 shiny.fluent::Dropdown.shinyInput(ns("plot_function_%widget_id%"), label = i18np$t("plot_choice"),
                     options = list(
                         list(key = "geom_histogram", text = paste0(i18np$t("histogram"), " (geom_histogram)")),
@@ -116,7 +115,7 @@ splitLayout(
                      options = y_variables, value = ifelse(inputs_values$y_variable %in% c("0", ""), 0L, as.integer(inputs_values$y_variable)))
                 ),
                 shiny.fluent::Dropdown.shinyInput(ns("colour_pal_%widget_id%"), options = palettes, 
-                    value = ifelse(inputs_values$colour_pal == "", "Set1", inputs_values$bins_type), label = i18np$t("palette")),
+                    value = ifelse(inputs_values$colour_pal == "", "Set1", inputs_values$colour_pal), label = i18np$t("palette")),
                 uiOutput(ns("colour_ui_%widget_id%")),
                 shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
                     shiny.fluent::Toggle.shinyInput(ns("group_data_%widget_id%"), 

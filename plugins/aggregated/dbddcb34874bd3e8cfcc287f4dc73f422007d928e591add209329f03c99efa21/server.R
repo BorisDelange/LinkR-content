@@ -15,8 +15,22 @@ colour_inputs <- "colour"
 inputs <- c(dropdowns, textfields, spin_buttons, toggle_inputs, colour_inputs)
 
 # Render plot
+
+observeEvent(input$plot_function_%widget_id%, {
+    print(paste0("test 1 - ", Sys.time()))
+    shinyjs::click("show_%widget_id%")
+}, once = TRUE)
+
 observeEvent(input$show_%widget_id%, {
     %req%
+    
+    # If pivot item has not been clicked, input variables are not initiated
+    if (length(isolate(input$colour_%widget_id%)) == 0){
+        shinyjs::runjs(glue::glue("$('#{id}-pivot_%widget_id% button[name=\"{i18np$t('variables')}\"]').click();"))
+        shinyjs::delay(500, shinyjs::click("show_%widget_id%"))
+    }
+    
+    req(length(isolate(input$colour_%widget_id%)) > 0)
     
     data <- list()
     variable <- list()
@@ -29,7 +43,7 @@ observeEvent(input$show_%widget_id%, {
     # Get x & y variables in data
     if (length(input$x_variable_%widget_id%) > 0) variable$x <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == input$x_variable_%widget_id%)
     if (length(input$y_variable_%widget_id%) > 0) variable$y <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == input$y_variable_%widget_id%)
-    
+ 
     if (nrow(variable$x) > 0){
         variable$x$domain_id <- tolower(variable$x$domain_id)
         if (variable$x$domain_id %in% c("observation", "measurement")) data$x <- d[[tolower(variable$x$domain_id)]] %>% 
