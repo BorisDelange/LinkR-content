@@ -7,7 +7,7 @@ shiny.fluent::updateDropdown.shinyInput(session, "y_variable_%widget_id%", optio
 
 # List of inputs (to save & get saved params)
 
-dropdowns <- c("plot_function", "plot_theme", "stat", "bins_type", "x_variable", "y_variable", "colour_pal", "group_by", "summarize_fct")
+dropdowns <- c("plot_function", "plot_theme", "bins_type", "x_variable", "y_variable", "colour_pal", "group_by", "group_by_type", "summarize_fct")
 textfields <- c("x_label", "y_label")
 spin_buttons <- c("num_of_bins", "bin_width", "group_by_num")
 toggle_inputs <- "group_data"

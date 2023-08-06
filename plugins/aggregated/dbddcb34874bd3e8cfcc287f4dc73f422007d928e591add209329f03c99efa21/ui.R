@@ -6,7 +6,7 @@ palettes <- convert_tibble_to_list(data = tibble::tibble(pal = c("Set1", "Set2",
 
 # List of inputs (to save & get saved params)
 
-dropdowns <- c("plot_function", "plot_theme", "stat", "bins_type", "x_variable", "y_variable", "colour_pal", "group_by", "summarize_fct")
+dropdowns <- c("plot_function", "plot_theme", "bins_type", "x_variable", "y_variable", "colour_pal", "group_by", "group_by_type", "summarize_fct")
 textfields <- c("x_label", "y_label")
 spin_buttons <- c("num_of_bins", "bin_width", "group_by_num")
 toggle_inputs <- "group_data"
@@ -73,12 +73,6 @@ splitLayout(
                 shiny.fluent::TextField.shinyInput(ns("y_label_%widget_id%"), label = i18np$t("y_label"), value = inputs_values$y_label),
                 conditionalPanel(
                     condition = "input.plot_function_%widget_id% == 'geom_histogram'", ns = ns,
-                    shiny.fluent::Dropdown.shinyInput(ns("stat_%widget_id%"), label = i18np$t("stat"),
-                        options = list(
-                            list(key = "bin", text = "bin"),
-                            list(key = "count", text = "count")
-                        ),
-                        value = ifelse(inputs_values$stat == "", "bin", inputs_values$stat)),
                     shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
                         div(
                             shiny.fluent::Dropdown.shinyInput(ns("bins_type_%widget_id%"), label = i18np$t("bins"),
@@ -93,12 +87,12 @@ splitLayout(
                             conditionalPanel(
                                 condition = "input.bins_type_%widget_id% == 'num_of_bins'", ns = ns,
                                 shiny.fluent::SpinButton.shinyInput(ns("num_of_bins_%widget_id%"), label = i18np$t("value"), 
-                                    value = ifelse(inputs_values$num_of_bins == NA_integer_, 10, inputs_values$num_of_bins), step = 5, min = 0, max = 2000)
+                                    value = ifelse(is.na(inputs_values$num_of_bins), 50, inputs_values$num_of_bins), step = 5, min = 0, max = 2000)
                             ),
                             conditionalPanel(
                                 condition = "input.bins_type_%widget_id% == 'bin_width'", ns = ns,
                                 shiny.fluent::SpinButton.shinyInput(ns("bin_width_%widget_id%"), label = i18np$t("value"), 
-                                value = ifelse(inputs_values$bin_width == NA_integer_, 1, inputs_values$bin_width), step = 1, min = 0, max = 100)
+                                value = ifelse(is.na(inputs_values$bin_width), 10, inputs_values$bin_width), step = 1, min = 0)
                             ),
                             style = "width:50%; margin-top:28px;"
                         )
@@ -140,7 +134,7 @@ splitLayout(
                                 shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
                                     div(
                                         shiny.fluent::SpinButton.shinyInput(ns("group_by_num_%widget_id%"), label = "", 
-                                            value = ifelse(inputs_values$group_by_num == NA_integer_, 4, inputs_values$group_by_num), step = 1, min = 0, max = 2000), 
+                                            value = ifelse(is.na(inputs_values$group_by_num), 4, inputs_values$group_by_num), step = 1, min = 0, max = 2000), 
                                         style = "width:50%; margin-top:29px;"
                                     ),
                                     div(
