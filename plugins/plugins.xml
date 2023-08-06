@@ -9,7 +9,7 @@
     <image>ggplot2.png</image>
     <description_fr>## &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; Description
 
-Ce plugin utilise la librairie R &lt;a href = "https://ggplot2.tidyverse.org/", target = "_blank"&gt;`ggplot2`&lt;/a&gt;, permettant de cr&#xE9;er des graphiques &#xE0; partir des donn&#xE9;es.
+Ce plugin utilise la librairie R &lt;a href = "https://ggplot2.tidyverse.org/" target = "_blank"&gt;`ggplot2`&lt;/a&gt;, permettant de cr&#xE9;er des graphiques &#xE0; partir des donn&#xE9;es.
 
 ## &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; Utilisation
 
@@ -54,7 +54,7 @@ Pour contrer cela, il est possible de **grouper les donn&#xE9;es**, par patient 
     <category_fr></category_fr>
     <category_en></category_en>
     <creation_datetime>2023-06-28 22:01:19</creation_datetime>
-    <update_datetime>2023-08-06 22:46:08</update_datetime>
+    <update_datetime>2023-08-06 22:51:52</update_datetime>
     <images>geom_histogram.png;;;geom_point.png;;;ggplot2.png</images>
   </plugin>
 </plugins>
