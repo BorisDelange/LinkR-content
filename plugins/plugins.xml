@@ -3,34 +3,55 @@
   <plugin>
     <app_version>0.2.0</app_version>
     <type>2</type>
-    <version>0.0.1.9002</version>
+    <version>0.0.1.9003</version>
     <unique_id>dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21</unique_id>
     <author>Boris Delange</author>
     <image>ggplot2.png</image>
-    <description_fr>## Description
+    <description_fr>## &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; Description
 
-Ce plugin utilise la librairie R [`ggplot2`](https://ggplot2.tidyverse.org/), permettant de cr&#xE9;er des graphiques &#xE0; partir des donn&#xE9;es.
+Ce plugin utilise la librairie R &lt;a href = "https://ggplot2.tidyverse.org/", target = "_blank"&gt;`ggplot2`&lt;/a&gt;, permettant de cr&#xE9;er des graphiques &#xE0; partir des donn&#xE9;es.
 
-## Utilisation
+## &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; Utilisation
 
-...
+Pour commencer, **choisissez la variable** &#xE0; afficher sur chacun des axes dans l'onglet "Variables".
 
-## Figures disponibles
+Certaines figures n'auront une **variable que sur un axe** (geom_histogram), d'autres ne s'afficheront que **si des variables sont renseign&#xE9;es sur les deux axes** (geom_point).
 
-### Diagrammes en barres (bar charts)
+Pour chaque figure, choisissez :
 
-...
+- le **th&#xE8;me** de la figure
+- le **texte** de l'axe des **x**
+- le **texte** de l'axe des **y** (qu'une variable y soit attribu&#xE9;e ou non)
 
-### Histogrammes (histograms)
+## &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; Figures disponibles
 
-...</description_fr>
+### Histogramme (geom_histogram)
+
+Permet de visualiser la distribution d'une variable continue unique en divisant l'axe des x en intervalles et en comptant le nombre d'observations dans chaque intervalle.
+
+&lt;img src = "%plugin_folder%/geom_histogram.png" width = "700" /&gt;
+
+
+
+### Diagramme de dispersion (geom_point)
+
+Permet de visualiser la distribution de deux variables continues, l'une sur l'axe des x, l'autre sur l'axe des y.
+
+&lt;img src = "%plugin_folder%/geom_point.png" width = "700" /&gt;
+
+Par d&#xE9;faut, uniquement les points ayant une **valeur &#xE0; un moment donn&#xE9;** &#xE0; la fois pour la **variable en x** et pour la **variable en y** seront affich&#xE9;s.
+
+Par exemple, si je choisis la pression art&#xE9;rielle systolique en x et la pression art&#xE9;rielle moyenne en y (tel que dans l'example),
+que j'ai une valeur de x tel jour &#xE0; 18:37:10 et une valeur de y le m&#xEA;me jour &#xE0; 18:37:11, le moment n'&#xE9;tant pas exactement le m&#xEA;me, il n'y aura pas de point correspondant sur la graphique.
+
+Pour contrer cela, il est possible de **grouper les donn&#xE9;es**, par patient ou par moment (cf paragraphe Utilisation).</description_fr>
     <description_en></description_en>
     <name_fr>ggplot2</name_fr>
     <name_en>ggplot2</name_en>
     <category_fr></category_fr>
     <category_en></category_en>
     <creation_datetime>2023-06-28 22:01:19</creation_datetime>
-    <update_datetime>2023-08-05 21:21:04</update_datetime>
-    <images>ggplot2.png</images>
+    <update_datetime>2023-08-06 22:31:13</update_datetime>
+    <images>geom_histogram.png;;;geom_point.png;;;ggplot2.png</images>
   </plugin>
 </plugins>
