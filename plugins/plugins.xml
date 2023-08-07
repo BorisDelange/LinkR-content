@@ -9,7 +9,7 @@
     <image>ggplot2.png</image>
     <description_fr>## &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; Description
 
-Ce plugin utilise la librairie R &lt;a href = "https://ggplot2.tidyverse.org/" target = "_blank"&gt;`ggplot2`&lt;/a&gt;, permettant de cr&#xE9;er des graphiques &#xE0; partir des donn&#xE9;es.
+Ce plugin utilise la librairie R &lt;a href="https://ggplot2.tidyverse.org/" target="_blank"&gt;`ggplot2`&lt;/a&gt;, permettant de cr&#xE9;er des graphiques &#xE0; partir des donn&#xE9;es.
 
 ## &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; Utilisation
 
@@ -36,7 +36,7 @@ Par exemple :
 
 Permet de visualiser la distribution d'une variable continue unique en divisant l'axe des x en intervalles et en comptant le nombre d'observations dans chaque intervalle.
 
-&lt;img src = "%plugin_folder%/geom_histogram.png" width = "700" /&gt;
+&lt;img src="%plugin_folder%/geom_histogram.png" width="700" /&gt;
 
 Vous pouvez chosir la **taille des barres** selon deux modalit&#xE9;s :
 
@@ -47,7 +47,7 @@ Vous pouvez chosir la **taille des barres** selon deux modalit&#xE9;s :
 
 Permet de visualiser la distribution de deux variables continues, l'une sur l'axe des x, l'autre sur l'axe des y.
 
-&lt;img src = "%plugin_folder%/geom_point.png" width = "700" /&gt;
+&lt;img src="%plugin_folder%/geom_point.png" width="700" /&gt;
 
 Par d&#xE9;faut, uniquement les points ayant une **valeur &#xE0; un moment donn&#xE9;** &#xE0; la fois pour la **variable en x** et pour la **variable en y** seront affich&#xE9;s.
 
@@ -61,7 +61,7 @@ Pour contrer cela, il est possible de **grouper les donn&#xE9;es**, par patient 
     <category_fr></category_fr>
     <category_en></category_en>
     <creation_datetime>2023-06-28 22:01:19</creation_datetime>
-    <update_datetime>2023-08-06 23:01:09</update_datetime>
+    <update_datetime>2023-08-07 20:07:40</update_datetime>
     <images>geom_histogram.png;;;geom_point.png;;;ggplot2.png</images>
   </plugin>
 </plugins>
