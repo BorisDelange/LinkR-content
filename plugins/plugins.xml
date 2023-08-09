@@ -3,6 +3,23 @@
   <plugin>
     <app_version>0.2.0</app_version>
     <type>2</type>
+    <version>0.0.1.9001</version>
+    <unique_id>6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8</unique_id>
+    <author>Boris Delange</author>
+    <image>console_icon.png</image>
+    <description_fr></description_fr>
+    <description_en></description_en>
+    <name_fr>Gestionnaire de scripts</name_fr>
+    <name_en>Scripts manager</name_en>
+    <category_fr></category_fr>
+    <category_en></category_en>
+    <creation_datetime>2023-08-07 20:11:14</creation_datetime>
+    <update_datetime>2023-08-09 22:39:16</update_datetime>
+    <images>console_icon.png</images>
+  </plugin>
+  <plugin>
+    <app_version>0.2.0</app_version>
+    <type>2</type>
     <version>0.0.1.9006</version>
     <unique_id>dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21</unique_id>
     <author>Boris Delange</author>
