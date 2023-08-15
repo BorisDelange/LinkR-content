@@ -4,17 +4,75 @@
     <app_version>0.2.0</app_version>
     <type>2</type>
     <unique_id>6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8</unique_id>
-    <version>0.0.1.9002</version>
+    <version>0.0.1.9003</version>
     <author>Boris Delange</author>
     <image>console_icon.png</image>
     <name_fr>Gestionnaire de scripts</name_fr>
     <name_en>Scripts manager</name_en>
     <category_fr></category_fr>
     <category_en></category_en>
-    <description_fr></description_fr>
+    <description_fr>## &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; Description
+
+Ce plugin vous permet d'**ex&#xE9;cuter du code** dans la console R et de **sauvegarder votre code sous forme de scripts**.
+
+## &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; Gestion des scripts
+
+Allez dans l'onglet "Gestion des scripts" pour **ajouter, supprimer ou renommer des scripts**.
+
+Un script est un **fichier texte contenant du code**.
+
+Une fois un script cr&#xE9;&#xE9;, vous pouvez l'**&#xE9;diter** dans l'onglet "Script" et **ex&#xE9;cuter le code**.
+
+## &lt;i class="fa fa-code" style="color: steelblue;"&gt;&lt;/i&gt; Code R
+
+Ecrivez du **code en R** et ex&#xE9;cutez-le : le **r&#xE9;sultat retourn&#xE9; par la console** appara&#xEE;tra en-dessous de l'&#xE9;diteur de texte.
+
+Pour conna&#xEE;tre le **mod&#xE8;le de donn&#xE9;es** utilis&#xE9; par l'application, cliquez sur le bouton d'aide (point d'interrogation en haut &#xE0; droite de la page) lorsque vous &#xEA;tes sur la page "Donn&#xE9;es / Acc&#xE9;der aux donn&#xE9;es".
+
+Exemple de code (obtenir le min, max et moyenne de la fr&#xE9;quence cardiaque chez nos patients) :
+
+```
+d$measurement %&gt;%
+    dplyr::filter(measurement_concept_id == 3027018) %&gt;%
+    dplyr::group_by(person_id) %&gt;%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
+    dplyr::ungroup()
+```
+
+&lt;img src="%plugin_folder%/r_code_1.png" width="1100" /&gt;
+
+&lt;img src="%plugin_folder%/r_code_2.png" width="900" /&gt;
+
+## &lt;i class="fa fa-file-code-o" style="color: steelblue;"&gt;&lt;/i&gt; RMarkdown
+
+Vous pouvez &#xE9;galement &#xE9;crire du code en **Rmarkdown**.
+
+Il s'agit d'un **Markdown** auquel vous pouvez ajouter du **code R**.
+
+Pour plus d'informations sur RMarkdown, &lt;a href="https://rmarkdown.rstudio.com/lesson-2.html" target="_blank"&gt;rendez-vous sur leur site&lt;/a&gt;.
+
+Exemple de code (le m&#xEA;me exemple que ci-dessus, en RMarkdown - un backslash a &#xE9;t&#xE9; ajout&#xE9; pour &#xE9;viter l'&#xE9;x&#xE9;cution du code) :
+
+```
+# Script sur la fr&#xE9;quence cardiaque
+
+\```{r}
+d$measurement %&gt;%
+    dplyr::filter(measurement_concept_id == 3027018) %&gt;%
+    dplyr::group_by(person_id) %&gt;%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
+    dplyr::ungroup()
+\```
+```
+
+&lt;img src="%plugin_folder%/rmarkdown_1.png" width="1100" /&gt;
+
+&lt;img src="%plugin_folder%/rmarkdown_2.png" width="1100" /&gt;
+
+## &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; Figure</description_fr>
     <description_en></description_en>
     <creation_datetime>2023-08-07 20:11:14</creation_datetime>
-    <update_datetime>2023-08-12 12:13:17</update_datetime>
-    <images>console_icon.png</images>
+    <update_datetime>2023-08-15 23:09:53</update_datetime>
+    <images>console_icon.png;;;r_code_1.png;;;r_code_2.png;;;rmarkdown_1.png;;;rmarkdown_2.png</images>
   </plugin>
 </plugins>

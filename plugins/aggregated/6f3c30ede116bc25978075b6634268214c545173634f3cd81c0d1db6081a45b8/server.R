@@ -4,7 +4,7 @@ widget_options <- DBI::dbGetQuery(m$db, sql)
 
 m$widget_options_%widget_id% <- widget_options
 m$scripts_%widget_id% <- widget_options %>% dplyr::filter(name == "script") %>% dplyr::select(id = value_num, name = value)
-m$scripts_temp_%widget_id% <- m$scripts_%widget_id% %>% dplyr::mutate(modified = TRUE)
+m$scripts_temp_%widget_id% <- m$scripts_%widget_id% %>% dplyr::mutate(modified = FALSE)
 m$reload_dt_%widget_id% <- Sys.time()
 
 # Var for delete confirm react
