@@ -1,4 +1,6 @@
 base,en,fr
+plot,Plot,Figure
+code,Code,Code
 plot_parameters,Plot parameters,Paramètres de la figure
 variables,Variables,Variables
 plot_choice,Plot choice,Choix de la figure
@@ -30,3 +32,5 @@ summarize_fct,Summarize function,Fonction d'agrégat
 min,Min,Minimum
 max,Max,Maximum
 mean,Mean,Moyenne
+unauthorized_access_to_console,You are not authorized to access the console,Vous n'avez pas l'autorisation pour accéder à la console
+generate_code,Generate code,Générer le code
