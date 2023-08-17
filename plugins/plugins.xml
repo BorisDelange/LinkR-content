@@ -78,7 +78,7 @@ d$measurement %&gt;%
   <plugin>
     <app_version>0.2.0</app_version>
     <type>2</type>
-    <version>0.0.1.9006</version>
+    <version>0.0.1.9009</version>
     <unique_id>dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21</unique_id>
     <author>Boris Delange</author>
     <image>ggplot2.png</image>
@@ -130,13 +130,60 @@ Par exemple, si je choisis la pression art&#xE9;rielle systolique en x et la pre
 que j'ai une valeur de x tel jour &#xE0; 18:37:10 et une valeur de y le m&#xEA;me jour &#xE0; 18:37:11, le moment n'&#xE9;tant pas exactement le m&#xEA;me, il n'y aura pas de point correspondant sur la graphique.
 
 Pour contrer cela, il est possible de **grouper les donn&#xE9;es**, par patient ou par moment (cf paragraphe Utilisation).</description_fr>
-    <description_en></description_en>
-    <name_fr>ggplot2</name_fr>
-    <name_en>ggplot2</name_en>
+    <description_en>## &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; Description
+
+This plugin uses the R library &lt;a href="https://ggplot2.tidyverse.org/" target="_blank"&gt;`ggplot2`&lt;/a&gt;, allowing for the creation of charts from data.
+
+## &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; Usage
+
+To start, **select the variable** to display on each of the axes in the "Variables" tab.
+
+Some figures will have a **variable on only one axis** (geom_histogram), while others will only display **if variables are provided on both axes** (geom_point).
+
+For each figure, choose:
+
+- the **theme** of the figure
+- the **text** of the **x** axis
+- the **text** of the **y** axis (whether or not a y variable is assigned)
+
+In the "Variables" tab, it's possible to **group the data** by patient or by time. Then select the **function** to apply to group the data.
+
+For example:
+
+- group data by **patient** and choose the **"maximum"** function: the maximum value of the parameter, across all stays, will be used for each patient
+- group data every **4 hours** and choose the **"average"** function: the maximum value will be considered for each 4-hour interval, for each patient (thus multiple data points per patient)
+
+## &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; Available Figures
+
+### Histogram (geom_histogram)
+
+Allows for the visualization of the distribution of a single continuous variable by dividing the x-axis into intervals and counting the number of observations in each interval.
+
+&lt;img src="%plugin_folder%/geom_histogram.png" width="700" /&gt;
+
+You can choose the **size of the bars** in two ways:
+
+- either by the **size** of the bars, based on the x-axis (a size of 50 means a bar will span 50 of the unit specified on the x-axis)
+- or by the **number** of total bars displayed
+
+### Scatter Plot (geom_point)
+
+Allows for the visualization of the distribution of two continuous variables, one on the x-axis and the other on the y-axis.
+
+&lt;img src="%plugin_folder%/geom_point.png" width="700" /&gt;
+
+By default, only points with a **value at a given time** for both the **x variable** and the **y variable** will be displayed.
+
+For instance, if I select systolic blood pressure for x and mean arterial pressure for y (as in the example),
+and I have a value for x on a certain day at 18:37:10 and a value for y on the same day at 18:37:11, since the times are not exactly the same, there will be no corresponding point on the chart.
+
+To address this, it's possible to **group data** by patient or by time (see the Usage section above).</description_en>
+    <name_fr>Figure (ggplot2)</name_fr>
+    <name_en>Plot (ggplot2)</name_en>
     <category_fr></category_fr>
     <category_en></category_en>
     <creation_datetime>2023-06-28 22:01:19</creation_datetime>
-    <update_datetime>2023-08-07 20:10:18</update_datetime>
+    <update_datetime>2023-08-17 23:53:44</update_datetime>
     <images>geom_histogram.png;;;geom_point.png;;;ggplot2.png</images>
   </plugin>
 </plugins>

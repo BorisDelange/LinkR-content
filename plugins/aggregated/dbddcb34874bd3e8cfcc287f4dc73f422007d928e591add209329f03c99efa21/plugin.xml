@@ -108,7 +108,7 @@ and I have a value for x on a certain day at 18:37:10 and a value for y on the s
 
 To address this, it's possible to **group data** by patient or by time (see the Usage section above).</description_en>
     <creation_datetime>2023-06-28 22:01:19</creation_datetime>
-    <update_datetime>2023-08-16 21:43:24</update_datetime>
+    <update_datetime>2023-08-17 23:53:44</update_datetime>
     <images>geom_histogram.png;;;geom_point.png;;;ggplot2.png</images>
   </plugin>
 </plugins>

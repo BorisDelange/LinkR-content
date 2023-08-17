@@ -1,6 +1,7 @@
 base,en,fr
 plot,Plot,Figure
 code,Code,Code
+scripts_management,Scripts management,Gérer les scripts
 plot_parameters,Plot parameters,Paramètres de la figure
 variables,Variables,Variables
 plot_choice,Plot choice,Choix de la figure
@@ -34,3 +35,8 @@ max,Max,Maximum
 mean,Mean,Moyenne
 unauthorized_access_to_console,You are not authorized to access the console,Vous n'avez pas l'autorisation pour accéder à la console
 generate_code,Generate code,Générer le code
+script_added,Script added,Script ajouté
+confirm_deletion_title,Delete scripts,Supprimer des scripts
+confirm_deletion_subtext,Do you want to delete these scripts ?,Confirmer la suppression de ces scripts ?
+script_deleted,Script(s) deleted,Script(s) supprimé(s)
+plot_width,Plot width (%),Largeur de la figure (%)
