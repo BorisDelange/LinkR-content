@@ -19,7 +19,7 @@ palettes <- convert_tibble_to_list(data = tibble::tibble(pal = c("Set1", "Set2",
 dropdowns <- c("plot_function", "plot_theme", "bins_type", "x_variable", "y_variable", "colour_pal", "group_by", "group_by_type", "summarize_fct")
 textfields <- c("x_label", "y_label")
 spin_buttons <- c("num_of_bins", "bin_width", "group_by_num")
-toggle_inputs <- "group_data"
+toggle_inputs <- c("group_data", "run_code_at_script_launch")
 colour_inputs <- "colour"
 ace_inputs <- "code"
 inputs <- c(dropdowns, textfields, spin_buttons, toggle_inputs, colour_inputs, ace_inputs)
@@ -41,6 +41,7 @@ default_values$bin_width <- 10L
 default_values$group_by_num <- 4L
 default_values$group_data <- FALSE
 default_values$colour <- "#E41A1C"
+default_values$run_code_at_script_launch <- FALSE
 default_values$code <- ""
 
 inputs_values <- list()
@@ -75,10 +76,7 @@ if (length(m$user_accesses) > 0) if ("data_console" %in% m$user_accesses) ace_ed
                 autoScrollEditorIntoView = TRUE, minLines = 30, maxLines = 1000
         ), 
     style = "width: 100%;"),
-    shiny.fluent::Stack(
-        horizontal = TRUE, tokens = list(childrenGap = 10),
-        shiny.fluent::PrimaryButton.shinyInput(ns("run_code_%widget_id%"), i18n$t("run_code"))
-    ), br()
+    shiny.fluent::PrimaryButton.shinyInput(ns("run_code_%widget_id%"), i18n$t("run_code")), br()
 )
 
 tagList(
@@ -96,8 +94,20 @@ tagList(
             div(shiny.fluent::Dropdown.shinyInput(ns("script_choice_%widget_id%"),
                 options = convert_tibble_to_list(plots, key_col = "id", text_col = "name"), value = selected_script), style = "width:300px"),
             shiny.fluent::DefaultButton.shinyInput(ns("save_%widget_id%"), i18np$t("save")),
-            shiny.fluent::Toggle.shinyInput(ns("hide_params_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
-            div(class = "toggle_title", i18np$t("hide_params"), style = "padding-top:5px;")
+            conditionalPanel(
+                condition = "input.current_tab_%widget_id% == 'plot_%widget_id%' || input.current_tab_%widget_id% == null", ns = ns,
+                shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                    shiny.fluent::Toggle.shinyInput(ns("hide_params_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
+                    div(class = "toggle_title", i18np$t("hide_params"), style = "padding-top:5px;")
+                )
+            ),
+            conditionalPanel(
+                condition = "input.current_tab_%widget_id% == 'code_%widget_id%'", ns = ns,
+                shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                    shiny.fluent::Toggle.shinyInput(ns("run_code_at_script_launch_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
+                    div(class = "toggle_title", i18np$t("run_code_at_script_launch"), style = "padding-top:5px;")
+                )
+            )
         )
     ),
     conditionalPanel(

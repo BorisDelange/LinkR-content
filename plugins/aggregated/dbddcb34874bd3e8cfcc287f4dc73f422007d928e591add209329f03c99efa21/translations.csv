@@ -40,3 +40,4 @@ confirm_deletion_title,Delete scripts,Supprimer des scripts
 confirm_deletion_subtext,Do you want to delete these scripts ?,Confirmer la suppression de ces scripts ?
 script_deleted,Script(s) deleted,Script(s) supprimé(s)
 plot_width,Plot width (%),Largeur de la figure (%)
+run_code_at_script_launch,Run code at script launch,Exécuter le code au lancement du script

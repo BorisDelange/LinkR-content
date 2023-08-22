@@ -12,7 +12,7 @@ m$reload_dt_%widget_id% <- Sys.time()
 dropdowns <- c("plot_function", "plot_theme", "bins_type", "x_variable", "y_variable", "colour_pal", "group_by", "group_by_type", "summarize_fct")
 textfields <- c("x_label", "y_label")
 spin_buttons <- c("num_of_bins", "bin_width", "group_by_num")
-toggle_inputs <- "group_data"
+toggle_inputs <- c("group_data", "run_code_at_script_launch")
 colour_inputs <- "colour"
 ace_inputs <- "code"
 inputs <- c(dropdowns, textfields, spin_buttons, toggle_inputs, colour_inputs, ace_inputs)
@@ -35,6 +35,7 @@ default_values$group_by_num <- 4L
 default_values$group_data <- FALSE
 default_values$colour <- "#E41A1C"
 default_values$code <- ""
+default_values$run_code_at_script_launch <- FALSE
 
 # -------------
 # --- Plot ----
@@ -50,7 +51,24 @@ shiny.fluent::updateDropdown.shinyInput(session, "y_variable_%widget_id%", optio
 # Render plot the first time the widget is launched
 observeEvent(input$plot_function_%widget_id%, {
     %req%
-    shinyjs::delay(1000, shinyjs::click("show_%widget_id%"))
+    
+    # Initiate variables div
+    shinyjs::show("variables_div_%widget_id%")
+    shinyjs::delay(500, shinyjs::hide("variables_div_%widget_id%"))
+    
+    # Get run_code_at_script_launch option value
+    plots <- widget_options %>% dplyr::filter(name == "script") %>% dplyr::select(id = value_num, name = value)
+    selected_script <- NULL
+    selected_script_result <- widget_options %>% dplyr::filter(name == "selected_script")
+    if (nrow(selected_script_result) > 0) if ((selected_script_result %>% dplyr::pull(value_num)) %in% plots$id) selected_script <- selected_script_result %>% dplyr::pull(value_num)
+    
+    run_code_at_script_launch <- FALSE
+    
+    if (length(selected_script) > 0) run_code_at_script_launch <- widget_options %>% dplyr::filter(link_id == selected_script, name == "run_code_at_script_launch") %>% dplyr::pull(value) %>% as.logical()
+    
+    # We put an extra delay (2000 ms), cause the 500 ms delay in observeEvent(input$script_choice_%widget_id%, __) is not enough to load all UI elements
+    # This is not a problem when we run script code
+    if (!run_code_at_script_launch) shinyjs::delay(2000, shinyjs::click("show_%widget_id%"))
 }, once = TRUE)
 
 # Render plot from "plot" tab
@@ -81,10 +99,10 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
     # At each step of the code, we put the code in the code variable, for the shinyAce code editor (tab "Code")
     
     # If pivot item has not been clicked, input variables are not initiated
-    if (length(isolate(input$colour_%widget_id%)) == 0){
-        shinyjs::show("variables_div_%widget_id%")
-        shinyjs::delay(500, shinyjs::hide("variables_div_%widget_id%"))
-    }
+    #if (length(isolate(input$colour_%widget_id%)) == 0){
+    #    shinyjs::show("variables_div_%widget_id%")
+    #    shinyjs::delay(500, shinyjs::hide("variables_div_%widget_id%"))
+    #}
     
     req(length(isolate(input$colour_%widget_id%)) > 0)
     
@@ -377,7 +395,14 @@ observeEvent(input$generate_code_%widget_id%, {
 })
 
 # Render plot from "code" tab
+
 observeEvent(input$run_code_%widget_id%, {
+    %req%
+    m$run_code_%widget_id% <- input$code_%widget_id%
+    m$run_code_trigger_%widget_id% <- Sys.time()
+})
+
+observeEvent(m$run_code_trigger_%widget_id%, {
     %req%
     
     # Go to plot tab
@@ -386,9 +411,11 @@ observeEvent(input$run_code_%widget_id%, {
     # Render plot
     output$plot_output_%widget_id% <- renderPlot({
         %req%
-        eval(parse(text = input$code_%widget_id%))
+        eval(parse(text = m$run_code_%widget_id%))
     })
 })
+
+
 
 # ---------------
 # --- Scripts ---
@@ -446,10 +473,11 @@ observeEvent(input$script_choice_%widget_id%, {
     
     widget_options <- m$widget_options_%widget_id% %>% dplyr::filter(link_id == input$script_choice_%widget_id%)
     
+    run_code_at_script_launch <- FALSE
+    code <- ""
+    
     for (input_name in inputs){
         widget_option <- widget_options %>% dplyr::filter(name == input_name)
-        
-        if (input_name == "colour") print(widget_option)
         
         # Update inputs with saved values
         if (nrow(widget_option) > 0){
@@ -462,6 +490,9 @@ observeEvent(input$script_choice_%widget_id%, {
             if (input_name %in% toggle_inputs) shiny.fluent::updateToggle.shinyInput(session, paste0(input_name, "_%widget_id%"), value = as.logical(widget_option$value))
             if (input_name %in% colour_inputs) shiny.fluent::updateSwatchColorPicker.shinyInput(session, paste0(input_name, "_%widget_id%"), value = widget_option$value)
             if (input_name %in% ace_inputs) shinyAce::updateAceEditor(session, paste0(input_name, "_%widget_id%"), value = widget_option$value)
+            
+            if (input_name == "run_code_at_script_launch") run_code_at_script_launch <- as.logical(widget_option$value)
+            if (input_name == "code") code <- widget_option$value
         }
         if (nrow(widget_option) == 0){
             if (input_name %in% dropdowns) shiny.fluent::updateDropdown.shinyInput(session, paste0(input_name, "_%widget_id%"), value = default_values[[input_name]])
@@ -474,7 +505,11 @@ observeEvent(input$script_choice_%widget_id%, {
     }
     
     # Render this plot
-    shinyjs::click("show_%widget_id%")
+    if (run_code_at_script_launch){
+        m$run_code_%widget_id% <- code
+        m$run_code_trigger_%widget_id% <- Sys.time()
+    }
+    else shinyjs::delay(500, shinyjs::click("show_%widget_id%"))
     
     # Save that this script is selected
     sql <- glue::glue_sql("DELETE FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND name = 'selected_script'", .con = m$db)
