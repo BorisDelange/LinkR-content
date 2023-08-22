@@ -19,6 +19,29 @@ if (nrow(selected_script_result) > 0) if ((selected_script_result %>% dplyr::pul
     }
 }
 
+# aceEditor div : show editor if user has access to the console
+ace_editor_div <- div(br(), shiny.fluent::MessageBar(i18np$t("unauthorized_access_to_console"), messageBarType = 5), br())
+if (length(m$user_accesses) > 0) if ("data_console" %in% m$user_accesses) ace_editor_div <- div(
+    div(
+        shinyAce::aceEditor(
+            ns("script_code_%widget_id%"), "", mode = selected_script_type, value = selected_script_code,
+                code_hotkeys = list(
+                    "r", list(
+                      run_selection = list(win = "CTRL-ENTER", mac = "CTRL-ENTER|CMD-ENTER"),
+                      run_all = list(win = "CTRL-SHIFT-ENTER", mac = "CTRL-SHIFT-ENTER|CMD-SHIFT-ENTER"),
+                      save = list(win = "CTRL-S", mac = "CTRL-S|CMD-S")
+                    )
+                ),
+                autoScrollEditorIntoView = TRUE, minLines = 30, maxLines = 1000
+        ), 
+    style = "width: 100%;"),
+    shiny.fluent::Stack(
+        horizontal = TRUE, tokens = list(childrenGap = 10),
+        shiny.fluent::PrimaryButton.shinyInput(ns("run_code_%widget_id%"), i18n$t("run_code")),
+        shiny.fluent::DefaultButton.shinyInput(ns("save_code_%widget_id%"), i18n$t("save"))
+    ), br()
+)
+
 tagList(
     shiny.fluent::reactOutput(ns("delete_confirm_%widget_id%")),
     shiny.fluent::Pivot(
@@ -43,22 +66,7 @@ tagList(
                 value = selected_script_type_choicegroup
             )
         ),
-        div(shinyAce::aceEditor(
-            ns("script_code_%widget_id%"), "", mode = selected_script_type, value = selected_script_code,
-                code_hotkeys = list(
-                    "r", list(
-                      run_selection = list(win = "CTRL-ENTER", mac = "CTRL-ENTER|CMD-ENTER"),
-                      run_all = list(win = "CTRL-SHIFT-ENTER", mac = "CTRL-SHIFT-ENTER|CMD-SHIFT-ENTER"),
-                      save = list(win = "CTRL-S", mac = "CTRL-S|CMD-S")
-                    )
-                ),
-                autoScrollEditorIntoView = TRUE, minLines = 30, maxLines = 1000
-            ), style = "width: 100%;"),
-        shiny.fluent::Stack(
-            horizontal = TRUE, tokens = list(childrenGap = 10),
-            shiny.fluent::PrimaryButton.shinyInput(ns("run_code_%widget_id%"), i18n$t("run_code")),
-            shiny.fluent::DefaultButton.shinyInput(ns("save_code_%widget_id%"), i18n$t("save"))
-        ), br(),
+        ace_editor_div,
         div(
             id = ns("r_script_result_div_%widget_id%"),
             verbatimTextOutput(ns("r_script_result_%widget_id%")), 
@@ -73,7 +81,12 @@ tagList(
         shinyjs::hidden(
             div(
                 id = ns("plot_script_result_div_%widget_id%"),
-                plotOutput(ns("plot_script_result_%widget_id%"))
+                div(id = ns("plot_div_%widget_id%"), plotOutput(ns("plot_script_result_%widget_id%")), style = "width:50%;"), br(),
+                shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 0),
+                    div(strong(i18np$t("plot_width"))),
+                    div(shiny.fluent::Slider.shinyInput(ns("plot_width_%widget_id%"), value = 50, min = 1, max = 100), style = "width:300px")
+                )
+                
             )
         )
     ),

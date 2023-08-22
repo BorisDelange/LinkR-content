@@ -4,11 +4,11 @@
     <app_version>0.2.0</app_version>
     <type>2</type>
     <unique_id>6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8</unique_id>
-    <version>0.0.1.9003</version>
+    <version>0.0.1.9004</version>
     <author>Boris Delange</author>
     <image>console_icon.png</image>
-    <name_fr>Gestionnaire de scripts</name_fr>
-    <name_en>Scripts manager</name_en>
+    <name_fr>Console R</name_fr>
+    <name_en>R console</name_en>
     <category_fr></category_fr>
     <category_en></category_en>
     <description_fr>## &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; Description
@@ -39,9 +39,9 @@ d$measurement %&gt;%
     dplyr::ungroup()
 ```
 
-&lt;img src="%plugin_folder%/r_code_1.png" width="1100" /&gt;
+&lt;img src="%plugin_folder%/r_code_1.png" width="1100" style="border:dashed 1px; padding:10px;"/&gt;
 
-&lt;img src="%plugin_folder%/r_code_2.png" width="900" /&gt;
+&lt;img src="%plugin_folder%/r_code_2.png" width="700" style="margin-left:-7px;"/&gt;
 
 ## &lt;i class="fa fa-file-code-o" style="color: steelblue;"&gt;&lt;/i&gt; RMarkdown
 
@@ -54,7 +54,7 @@ Pour plus d'informations sur RMarkdown, &lt;a href="https://rmarkdown.rstudio.co
 Exemple de code (le m&#xEA;me exemple que ci-dessus, en RMarkdown - un backslash a &#xE9;t&#xE9; ajout&#xE9; pour &#xE9;viter l'&#xE9;x&#xE9;cution du code) :
 
 ```
-# Script sur la fr&#xE9;quence cardiaque
+# Script on heart rate
 
 \```{r}
 d$measurement %&gt;%
@@ -65,14 +65,118 @@ d$measurement %&gt;%
 \```
 ```
 
-&lt;img src="%plugin_folder%/rmarkdown_1.png" width="1100" /&gt;
+&lt;img src="%plugin_folder%/rmarkdown_1.png" width="1100" style="border:dashed 1px; padding:10px;" /&gt;
 
-&lt;img src="%plugin_folder%/rmarkdown_2.png" width="1100" /&gt;
+&lt;img src="%plugin_folder%/rmarkdown_2.png" width="900" style="border:dashed 1px; padding:10px;" /&gt;
 
-## &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; Figure</description_fr>
-    <description_en></description_en>
+## &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; Figure
+
+Vous pouvez **cr&#xE9;er des figures**, par exemple avec la librairie `ggplot2`.
+
+Voici un exemple de code :
+
+```
+# A list containing the data for the plot
+data &lt;- list()
+
+# Filter data
+data$x &lt;- d$measurement %&gt;% dplyr::filter(measurement_concept_id == 3027018)
+
+# Create ggplot2 plot
+data$x %&gt;%
+    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+    ggplot2::geom_histogram(bins = 50, fill = "#377EB8", color = "#FFFFFF") +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(x = "Heart rate (bpm)", y = "")
+```
+
+&lt;img src="%plugin_folder%/r_plot_1.png" width="750" style="border:dashed 1px; padding:10px;" /&gt;
+
+&lt;img src="%plugin_folder%/r_plot_2.png" width="700" style="border:dashed 1px; padding:10px;" /&gt;</description_fr>
+    <description_en>## &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; Description
+
+This plugin allows you to **execute code** in the R console and **save your code as scripts**.
+
+## &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; Scripts management
+
+Go to the "Scripts management" tab to **add, delete, or rename scripts**.
+
+A script is a **text file containing code**.
+
+Once a script is created, you can **edit** it in the "Script" tab and **execute the code**.
+
+## &lt;i class="fa fa-code" style="color: steelblue;"&gt;&lt;/i&gt; R code
+
+Write **R code** and execute it: the **result returned by the console** will appear below the text editor.
+
+To know the **data model** used by the application, click on the help button (question mark at the top right of the page) when you are on the "Data / Access Data" page.
+
+Example code (get the min, max, and average heart rate of our patients):
+
+```
+d$measurement %&gt;%
+    dplyr::filter(measurement_concept_id == 3027018) %&gt;%
+    dplyr::group_by(person_id) %&gt;%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
+    dplyr::ungroup()
+```
+
+&lt;img src="%plugin_folder%/r_code_1.png" width="1100" style="border:dashed 1px; padding:10px;"/&gt;
+
+&lt;img src="%plugin_folder%/r_code_2.png" width="700" style="margin-left:-7px;"/&gt;
+
+## &lt;i class="fa fa-file-code-o" style="color: steelblue;"&gt;&lt;/i&gt; RMarkdown
+
+You can also write code in **Rmarkdown**.
+
+This is **Markdown** to which you can add **R code**.
+
+For more information on RMarkdown, &lt;a href="https://rmarkdown.rstudio.com/lesson-2.html" target="_blank"&gt;visit their site&lt;/a&gt;.
+
+Example code (the same example as above, in RMarkdown - a backslash has been added to prevent code execution):
+
+```
+# Script on heart rate
+
+\```{r}
+d$measurement %&gt;%
+dplyr::filter(measurement_concept_id == 3027018) %&gt;%
+dplyr::group_by(person_id) %&gt;%
+dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
+dplyr::ungroup()
+\```
+```
+
+&lt;img src="%plugin_folder%/rmarkdown_1.png" width="1100" style="border:dashed 1px; padding:10px;" /&gt;
+
+&lt;img src="%plugin_folder%/rmarkdown_2.png" width="900" style="border:dashed 1px; padding:10px;" /&gt;
+
+## &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; Figure
+
+You can **create figures**, for example with the `ggplot2` library.
+
+Here's an example of code:
+
+```
+# A list containing the data for the plot
+data &lt;- list()
+
+# Filter data
+data$x &lt;- d$measurement %&gt;% dplyr::filter(measurement_concept_id == 3027018)
+
+# Create ggplot2 plot
+data$x %&gt;%
+    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+    ggplot2::geom_histogram(bins = 50, fill = "#377EB8", color = "#FFFFFF") +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(x = "Heart rate (bpm)", y = "")
+```
+
+&lt;img src="%plugin_folder%/r_plot_1.png" width="750" style="border:dashed 1px; padding:10px;" /&gt;
+
+&lt;img src="%plugin_folder%/r_plot_2.png" width="700" style="border:dashed 1px; padding:10px;" /&gt;</description_en>
     <creation_datetime>2023-08-07 20:11:14</creation_datetime>
-    <update_datetime>2023-08-15 23:09:53</update_datetime>
-    <images>console_icon.png;;;r_code_1.png;;;r_code_2.png;;;rmarkdown_1.png;;;rmarkdown_2.png</images>
+    <update_datetime>2023-08-22 14:24:32</update_datetime>
+    <images>console_icon.png;;;r_code_1.png;;;r_code_2.png;;;r_plot_1.png;;;r_plot_2.png;;;rmarkdown_1.png;;;rmarkdown_2.png</images>
   </plugin>
 </plugins>
