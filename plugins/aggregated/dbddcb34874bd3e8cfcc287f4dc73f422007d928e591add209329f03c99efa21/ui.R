@@ -19,7 +19,7 @@ palettes <- convert_tibble_to_list(data = tibble::tibble(pal = c("Set1", "Set2",
 dropdowns <- c("plot_function", "plot_theme", "bins_type", "x_variable", "y_variable", "colour_pal", "group_by", "group_by_type", "summarize_fct")
 textfields <- c("x_label", "y_label")
 spin_buttons <- c("num_of_bins", "bin_width", "group_by_num")
-toggle_inputs <- c("group_data", "run_code_at_script_launch")
+toggle_inputs <- c("group_data", "run_code_at_script_launch", "run_plot_at_script_launch")
 colour_inputs <- "colour"
 ace_inputs <- "code"
 inputs <- c(dropdowns, textfields, spin_buttons, toggle_inputs, colour_inputs, ace_inputs)
@@ -42,6 +42,7 @@ default_values$group_by_num <- 4L
 default_values$group_data <- FALSE
 default_values$colour <- "#E41A1C"
 default_values$run_code_at_script_launch <- FALSE
+default_values$run_plot_at_script_launch <- FALSE
 default_values$code <- ""
 
 inputs_values <- list()
@@ -97,8 +98,8 @@ tagList(
             conditionalPanel(
                 condition = "input.current_tab_%widget_id% == 'plot_%widget_id%' || input.current_tab_%widget_id% == null", ns = ns,
                 shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                    shiny.fluent::Toggle.shinyInput(ns("hide_params_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
-                    div(class = "toggle_title", i18np$t("hide_params"), style = "padding-top:5px;")
+                    shiny.fluent::Toggle.shinyInput(ns("run_plot_at_script_launch_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
+                    div(class = "toggle_title", i18np$t("run_plot_at_script_launch"), style = "padding-top:5px;")
                 )
             ),
             conditionalPanel(
@@ -122,9 +123,11 @@ tagList(
                         id = ns("plot_div_%widget_id%"), br(),
                         plotOutput(ns("plot_output_%widget_id%"))
                     ), br(),
-                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 0),
-                        div(strong(i18np$t("plot_width"))),
-                        div(shiny.fluent::Slider.shinyInput(ns("plot_width_%widget_id%"), value = 100, min = 0, max = 100), style = "width:300px")
+                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                        shiny.fluent::Toggle.shinyInput(ns("hide_params_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
+                        div(class = "toggle_title", i18np$t("hide_params"), style = "padding-top:5px;"),
+                        div(strong(i18np$t("plot_width")), style = "margin-top:6px;"),
+                        div(shiny.fluent::Slider.shinyInput(ns("plot_width_%widget_id%"), value = 100, min = 1, max = 100), style = "width:300px; margin-left:0px; padding-top:4px;")
                     )
                 ),
                 div(id = ns("split_layout_right_%widget_id%"),

@@ -4,7 +4,7 @@
     <app_version>0.2.0</app_version>
     <type>2</type>
     <unique_id>dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21</unique_id>
-    <version>0.0.1.9010</version>
+    <version>0.0.1.9012</version>
     <author>Boris Delange</author>
     <image>ggplot2.png</image>
     <name_fr>Figure (ggplot2)</name_fr>
@@ -16,6 +16,10 @@
 Ce plugin utilise la librairie R &lt;a href="https://ggplot2.tidyverse.org/" target="_blank"&gt;`ggplot2`&lt;/a&gt;, permettant de cr&#xE9;er des graphiques &#xE0; partir des donn&#xE9;es.
 
 ## &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; Utilisation
+
+&lt;details&gt;
+&lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
+Cliquez ici pour afficher / masquer le contenu&lt;/span&gt;&lt;/summary&gt;
 
 ### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; G&#xE9;rer les scripts
 
@@ -71,7 +75,13 @@ En cochant "**Ex&#xE9;cuter le code au lancement du script**", le **code** (ongl
 
 &lt;br /&gt;&lt;img src="%plugin_folder%/plot_code.png" width="750" style="border:dashed 1px; padding:10px;" /&gt;
 
+&lt;/details&gt;
+
 ## &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; Figures disponibles
+
+&lt;details open&gt;
+&lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
+Cliquez ici pour afficher / masquer le contenu&lt;/span&gt;&lt;/summary&gt;
 
 ### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Histogramme (geom_histogram)
 
@@ -95,7 +105,9 @@ Par d&#xE9;faut, uniquement les points ayant une **valeur &#xE0; un moment donn&
 Par exemple, si je choisis la pression art&#xE9;rielle systolique en x et la pression art&#xE9;rielle moyenne en y (tel que dans l'example),
 que j'ai une valeur de x tel jour &#xE0; 18:37:10 et une valeur de y le m&#xEA;me jour &#xE0; 18:37:11, le moment n'&#xE9;tant pas exactement le m&#xEA;me, il n'y aura pas de point correspondant sur la graphique.
 
-Pour contrer cela, il est possible de **grouper les donn&#xE9;es**, par patient ou par moment (cf paragraphe Utilisation).</description_fr>
+Pour contrer cela, il est possible de **grouper les donn&#xE9;es**, par patient ou par moment (cf paragraphe Utilisation).
+
+&lt;/details&gt;</description_fr>
     <description_en>## &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; Description
 
 This plugin uses the R library &lt;a href="https://ggplot2.tidyverse.org/" target="_blank"&gt;`ggplot2`&lt;/a&gt;, allowing the creation of plots from data.
@@ -182,7 +194,7 @@ For instance, if I choose systolic blood pressure for x and mean arterial pressu
 To counter this, it is possible to **group data**, by patient or by time (see Usage section).
 </description_en>
     <creation_datetime>2023-06-28 22:01:19</creation_datetime>
-    <update_datetime>2023-08-22 11:35:39</update_datetime>
+    <update_datetime>2023-08-23 10:19:16</update_datetime>
     <images>geom_histogram.png;;;geom_point.png;;;ggplot2.png;;;plot_code.png;;;plot_settings.png;;;scripts_management.png</images>
   </plugin>
 </plugins>
