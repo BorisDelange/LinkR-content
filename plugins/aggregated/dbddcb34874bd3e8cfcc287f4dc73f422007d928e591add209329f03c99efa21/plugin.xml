@@ -59,6 +59,8 @@ Par exemple :
 - grouper les donn&#xE9;es par **patient** en choisissant la fonction **"maximum"** : la valeur maximale du param&#xE8;tre, tous s&#xE9;jours confondus, sera retenue pour chaque patient
 - grouper les donn&#xE9;es par **4 heures** en choisissant la fonction **"moyenne"** : la valeur maximale sera retenue sur chaque intervalle de 4 heures, pour chaque patient (donc plusieurs donn&#xE9;es par patient)
 
+En cochant "Afficher la figure au lancement du script", la **figure** sera **affich&#xE9;e au chargement au script**.
+
 &lt;br /&gt;&lt;img src="%plugin_folder%/plot_settings.png" width="950" style="border:dashed 1px; padding:10px;" /&gt;
 
 ### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Afficher le code
@@ -71,7 +73,7 @@ Si vous cliquez de nouveau sur **G&#xE9;n&#xE9;rer le code**, votre code sera su
 
 Cliquez sur "**Ex&#xE9;cuter**" pour afficher la figure correspond au code.
 
-En cochant "**Ex&#xE9;cuter le code au lancement du script**", le **code** (onglet "Code") plut&#xF4;t que les param&#xE8;tres de la figure (onglet "Figure") sera **utilis&#xE9; au chargement au script**.
+En cochant "Ex&#xE9;cuter le code au lancement du script", le **code** sera **ex&#xE9;cut&#xE9; au chargement au script**.
 
 &lt;br /&gt;&lt;img src="%plugin_folder%/plot_code.png" width="750" style="border:dashed 1px; padding:10px;" /&gt;
 
@@ -116,6 +118,10 @@ This plugin uses the R library &lt;a href="https://ggplot2.tidyverse.org/" targe
 
 ### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Manage Scripts
 
+&lt;details&gt;
+&lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
+Click here to show / hide content&lt;/span&gt;&lt;/summary&gt;
+
 In order to **save multiple plots** to a single widget, you can **create scripts** from the "Scripts management" tab.
 
 You can also **rename** and **delete** scripts from this tab.
@@ -152,6 +158,8 @@ For example:
 - Group data by **patient** by selecting the **"maximum"** function: the maximum value of the parameter, across all stays, will be chosen for each patient.
 - Group data every **4 hours** by selecting the **"average"** function: the maximum value will be chosen for each 4-hour interval, for each patient (thus, multiple data points per patient).
 
+By checking "Show plot at script launch", the **plot** will be **displayed upon the script's loading**.
+
 &lt;br /&gt;&lt;img src="%plugin_folder%/plot_settings.png" width="950" style="border:dashed 1px; padding:10px;" /&gt;
 
 ### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Display the Code
@@ -164,11 +172,17 @@ If you click on **Generate Code** again, your code will be deleted and replaced 
 
 Click on "**Run code**" to display the plot corresponding to the code.
 
-By checking "**Run code at script launch**", the **code** (in the "Code" tab) rather than the plot parameters (in the "Plot" tab) will be used when loading the script.
+By checking "Run code at script launch", the **code** will be **executed upon the script's loading**.
 
 &lt;br /&gt;&lt;img src="%plugin_folder%/plot_code.png" width="750" style="border:dashed 1px; padding:10px;" /&gt;
 
+&lt;/details&gt;
+
 ## &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; Available Plots
+
+&lt;details open&gt;
+&lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
+Click here to show / hide content&lt;/span&gt;&lt;/summary&gt;
 
 ### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Histogram (geom_histogram)
 
@@ -192,9 +206,10 @@ By default, only points having a **value at a given moment** both for the **x va
 For instance, if I choose systolic blood pressure for x and mean arterial pressure for y (as in the example), and I have an x value on a certain day at 18:37:10 and a y value on the same day at 18:37:11, since the moments aren't exactly the same, there won't be a corresponding point on the graph.
 
 To counter this, it is possible to **group data**, by patient or by time (see Usage section).
-</description_en>
+
+&lt;/details&gt;</description_en>
     <creation_datetime>2023-06-28 22:01:19</creation_datetime>
-    <update_datetime>2023-08-23 10:19:16</update_datetime>
+    <update_datetime>2023-08-23 10:25:48</update_datetime>
     <images>geom_histogram.png;;;geom_point.png;;;ggplot2.png;;;plot_code.png;;;plot_settings.png;;;scripts_management.png</images>
   </plugin>
 </plugins>
