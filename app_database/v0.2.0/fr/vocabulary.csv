@@ -1,0 +1,9 @@
+id,vocabulary_id,vocabulary_name,vocabulary_reference,vocabulary_version,vocabulary_concept_id,data_source_id,display_order,creator_id,datetime,deleted
+1,MIMIC-IV,MIMIC-IV,,,,1,NA,1,2023-09-18 11:20:02,0
+2,LOINC,LOINC,,,,1,NA,1,2023-09-18 11:20:06,0
+3,RxNorm,RxNorm,,,,1,NA,1,2023-09-18 11:20:10,0
+4,Gender,OMOP Gender,,,,1,NA,1,2023-09-18 11:34:30,0
+5,CMS Place of Service,CMS Place of Service,,,,1,NA,1,2023-09-18 11:39:57,0
+6,SNOMED,SNOMED,,,,1,NA,1,2023-09-18 11:40:01,0
+7,NUCC,National Uniform Claim Committee Health Care Provider Taxonomy Code Set,,,,1,NA,1,2023-09-18 11:49:30,0
+8,Medicare Specialty,Medicare Specialty,,,,1,NA,1,2023-09-18 11:49:51,0
