@@ -14,7 +14,7 @@ m$reload_dt_%widget_id% <- Sys.time()
 # When script code is executed
 observeEvent(input$script_code_%widget_id%_run_selection, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$script_code_%widget_id%_run_selection"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$script_code_%widget_id%_run_selection"))
     if(!shinyAce::is.empty(input$script_code_%widget_id%_run_selection$selection)) m$script_final_code_%widget_id% <- input$script_code_%widget_id%_run_selection$selection
     else m$script_final_code_%widget_id% <- input$script_code_%widget_id%_run_selection$line
     
@@ -23,21 +23,21 @@ observeEvent(input$script_code_%widget_id%_run_selection, {
 
 observeEvent(input$script_code_%widget_id%_run_all, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$script_code_%widget_id%_run_all"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$script_code_%widget_id%_run_all"))
     m$script_final_code_%widget_id% <- input$script_code_%widget_id%
     m$script_code_trigger_%widget_id% <- Sys.time()
 })
 
 observeEvent(input$run_code_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$run_code_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_code_%widget_id%"))
     m$script_final_code_%widget_id% <- input$script_code_%widget_id%
     m$script_code_trigger_%widget_id% <- Sys.time()
 })
 
 observeEvent(m$script_code_trigger_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer m$script_code_trigger_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer m$script_code_trigger_%widget_id%"))
     
     divs <- c("r_script_result_div_%widget_id%", "rmarkdown_script_result_div_%widget_id%", "plot_script_result_div_%widget_id%")
     
@@ -52,7 +52,7 @@ observeEvent(m$script_code_trigger_%widget_id%, {
         
         output$r_script_result_%widget_id% <- renderText({
             %req%
-            if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - output$r_script_result_%widget_id%"))
+            if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - output$r_script_result_%widget_id%"))
             paste(captured_output, collapse = "\n")
         })
     }
@@ -79,7 +79,7 @@ observeEvent(m$script_code_trigger_%widget_id%, {
             knitr::knit(text = markdown_file, output = file, quiet = TRUE)
             
             output$rmarkdown_script_result_%widget_id% <- renderUI({
-                if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - output$rmarkdown_script_result_%widget_id%"))
+                if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - output$rmarkdown_script_result_%widget_id%"))
                 div(class = "markdown", withMathJax(includeMarkdown(file)))
             })
         }, error = function(e) "")
@@ -93,7 +93,7 @@ observeEvent(m$script_code_trigger_%widget_id%, {
         
         output$plot_script_result_%widget_id% <- renderPlot({
             %req%
-            if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - output$plot_script_result_%widget_id%"))
+            if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - output$plot_script_result_%widget_id%"))
             eval(parse(text = paste(code, collapse = "\n")))
         })
     }
@@ -102,19 +102,19 @@ observeEvent(m$script_code_trigger_%widget_id%, {
 # Save updates on current script
 observeEvent(input$script_code_%widget_id%_save, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$script_code_%widget_id%_save"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$script_code_%widget_id%_save"))
     m$save_code_trigger_%widget_id% <- Sys.time()
 })
 
 observeEvent(input$save_code_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$save_code_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$save_code_%widget_id%"))
     m$save_code_trigger_%widget_id% <- Sys.time()
 })
 
 observeEvent(m$save_code_trigger_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer m$save_code_trigger_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer m$save_code_trigger_%widget_id%"))
     
     req(input$script_choice_%widget_id%)
     
@@ -151,7 +151,7 @@ observeEvent(m$save_code_trigger_%widget_id%, {
 # Load a script
 observeEvent(input$script_choice_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$script_choice_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$script_choice_%widget_id%"))
     
     script_code <- m$widget_options_%widget_id% %>% dplyr::filter(name == "script_code" & link_id == input$script_choice_%widget_id%)
     script_type <- m$widget_options_%widget_id% %>% dplyr::filter(name == "script_type" & link_id == input$script_choice_%widget_id%)
@@ -183,7 +183,7 @@ observeEvent(input$script_choice_%widget_id%, {
 # Plot width
 observeEvent(input$plot_width_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$plot_width_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_width_%widget_id%"))
     
     shinyjs::runjs(glue::glue("$('#{id}-plot_div_%widget_id%').css('width', '{isolate(input$plot_width_%widget_id%)}%');")) %>% throttle(1000)
 })
@@ -198,7 +198,7 @@ m$delete_open_dialog_%widget_id% <- FALSE
 # Update scripts DT & dropdown
 observeEvent(m$reload_dt_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer m$reload_dt_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer m$reload_dt_%widget_id%"))
     
     # Reload DT
     
@@ -239,7 +239,7 @@ observeEvent(m$reload_dt_%widget_id%, {
 # Add a new script
 observeEvent(input$add_script_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$add_script_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$add_script_%widget_id%"))
     
     # Check if name is not empty
     empty_name <- TRUE
@@ -286,7 +286,7 @@ observeEvent(input$add_script_%widget_id%, {
 # Updates on scripts DT
 observeEvent(input$scripts_management_datatable_%widget_id%_cell_edit, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$scripts_management_datatable_%widget_id%_cell_edit"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_management_datatable_%widget_id%_cell_edit"))
     
     edit_info <- input$scripts_management_datatable_%widget_id%_cell_edit
     m$scripts_temp_%widget_id% <- DT::editData(m$scripts_temp_%widget_id%, edit_info, rownames = FALSE)
@@ -298,7 +298,7 @@ observeEvent(input$scripts_management_datatable_%widget_id%_cell_edit, {
 # Save updates on scripts
 observeEvent(input$save_scripts_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$save_scripts_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$save_scripts_%widget_id%"))
     
     # Check if there are no duplicates in names
     duplicates <- m$scripts_temp_%widget_id% %>% dplyr::mutate_at("name", tolower) %>% dplyr::group_by(name) %>% dplyr::summarize(n = dplyr::n()) %>% dplyr::filter(n > 1) %>% nrow() >= 1
@@ -340,7 +340,7 @@ observeEvent(input$save_scripts_%widget_id%, {
 ### Delete with trash icon
 observeEvent(input$deleted_pressed_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$deleted_pressed_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$deleted_pressed_%widget_id%"))
     
     # Reload datatable (to unselect rows)
     DT::replaceData(m$datatable_proxy_%widget_id%, m$scripts_datatable_temp_%widget_id%, resetPaging = FALSE, rownames = FALSE)
@@ -352,7 +352,7 @@ observeEvent(input$deleted_pressed_%widget_id%, {
 ### Delete with "delete selection" button
 observeEvent(input$delete_scripts_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$delete_scripts_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$delete_scripts_%widget_id%"))
     
     req(length(input$scripts_management_datatable_%widget_id%_rows_selected) > 0)
     m$delete_scripts_%widget_id% <- m$scripts_%widget_id%[input$scripts_management_datatable_%widget_id%_rows_selected, ] %>% dplyr::pull(id)
@@ -362,7 +362,7 @@ observeEvent(input$delete_scripts_%widget_id%, {
 ### reactOutput for deletion confirmation
 output$delete_confirm_%widget_id% <- shiny.fluent::renderReact({
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - output$delete_confirm_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - output$delete_confirm_%widget_id%"))
     
     shiny.fluent::Dialog(
         hidden = !m$delete_open_dialog_%widget_id%,
@@ -385,19 +385,19 @@ output$delete_confirm_%widget_id% <- shiny.fluent::renderReact({
 ### Close reactOutput
 observeEvent(input$scripts_hide_dialog_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$scripts_hide_dialog_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_hide_dialog_%widget_id%"))
     m$delete_open_dialog_%widget_id% <- FALSE
 })
 observeEvent(input$scripts_delete_canceled_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$scripts_delete_canceled_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_delete_canceled_%widget_id%"))
     m$delete_open_dialog_%widget_id% <- FALSE
 })
 
 ### Deletion confirmed
 observeEvent(input$scripts_delete_confirmed_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$scripts_delete_confirmed_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_delete_confirmed_%widget_id%"))
     
     m$delete_open_dialog_%widget_id% <- FALSE
     
@@ -425,7 +425,7 @@ observeEvent(input$scripts_delete_confirmed_%widget_id%, {
 # Change script type
 observeEvent(input$script_type_%widget_id%, {
     %req%
-    if (debug) print(paste0(Sys.time(), " - mod_", id, " - plugin_id = %plugin_id% - widget_id = %widget_id% - observer input$script_type_%widget_id%"))
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$script_type_%widget_id%"))
     
     if (input$script_type_%widget_id% == "rmarkdown") shinyAce::updateAceEditor(session, "script_code_%widget_id%", mode = "markdown")
     else shinyAce::updateAceEditor(session, "script_code_%widget_id%", mode = "r")
