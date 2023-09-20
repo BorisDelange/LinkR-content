@@ -52,6 +52,7 @@ shiny.fluent::updateDropdown.shinyInput(session, "y_variable_%widget_id%", optio
 # Render plot the first time the widget is launched
 observeEvent(input$plot_function_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_function_%widget_id%"))
     
     # Initiate variables div
     shinyjs::show("variables_div_%widget_id%")
@@ -79,9 +80,14 @@ observeEvent(input$plot_function_%widget_id%, {
 # Render plot from "plot" tab
 observeEvent(input$show_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$show_%widget_id%"))
     
     # Blank plot
-    output$plot_output_%widget_id% <- renderPlot(ggplot2::ggplot())
+    output$plot_output_%widget_id% <- renderPlot({
+        %req%
+        if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - output$plot_output_%widget_id%"))
+        ggplot2::ggplot()
+    })
     
     # Then load plot
     m$create_plot_type_%widget_id% <- "show_plot"
@@ -91,6 +97,7 @@ observeEvent(input$show_%widget_id%, {
 # Show or hide "Variables" tab
 observeEvent(input$plot_current_tab_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_current_tab_%widget_id%"))
     if (input$plot_current_tab_%widget_id% == "variables_%widget_id%") shinyjs::show("variables_div_%widget_id%")
     else shinyjs::hide("variables_div_%widget_id%")
 })
@@ -98,6 +105,7 @@ observeEvent(input$plot_current_tab_%widget_id%, {
 # Generate code and update aceEditor or render plot
 observeEvent(m$create_plot_trigger_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer m$create_plot_trigger_%widget_id%"))
     
     create_plot_type <- isolate(m$create_plot_type_%widget_id%)
     
@@ -121,8 +129,9 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
     variable$y <- tibble::tibble()
     
     # Get x & y variables in data
-    if (length(input$x_variable_%widget_id%) > 0) variable$x <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == input$x_variable_%widget_id%)
-    if (length(input$y_variable_%widget_id%) > 0) variable$y <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == input$y_variable_%widget_id%)
+    # For now, we do not include merged concepts
+    if (length(input$x_variable_%widget_id%) > 0) variable$x <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == input$x_variable_%widget_id%, is.na(relationship_id))
+    if (length(input$y_variable_%widget_id%) > 0) variable$y <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == input$y_variable_%widget_id%, is.na(relationship_id))
  
     code <- paste0(code, "\n# Filter data")
     sapply(c("x", "y"), function(var_name){
@@ -295,6 +304,7 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
     # Final object of ggplot2 figure
     if (create_plot_type == "show_plot") output$plot_output_%widget_id% <- renderPlot({
         %req%
+        if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - output$plot_output_%widget_id%"))
         eval(parse(text = code))
     })
 })
@@ -302,6 +312,7 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
 # Change SwatchColorPicker
 observeEvent(input$colour_pal_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$colour_pal_%widget_id%"))
 
     pal <- RColorBrewer::brewer.pal(n = 8, name = input$colour_pal_%widget_id%)
     pal_tibble <- tibble::tibble(name = pal)
@@ -318,6 +329,7 @@ observeEvent(input$colour_pal_%widget_id%, {
     
     output$colour_ui_%widget_id% <- renderUI({
         %req%
+        if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - output$colour_ui_%widget_id%"))
         shiny.fluent::SwatchColorPicker.shinyInput(ns("colour_%widget_id%"), colorCells = colorCells, columnCount = length(colorCells), value = value)
     })
 })
@@ -325,6 +337,7 @@ observeEvent(input$colour_pal_%widget_id%, {
 # Save widget parameters
 observeEvent(input$save_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$save_%widget_id%"))
     
     req(length(input$script_choice_%widget_id%) > 0)
 
@@ -370,6 +383,7 @@ observeEvent(input$save_%widget_id%, {
 # Hide parameters div
 observeEvent(input$hide_params_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$hide_params_%widget_id%"))
 
     if (input$hide_params_%widget_id%){
         shinyjs::hide("split_layout_right_%widget_id%")
@@ -384,17 +398,19 @@ observeEvent(input$hide_params_%widget_id%, {
 # Plot width
 observeEvent(input$plot_width_%widget_id%, {
     %req%
-    
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_width_%widget_id%"))
     shinyjs::runjs(glue::glue("$('#{id}-plot_div_%widget_id%').css('width', '{isolate(input$plot_width_%widget_id%)}%');")) %>% throttle(1000)
 })
 
 # Run plot / code at script launch
 observeEvent(input$run_plot_at_script_launch_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_plot_at_script_launch_%widget_id%"))
     if (input$run_plot_at_script_launch_%widget_id%) shiny.fluent::updateToggle.shinyInput(session, "run_code_at_script_launch_%widget_id%", value = FALSE)
 })
 observeEvent(input$run_code_at_script_launch_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_code_at_script_launch_%widget_id%"))
     if (input$run_code_at_script_launch_%widget_id%) shiny.fluent::updateToggle.shinyInput(session, "run_plot_at_script_launch_%widget_id%", value = FALSE)
 })
 
@@ -405,6 +421,7 @@ observeEvent(input$run_code_at_script_launch_%widget_id%, {
 # Generate code
 observeEvent(input$generate_code_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$generate_code_%widget_id%"))
     m$create_plot_type_%widget_id% <- "generate_code"
     m$create_plot_trigger_%widget_id% <- Sys.time()
 })
@@ -413,12 +430,14 @@ observeEvent(input$generate_code_%widget_id%, {
 
 observeEvent(input$run_code_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_code_%widget_id%"))
     m$run_code_%widget_id% <- input$code_%widget_id%
     m$run_code_trigger_%widget_id% <- Sys.time()
 })
 
 observeEvent(m$run_code_trigger_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer m$run_code_trigger_%widget_id%"))
     
     # Go to plot tab
     shinyjs::runjs(glue::glue("$('#{id}-pivot_%widget_id% button[name=\"{i18np$t('plot')}\"]').click();"))
@@ -426,6 +445,7 @@ observeEvent(m$run_code_trigger_%widget_id%, {
     # Render plot
     output$plot_output_%widget_id% <- renderPlot({
         %req%
+        if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - output$plot_output_%widget_id%"))
         eval(parse(text = m$run_code_%widget_id%))
     })
 })
@@ -437,6 +457,7 @@ observeEvent(m$run_code_trigger_%widget_id%, {
 # Add a new script
 observeEvent(input$add_script_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$add_script_%widget_id%"))
     
     # Check if name is not empty
     empty_name <- TRUE
@@ -483,6 +504,7 @@ observeEvent(input$add_script_%widget_id%, {
 # Load a script
 observeEvent(input$script_choice_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$script_choice_%widget_id%"))
     
     widget_options <- m$widget_options_%widget_id% %>% dplyr::filter(link_id == input$script_choice_%widget_id%)
     
@@ -547,6 +569,7 @@ m$delete_open_dialog_%widget_id% <- FALSE
 # Update scripts DT & dropdown
 observeEvent(m$reload_dt_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer m$reload_dt_%widget_id%"))
     
     # Reload DT
     
@@ -587,6 +610,7 @@ observeEvent(m$reload_dt_%widget_id%, {
 # Updates on scripts DT
 observeEvent(input$scripts_management_datatable_%widget_id%_cell_edit, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_management_datatable_%widget_id%_cell_edit"))
     
     edit_info <- input$scripts_management_datatable_%widget_id%_cell_edit
     m$scripts_temp_%widget_id% <- DT::editData(m$scripts_temp_%widget_id%, edit_info, rownames = FALSE)
@@ -598,6 +622,7 @@ observeEvent(input$scripts_management_datatable_%widget_id%_cell_edit, {
 # Save updates on scripts
 observeEvent(input$save_scripts_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$save_scripts_%widget_id%"))
     
     # Check if there are no duplicates in names
     duplicates <- m$scripts_temp_%widget_id% %>% dplyr::mutate_at("name", tolower) %>% dplyr::group_by(name) %>% dplyr::summarize(n = dplyr::n()) %>% dplyr::filter(n > 1) %>% nrow() >= 1
@@ -639,6 +664,7 @@ observeEvent(input$save_scripts_%widget_id%, {
 ### Delete with trash icon
 observeEvent(input$deleted_pressed_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$deleted_pressed_%widget_id%"))
     
     # Reload datatable (to unselect rows)
     DT::replaceData(m$datatable_proxy_%widget_id%, m$scripts_datatable_temp_%widget_id%, resetPaging = FALSE, rownames = FALSE)
@@ -650,6 +676,7 @@ observeEvent(input$deleted_pressed_%widget_id%, {
 ### Delete with "delete selection" button
 observeEvent(input$delete_scripts_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$delete_scripts_%widget_id%"))
     
     req(length(input$scripts_management_datatable_%widget_id%_rows_selected) > 0)
     m$delete_scripts_%widget_id% <- m$scripts_%widget_id%[input$scripts_management_datatable_%widget_id%_rows_selected, ] %>% dplyr::pull(id)
@@ -659,6 +686,7 @@ observeEvent(input$delete_scripts_%widget_id%, {
 ### reactOutput for deletion confirmation
 output$delete_confirm_%widget_id% <- shiny.fluent::renderReact({
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - output$delete_confirm_%widget_id%"))
     
     shiny.fluent::Dialog(
         hidden = !m$delete_open_dialog_%widget_id%,
@@ -681,16 +709,19 @@ output$delete_confirm_%widget_id% <- shiny.fluent::renderReact({
 ### Close reactOutput
 observeEvent(input$scripts_hide_dialog_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_hide_dialog_%widget_id%"))
     m$delete_open_dialog_%widget_id% <- FALSE
 })
 observeEvent(input$scripts_delete_canceled_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_delete_canceled_%widget_id%"))
     m$delete_open_dialog_%widget_id% <- FALSE
 })
 
 ### Deletion confirmed
 observeEvent(input$scripts_delete_confirmed_%widget_id%, {
     %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_delete_confirmed_%widget_id%"))
     
     m$delete_open_dialog_%widget_id% <- FALSE
     
