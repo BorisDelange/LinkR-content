@@ -138,13 +138,19 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
         if (nrow(variable[[var_name]]) > 0){
             variable[[var_name]]$domain_id <<- tolower(variable[[var_name]]$domain_id)
             if (variable[[var_name]]$domain_id %in% c("observation", "measurement")){
-                data[[var_name]] <<- d[[tolower(variable[[var_name]]$domain_id)]] %>% 
-                    dplyr::filter(get(paste0(tolower(variable[[var_name]]$domain_id), "_concept_id")) == variable[[var_name]]$concept_id_1)
+            
+                table_name <- tolower(variable[[var_name]]$domain_id)
+                concept_id <- variable[[var_name]]$concept_id_1
+                
+                if ("tbl_lazy" %in% class(d[[table_name]])) data[[var_name]] <<- d[[table_name]] %>% dplyr::filter(rlang::sym(paste0(table_name, "_concept_id")) == !!concept_id) %>% dplyr::collect()
+                else data[[var_name]] <<- d[[table_name]] %>% dplyr::filter(get(paste0(table_name, "_concept_id")) == !!concept_id)
                 
                 code <<- glue::glue(
                     "{code}\n",
                     "data${var_name} <- d${tolower(variable[[var_name]]$domain_id)} %>% ",
-                    "dplyr::filter({paste0(tolower(variable[[var_name]]$domain_id), '_concept_id')} == {variable[[var_name]]$concept_id_1})")
+                    "dplyr::filter({paste0(tolower(variable[[var_name]]$domain_id), '_concept_id')} == {variable[[var_name]]$concept_id_1}) %>% ",
+                    "dplyr::collect()"
+                )
             }
         }
     })
