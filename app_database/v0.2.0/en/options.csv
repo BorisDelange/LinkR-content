@@ -70,7 +70,7 @@ id,category,link_id,name,value,value_num,creator_id,datetime,deleted
 132,users_accesses,2,log,NA,1,1,2023-06-01 18:20:42,0
 133,users_accesses,2,all_users,NA,0,1,2023-06-01 18:20:42,0
 134,users_accesses,2,only_me,NA,1,1,2023-06-01 18:20:42,0
-135,last_db_save,NA,last_db_save,2023-09-18 12:18:28,NA,1,2023-09-18 12:18:28,0
+135,last_db_save,NA,last_db_save,2023-09-30 22:02:06,NA,1,2023-09-30 22:02:06,0
 142,study,1,users_allowed_read_group,everybody,1,1,2023-06-01 18:33:47,1
 144,study,1,version,0.0.1,NA,1,2023-06-01 18:33:47,1
 145,study,1,unique_id,18941d5908d0cc1a286f1b75fb44edae0a913bd457ad27fd28f4e34cbf172f18,NA,1,2023-06-01 18:33:47,1
@@ -268,182 +268,8 @@ id,category,link_id,name,value,value_num,creator_id,datetime,deleted
 403,users_accesses,1,log,NA,1,1,2023-09-05 16:47:18,0
 404,users_accesses,1,all_users,NA,1,1,2023-09-05 16:47:18,0
 405,users_accesses,1,only_me,NA,1,1,2023-09-05 16:47:18,0
-406,plugin,1,users_allowed_read_group,everybody,1,1,2023-09-18 11:26:29,0
-407,plugin,1,user_allowed_read,,1,1,2023-09-18 11:26:29,0
-408,plugin,1,version,0.0.1.9004,NA,1,2023-09-18 11:26:29,0
-409,plugin,1,unique_id,6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8,NA,1,2023-09-18 11:26:29,0
-410,plugin,1,author,Boris Delange,NA,1,2023-09-18 11:26:29,0
-411,plugin,1,image,console_icon.png,NA,1,2023-09-18 11:26:29,0
-412,plugin,1,description_fr,"## <i class=""fa fa-info-circle"" style=""color: steelblue;""></i> Description
-
-Ce plugin vous permet d''**exécuter du code** dans la console R et de **sauvegarder votre code sous forme de scripts**.
-
-## <i class=""fa fa-cogs"" style=""color: steelblue;""></i> Gestion des scripts
-
-Allez dans l''onglet ""Gestion des scripts"" pour **ajouter, supprimer ou renommer des scripts**.
-
-Un script est un **fichier texte contenant du code**.
-
-Une fois un script créé, vous pouvez l''**éditer** dans l''onglet ""Script"" et **exécuter le code**.
-
-## <i class=""fa fa-code"" style=""color: steelblue;""></i> Code R
-
-Ecrivez du **code en R** et exécutez-le : le **résultat retourné par la console** apparaîtra en-dessous de l''éditeur de texte.
-
-Pour connaître le **modèle de données** utilisé par l''application, cliquez sur le bouton d''aide (point d''interrogation en haut à droite de la page) lorsque vous êtes sur la page ""Données / Accéder aux données"".
-
-Exemple de code (obtenir le min, max et moyenne de la fréquence cardiaque chez nos patients) :
-
-```
-d$measurement %>%
-    dplyr::filter(measurement_concept_id == 3027018) %>%
-    dplyr::group_by(person_id) %>%
-    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
-    dplyr::ungroup()
-```
-
-<img src=""%plugin_folder%/r_code_1.png"" width=""1100"" style=""border:dashed 1px; padding:10px;""/>
-
-<img src=""%plugin_folder%/r_code_2.png"" width=""700"" style=""margin-left:-7px;""/>
-
-## <i class=""fa fa-file-code-o"" style=""color: steelblue;""></i> RMarkdown
-
-Vous pouvez également écrire du code en **Rmarkdown**.
-
-Il s''agit d''un **Markdown** auquel vous pouvez ajouter du **code R**.
-
-Pour plus d''informations sur RMarkdown, <a href=""https://rmarkdown.rstudio.com/lesson-2.html"" target=""_blank"">rendez-vous sur leur site</a>.
-
-Exemple de code (le même exemple que ci-dessus, en RMarkdown - un backslash a été ajouté pour éviter l''éxécution du code) :
-
-```
-# Script on heart rate
-
-\```{r}
-d$measurement %>%
-    dplyr::filter(measurement_concept_id == 3027018) %>%
-    dplyr::group_by(person_id) %>%
-    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
-    dplyr::ungroup()
-\```
-```
-
-<img src=""%plugin_folder%/rmarkdown_1.png"" width=""1100"" style=""border:dashed 1px; padding:10px;"" />
-
-<img src=""%plugin_folder%/rmarkdown_2.png"" width=""900"" style=""border:dashed 1px; padding:10px;"" />
-
-## <i class=""fa fa-bar-chart"" style=""color: steelblue;""></i> Figure
-
-Vous pouvez **créer des figures**, par exemple avec la librairie `ggplot2`.
-
-Voici un exemple de code :
-
-```
-# A list containing the data for the plot
-data <- list()
-
-# Filter data
-data$x <- d$measurement %>% dplyr::filter(measurement_concept_id == 3027018)
-
-# Create ggplot2 plot
-data$x %>%
-    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
-    ggplot2::geom_histogram(bins = 50, fill = ""#377EB8"", color = ""#FFFFFF"") +
-    ggplot2::theme_minimal() +
-    ggplot2::labs(x = ""Heart rate (bpm)"", y = """")
-```
-
-<img src=""%plugin_folder%/r_plot_1.png"" width=""750"" style=""border:dashed 1px; padding:10px;"" />
-
-<img src=""%plugin_folder%/r_plot_2.png"" width=""700"" style=""border:dashed 1px; padding:10px;"" />",NA,1,2023-09-18 11:26:29,0
-413,plugin,1,description_en,"## <i class=""fa fa-info-circle"" style=""color: steelblue;""></i> Description
-
-This plugin allows you to **execute code** in the R console and **save your code as scripts**.
-
-## <i class=""fa fa-cogs"" style=""color: steelblue;""></i> Scripts management
-
-Go to the ""Scripts management"" tab to **add, delete, or rename scripts**.
-
-A script is a **text file containing code**.
-
-Once a script is created, you can **edit** it in the ""Script"" tab and **execute the code**.
-
-## <i class=""fa fa-code"" style=""color: steelblue;""></i> R code
-
-Write **R code** and execute it: the **result returned by the console** will appear below the text editor.
-
-To know the **data model** used by the application, click on the help button (question mark at the top right of the page) when you are on the ""Data / Access Data"" page.
-
-Example code (get the min, max, and average heart rate of our patients):
-
-```
-d$measurement %>%
-    dplyr::filter(measurement_concept_id == 3027018) %>%
-    dplyr::group_by(person_id) %>%
-    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
-    dplyr::ungroup()
-```
-
-<img src=""%plugin_folder%/r_code_1.png"" width=""1100"" style=""border:dashed 1px; padding:10px;""/>
-
-<img src=""%plugin_folder%/r_code_2.png"" width=""700"" style=""margin-left:-7px;""/>
-
-## <i class=""fa fa-file-code-o"" style=""color: steelblue;""></i> RMarkdown
-
-You can also write code in **Rmarkdown**.
-
-This is **Markdown** to which you can add **R code**.
-
-For more information on RMarkdown, <a href=""https://rmarkdown.rstudio.com/lesson-2.html"" target=""_blank"">visit their site</a>.
-
-Example code (the same example as above, in RMarkdown - a backslash has been added to prevent code execution):
-
-```
-# Script on heart rate
-
-\```{r}
-d$measurement %>%
-dplyr::filter(measurement_concept_id == 3027018) %>%
-dplyr::group_by(person_id) %>%
-dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
-dplyr::ungroup()
-\```
-```
-
-<img src=""%plugin_folder%/rmarkdown_1.png"" width=""1100"" style=""border:dashed 1px; padding:10px;"" />
-
-<img src=""%plugin_folder%/rmarkdown_2.png"" width=""900"" style=""border:dashed 1px; padding:10px;"" />
-
-## <i class=""fa fa-bar-chart"" style=""color: steelblue;""></i> Figure
-
-You can **create figures**, for example with the `ggplot2` library.
-
-Here''s an example of code:
-
-```
-# A list containing the data for the plot
-data <- list()
-
-# Filter data
-data$x <- d$measurement %>% dplyr::filter(measurement_concept_id == 3027018)
-
-# Create ggplot2 plot
-data$x %>%
-    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
-    ggplot2::geom_histogram(bins = 50, fill = ""#377EB8"", color = ""#FFFFFF"") +
-    ggplot2::theme_minimal() +
-    ggplot2::labs(x = ""Heart rate (bpm)"", y = """")
-```
-
-<img src=""%plugin_folder%/r_plot_1.png"" width=""750"" style=""border:dashed 1px; padding:10px;"" />
-
-<img src=""%plugin_folder%/r_plot_2.png"" width=""700"" style=""border:dashed 1px; padding:10px;"" />",NA,1,2023-09-18 11:26:29,0
-414,plugin,1,category_fr,,NA,1,2023-09-18 11:26:29,0
-415,plugin,1,category_en,,NA,1,2023-09-18 11:26:29,0
-416,plugin,1,name_fr,Console R,NA,1,2023-09-18 11:26:29,0
-417,plugin,1,name_en,R console,NA,1,2023-09-18 11:26:29,0
 418,plugin,2,users_allowed_read_group,everybody,1,1,2023-09-18 11:26:34,1
-419,plugin,2,user_allowed_read,,1,1,2023-09-18 11:26:34,1
+419,plugin,2,user_allowed_read,NA,1,1,2023-09-18 11:26:34,1
 420,plugin,2,version,0.0.1.9012,NA,1,2023-09-18 11:26:34,1
 421,plugin,2,unique_id,dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21,NA,1,2023-09-18 11:26:34,1
 422,plugin,2,author,Boris Delange,NA,1,2023-09-18 11:26:34,1
@@ -645,7 +471,181 @@ For instance, if I choose systolic blood pressure for x and mean arterial pressu
 To counter this, it is possible to **group data**, by patient or by time (see Usage section).
 
 </details>",NA,1,2023-09-18 11:26:34,1
-426,plugin,2,category_fr,,NA,1,2023-09-18 11:26:34,1
-427,plugin,2,category_en,,NA,1,2023-09-18 11:26:34,1
+426,plugin,2,category_fr,NA,NA,1,2023-09-18 11:26:34,1
+427,plugin,2,category_en,NA,NA,1,2023-09-18 11:26:34,1
 428,plugin,2,name_fr,Figure (ggplot2),NA,1,2023-09-18 11:26:34,1
 429,plugin,2,name_en,Plot (ggplot2),NA,1,2023-09-18 11:26:34,1
+430,plugin,1,users_allowed_read_group,everybody,1,1,2023-09-30 21:42:15,0
+431,plugin,1,user_allowed_read,,1,1,2023-09-30 21:42:15,0
+432,plugin,1,version,0.0.1.9006,NA,1,2023-09-30 21:42:15,0
+433,plugin,1,unique_id,6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8,NA,1,2023-09-30 21:42:15,0
+434,plugin,1,author,Boris Delange,NA,1,2023-09-30 21:42:15,0
+435,plugin,1,image,console_icon.png,NA,1,2023-09-30 21:42:15,0
+436,plugin,1,description_fr,"## <i class=""fa fa-info-circle"" style=""color: steelblue;""></i> Description
+
+Ce plugin vous permet d''**exécuter du code** dans la console R et de **sauvegarder votre code sous forme de scripts**.
+
+## <i class=""fa fa-cogs"" style=""color: steelblue;""></i> Gestion des scripts
+
+Allez dans l''onglet ""Gestion des scripts"" pour **ajouter, supprimer ou renommer des scripts**.
+
+Un script est un **fichier texte contenant du code**.
+
+Une fois un script créé, vous pouvez l''**éditer** dans l''onglet ""Script"" et **exécuter le code**.
+
+## <i class=""fa fa-code"" style=""color: steelblue;""></i> Code R
+
+Ecrivez du **code en R** et exécutez-le : le **résultat retourné par la console** apparaîtra en-dessous de l''éditeur de texte.
+
+Pour connaître le **modèle de données** utilisé par l''application, cliquez sur le bouton d''aide (point d''interrogation en haut à droite de la page) lorsque vous êtes sur la page ""Données / Accéder aux données"".
+
+Exemple de code (obtenir le min, max et moyenne de la fréquence cardiaque chez nos patients) :
+
+```
+d$measurement %>%
+    dplyr::filter(measurement_concept_id == 3027018) %>%
+    dplyr::group_by(person_id) %>%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
+    dplyr::ungroup()
+```
+
+<img src=""%plugin_folder%/r_code_1.png"" width=""1100"" style=""border:dashed 1px; padding:10px;""/>
+
+<img src=""%plugin_folder%/r_code_2.png"" width=""700"" style=""margin-left:-7px;""/>
+
+## <i class=""fa fa-file-code-o"" style=""color: steelblue;""></i> RMarkdown
+
+Vous pouvez également écrire du code en **Rmarkdown**.
+
+Il s''agit d''un **Markdown** auquel vous pouvez ajouter du **code R**.
+
+Pour plus d''informations sur RMarkdown, <a href=""https://rmarkdown.rstudio.com/lesson-2.html"" target=""_blank"">rendez-vous sur leur site</a>.
+
+Exemple de code (le même exemple que ci-dessus, en RMarkdown - un backslash a été ajouté pour éviter l''éxécution du code) :
+
+```
+# Script on heart rate
+
+\```{r}
+d$measurement %>%
+    dplyr::filter(measurement_concept_id == 3027018) %>%
+    dplyr::group_by(person_id) %>%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
+    dplyr::ungroup()
+\```
+```
+
+<img src=""%plugin_folder%/rmarkdown_1.png"" width=""1100"" style=""border:dashed 1px; padding:10px;"" />
+
+<img src=""%plugin_folder%/rmarkdown_2.png"" width=""900"" style=""border:dashed 1px; padding:10px;"" />
+
+## <i class=""fa fa-bar-chart"" style=""color: steelblue;""></i> Figure
+
+Vous pouvez **créer des figures**, par exemple avec la librairie `ggplot2`.
+
+Voici un exemple de code :
+
+```
+# A list containing the data for the plot
+data <- list()
+
+# Filter data
+data$x <- d$measurement %>% dplyr::filter(measurement_concept_id == 3027018)
+
+# Create ggplot2 plot
+data$x %>%
+    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+    ggplot2::geom_histogram(bins = 50, fill = ""#377EB8"", color = ""#FFFFFF"") +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(x = ""Heart rate (bpm)"", y = """")
+```
+
+<img src=""%plugin_folder%/r_plot_1.png"" width=""750"" style=""border:dashed 1px; padding:10px;"" />
+
+<img src=""%plugin_folder%/r_plot_2.png"" width=""700"" style=""border:dashed 1px; padding:10px;"" />",NA,1,2023-09-30 21:42:15,0
+437,plugin,1,description_en,"## <i class=""fa fa-info-circle"" style=""color: steelblue;""></i> Description
+
+This plugin allows you to **execute code** in the R console and **save your code as scripts**.
+
+## <i class=""fa fa-cogs"" style=""color: steelblue;""></i> Scripts management
+
+Go to the ""Scripts management"" tab to **add, delete, or rename scripts**.
+
+A script is a **text file containing code**.
+
+Once a script is created, you can **edit** it in the ""Script"" tab and **execute the code**.
+
+## <i class=""fa fa-code"" style=""color: steelblue;""></i> R code
+
+Write **R code** and execute it: the **result returned by the console** will appear below the text editor.
+
+To know the **data model** used by the application, click on the help button (question mark at the top right of the page) when you are on the ""Data / Access Data"" page.
+
+Example code (get the min, max, and average heart rate of our patients):
+
+```
+d$measurement %>%
+    dplyr::filter(measurement_concept_id == 3027018) %>%
+    dplyr::group_by(person_id) %>%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
+    dplyr::ungroup()
+```
+
+<img src=""%plugin_folder%/r_code_1.png"" width=""1100"" style=""border:dashed 1px; padding:10px;""/>
+
+<img src=""%plugin_folder%/r_code_2.png"" width=""700"" style=""margin-left:-7px;""/>
+
+## <i class=""fa fa-file-code-o"" style=""color: steelblue;""></i> RMarkdown
+
+You can also write code in **Rmarkdown**.
+
+This is **Markdown** to which you can add **R code**.
+
+For more information on RMarkdown, <a href=""https://rmarkdown.rstudio.com/lesson-2.html"" target=""_blank"">visit their site</a>.
+
+Example code (the same example as above, in RMarkdown - a backslash has been added to prevent code execution):
+
+```
+# Script on heart rate
+
+\```{r}
+d$measurement %>%
+dplyr::filter(measurement_concept_id == 3027018) %>%
+dplyr::group_by(person_id) %>%
+dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
+dplyr::ungroup()
+\```
+```
+
+<img src=""%plugin_folder%/rmarkdown_1.png"" width=""1100"" style=""border:dashed 1px; padding:10px;"" />
+
+<img src=""%plugin_folder%/rmarkdown_2.png"" width=""900"" style=""border:dashed 1px; padding:10px;"" />
+
+## <i class=""fa fa-bar-chart"" style=""color: steelblue;""></i> Figure
+
+You can **create figures**, for example with the `ggplot2` library.
+
+Here''s an example of code:
+
+```
+# A list containing the data for the plot
+data <- list()
+
+# Filter data
+data$x <- d$measurement %>% dplyr::filter(measurement_concept_id == 3027018)
+
+# Create ggplot2 plot
+data$x %>%
+    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+    ggplot2::geom_histogram(bins = 50, fill = ""#377EB8"", color = ""#FFFFFF"") +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(x = ""Heart rate (bpm)"", y = """")
+```
+
+<img src=""%plugin_folder%/r_plot_1.png"" width=""750"" style=""border:dashed 1px; padding:10px;"" />
+
+<img src=""%plugin_folder%/r_plot_2.png"" width=""700"" style=""border:dashed 1px; padding:10px;"" />",NA,1,2023-09-30 21:42:15,0
+438,plugin,1,category_fr,,NA,1,2023-09-30 21:42:15,0
+439,plugin,1,category_en,,NA,1,2023-09-30 21:42:15,0
+440,plugin,1,name_fr,Console R,NA,1,2023-09-30 21:42:15,0
+441,plugin,1,name_en,R console,NA,1,2023-09-30 21:42:15,0

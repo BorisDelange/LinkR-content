@@ -18,7 +18,7 @@ d$measurement %>%
     dplyr::ungroup()
 ```",NA,NA,2023-09-18 12:11:46,0
 9,1,NA,2,NA,script_type,rmarkdown,NA,NA,2023-09-18 12:11:46,0
-11,1,NA,3,NA,script_code,"data <- list()
+17,1,NA,3,NA,script_code,"data <- list()
 
 data$x <- d$measurement %>% dplyr::filter(measurement_concept_id == 3027018)
 
@@ -26,6 +26,6 @@ data$x %>%
     ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
     ggplot2::geom_histogram(bins = 50, fill = ""#377EB8"", color = ""#FFFFFF"") +
     ggplot2::theme_minimal() +
-    ggplot2::labs(x = ""Heart rate (bpm)"", y = """")",NA,NA,2023-09-18 12:12:06,0
-12,1,NA,3,NA,script_type,plot,NA,NA,2023-09-18 12:12:06,0
-13,1,NA,NA,NA,selected_script,NA,3,NA,2023-09-18 12:18:10,0
+    ggplot2::labs(x = ""Heart rate (bpm)"", y = """")",NA,NA,2023-09-30 21:43:47,0
+18,1,NA,3,NA,script_type,plot,NA,NA,2023-09-30 21:43:47,0
+19,1,NA,NA,NA,selected_script,NA,3,NA,2023-09-30 22:01:09,0

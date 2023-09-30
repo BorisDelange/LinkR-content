@@ -1,3 +1,3 @@
 id,name,description,tab_group_id,parent_tab_id,display_order,creator_id,datetime,deleted
-1,Console,,5,NA,1,1,2023-09-18 12:00:10,0
-2,Hémodynamique,,5,NA,2,1,2023-09-18 12:00:17,1
+1,Console,NA,5,NA,1,1,2023-09-18 12:00:10,0
+2,Hémodynamique,NA,5,NA,2,1,2023-09-18 12:00:17,1
