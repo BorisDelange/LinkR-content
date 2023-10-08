@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<plugins>
+  <plugin>
+    <app_version>0.2.0</app_version>
+    <type>2</type>
+    <unique_id>43d7694a4d0212664a11df08d841581d73dadfc94f0fd36453f9514301deb506</unique_id>
+    <version>0.0.1.9000</version>
+    <author>Alan Turing</author>
+    <image></image>
+    <name_en>Plugin 5</name_en>
+    <name_fr>Plugin 5</name_fr>
+    <name_it>Plugin 5</name_it>
+    <category_en></category_en>
+    <category_fr></category_fr>
+    <category_it></category_it>
+    <description_en></description_en>
+    <description_fr></description_fr>
+    <description_it></description_it>
+    <creation_datetime>2023-10-08 20:28:15</creation_datetime>
+    <update_datetime>2023-10-08 20:28:15</update_datetime>
+    <images></images>
+  </plugin>
+</plugins>
