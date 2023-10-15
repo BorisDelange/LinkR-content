@@ -1,651 +1,190 @@
 id,category,link_id,name,value,value_num,creator_id,datetime,deleted
 1,remote_db,NA,connection_type,local,NA,NA,NA,0
 2,remote_db,NA,sql_lib,postgres,NA,NA,NA,0
-3,remote_db,NA,main_db_name,NA,NA,NA,NA,0
-4,remote_db,NA,public_db_name,NA,NA,NA,NA,0
-5,remote_db,NA,host,NA,NA,NA,NA,0
-6,remote_db,NA,port,NA,NA,NA,NA,0
-7,remote_db,NA,user,NA,NA,NA,NA,0
-8,remote_db,NA,password,NA,NA,NA,NA,0
-72,users_accesses,2,general_settings,NA,1,1,2023-06-01 18:20:42,0
-73,users_accesses,2,change_password_card,NA,1,1,2023-06-01 18:20:42,0
-74,users_accesses,2,app_db,NA,0,1,2023-06-01 18:20:42,0
-75,users_accesses,2,db_connection_infos_card,NA,0,1,2023-06-01 18:20:42,0
-76,users_accesses,2,db_datatable_card,NA,0,1,2023-06-01 18:20:42,0
-77,users_accesses,2,db_request_card,NA,0,1,2023-06-01 18:20:42,0
-78,users_accesses,2,db_save_card,NA,0,1,2023-06-01 18:20:42,0
-79,users_accesses,2,db_restore_card,NA,0,1,2023-06-01 18:20:42,0
-80,users_accesses,2,remote_git_repos,NA,0,1,2023-06-01 18:20:42,0
-81,users_accesses,2,git_add_repo_card,NA,0,1,2023-06-01 18:20:42,0
-82,users_accesses,2,git_repos_management_card,NA,0,1,2023-06-01 18:20:42,0
-83,users_accesses,2,users,NA,0,1,2023-06-01 18:20:42,0
-84,users_accesses,2,users_creation_card,NA,0,1,2023-06-01 18:20:42,0
-85,users_accesses,2,users_management_card,NA,0,1,2023-06-01 18:20:42,0
-86,users_accesses,2,users_accesses_management_card,NA,0,1,2023-06-01 18:20:42,0
-87,users_accesses,2,users_accesses_options_card,NA,0,1,2023-06-01 18:20:42,0
-88,users_accesses,2,users_statuses_management_card,NA,0,1,2023-06-01 18:20:42,0
-89,users_accesses,2,dev,NA,0,1,2023-06-01 18:20:42,0
-90,users_accesses,2,dev_edit_code_card,NA,0,1,2023-06-01 18:20:42,0
-91,users_accesses,2,dev_perf_monitoring_card,NA,0,1,2023-06-01 18:20:42,0
-92,users_accesses,2,data_sources,NA,0,1,2023-06-01 18:20:42,0
-93,users_accesses,2,data_sources_datatable_card,NA,0,1,2023-06-01 18:20:42,0
-94,users_accesses,2,datasets,NA,0,1,2023-06-01 18:20:42,0
-95,users_accesses,2,datasets_see_all_data,NA,0,1,2023-06-01 18:20:42,0
-96,users_accesses,2,datasets_datatable_card,NA,0,1,2023-06-01 18:20:42,0
-97,users_accesses,2,datasets_options_card,NA,0,1,2023-06-01 18:20:42,0
-98,users_accesses,2,datasets_edit_code_card,NA,0,1,2023-06-01 18:20:42,0
-99,users_accesses,2,studies,NA,1,1,2023-06-01 18:20:42,0
-100,users_accesses,2,studies_see_all_data,NA,0,1,2023-06-01 18:20:42,0
-101,users_accesses,2,studies_messages_card,NA,1,1,2023-06-01 18:20:42,0
-102,users_accesses,2,studies_description_card,NA,1,1,2023-06-01 18:20:42,0
-103,users_accesses,2,studies_datatable_card,NA,1,1,2023-06-01 18:20:42,0
-104,users_accesses,2,studies_options_card,NA,1,1,2023-06-01 18:20:42,0
-105,users_accesses,2,subsets,NA,1,1,2023-06-01 18:20:42,0
-106,users_accesses,2,subsets_datatable_card,NA,1,1,2023-06-01 18:20:42,0
-107,users_accesses,2,subsets_edit_code_card,NA,1,1,2023-06-01 18:20:42,0
-108,users_accesses,2,subsets_persons_card,NA,1,1,2023-06-01 18:20:42,0
-109,users_accesses,2,vocabularies,NA,1,1,2023-06-01 18:20:42,0
-110,users_accesses,2,vocabularies_concepts_card,NA,1,1,2023-06-01 18:20:42,0
-111,users_accesses,2,vocabularies_mapping_card,NA,1,1,2023-06-01 18:20:42,0
-112,users_accesses,2,vocabularies_datatable_card,NA,0,1,2023-06-01 18:20:42,0
-113,users_accesses,2,vocabularies_vocabularies_tables_datatable_card,NA,0,1,2023-06-01 18:20:42,0
-114,users_accesses,2,vocabularies_edit_code_card,NA,0,1,2023-06-01 18:20:42,0
-115,users_accesses,2,vocabularies_import_vocabulary_card,NA,0,1,2023-06-01 18:20:42,0
-116,users_accesses,2,plugins,NA,1,1,2023-06-01 18:20:42,0
-117,users_accesses,2,plugins_see_all_data,NA,0,1,2023-06-01 18:20:42,0
-118,users_accesses,2,all_plugins_card,NA,1,1,2023-06-01 18:20:42,0
-119,users_accesses,2,plugins_datatable_card,NA,0,1,2023-06-01 18:20:42,0
-120,users_accesses,2,plugins_options_card,NA,0,1,2023-06-01 18:20:42,0
-121,users_accesses,2,plugins_edit_code_card,NA,0,1,2023-06-01 18:20:42,0
-122,users_accesses,2,import_plugin_card,NA,0,1,2023-06-01 18:20:42,0
-123,users_accesses,2,export_plugin_card,NA,0,1,2023-06-01 18:20:42,0
-124,users_accesses,2,scripts,NA,0,1,2023-06-01 18:20:42,0
-125,users_accesses,2,dataset_scripts_card,NA,0,1,2023-06-01 18:20:42,0
-126,users_accesses,2,all_scripts_card,NA,0,1,2023-06-01 18:20:42,0
-127,users_accesses,2,scripts_datatable_card,NA,0,1,2023-06-01 18:20:42,0
-128,users_accesses,2,scripts_edit_code_card,NA,0,1,2023-06-01 18:20:42,0
-129,users_accesses,2,scripts_options_card,NA,0,1,2023-06-01 18:20:42,0
-130,users_accesses,2,import_script_card,NA,0,1,2023-06-01 18:20:42,0
-131,users_accesses,2,export_script_card,NA,0,1,2023-06-01 18:20:42,0
-132,users_accesses,2,log,NA,1,1,2023-06-01 18:20:42,0
-133,users_accesses,2,all_users,NA,0,1,2023-06-01 18:20:42,0
-134,users_accesses,2,only_me,NA,1,1,2023-06-01 18:20:42,0
-135,last_db_save,NA,last_db_save,2023-09-30 22:02:06,NA,1,2023-09-30 22:02:06,0
-142,study,1,users_allowed_read_group,everybody,1,1,2023-06-01 18:33:47,1
-144,study,1,version,0.0.1,NA,1,2023-06-01 18:33:47,1
-145,study,1,unique_id,18941d5908d0cc1a286f1b75fb44edae0a913bd457ad27fd28f4e34cbf172f18,NA,1,2023-06-01 18:33:47,1
-146,study,1,author,Alan Turing,NA,1,2023-06-01 18:33:47,1
-147,study,1,description_fr,NA,NA,1,2023-06-01 18:33:47,1
-148,study,1,description_en,NA,NA,1,2023-06-01 18:33:47,1
-149,study,1,category_fr,NA,NA,1,2023-06-01 18:33:47,1
-150,study,1,category_en,NA,NA,1,2023-06-01 18:33:47,1
-151,study,1,name_fr,Prédiction de la mortalité,NA,1,2023-06-01 18:33:47,1
-152,study,1,name_en,Mortality prediction,NA,1,2023-06-01 18:33:47,1
-153,study,1,user_allowed_read,NA,NA,1,2023-06-01 18:33:59,1
-154,last_db_restore,NA,last_db_restore,2023-06-01 18:48:25,NA,1,2023-06-01 18:48:25,0
-155,dataset,1,users_allowed_read_group,everybody,1,1,2023-06-01 18:49:56,1
-156,dataset,1,user_allowed_read,NA,1,1,2023-06-01 18:49:56,1
-157,dataset,1,show_only_aggregated_data,NA,0,1,2023-06-01 18:49:56,1
-158,dataset,1,activate_scripts_cache,NA,1,1,2023-06-01 18:49:56,1
-159,dataset,1,unique_id,62afbdc139a7426fb4e78026374710add88a0037c89b0410144febdd09e07e96,NA,1,2023-06-01 18:49:56,1
-160,dataset,1,omop_version,5.3,NA,1,2023-06-01 18:49:56,1
-161,study,2,users_allowed_read_group,everybody,1,1,2023-06-14 20:46:20,1
-163,study,2,version,0.0.1,NA,1,2023-06-14 20:46:20,1
-164,study,2,unique_id,d1c37e5daa58d8b250f1c4a5372e6382016f3da40160859c996ec59a5e1f9314,NA,1,2023-06-14 20:46:20,1
-165,study,2,author,Alan Turing,NA,1,2023-06-14 20:46:20,1
-166,study,2,description_fr,NA,NA,1,2023-06-14 20:46:20,1
-167,study,2,description_en,NA,NA,1,2023-06-14 20:46:20,1
-168,study,2,category_fr,NA,NA,1,2023-06-14 20:46:20,1
-169,study,2,category_en,NA,NA,1,2023-06-14 20:46:20,1
-170,study,2,name_fr,Prédiciton de la mortalité,NA,1,2023-06-14 20:46:20,1
-171,study,2,name_en,Mortality prediction,NA,1,2023-06-14 20:46:20,1
-172,study,2,user_allowed_read,NA,NA,1,2023-06-14 20:46:33,1
-236,users_accesses,2,general_settings,NA,1,1,2023-06-23 17:11:58,0
-237,users_accesses,2,change_password_card,NA,1,1,2023-06-23 17:11:58,0
-238,users_accesses,2,app_db,NA,0,1,2023-06-23 17:11:58,0
-239,users_accesses,2,db_connection_infos_card,NA,0,1,2023-06-23 17:11:58,0
-240,users_accesses,2,db_datatable_card,NA,0,1,2023-06-23 17:11:58,0
-241,users_accesses,2,db_request_card,NA,0,1,2023-06-23 17:11:58,0
-242,users_accesses,2,db_save_card,NA,0,1,2023-06-23 17:11:58,0
-243,users_accesses,2,db_restore_card,NA,0,1,2023-06-23 17:11:58,0
-244,users_accesses,2,remote_git_repos,NA,0,1,2023-06-23 17:11:58,0
-245,users_accesses,2,git_add_repo_card,NA,0,1,2023-06-23 17:11:58,0
-246,users_accesses,2,git_repos_management_card,NA,0,1,2023-06-23 17:11:58,0
-247,users_accesses,2,users,NA,0,1,2023-06-23 17:11:58,0
-248,users_accesses,2,users_creation_card,NA,0,1,2023-06-23 17:11:58,0
-249,users_accesses,2,users_management_card,NA,0,1,2023-06-23 17:11:58,0
-250,users_accesses,2,users_accesses_management_card,NA,0,1,2023-06-23 17:11:58,0
-251,users_accesses,2,users_accesses_options_card,NA,0,1,2023-06-23 17:11:58,0
-252,users_accesses,2,users_statuses_management_card,NA,0,1,2023-06-23 17:11:58,0
-253,users_accesses,2,dev,NA,0,1,2023-06-23 17:11:58,0
-254,users_accesses,2,dev_edit_code_card,NA,0,1,2023-06-23 17:11:58,0
-255,users_accesses,2,dev_perf_monitoring_card,NA,0,1,2023-06-23 17:11:58,0
-256,users_accesses,2,data_sources,NA,0,1,2023-06-23 17:11:58,0
-257,users_accesses,2,data_sources_datatable_card,NA,0,1,2023-06-23 17:11:58,0
-258,users_accesses,2,datasets,NA,0,1,2023-06-23 17:11:58,0
-259,users_accesses,2,datasets_see_all_data,NA,0,1,2023-06-23 17:11:58,0
-260,users_accesses,2,datasets_datatable_card,NA,0,1,2023-06-23 17:11:58,0
-261,users_accesses,2,datasets_options_card,NA,0,1,2023-06-23 17:11:58,0
-262,users_accesses,2,datasets_edit_code_card,NA,0,1,2023-06-23 17:11:58,0
-263,users_accesses,2,studies,NA,1,1,2023-06-23 17:11:58,0
-264,users_accesses,2,studies_see_all_data,NA,0,1,2023-06-23 17:11:58,0
-265,users_accesses,2,studies_datatable_card,NA,1,1,2023-06-23 17:11:58,0
-266,users_accesses,2,studies_options_card,NA,1,1,2023-06-23 17:11:58,0
-267,users_accesses,2,subsets,NA,1,1,2023-06-23 17:11:58,0
-268,users_accesses,2,subsets_datatable_card,NA,1,1,2023-06-23 17:11:58,0
-269,users_accesses,2,subsets_edit_code_card,NA,1,1,2023-06-23 17:11:58,0
-270,users_accesses,2,subsets_persons_card,NA,1,1,2023-06-23 17:11:58,0
-271,users_accesses,2,vocabularies,NA,1,1,2023-06-23 17:11:58,0
-272,users_accesses,2,vocabularies_concepts_card,NA,1,1,2023-06-23 17:11:58,0
-273,users_accesses,2,vocabularies_mapping_card,NA,1,1,2023-06-23 17:11:58,0
-274,users_accesses,2,vocabularies_datatable_card,NA,0,1,2023-06-23 17:11:58,0
-275,users_accesses,2,vocabularies_vocabularies_tables_datatable_card,NA,0,1,2023-06-23 17:11:58,0
-276,users_accesses,2,vocabularies_edit_code_card,NA,0,1,2023-06-23 17:11:58,0
-277,users_accesses,2,vocabularies_import_vocabulary_card,NA,0,1,2023-06-23 17:11:58,0
-278,users_accesses,2,messages,NA,0,1,2023-06-23 17:11:58,0
-279,users_accesses,2,study_messages_card,NA,0,1,2023-06-23 17:11:58,0
-280,users_accesses,2,plugins,NA,1,1,2023-06-23 17:11:58,0
-281,users_accesses,2,plugins_see_all_data,NA,0,1,2023-06-23 17:11:58,0
-282,users_accesses,2,all_plugins_card,NA,1,1,2023-06-23 17:11:58,0
-283,users_accesses,2,plugins_datatable_card,NA,0,1,2023-06-23 17:11:58,0
-284,users_accesses,2,plugins_options_card,NA,0,1,2023-06-23 17:11:58,0
-285,users_accesses,2,plugins_edit_code_card,NA,0,1,2023-06-23 17:11:58,0
-286,users_accesses,2,import_plugin_card,NA,0,1,2023-06-23 17:11:58,0
-287,users_accesses,2,export_plugin_card,NA,0,1,2023-06-23 17:11:58,0
-288,users_accesses,2,scripts,NA,0,1,2023-06-23 17:11:58,0
-289,users_accesses,2,dataset_scripts_card,NA,0,1,2023-06-23 17:11:58,0
-290,users_accesses,2,all_scripts_card,NA,0,1,2023-06-23 17:11:58,0
-291,users_accesses,2,scripts_datatable_card,NA,0,1,2023-06-23 17:11:58,0
-292,users_accesses,2,scripts_edit_code_card,NA,0,1,2023-06-23 17:11:58,0
-293,users_accesses,2,scripts_options_card,NA,0,1,2023-06-23 17:11:58,0
-294,users_accesses,2,import_script_card,NA,0,1,2023-06-23 17:11:58,0
-295,users_accesses,2,export_script_card,NA,0,1,2023-06-23 17:11:58,0
-296,users_accesses,2,log,NA,1,1,2023-06-23 17:11:58,0
-297,users_accesses,2,all_users,NA,0,1,2023-06-23 17:11:58,0
-298,users_accesses,2,only_me,NA,1,1,2023-06-23 17:11:58,0
-299,dataset,2,users_allowed_read_group,everybody,1,1,2023-06-23 17:17:31,0
-301,dataset,2,show_only_aggregated_data,NA,0,1,2023-06-23 17:17:31,0
-302,dataset,2,activate_scripts_cache,NA,1,1,2023-06-23 17:17:31,0
-303,dataset,2,unique_id,f0dd32814b6f43badb04d8d2d8b859267e11a3c356391764651709bf3a0d9daf,NA,1,2023-06-23 17:17:31,0
-304,dataset,2,omop_version,5.3,NA,1,2023-06-23 17:17:31,0
-305,dataset,2,description,NA,NA,1,2023-06-23 17:17:31,0
-306,dataset,2,user_allowed_read,NA,NA,1,2023-06-23 17:17:56,0
-307,study,3,users_allowed_read_group,everybody,1,1,2023-06-23 17:18:09,0
-308,study,3,user_allowed_read,NA,1,1,2023-06-23 17:18:09,0
-309,study,3,version,0.0.1,NA,1,2023-06-23 17:18:09,0
-310,study,3,unique_id,cbc82293cecf645121798b812fc754909cd1c486a4a0de5715042fe835d75012,NA,1,2023-06-23 17:18:09,0
-311,study,3,author,Alan Turing,NA,1,2023-06-23 17:18:09,0
-312,study,3,description_fr,NA,NA,1,2023-06-23 17:18:09,0
-313,study,3,description_en,NA,NA,1,2023-06-23 17:18:09,0
-314,study,3,category_fr,NA,NA,1,2023-06-23 17:18:09,0
-315,study,3,category_en,NA,NA,1,2023-06-23 17:18:09,0
-316,study,3,name_fr,Mortality prediction,NA,1,2023-06-23 17:18:09,0
-317,study,3,name_en,Mortality prediction,NA,1,2023-06-23 17:18:09,0
-318,study,4,users_allowed_read_group,everybody,1,1,2023-06-23 17:23:37,1
-319,study,4,user_allowed_read,NA,1,1,2023-06-23 17:23:37,1
-320,study,4,version,0.0.1,NA,1,2023-06-23 17:23:37,1
-321,study,4,unique_id,d476cb517ded90d46c64e5040a3151c7b5604a62a68d91e5b95fdd80b821cd80,NA,1,2023-06-23 17:23:37,1
-322,study,4,author,Alan Turing,NA,1,2023-06-23 17:23:37,1
-323,study,4,description_fr,NA,NA,1,2023-06-23 17:23:37,1
-324,study,4,description_en,NA,NA,1,2023-06-23 17:23:37,1
-325,study,4,category_fr,NA,NA,1,2023-06-23 17:23:37,1
-326,study,4,category_en,NA,NA,1,2023-06-23 17:23:37,1
-327,study,4,name_fr,Mortality prediction,NA,1,2023-06-23 17:23:37,1
-328,study,4,name_en,Mortality prediction,NA,1,2023-06-23 17:23:37,1
-329,study,5,users_allowed_read_group,everybody,1,1,2023-07-03 19:26:58,0
-331,study,5,version,0.0.1,NA,1,2023-07-03 19:26:58,0
-332,study,5,unique_id,1affaa05ec12c677ccb2c15ef8971fba4cc1c770e2e9d7acbeea53ca228cc84b,NA,1,2023-07-03 19:26:58,0
-333,study,5,author,Alan Turing,NA,1,2023-07-03 19:26:58,0
-334,study,5,description_fr,NA,NA,1,2023-07-03 19:26:58,0
-335,study,5,description_en,NA,NA,1,2023-07-03 19:26:58,0
-336,study,5,category_fr,NA,NA,1,2023-07-03 19:26:58,0
-337,study,5,category_en,NA,NA,1,2023-07-03 19:26:58,0
-338,study,5,name_fr,Prédiction de la mortalité,NA,1,2023-07-03 19:26:58,0
-339,study,5,name_en,Mortality prediction,NA,1,2023-07-03 19:26:58,0
-340,study,5,user_allowed_read,NA,1,1,2023-07-03 19:27:28,0
-341,users_accesses,1,general_settings,NA,1,1,2023-09-05 16:47:18,0
-342,users_accesses,1,change_password_card,NA,1,1,2023-09-05 16:47:18,0
-343,users_accesses,1,app_db,NA,1,1,2023-09-05 16:47:18,0
-344,users_accesses,1,db_connection_infos_card,NA,1,1,2023-09-05 16:47:18,0
-345,users_accesses,1,db_datatable_card,NA,1,1,2023-09-05 16:47:18,0
-346,users_accesses,1,db_request_card,NA,1,1,2023-09-05 16:47:18,0
-347,users_accesses,1,db_save_card,NA,1,1,2023-09-05 16:47:18,0
-348,users_accesses,1,db_restore_card,NA,1,1,2023-09-05 16:47:18,0
-349,users_accesses,1,remote_git_repos,NA,1,1,2023-09-05 16:47:18,0
-350,users_accesses,1,git_add_repo_card,NA,1,1,2023-09-05 16:47:18,0
-351,users_accesses,1,git_repos_management_card,NA,1,1,2023-09-05 16:47:18,0
-352,users_accesses,1,users,NA,1,1,2023-09-05 16:47:18,0
-353,users_accesses,1,users_creation_card,NA,1,1,2023-09-05 16:47:18,0
-354,users_accesses,1,users_management_card,NA,1,1,2023-09-05 16:47:18,0
-355,users_accesses,1,users_accesses_management_card,NA,1,1,2023-09-05 16:47:18,0
-356,users_accesses,1,users_accesses_options_card,NA,1,1,2023-09-05 16:47:18,0
-357,users_accesses,1,users_statuses_management_card,NA,1,1,2023-09-05 16:47:18,0
-358,users_accesses,1,dev,NA,1,1,2023-09-05 16:47:18,0
-359,users_accesses,1,dev_edit_code_card,NA,1,1,2023-09-05 16:47:18,0
-360,users_accesses,1,dev_perf_monitoring_card,NA,1,1,2023-09-05 16:47:18,0
-361,users_accesses,1,data_sources,NA,1,1,2023-09-05 16:47:18,0
-362,users_accesses,1,data_sources_datatable_card,NA,1,1,2023-09-05 16:47:18,0
-363,users_accesses,1,datasets,NA,1,1,2023-09-05 16:47:18,0
-364,users_accesses,1,datasets_see_all_data,NA,1,1,2023-09-05 16:47:18,0
-365,users_accesses,1,datasets_datatable_card,NA,1,1,2023-09-05 16:47:18,0
-366,users_accesses,1,datasets_options_card,NA,1,1,2023-09-05 16:47:18,0
-367,users_accesses,1,datasets_edit_code_card,NA,1,1,2023-09-05 16:47:18,0
-368,users_accesses,1,studies,NA,1,1,2023-09-05 16:47:18,0
-369,users_accesses,1,studies_see_all_data,NA,1,1,2023-09-05 16:47:18,0
-370,users_accesses,1,studies_datatable_card,NA,1,1,2023-09-05 16:47:18,0
-371,users_accesses,1,studies_options_card,NA,1,1,2023-09-05 16:47:18,0
-372,users_accesses,1,subsets,NA,1,1,2023-09-05 16:47:18,0
-373,users_accesses,1,subsets_datatable_card,NA,1,1,2023-09-05 16:47:18,0
-374,users_accesses,1,subsets_edit_code_card,NA,1,1,2023-09-05 16:47:18,0
-375,users_accesses,1,subsets_persons_card,NA,1,1,2023-09-05 16:47:18,0
-376,users_accesses,1,data,NA,1,1,2023-09-05 16:47:18,0
-377,users_accesses,1,data_console,NA,1,1,2023-09-05 16:47:18,0
-378,users_accesses,1,vocabularies,NA,1,1,2023-09-05 16:47:18,0
-379,users_accesses,1,vocabularies_concepts_card,NA,1,1,2023-09-05 16:47:18,0
-380,users_accesses,1,vocabularies_mapping_card,NA,1,1,2023-09-05 16:47:18,0
-381,users_accesses,1,vocabularies_datatable_card,NA,1,1,2023-09-05 16:47:18,0
-382,users_accesses,1,vocabularies_vocabularies_tables_datatable_card,NA,1,1,2023-09-05 16:47:18,0
-383,users_accesses,1,vocabularies_edit_code_card,NA,1,1,2023-09-05 16:47:18,0
-384,users_accesses,1,vocabularies_import_vocabulary_card,NA,1,1,2023-09-05 16:47:18,0
-385,users_accesses,1,messages,NA,1,1,2023-09-05 16:47:18,0
-386,users_accesses,1,study_messages_card,NA,1,1,2023-09-05 16:47:18,0
-387,users_accesses,1,plugins,NA,1,1,2023-09-05 16:47:18,0
-388,users_accesses,1,plugins_see_all_data,NA,1,1,2023-09-05 16:47:18,0
-389,users_accesses,1,all_plugins_card,NA,1,1,2023-09-05 16:47:18,0
-390,users_accesses,1,plugins_datatable_card,NA,1,1,2023-09-05 16:47:18,0
-391,users_accesses,1,plugins_options_card,NA,1,1,2023-09-05 16:47:18,0
-392,users_accesses,1,plugins_edit_code_card,NA,1,1,2023-09-05 16:47:18,0
-393,users_accesses,1,import_plugin_card,NA,1,1,2023-09-05 16:47:18,0
-394,users_accesses,1,export_plugin_card,NA,1,1,2023-09-05 16:47:18,0
-395,users_accesses,1,scripts,NA,1,1,2023-09-05 16:47:18,0
-396,users_accesses,1,dataset_scripts_card,NA,1,1,2023-09-05 16:47:18,0
-397,users_accesses,1,all_scripts_card,NA,1,1,2023-09-05 16:47:18,0
-398,users_accesses,1,scripts_datatable_card,NA,1,1,2023-09-05 16:47:18,0
-399,users_accesses,1,scripts_edit_code_card,NA,1,1,2023-09-05 16:47:18,0
-400,users_accesses,1,scripts_options_card,NA,1,1,2023-09-05 16:47:18,0
-401,users_accesses,1,import_script_card,NA,1,1,2023-09-05 16:47:18,0
-402,users_accesses,1,export_script_card,NA,1,1,2023-09-05 16:47:18,0
-403,users_accesses,1,log,NA,1,1,2023-09-05 16:47:18,0
-404,users_accesses,1,all_users,NA,1,1,2023-09-05 16:47:18,0
-405,users_accesses,1,only_me,NA,1,1,2023-09-05 16:47:18,0
-418,plugin,2,users_allowed_read_group,everybody,1,1,2023-09-18 11:26:34,1
-419,plugin,2,user_allowed_read,NA,1,1,2023-09-18 11:26:34,1
-420,plugin,2,version,0.0.1.9012,NA,1,2023-09-18 11:26:34,1
-421,plugin,2,unique_id,dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21,NA,1,2023-09-18 11:26:34,1
-422,plugin,2,author,Boris Delange,NA,1,2023-09-18 11:26:34,1
-423,plugin,2,image,ggplot2.png,NA,1,2023-09-18 11:26:34,1
-424,plugin,2,description_fr,"## <i class=""fa fa-info-circle"" style=""color: steelblue;""></i> Description
-
-Ce plugin utilise la librairie R <a href=""https://ggplot2.tidyverse.org/"" target=""_blank"">`ggplot2`</a>, permettant de créer des graphiques à partir des données.
-
-## <i class=""fa fa-cogs"" style=""color: steelblue;""></i> Utilisation
-
-<details>
-<summary><span style=""--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;"" onmouseover=""this.style.color=this.style.getPropertyValue(''--hover-color'')"" onmouseout=""this.style.color=''''"">
-Cliquez ici pour afficher / masquer le contenu</span></summary>
-
-### <i class=""fa fa-check"" style=""color: steelblue;""></i> Gérer les scripts
-
-Afin de pouvoir **sauvegarder plusieurs figures** sur un même widget, vous pouvez **créer des scripts** depuis l''onglet ""Gérer les scripts"".
-
-Vous pouvez également **renommer** et **supprimer** des scripts depuis cet onglet.
-
-Un script comprend :
-
-- Les **paramètres** enregistrés sur une figure, depuis l''onglet ""Figure""
-- Le **code** correspond à cette figure, depuis l''onglet ""Code""
-
-Une fois un **script créé**, **sélectionnez-le** depuis l''onglet ""Figure"" ou ""Code"".
-
-**Sauvegardez** ce script une fois des modifications effectuées.
-
-<br /><img src=""%plugin_folder%/scripts_management.png"" width=""850"" style=""border:dashed 1px; padding:10px;"" />
-
-### <i class=""fa fa-check"" style=""color: steelblue;""></i> Configurer une figure
-
-Rendez-vous dans l''onglet ""Figure"".
-
-**Choisissez la variable** à afficher sur chacun des axes dans l''onglet ""Variables"".
-
-Certaines figures n''auront une **variable que sur un axe** (geom_histogram), d''autres ne s''afficheront que **si des variables sont renseignées sur les deux axes** (geom_point).
-
-Pour chaque figure, choisissez :
-
-- le **thème** de la figure
-- le **texte** de l''axe des **x**
-- le **texte** de l''axe des **y** (qu''une variable y soit attribuée ou non)
-
-Dans l''onglet ""Variables"", il est possible de **grouper les données**, par patient ou par moment. Choisissez ensuite la **fonction** à appliquer pour grouper les données.
-
-Par exemple :
-
-- grouper les données par **patient** en choisissant la fonction **""maximum""** : la valeur maximale du paramètre, tous séjours confondus, sera retenue pour chaque patient
-- grouper les données par **4 heures** en choisissant la fonction **""moyenne""** : la valeur maximale sera retenue sur chaque intervalle de 4 heures, pour chaque patient (donc plusieurs données par patient)
-
-En cochant ""Afficher la figure au lancement du script"", la **figure** sera **affichée au chargement au script**.
-
-<br /><img src=""%plugin_folder%/plot_settings.png"" width=""950"" style=""border:dashed 1px; padding:10px;"" />
-
-### <i class=""fa fa-check"" style=""color: steelblue;""></i> Afficher le code
-
-En cliquant sur ""**Générer le code**"" depuis l''onglet ""Figure"", le **code correspondant à la figure** sera **généré** dans l''éditeur de texte, dans l''onglet ""Code"".
-
-Vous pouvez **modifier ce code**, et **sauvegarder** vos modifications.
-
-Si vous cliquez de nouveau sur **Générer le code**, votre code sera supprimé et remplacé par le code par défaut correspondant à la figure configurée dans l''onglet ""Figure"".
-
-Cliquez sur ""**Exécuter**"" pour afficher la figure correspond au code.
-
-En cochant ""Exécuter le code au lancement du script"", le **code** sera **exécuté au chargement au script**.
-
-<br /><img src=""%plugin_folder%/plot_code.png"" width=""750"" style=""border:dashed 1px; padding:10px;"" />
-
-</details>
-
-## <i class=""fa fa-bar-chart"" style=""color: steelblue;""></i> Figures disponibles
-
-<details open>
-<summary><span style=""--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;"" onmouseover=""this.style.color=this.style.getPropertyValue(''--hover-color'')"" onmouseout=""this.style.color=''''"">
-Cliquez ici pour afficher / masquer le contenu</span></summary>
-
-### <i class=""fa fa-check"" style=""color: steelblue;""></i> Histogramme (geom_histogram)
-
-Permet de visualiser la distribution d''une variable continue unique en divisant l''axe des x en intervalles et en comptant le nombre d''observations dans chaque intervalle.
-
-<img src=""%plugin_folder%/geom_histogram.png"" width=""700"" />
-
-Vous pouvez chosir la **taille des barres** selon deux modalités :
-
-- soit par la **taille** des barres, en fonction de l''axe des x (une taille à 50 voudra dire qu''une barre prendra 50 de l''unité renseignée sur l''axe des x)
-- soit par le **nombre** de barres totales affichées
-
-### <i class=""fa fa-check"" style=""color: steelblue;""></i> Diagramme de dispersion (geom_point)
-
-Permet de visualiser la distribution de deux variables continues, l''une sur l''axe des x, l''autre sur l''axe des y.
-
-<img src=""%plugin_folder%/geom_point.png"" width=""700"" />
-
-Par défaut, uniquement les points ayant une **valeur à un moment donné** à la fois pour la **variable en x** et pour la **variable en y** seront affichés.
-
-Par exemple, si je choisis la pression artérielle systolique en x et la pression artérielle moyenne en y (tel que dans l''example),
-que j''ai une valeur de x tel jour à 18:37:10 et une valeur de y le même jour à 18:37:11, le moment n''étant pas exactement le même, il n''y aura pas de point correspondant sur la graphique.
-
-Pour contrer cela, il est possible de **grouper les données**, par patient ou par moment (cf paragraphe Utilisation).
-
-</details>",NA,1,2023-09-18 11:26:34,1
-425,plugin,2,description_en,"## <i class=""fa fa-info-circle"" style=""color: steelblue;""></i> Description
-
-This plugin uses the R library <a href=""https://ggplot2.tidyverse.org/"" target=""_blank"">`ggplot2`</a>, allowing the creation of plots from data.
-
-## <i class=""fa fa-cogs"" style=""color: steelblue;""></i> Usage
-
-### <i class=""fa fa-check"" style=""color: steelblue;""></i> Manage Scripts
-
-<details>
-<summary><span style=""--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;"" onmouseover=""this.style.color=this.style.getPropertyValue(''--hover-color'')"" onmouseout=""this.style.color=''''"">
-Click here to show / hide content</span></summary>
-
-In order to **save multiple plots** to a single widget, you can **create scripts** from the ""Scripts management"" tab.
-
-You can also **rename** and **delete** scripts from this tab.
-
-A script includes:
-
-- The **parameters** saved on a plot, from the ""Plot"" tab.
-- The **code** corresponding to that plot, from the ""Code"" tab.
-
-Once a **script is created**, **select it** from the ""Plot"" or ""Code"" tab.
-
-**Save** this script after making changes.
-
-<br /><img src=""%plugin_folder%/scripts_management.png"" width=""850"" style=""border:dashed 1px; padding:10px;"" />
-
-### <i class=""fa fa-check"" style=""color: steelblue;""></i> Configure a Plot
-
-Go to the ""Plot"" tab.
-
-**Choose the variable** to display on each axis in the ""Variables"" tab.
-
-Some plots will have a **variable on only one axis** (geom_histogram), while others will only display **if variables are specified on both axes** (geom_point).
-
-For each plot, choose:
-
-- The **theme** of the plot.
-- The **text** for the **x** axis.
-- The **text** for the **y** axis (whether a variable is assigned to it or not).
-
-In the ""Variables"" tab, it''s possible to **group data**, by patient or by time. Then choose the **function** to apply to group the data.
-
-For example:
-
-- Group data by **patient** by selecting the **""maximum""** function: the maximum value of the parameter, across all stays, will be chosen for each patient.
-- Group data every **4 hours** by selecting the **""average""** function: the maximum value will be chosen for each 4-hour interval, for each patient (thus, multiple data points per patient).
-
-By checking ""Show plot at script launch"", the **plot** will be **displayed upon the script''s loading**.
-
-<br /><img src=""%plugin_folder%/plot_settings.png"" width=""950"" style=""border:dashed 1px; padding:10px;"" />
-
-### <i class=""fa fa-check"" style=""color: steelblue;""></i> Display the Code
-
-By clicking on ""**Generate Code**"" from the ""Plot"" tab, the **code corresponding to the plot** will be **generated** in the text editor, in the ""Code"" tab.
-
-You can **edit this code** and **save** your changes.
-
-If you click on **Generate Code** again, your code will be deleted and replaced by the default code corresponding to the plot configured in the ""Plot"" tab.
-
-Click on ""**Run code**"" to display the plot corresponding to the code.
-
-By checking ""Run code at script launch"", the **code** will be **executed upon the script''s loading**.
-
-<br /><img src=""%plugin_folder%/plot_code.png"" width=""750"" style=""border:dashed 1px; padding:10px;"" />
-
-</details>
-
-## <i class=""fa fa-bar-chart"" style=""color: steelblue;""></i> Available Plots
-
-<details open>
-<summary><span style=""--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;"" onmouseover=""this.style.color=this.style.getPropertyValue(''--hover-color'')"" onmouseout=""this.style.color=''''"">
-Click here to show / hide content</span></summary>
-
-### <i class=""fa fa-check"" style=""color: steelblue;""></i> Histogram (geom_histogram)
-
-Allows visualization of the distribution of a single continuous variable by dividing the x-axis into intervals and counting the number of observations in each interval.
-
-<img src=""%plugin_folder%/geom_histogram.png"" width=""700"" />
-
-You can choose the **size of the bars** in two ways:
-
-- Either by the **size** of the bars, depending on the x-axis (a size of 50 means a bar will take up 50 of the unit specified on the x-axis).
-- Or by the **number** of total bars displayed.
-
-### <i class=""fa fa-check"" style=""color: steelblue;""></i> Scatter Plot (geom_point)
-
-Allows visualization of the distribution of two continuous variables, one on the x-axis and the other on the y-axis.
-
-<img src=""%plugin_folder%/geom_point.png"" width=""700"" />
-
-By default, only points having a **value at a given moment** both for the **x variable** and for the **y variable** will be displayed.
-
-For instance, if I choose systolic blood pressure for x and mean arterial pressure for y (as in the example), and I have an x value on a certain day at 18:37:10 and a y value on the same day at 18:37:11, since the moments aren''t exactly the same, there won''t be a corresponding point on the graph.
-
-To counter this, it is possible to **group data**, by patient or by time (see Usage section).
-
-</details>",NA,1,2023-09-18 11:26:34,1
-426,plugin,2,category_fr,NA,NA,1,2023-09-18 11:26:34,1
-427,plugin,2,category_en,NA,NA,1,2023-09-18 11:26:34,1
-428,plugin,2,name_fr,Figure (ggplot2),NA,1,2023-09-18 11:26:34,1
-429,plugin,2,name_en,Plot (ggplot2),NA,1,2023-09-18 11:26:34,1
-430,plugin,1,users_allowed_read_group,everybody,1,1,2023-09-30 21:42:15,0
-431,plugin,1,user_allowed_read,,1,1,2023-09-30 21:42:15,0
-432,plugin,1,version,0.0.1.9006,NA,1,2023-09-30 21:42:15,0
-433,plugin,1,unique_id,6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8,NA,1,2023-09-30 21:42:15,0
-434,plugin,1,author,Boris Delange,NA,1,2023-09-30 21:42:15,0
-435,plugin,1,image,console_icon.png,NA,1,2023-09-30 21:42:15,0
-436,plugin,1,description_fr,"## <i class=""fa fa-info-circle"" style=""color: steelblue;""></i> Description
-
-Ce plugin vous permet d''**exécuter du code** dans la console R et de **sauvegarder votre code sous forme de scripts**.
-
-## <i class=""fa fa-cogs"" style=""color: steelblue;""></i> Gestion des scripts
-
-Allez dans l''onglet ""Gestion des scripts"" pour **ajouter, supprimer ou renommer des scripts**.
-
-Un script est un **fichier texte contenant du code**.
-
-Une fois un script créé, vous pouvez l''**éditer** dans l''onglet ""Script"" et **exécuter le code**.
-
-## <i class=""fa fa-code"" style=""color: steelblue;""></i> Code R
-
-Ecrivez du **code en R** et exécutez-le : le **résultat retourné par la console** apparaîtra en-dessous de l''éditeur de texte.
-
-Pour connaître le **modèle de données** utilisé par l''application, cliquez sur le bouton d''aide (point d''interrogation en haut à droite de la page) lorsque vous êtes sur la page ""Données / Accéder aux données"".
-
-Exemple de code (obtenir le min, max et moyenne de la fréquence cardiaque chez nos patients) :
-
-```
-d$measurement %>%
-    dplyr::filter(measurement_concept_id == 3027018) %>%
-    dplyr::group_by(person_id) %>%
-    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
-    dplyr::ungroup()
-```
-
-<img src=""%plugin_folder%/r_code_1.png"" width=""1100"" style=""border:dashed 1px; padding:10px;""/>
-
-<img src=""%plugin_folder%/r_code_2.png"" width=""700"" style=""margin-left:-7px;""/>
-
-## <i class=""fa fa-file-code-o"" style=""color: steelblue;""></i> RMarkdown
-
-Vous pouvez également écrire du code en **Rmarkdown**.
-
-Il s''agit d''un **Markdown** auquel vous pouvez ajouter du **code R**.
-
-Pour plus d''informations sur RMarkdown, <a href=""https://rmarkdown.rstudio.com/lesson-2.html"" target=""_blank"">rendez-vous sur leur site</a>.
-
-Exemple de code (le même exemple que ci-dessus, en RMarkdown - un backslash a été ajouté pour éviter l''éxécution du code) :
-
-```
-# Script on heart rate
-
-\```{r}
-d$measurement %>%
-    dplyr::filter(measurement_concept_id == 3027018) %>%
-    dplyr::group_by(person_id) %>%
-    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
-    dplyr::ungroup()
-\```
-```
-
-<img src=""%plugin_folder%/rmarkdown_1.png"" width=""1100"" style=""border:dashed 1px; padding:10px;"" />
-
-<img src=""%plugin_folder%/rmarkdown_2.png"" width=""900"" style=""border:dashed 1px; padding:10px;"" />
-
-## <i class=""fa fa-bar-chart"" style=""color: steelblue;""></i> Figure
-
-Vous pouvez **créer des figures**, par exemple avec la librairie `ggplot2`.
-
-Voici un exemple de code :
-
-```
-# A list containing the data for the plot
-data <- list()
-
-# Filter data
-data$x <- d$measurement %>% dplyr::filter(measurement_concept_id == 3027018)
-
-# Create ggplot2 plot
-data$x %>%
-    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
-    ggplot2::geom_histogram(bins = 50, fill = ""#377EB8"", color = ""#FFFFFF"") +
-    ggplot2::theme_minimal() +
-    ggplot2::labs(x = ""Heart rate (bpm)"", y = """")
-```
-
-<img src=""%plugin_folder%/r_plot_1.png"" width=""750"" style=""border:dashed 1px; padding:10px;"" />
-
-<img src=""%plugin_folder%/r_plot_2.png"" width=""700"" style=""border:dashed 1px; padding:10px;"" />",NA,1,2023-09-30 21:42:15,0
-437,plugin,1,description_en,"## <i class=""fa fa-info-circle"" style=""color: steelblue;""></i> Description
-
-This plugin allows you to **execute code** in the R console and **save your code as scripts**.
-
-## <i class=""fa fa-cogs"" style=""color: steelblue;""></i> Scripts management
-
-Go to the ""Scripts management"" tab to **add, delete, or rename scripts**.
-
-A script is a **text file containing code**.
-
-Once a script is created, you can **edit** it in the ""Script"" tab and **execute the code**.
-
-## <i class=""fa fa-code"" style=""color: steelblue;""></i> R code
-
-Write **R code** and execute it: the **result returned by the console** will appear below the text editor.
-
-To know the **data model** used by the application, click on the help button (question mark at the top right of the page) when you are on the ""Data / Access Data"" page.
-
-Example code (get the min, max, and average heart rate of our patients):
-
-```
-d$measurement %>%
-    dplyr::filter(measurement_concept_id == 3027018) %>%
-    dplyr::group_by(person_id) %>%
-    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
-    dplyr::ungroup()
-```
-
-<img src=""%plugin_folder%/r_code_1.png"" width=""1100"" style=""border:dashed 1px; padding:10px;""/>
-
-<img src=""%plugin_folder%/r_code_2.png"" width=""700"" style=""margin-left:-7px;""/>
-
-## <i class=""fa fa-file-code-o"" style=""color: steelblue;""></i> RMarkdown
-
-You can also write code in **Rmarkdown**.
-
-This is **Markdown** to which you can add **R code**.
-
-For more information on RMarkdown, <a href=""https://rmarkdown.rstudio.com/lesson-2.html"" target=""_blank"">visit their site</a>.
-
-Example code (the same example as above, in RMarkdown - a backslash has been added to prevent code execution):
-
-```
-# Script on heart rate
-
-\```{r}
-d$measurement %>%
-dplyr::filter(measurement_concept_id == 3027018) %>%
-dplyr::group_by(person_id) %>%
-dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
-dplyr::ungroup()
-\```
-```
-
-<img src=""%plugin_folder%/rmarkdown_1.png"" width=""1100"" style=""border:dashed 1px; padding:10px;"" />
-
-<img src=""%plugin_folder%/rmarkdown_2.png"" width=""900"" style=""border:dashed 1px; padding:10px;"" />
-
-## <i class=""fa fa-bar-chart"" style=""color: steelblue;""></i> Figure
-
-You can **create figures**, for example with the `ggplot2` library.
-
-Here''s an example of code:
-
-```
-# A list containing the data for the plot
-data <- list()
-
-# Filter data
-data$x <- d$measurement %>% dplyr::filter(measurement_concept_id == 3027018)
-
-# Create ggplot2 plot
-data$x %>%
-    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
-    ggplot2::geom_histogram(bins = 50, fill = ""#377EB8"", color = ""#FFFFFF"") +
-    ggplot2::theme_minimal() +
-    ggplot2::labs(x = ""Heart rate (bpm)"", y = """")
-```
-
-<img src=""%plugin_folder%/r_plot_1.png"" width=""750"" style=""border:dashed 1px; padding:10px;"" />
-
-<img src=""%plugin_folder%/r_plot_2.png"" width=""700"" style=""border:dashed 1px; padding:10px;"" />",NA,1,2023-09-30 21:42:15,0
-438,plugin,1,category_fr,,NA,1,2023-09-30 21:42:15,0
-439,plugin,1,category_en,,NA,1,2023-09-30 21:42:15,0
-440,plugin,1,name_fr,Console R,NA,1,2023-09-30 21:42:15,0
-441,plugin,1,name_en,R console,NA,1,2023-09-30 21:42:15,0
+3,remote_db,NA,main_db_name,,NA,NA,NA,0
+4,remote_db,NA,public_db_name,,NA,NA,NA,0
+5,remote_db,NA,host,,NA,NA,NA,0
+6,remote_db,NA,port,,NA,NA,NA,0
+7,remote_db,NA,user,,NA,NA,NA,0
+8,remote_db,NA,password,,NA,NA,NA,0
+9,users_accesses,1,general_settings,,1,1,2023-10-15 17:08:17,0
+10,users_accesses,1,change_password_card,,1,1,2023-10-15 17:08:17,0
+11,users_accesses,1,app_db,,1,1,2023-10-15 17:08:17,0
+12,users_accesses,1,db_connection_infos_card,,1,1,2023-10-15 17:08:17,0
+13,users_accesses,1,db_datatable_card,,1,1,2023-10-15 17:08:17,0
+14,users_accesses,1,db_request_card,,1,1,2023-10-15 17:08:17,0
+15,users_accesses,1,db_save_card,,1,1,2023-10-15 17:08:17,0
+16,users_accesses,1,db_restore_card,,1,1,2023-10-15 17:08:17,0
+17,users_accesses,1,remote_git_repos,,1,1,2023-10-15 17:08:17,0
+18,users_accesses,1,git_add_repo_card,,1,1,2023-10-15 17:08:17,0
+19,users_accesses,1,git_repos_management_card,,1,1,2023-10-15 17:08:17,0
+20,users_accesses,1,git_repo_options_card,,1,1,2023-10-15 17:08:17,0
+21,users_accesses,1,git_edit_repo_card,,1,1,2023-10-15 17:08:17,0
+22,users_accesses,1,users,,1,1,2023-10-15 17:08:17,0
+23,users_accesses,1,users_creation_card,,1,1,2023-10-15 17:08:17,0
+24,users_accesses,1,users_management_card,,1,1,2023-10-15 17:08:17,0
+25,users_accesses,1,users_accesses_management_card,,1,1,2023-10-15 17:08:17,0
+26,users_accesses,1,users_accesses_options_card,,1,1,2023-10-15 17:08:17,0
+27,users_accesses,1,users_statuses_management_card,,1,1,2023-10-15 17:08:17,0
+28,users_accesses,1,dev,,1,1,2023-10-15 17:08:17,0
+29,users_accesses,1,dev_edit_code_card,,1,1,2023-10-15 17:08:17,0
+30,users_accesses,1,dev_perf_monitoring_card,,1,1,2023-10-15 17:08:17,0
+31,users_accesses,1,data_sources,,1,1,2023-10-15 17:08:17,0
+32,users_accesses,1,data_sources_datatable_card,,1,1,2023-10-15 17:08:17,0
+33,users_accesses,1,datasets,,1,1,2023-10-15 17:08:17,0
+34,users_accesses,1,datasets_see_all_data,,1,1,2023-10-15 17:08:17,0
+35,users_accesses,1,datasets_all_datasets_card,,1,1,2023-10-15 17:08:17,0
+36,users_accesses,1,datasets_datatable_card,,1,1,2023-10-15 17:08:17,0
+37,users_accesses,1,datasets_edit_code_card,,1,1,2023-10-15 17:08:17,0
+38,users_accesses,1,datasets_options_card,,1,1,2023-10-15 17:08:17,0
+39,users_accesses,1,datasets_import_dataset_card,,1,1,2023-10-15 17:08:17,0
+40,users_accesses,1,datasets_export_dataset_card,,1,1,2023-10-15 17:08:17,0
+41,users_accesses,1,studies,,1,1,2023-10-15 17:08:17,0
+42,users_accesses,1,studies_see_all_data,,1,1,2023-10-15 17:08:17,0
+43,users_accesses,1,all_studies_card,,1,1,2023-10-15 17:08:17,0
+44,users_accesses,1,studies_datatable_card,,1,1,2023-10-15 17:08:17,0
+45,users_accesses,1,studies_options_card,,1,1,2023-10-15 17:08:17,0
+46,users_accesses,1,import_study_card,,1,1,2023-10-15 17:08:17,0
+47,users_accesses,1,export_study_card,,1,1,2023-10-15 17:08:17,0
+48,users_accesses,1,subsets,,1,1,2023-10-15 17:08:17,0
+49,users_accesses,1,subsets_datatable_card,,1,1,2023-10-15 17:08:17,0
+50,users_accesses,1,subsets_edit_code_card,,1,1,2023-10-15 17:08:17,0
+51,users_accesses,1,subsets_persons_card,,1,1,2023-10-15 17:08:17,0
+52,users_accesses,1,data,,1,1,2023-10-15 17:08:17,0
+53,users_accesses,1,data_console,,1,1,2023-10-15 17:08:17,0
+54,users_accesses,1,vocabularies,,1,1,2023-10-15 17:08:17,0
+55,users_accesses,1,vocabularies_concepts_card,,1,1,2023-10-15 17:08:17,0
+56,users_accesses,1,vocabularies_mapping_card,,1,1,2023-10-15 17:08:17,0
+57,users_accesses,1,vocabularies_all_vocabularies_card,,1,1,2023-10-15 17:08:17,0
+58,users_accesses,1,vocabularies_datatable_card,,1,1,2023-10-15 17:08:17,0
+59,users_accesses,1,vocabularies_vocabularies_tables_datatable_card,,1,1,2023-10-15 17:08:17,0
+60,users_accesses,1,vocabularies_edit_code_card,,1,1,2023-10-15 17:08:17,0
+61,users_accesses,1,vocabularies_options_card,,1,1,2023-10-15 17:08:17,0
+62,users_accesses,1,vocabularies_import_vocabulary_card,,1,1,2023-10-15 17:08:17,0
+63,users_accesses,1,vocabularies_export_vocabulary_card,,1,1,2023-10-15 17:08:17,0
+64,users_accesses,1,messages,,1,1,2023-10-15 17:08:17,0
+65,users_accesses,1,study_messages_card,,1,1,2023-10-15 17:08:17,0
+66,users_accesses,1,plugins,,1,1,2023-10-15 17:08:17,0
+67,users_accesses,1,plugins_see_all_data,,1,1,2023-10-15 17:08:17,0
+68,users_accesses,1,all_plugins_card,,1,1,2023-10-15 17:08:17,0
+69,users_accesses,1,plugins_datatable_card,,1,1,2023-10-15 17:08:17,0
+70,users_accesses,1,plugins_options_card,,1,1,2023-10-15 17:08:17,0
+71,users_accesses,1,plugins_edit_code_card,,1,1,2023-10-15 17:08:17,0
+72,users_accesses,1,import_plugin_card,,1,1,2023-10-15 17:08:17,0
+73,users_accesses,1,export_plugin_card,,1,1,2023-10-15 17:08:17,0
+74,users_accesses,1,scripts,,1,1,2023-10-15 17:08:17,0
+75,users_accesses,1,dataset_scripts_card,,1,1,2023-10-15 17:08:17,0
+76,users_accesses,1,all_scripts_card,,1,1,2023-10-15 17:08:17,0
+77,users_accesses,1,scripts_datatable_card,,1,1,2023-10-15 17:08:17,0
+78,users_accesses,1,scripts_edit_code_card,,1,1,2023-10-15 17:08:17,0
+79,users_accesses,1,scripts_options_card,,1,1,2023-10-15 17:08:17,0
+80,users_accesses,1,import_script_card,,1,1,2023-10-15 17:08:17,0
+81,users_accesses,1,export_script_card,,1,1,2023-10-15 17:08:17,0
+82,users_accesses,1,log,,1,1,2023-10-15 17:08:17,0
+83,users_accesses,1,all_users,,1,1,2023-10-15 17:08:17,0
+84,users_accesses,1,only_me,,1,1,2023-10-15 17:08:17,0
+85,users_accesses,2,general_settings,,1,1,2023-10-15 17:08:17,0
+86,users_accesses,2,change_password_card,,1,1,2023-10-15 17:08:17,0
+87,users_accesses,2,app_db,,0,1,2023-10-15 17:08:17,0
+88,users_accesses,2,db_connection_infos_card,,0,1,2023-10-15 17:08:17,0
+89,users_accesses,2,db_datatable_card,,0,1,2023-10-15 17:08:17,0
+90,users_accesses,2,db_request_card,,0,1,2023-10-15 17:08:17,0
+91,users_accesses,2,db_save_card,,0,1,2023-10-15 17:08:17,0
+92,users_accesses,2,db_restore_card,,0,1,2023-10-15 17:08:17,0
+93,users_accesses,2,remote_git_repos,,0,1,2023-10-15 17:08:17,0
+94,users_accesses,2,git_add_repo_card,,0,1,2023-10-15 17:08:17,0
+95,users_accesses,2,git_repos_management_card,,0,1,2023-10-15 17:08:17,0
+96,users_accesses,2,git_repo_options_card,,0,1,2023-10-15 17:08:17,0
+97,users_accesses,2,git_edit_repo_card,,0,1,2023-10-15 17:08:17,0
+98,users_accesses,2,users,,0,1,2023-10-15 17:08:17,0
+99,users_accesses,2,users_creation_card,,0,1,2023-10-15 17:08:17,0
+100,users_accesses,2,users_management_card,,0,1,2023-10-15 17:08:17,0
+101,users_accesses,2,users_accesses_management_card,,0,1,2023-10-15 17:08:17,0
+102,users_accesses,2,users_accesses_options_card,,0,1,2023-10-15 17:08:17,0
+103,users_accesses,2,users_statuses_management_card,,0,1,2023-10-15 17:08:17,0
+104,users_accesses,2,dev,,0,1,2023-10-15 17:08:17,0
+105,users_accesses,2,dev_edit_code_card,,0,1,2023-10-15 17:08:17,0
+106,users_accesses,2,dev_perf_monitoring_card,,0,1,2023-10-15 17:08:17,0
+107,users_accesses,2,data_sources,,0,1,2023-10-15 17:08:17,0
+108,users_accesses,2,data_sources_datatable_card,,0,1,2023-10-15 17:08:17,0
+109,users_accesses,2,datasets,,0,1,2023-10-15 17:08:17,0
+110,users_accesses,2,datasets_see_all_data,,0,1,2023-10-15 17:08:17,0
+111,users_accesses,2,datasets_all_datasets_card,,0,1,2023-10-15 17:08:17,0
+112,users_accesses,2,datasets_datatable_card,,0,1,2023-10-15 17:08:17,0
+113,users_accesses,2,datasets_edit_code_card,,0,1,2023-10-15 17:08:17,0
+114,users_accesses,2,datasets_options_card,,0,1,2023-10-15 17:08:17,0
+115,users_accesses,2,datasets_import_dataset_card,,0,1,2023-10-15 17:08:17,0
+116,users_accesses,2,datasets_export_dataset_card,,0,1,2023-10-15 17:08:17,0
+117,users_accesses,2,studies,,1,1,2023-10-15 17:08:17,0
+118,users_accesses,2,studies_see_all_data,,0,1,2023-10-15 17:08:17,0
+119,users_accesses,2,all_studies_card,,0,1,2023-10-15 17:08:17,0
+120,users_accesses,2,studies_datatable_card,,1,1,2023-10-15 17:08:17,0
+121,users_accesses,2,studies_options_card,,1,1,2023-10-15 17:08:17,0
+122,users_accesses,2,import_study_card,,0,1,2023-10-15 17:08:17,0
+123,users_accesses,2,export_study_card,,0,1,2023-10-15 17:08:17,0
+124,users_accesses,2,subsets,,1,1,2023-10-15 17:08:17,0
+125,users_accesses,2,subsets_datatable_card,,1,1,2023-10-15 17:08:17,0
+126,users_accesses,2,subsets_edit_code_card,,1,1,2023-10-15 17:08:17,0
+127,users_accesses,2,subsets_persons_card,,1,1,2023-10-15 17:08:17,0
+128,users_accesses,2,data,,0,1,2023-10-15 17:08:17,0
+129,users_accesses,2,data_console,,0,1,2023-10-15 17:08:17,0
+130,users_accesses,2,vocabularies,,1,1,2023-10-15 17:08:17,0
+131,users_accesses,2,vocabularies_concepts_card,,1,1,2023-10-15 17:08:17,0
+132,users_accesses,2,vocabularies_mapping_card,,1,1,2023-10-15 17:08:17,0
+133,users_accesses,2,vocabularies_all_vocabularies_card,,0,1,2023-10-15 17:08:17,0
+134,users_accesses,2,vocabularies_datatable_card,,0,1,2023-10-15 17:08:17,0
+135,users_accesses,2,vocabularies_vocabularies_tables_datatable_card,,0,1,2023-10-15 17:08:17,0
+136,users_accesses,2,vocabularies_edit_code_card,,0,1,2023-10-15 17:08:17,0
+137,users_accesses,2,vocabularies_options_card,,0,1,2023-10-15 17:08:17,0
+138,users_accesses,2,vocabularies_import_vocabulary_card,,0,1,2023-10-15 17:08:17,0
+139,users_accesses,2,vocabularies_export_vocabulary_card,,0,1,2023-10-15 17:08:17,0
+140,users_accesses,2,messages,,0,1,2023-10-15 17:08:17,0
+141,users_accesses,2,study_messages_card,,0,1,2023-10-15 17:08:17,0
+142,users_accesses,2,plugins,,1,1,2023-10-15 17:08:17,0
+143,users_accesses,2,plugins_see_all_data,,0,1,2023-10-15 17:08:17,0
+144,users_accesses,2,all_plugins_card,,1,1,2023-10-15 17:08:17,0
+145,users_accesses,2,plugins_datatable_card,,0,1,2023-10-15 17:08:17,0
+146,users_accesses,2,plugins_options_card,,0,1,2023-10-15 17:08:17,0
+147,users_accesses,2,plugins_edit_code_card,,0,1,2023-10-15 17:08:17,0
+148,users_accesses,2,import_plugin_card,,0,1,2023-10-15 17:08:17,0
+149,users_accesses,2,export_plugin_card,,0,1,2023-10-15 17:08:17,0
+150,users_accesses,2,scripts,,0,1,2023-10-15 17:08:17,0
+151,users_accesses,2,dataset_scripts_card,,0,1,2023-10-15 17:08:17,0
+152,users_accesses,2,all_scripts_card,,0,1,2023-10-15 17:08:17,0
+153,users_accesses,2,scripts_datatable_card,,0,1,2023-10-15 17:08:17,0
+154,users_accesses,2,scripts_edit_code_card,,0,1,2023-10-15 17:08:17,0
+155,users_accesses,2,scripts_options_card,,0,1,2023-10-15 17:08:17,0
+156,users_accesses,2,import_script_card,,0,1,2023-10-15 17:08:17,0
+157,users_accesses,2,export_script_card,,0,1,2023-10-15 17:08:17,0
+158,users_accesses,2,log,,1,1,2023-10-15 17:08:17,0
+159,users_accesses,2,all_users,,0,1,2023-10-15 17:08:17,0
+160,users_accesses,2,only_me,,1,1,2023-10-15 17:08:17,0
+161,dataset,1,version,0.0.1.9000,NA,1,2023-10-15 17:08:40,0
+162,dataset,1,unique_id,3d3aaab2f83b4acccb9b67bd107db82f66282ae972d7dfbd7baf05c690ed73c0,NA,1,2023-10-15 17:08:40,0
+163,dataset,1,author,Alan Turing,NA,1,2023-10-15 17:08:40,0
+164,dataset,1,users_allowed_read_group,everybody,1,1,2023-10-15 17:08:40,0
+165,dataset,1,user_allowed_read,,1,1,2023-10-15 17:08:40,0
+166,dataset,1,show_only_aggregated_data,,0,1,2023-10-15 17:08:40,0
+167,dataset,1,omop_version,6.0,NA,1,2023-10-15 17:08:40,0
+168,dataset,1,downloaded_from,,NA,1,2023-10-15 17:08:40,0
+169,dataset,1,downloaded_from_url,,NA,1,2023-10-15 17:08:40,0
+170,dataset,1,category_en,,NA,1,2023-10-15 17:08:40,0
+171,dataset,1,description_en,,NA,1,2023-10-15 17:08:40,0
+172,dataset,1,name_en,MIMIC-IV demo,NA,1,2023-10-15 17:08:40,0
+173,dataset,1,category_fr,,NA,1,2023-10-15 17:08:40,0
+174,dataset,1,description_fr,,NA,1,2023-10-15 17:08:40,0
+175,dataset,1,name_fr,MIMIC-IV demo,NA,1,2023-10-15 17:08:40,0
+176,vocabulary,1,version,0.0.1.9000,NA,1,2023-10-15 17:12:32,0
+177,vocabulary,1,unique_id,5d5f1340de71fc17788aedd5aa1a65023a294f95dc18b4747dab96e068cc8138,NA,1,2023-10-15 17:12:32,0
+178,vocabulary,1,author,Alan Turing,NA,1,2023-10-15 17:12:32,0
+179,vocabulary,1,downloaded_from,,NA,1,2023-10-15 17:12:32,0
+180,vocabulary,1,downloaded_from_url,,NA,1,2023-10-15 17:12:32,0
+181,vocabulary,1,category_en,,NA,1,2023-10-15 17:12:32,0
+182,vocabulary,1,description_en,,NA,1,2023-10-15 17:12:32,0
+183,vocabulary,1,name_en,MIMIC-IV demo,NA,1,2023-10-15 17:12:32,0
+184,vocabulary,1,category_fr,,NA,1,2023-10-15 17:12:32,0
+185,vocabulary,1,description_fr,,NA,1,2023-10-15 17:12:32,0
+186,vocabulary,1,name_fr,MIMIC-IV demo,NA,1,2023-10-15 17:12:32,0
+187,git_repo,1,name_en,InterHop,NA,NA,NA,NA
+188,git_repo,1,name_fr,InterHop,NA,NA,NA,NA
+189,last_db_save,NA,last_db_save,2023-10-15 17:17:43,NA,1,2023-10-15 17:17:43,0

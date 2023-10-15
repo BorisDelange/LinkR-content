@@ -1,3 +1,2 @@
-id,name,description,category,url_address,creator_id,datetime,deleted
-1,InterHop,NA,plugin,https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins,1,2023-09-05 16:48:35,0
-2,InterHop,NA,script,https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/scripts,1,2023-09-05 16:48:50,0
+id,unique_id,name,api_key,repo_url_address,raw_files_url_address,creator_id,datetime,deleted
+1,f56d2dcd2cd6c64f16bb421707954375b74149bf2cbdfb05a8eafee88bd23c12,InterHop,NA,https://framagit.org/interhop/linkr/LinkR-content,https://framagit.org/interhop/linkr/LinkR-content/-/raw/main,1,2023-10-15 17:16:19,0
