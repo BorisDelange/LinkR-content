@@ -1,60 +1,45 @@
-<?xml version="1.0"?>
-<datasets>
-  <dataset>
-    <app_version>0.2.0</app_version>
-    <unique_id>3d3aaab2f83b4acccb9b67bd107db82f66282ae972d7dfbd7baf05c690ed73c0</unique_id>
-    <version>0.0.1.9000</version>
-    <author>Alan Turing</author>
-    <description_en></description_en>
-    <name_en>MIMIC-IV demo</name_en>
-    <category_en></category_en>
-    <description_fr></description_fr>
-    <name_fr>MIMIC-IV demo</name_fr>
-    <category_fr></category_fr>
-    <creation_datetime>2023-10-15 17:08:40</creation_datetime>
-    <update_datetime>2023-10-15 17:09:11</update_datetime>
-    <code>create_ids &lt;- function(col_name = character(), data = tibble::tibble(), new_cols = list(), col_left_join = character()){
+create_ids <- function(col_name = character(), data = tibble::tibble(), new_cols = list(), col_left_join = character()){
   
-  new_cols[[col_name]] &lt;&lt;-
-    data %&gt;%
-    dplyr::distinct(get(col_name)) %&gt;%
+  new_cols[[col_name]] <<-
+    data %>%
+    dplyr::distinct(get(col_name)) %>%
     dplyr::rename_at(1, ~col_name)
   
-  if (length(col_left_join) &gt; 0) new_cols[[col_name]] &lt;&lt;- 
-      new_cols[[col_name]] %&gt;%
+  if (length(col_left_join) > 0) new_cols[[col_name]] <<- 
+      new_cols[[col_name]] %>%
       dplyr::left_join(
-        new_cols[[col_left_join]] %&gt;%
-          dplyr::rename_at(1, ~col_name) %&gt;%
+        new_cols[[col_left_join]] %>%
+          dplyr::rename_at(1, ~col_name) %>%
           dplyr::rename_at(2, ~paste0("new_", col_name)),
         by = col_name
       )
   
-  else new_cols[[col_name]] &lt;&lt;- 
-      new_cols[[col_name]] %&gt;% 
+  else new_cols[[col_name]] <<- 
+      new_cols[[col_name]] %>% 
       dplyr::mutate(!!paste0("new_", col_name) := 1:dplyr::n())
 }
 
-join_new_ids &lt;- function(col_name = character(), data = tibble::tibble()){
+join_new_ids <- function(col_name = character(), data = tibble::tibble()){
   
-  data &lt;&lt;-
-    data %&gt;%
-    dplyr::left_join(new_cols[[col_name]], by = col_name) %&gt;%
-    dplyr::relocate(!!paste0("new_", col_name), .before = !!col_name) %&gt;%
-    dplyr::select(-!!col_name) %&gt;%
+  data <<-
+    data %>%
+    dplyr::left_join(new_cols[[col_name]], by = col_name) %>%
+    dplyr::relocate(!!paste0("new_", col_name), .before = !!col_name) %>%
+    dplyr::select(-!!col_name) %>%
     dplyr::rename_at(paste0("new_", col_name), ~col_name)
 }
 
-cols_left_join &lt;- c(
+cols_left_join <- c(
   "preceding_visit_occurrence_id" = "visit_occurrence_id",
   "preceding_visit_detail_id" = "visit_detail_id"
 )
 
-new_cols &lt;- list()
-data &lt;- tibble::tibble()
+new_cols <- list()
+data <- tibble::tibble()
 
-prefix &lt;- "https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/"
+prefix <- "https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/"
 
-tables &lt;- tibble::tribble(
+tables <- tibble::tribble(
   ~table_name, ~col_types, ~ids_to_join, ~ids_to_create, 
   "person", "niiiiTiiiiiccicici", "person_id", "person_id",
   "observation_period", "nnDDi", 
@@ -105,32 +90,32 @@ tables &lt;- tibble::tribble(
 )
 
 # Have all tables already been saved as csv ?
-all_tables_saved_as_csv &lt;- all(paste0(tables$table_name, ".csv") %in% list.files(paste0(r$app_folder, "/datasets/", %dataset_id%)))
+all_tables_saved_as_csv <- all(paste0(tables$table_name, ".csv") %in% list.files(paste0(r$app_folder, "/datasets/", %dataset_id%)))
 
 for (i in 1:nrow(tables)){
-  table &lt;- tables[i, ]
+  table <- tables[i, ]
   if (i != 1) cat("\n\n")
   cat(paste0(toupper(table$table_name), "\n\n"))
   
-  get_data &lt;- function(){
-    data &lt;&lt;- vroom::vroom(paste0(prefix, table$table_name, ".csv"), col_types = table$col_types, progress = FALSE)
+  get_data <- function(){
+    data <<- vroom::vroom(paste0(prefix, table$table_name, ".csv"), col_types = table$col_types, progress = FALSE)
     
-    if (table$table_name == "visit_detail") data &lt;&lt;- data %&gt;%
+    if (table$table_name == "visit_detail") data <<- data %>%
         dplyr::relocate(visit_detail_source_value, visit_detail_source_concept_id, admitting_source_value, admitting_source_concept_id,
           discharge_to_source_value, discharge_to_concept_id, preceding_visit_detail_id, visit_detail_parent_id, visit_occurrence_id, .after = "care_site_id")
-    if (table$table_name == "condition_occurrence") data &lt;&lt;- data %&gt;%
+    if (table$table_name == "condition_occurrence") data <<- data %>%
         dplyr::relocate(condition_status_concept_id, .after = "condition_type_concept_id")
     
-    ids_to_join &lt;- table$ids_to_join %&gt;% unlist()
-    ids_to_create &lt;- table$ids_to_create %&gt;% unlist()
+    ids_to_join <- table$ids_to_join %>% unlist()
+    ids_to_create <- table$ids_to_create %>% unlist()
     
-    if (length(ids_to_join) &gt; 0){
+    if (length(ids_to_join) > 0){
       for (j in 1:length(ids_to_join)){
-        id_to_join &lt;- ids_to_join[j]
+        id_to_join <- ids_to_join[j]
         
         if (id_to_join %in% ids_to_create){
-          col_left_join &lt;- character()
-          if (id_to_join %in% names(cols_left_join)) col_left_join &lt;- cols_left_join[id_to_join]
+          col_left_join <- character()
+          if (id_to_join %in% names(cols_left_join)) col_left_join <- cols_left_join[id_to_join]
           
           create_ids(col_name = id_to_join, data = data, new_cols = new_cols, col_left_join = col_left_join)
         }
@@ -142,12 +127,8 @@ for (i in 1:nrow(tables)){
     data
   }
   
-  if (table$table_name %in% c("person", "care_site", "visit_occurrence", "visit_detail") &amp; !all_tables_saved_as_csv) get_data()
+  if (table$table_name %in% c("person", "care_site", "visit_occurrence", "visit_detail") & !all_tables_saved_as_csv) get_data()
   
   import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = get_data(), 
     type = table$table_name, omop_version = "5.3", read_with = "vroom", save_as = "csv", rewrite = FALSE)
-}</code>
-    <omop_version>6.0</omop_version>
-    <images></images>
-  </dataset>
-</datasets>
+}

@@ -5,12 +5,12 @@
     <unique_id>3d3aaab2f83b4acccb9b67bd107db82f66282ae972d7dfbd7baf05c690ed73c0</unique_id>
     <version>0.0.1.9000</version>
     <author>Alan Turing</author>
-    <description_en></description_en>
     <name_en>MIMIC-IV demo</name_en>
-    <category_en></category_en>
-    <description_fr></description_fr>
     <name_fr>MIMIC-IV demo</name_fr>
+    <category_en></category_en>
     <category_fr></category_fr>
+    <description_en></description_en>
+    <description_fr></description_fr>
     <creation_datetime>2023-10-15 17:08:40</creation_datetime>
     <update_datetime>2023-10-15 17:09:11</update_datetime>
     <code>create_ids &lt;- function(col_name = character(), data = tibble::tibble(), new_cols = list(), col_left_join = character()){
