@@ -4,7 +4,7 @@
     <app_version>0.2.0</app_version>
     <unique_id>5d5f1340de71fc17788aedd5aa1a65023a294f95dc18b4747dab96e068cc8138</unique_id>
     <version>0.0.1.9000</version>
-    <author>Alan Turing</author>
+    <author>Boris Delange</author>
     <name_en>MIMIC-IV demo</name_en>
     <name_fr>MIMIC-IV demo</name_fr>
     <category_en></category_en>
@@ -12,7 +12,7 @@
     <description_en></description_en>
     <description_fr></description_fr>
     <creation_datetime>2023-10-15 17:12:32</creation_datetime>
-    <update_datetime>2023-10-15 17:13:19</update_datetime>
+    <update_datetime>2023-10-16 20:04:23</update_datetime>
     <code>folder &lt;- "https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/"
 
 col_types &lt;- list()
