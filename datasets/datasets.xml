@@ -3,8 +3,8 @@
   <dataset>
     <app_version>0.2.0</app_version>
     <unique_id>3d3aaab2f83b4acccb9b67bd107db82f66282ae972d7dfbd7baf05c690ed73c0</unique_id>
-    <version>0.0.1.9000</version>
-    <author>Alan Turing</author>
+    <version>0.0.1.9001</version>
+    <author>Boris Delange</author>
     <description_en></description_en>
     <name_en>MIMIC-IV demo</name_en>
     <category_en></category_en>
@@ -12,7 +12,7 @@
     <name_fr>MIMIC-IV demo</name_fr>
     <category_fr></category_fr>
     <creation_datetime>2023-10-15 17:08:40</creation_datetime>
-    <update_datetime>2023-10-15 17:09:11</update_datetime>
+    <update_datetime>2023-10-16 19:33:15</update_datetime>
     <code>create_ids &lt;- function(col_name = character(), data = tibble::tibble(), new_cols = list(), col_left_join = character()){
   
   new_cols[[col_name]] &lt;&lt;-
@@ -147,7 +147,7 @@ for (i in 1:nrow(tables)){
   import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = get_data(), 
     type = table$table_name, omop_version = "5.3", read_with = "vroom", save_as = "csv", rewrite = FALSE)
 }</code>
-    <omop_version>6.0</omop_version>
+    <omop_version>5.3</omop_version>
     <images></images>
   </dataset>
 </datasets>
