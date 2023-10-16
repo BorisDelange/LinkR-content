@@ -33,7 +33,7 @@ visit_occurrence <- function(){
     )
 
     query <- bigrquery::bq_project_query(bd_config %>% dplyr::filter(key == "bq_project_id") %>% dplyr::pull(value), sql)
-    bigrquery::bq_table_download(query)
+    bigrquery::bq_table_download(query, quiet = TRUE)
 }
 
 import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = visit_occurrence(),
@@ -69,8 +69,8 @@ person <- function(){
         "WHERE SUBJECT_ID IN ({glue::glue_collapse(visit_occurrence() %>% dplyr::pull(person_id), sep = ', ')})"
     ))
 
-    query <- bigrquery::bq_project_query("physionet-data-315510", sql)
-    bigrquery::bq_table_download(query) %>%
+    query <- bigrquery::bq_project_query(bd_config %>% dplyr::filter(key == "bq_project_id") %>% dplyr::pull(value), sql)
+    bigrquery::bq_table_download(query, quiet = TRUE) %>%
         dplyr::mutate_at(c("person_id", "gender_concept_id", "year_of_birth", "month_of_birth", "day_of_birth", "race_concept_id", "ethnicity_concept_id",
             "location_id", "provider_id", "care_site_id", "gender_source_concept_id", "race_source_concept_id", "ethnicity_source_concept_id"), as.integer) %>%
         dplyr::mutate_at(c("person_source_value", "gender_source_value", "race_source_value", "ethnicity_source_value"), as.character)
@@ -117,8 +117,8 @@ visit_detail <- function(){
         "WHERE HADM_ID IN ({glue::glue_collapse(visit_occurrence() %>% dplyr::pull(visit_occurrence_id), sep = ', ')})"
     ))
 
-    query <- bigrquery::bq_project_query("physionet-data-315510", sql)
-    data <- bigrquery::bq_table_download(query) %>%
+    query <- bigrquery::bq_project_query(bd_config %>% dplyr::filter(key == "bq_project_id") %>% dplyr::pull(value), sql)
+    data <- bigrquery::bq_table_download(query, quiet = TRUE) %>%
         dplyr::mutate_at(c("visit_detail_id", "person_id", "visit_detail_concept_id", "visit_detail_type_concept_id", "provider_id", "care_site_id",
             "visit_detail_source_concept_id", "admitted_from_concept_id", "discharge_to_concept_id", "visit_detail_parent_id", "visit_occurrence_id"), as.integer) %>%
         dplyr::mutate_at(c("visit_detail_source_value", "admitted_from_source_value", "discharge_to_source_value"), as.character)
@@ -142,7 +142,40 @@ import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id =
     type = "visit_detail", omop_version = %omop_version%, read_with = "vroom", save_as = "csv", rewrite = FALSE)
 
 # NOTE
+cat("\n\n<strong>NOTE</strong>\n\n")
 
+note <- function(){
+    sql <- glue::glue(paste0(
+        "SELECT ",
+        "ROW_ID AS note_id,",
+        "SUBJECT_ID AS person_id,",
+        "NULL AS note_event_id,",
+        "NULL AS note_event_field_concept_id,",
+        "CAST(CHARTDATE AS DATE) AS note_date,",
+        "CAST(CONCAT(CAST(CHARTDATE AS DATE), ' 00:00:00') AS DATETIME) AS note_datetime,",
+        "NULL AS note_type_concept_id,",
+        "NULL AS note_class_concept_id,",
+        "CONCAT(CATEGORY, ' - ', DESCRIPTION) AS note_title,",
+        "TEXT AS note_text,",
+        "NULL AS encoding_concept_id,",
+        "NULL AS language_concept_id,",
+        "NULL AS provider_id,",
+        "HADM_ID AS visit_occurrence_id,",
+        "NULL AS visit_detail_id,",
+        "NULL AS note_source_value ",
+        "FROM physionet-data.mimiciii_notes.noteevents ",
+        "WHERE HADM_ID IN ({glue::glue_collapse(visit_occurrence() %>% dplyr::pull(visit_occurrence_id), sep = ', ')})"
+    ))
+
+    query <- bigrquery::bq_project_query(bd_config %>% dplyr::filter(key == "bq_project_id") %>% dplyr::pull(value), sql)
+    data <- bigrquery::bq_table_download(query, quiet = TRUE) %>%
+        dplyr::mutate_at(c("note_id", "note_event_field_concept_id", "note_type_concept_id", "note_class_concept_id", 
+            "encoding_concept_id", "language_concept_id", "provider_id", "visit_occurrence_id", "visit_detail_id"), as.integer) %>%
+        dplyr::mutate_at(c("note_title", "note_text", "note_source_value"), as.character)
+}
+
+import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = note(),
+    type = "note", omop_version = %omop_version%, read_with = "duckdb", save_as = "parquet", rewrite = FALSE)
 
 # DEVICE_EXPOSURE
 # cat("\n\n<strong>DEVICE_EXPOSURE</strong>\n\n")
@@ -177,8 +210,8 @@ import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id =
 #         "WHERE vd.icustay_id IN ({glue::glue_collapse(visit_detail() %>% dplyr::pull(visit_detail_id), sep = ', ')})"
 #     ))
 # 
-#     query <- bigrquery::bq_project_query("physionet-data-315510", sql)
-#     data <- bigrquery::bq_table_download(query) %>%
+#     query <- bigrquery::bq_project_query(bd_config %>% dplyr::filter(key == "bq_project_id") %>% dplyr::pull(value), sql)
+#     data <- bigrquery::bq_table_download(query, quiet = TRUE) %>%
 #         dplyr::mutate_at(c("device_exposure_id", "person_id", "device_concept_id", "device_type_concept_id", "quantity", "provider_id",
 #             "visit_occurrence_id", "visit_detail_id", "device_source_concept_id"), as.integer) %>%
 #         dplyr::mutate_at(c("unique_device_id", "device_source_value"), as.character)
