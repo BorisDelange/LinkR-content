@@ -1,0 +1,12 @@
+base,en,fr
+script,Script,Script
+scripts_management,Scripts management,Gestion des scripts
+r,R,R
+rmarkdown,RMarkdown,RMarkdown
+plot,Plot,Figure
+confirm_deletion_title,Delete scripts,Supprimer des scripts
+confirm_deletion_subtext,Do you want to delete these scripts ?,Confirmer la suppression de ces scripts ?
+script_deleted,Script(s) deleted,Script(s) supprimé(s)
+scripts_names_duplicates,"There are duplicates in the names, please remove duplicates before saving","Certains noms sont utilisés plusieurs fois, retirez-les avant de sauvegarder"
+unauthorized_access_to_console,You are not authorized to access the console,Vous n'avez pas l'autorisation pour accéder à la console
+plot_width,Plot width (%),Largeur de la figure (%)
