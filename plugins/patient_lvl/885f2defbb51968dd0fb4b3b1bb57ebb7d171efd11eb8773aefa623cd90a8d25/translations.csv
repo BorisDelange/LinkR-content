@@ -5,3 +5,12 @@ show_all_notes,Show all notes,Afficher toutes les notes
 code,Code,Code
 scripts_management,Scripts management,Gérer les scripts
 chronological_order,Chronological order,Ordre chronologique
+save,Save,Sauvegarder
+hide_params,Hide parameters,Masquer les paramètres
+script_added,Script added,Script ajouté
+confirm_deletion_title,Delete scripts,Supprimer des scripts
+confirm_deletion_subtext,Do you want to delete these scripts ?,Confirmer la suppression de ces scripts ?
+script_deleted,Script(s) deleted,Script(s) supprimé(s)
+id,ID,ID
+title,Title,Titre
+datetime,Datetime,Date & heure
