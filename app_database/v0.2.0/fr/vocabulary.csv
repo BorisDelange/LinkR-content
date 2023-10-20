@@ -1,2 +1,1 @@
 id,vocabulary_id,vocabulary_name,vocabulary_reference,vocabulary_version,vocabulary_concept_id,data_source_id,display_order,creator_id,creation_datetime,update_datetime,deleted
-1,MIMIC-IV demo,MIMIC-IV demo,,,NA,,NA,1,2023-10-15 17:12:32,2023-10-15 17:13:19,0
