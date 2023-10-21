@@ -4,13 +4,111 @@
     <app_version>0.2.0</app_version>
     <type>2</type>
     <unique_id>dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21</unique_id>
-    <version>0.0.1.9014</version>
+    <version>0.0.1.9016</version>
     <author>Boris Delange</author>
     <image>ggplot2.png</image>
-    <name_fr>Figure (ggplot2)</name_fr>
     <name_en>Plot (ggplot2)</name_en>
-    <category_fr></category_fr>
+    <name_fr>Figure (ggplot2)</name_fr>
     <category_en></category_en>
+    <category_fr></category_fr>
+    <description_en>## &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; Description
+
+This plugin uses the R library &lt;a href="https://ggplot2.tidyverse.org/" target="_blank"&gt;`ggplot2`&lt;/a&gt;, allowing the creation of plots from data.
+
+## &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; Usage
+
+### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Manage Scripts
+
+&lt;details&gt;
+&lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
+Click here to show / hide content&lt;/span&gt;&lt;/summary&gt;
+
+In order to **save multiple plots** to a single widget, you can **create scripts** from the "Scripts management" tab.
+
+You can also **rename** and **delete** scripts from this tab.
+
+A script includes:
+
+- The **parameters** saved on a plot, from the "Plot" tab.
+- The **code** corresponding to that plot, from the "Code" tab.
+
+Once a **script is created**, **select it** from the "Plot" or "Code" tab.
+
+**Save** this script after making changes.
+
+&lt;br /&gt;&lt;img src="%plugin_folder%/scripts_management.png" width="850" style="border:dashed 1px; padding:10px;" /&gt;
+
+### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Configure a Plot
+
+Go to the "Plot" tab.
+
+**Choose the variable** to display on each axis in the "Variables" tab.
+
+Some plots will have a **variable on only one axis** (geom_histogram), while others will only display **if variables are specified on both axes** (geom_point).
+
+For each plot, choose:
+
+- The **theme** of the plot.
+- The **text** for the **x** axis.
+- The **text** for the **y** axis (whether a variable is assigned to it or not).
+
+In the "Variables" tab, it's possible to **group data**, by patient or by time. Then choose the **function** to apply to group the data.
+
+For example:
+
+- Group data by **patient** by selecting the **"maximum"** function: the maximum value of the parameter, across all stays, will be chosen for each patient.
+- Group data every **4 hours** by selecting the **"average"** function: the maximum value will be chosen for each 4-hour interval, for each patient (thus, multiple data points per patient).
+
+By checking "Show plot at script launch", the **plot** will be **displayed upon the script's loading**.
+
+&lt;br /&gt;&lt;img src="%plugin_folder%/plot_settings.png" width="950" style="border:dashed 1px; padding:10px;" /&gt;
+
+### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Display the Code
+
+By clicking on "**Generate Code**" from the "Plot" tab, the **code corresponding to the plot** will be **generated** in the text editor, in the "Code" tab.
+
+You can **edit this code** and **save** your changes.
+
+If you click on **Generate Code** again, your code will be deleted and replaced by the default code corresponding to the plot configured in the "Plot" tab.
+
+Click on "**Run code**" to display the plot corresponding to the code.
+
+By checking "Run code at script launch", the **code** will be **executed upon the script's loading**.
+
+&lt;br /&gt;&lt;img src="%plugin_folder%/plot_code.png" width="750" style="border:dashed 1px; padding:10px;" /&gt;
+
+&lt;/details&gt;
+
+## &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; Available Plots
+
+&lt;details open&gt;
+&lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
+Click here to show / hide content&lt;/span&gt;&lt;/summary&gt;
+
+### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Histogram (geom_histogram)
+
+Allows visualization of the distribution of a single continuous variable by dividing the x-axis into intervals and counting the number of observations in each interval.
+
+&lt;img src="%plugin_folder%/geom_histogram.png" width="700" /&gt;
+
+You can choose the **size of the bars** in two ways:
+
+- Either by the **size** of the bars, depending on the x-axis (a size of 50 means a bar will take up 50 of the unit specified on the x-axis).
+- Or by the **number** of total bars displayed.
+
+### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Scatter Plot (geom_point)
+
+Allows visualization of the distribution of two continuous variables, one on the x-axis and the other on the y-axis.
+
+&lt;img src="%plugin_folder%/geom_point.png" width="700" /&gt;
+
+By default, only points having a **value at a given moment** both for the **x variable** and for the **y variable** will be displayed.
+
+For instance, if I choose systolic blood pressure for x and mean arterial pressure for y (as in the example), and I have an x value on a certain day at 18:37:10 and a y value on the same day at 18:37:11, since the moments aren't exactly the same, there won't be a corresponding point on the graph.
+
+To counter this, it is possible to **group data**, by patient or by time (see Usage section).
+
+&lt;/details&gt;</description_en>
     <description_fr>## &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; Description
 
 Ce plugin utilise la librairie R &lt;a href="https://ggplot2.tidyverse.org/" target="_blank"&gt;`ggplot2`&lt;/a&gt;, permettant de cr&#xE9;er des graphiques &#xE0; partir des donn&#xE9;es.
@@ -110,106 +208,8 @@ que j'ai une valeur de x tel jour &#xE0; 18:37:10 et une valeur de y le m&#xEA;m
 Pour contrer cela, il est possible de **grouper les donn&#xE9;es**, par patient ou par moment (cf paragraphe Utilisation).
 
 &lt;/details&gt;</description_fr>
-    <description_en>## &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; Description
-
-This plugin uses the R library &lt;a href="https://ggplot2.tidyverse.org/" target="_blank"&gt;`ggplot2`&lt;/a&gt;, allowing the creation of plots from data.
-
-## &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; Usage
-
-### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Manage Scripts
-
-&lt;details&gt;
-&lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
-Click here to show / hide content&lt;/span&gt;&lt;/summary&gt;
-
-In order to **save multiple plots** to a single widget, you can **create scripts** from the "Scripts management" tab.
-
-You can also **rename** and **delete** scripts from this tab.
-
-A script includes:
-
-- The **parameters** saved on a plot, from the "Plot" tab.
-- The **code** corresponding to that plot, from the "Code" tab.
-
-Once a **script is created**, **select it** from the "Plot" or "Code" tab.
-
-**Save** this script after making changes.
-
-&lt;br /&gt;&lt;img src="%plugin_folder%/scripts_management.png" width="850" style="border:dashed 1px; padding:10px;" /&gt;
-
-### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Configure a Plot
-
-Go to the "Plot" tab.
-
-**Choose the variable** to display on each axis in the "Variables" tab.
-
-Some plots will have a **variable on only one axis** (geom_histogram), while others will only display **if variables are specified on both axes** (geom_point).
-
-For each plot, choose:
-
-- The **theme** of the plot.
-- The **text** for the **x** axis.
-- The **text** for the **y** axis (whether a variable is assigned to it or not).
-
-In the "Variables" tab, it's possible to **group data**, by patient or by time. Then choose the **function** to apply to group the data.
-
-For example:
-
-- Group data by **patient** by selecting the **"maximum"** function: the maximum value of the parameter, across all stays, will be chosen for each patient.
-- Group data every **4 hours** by selecting the **"average"** function: the maximum value will be chosen for each 4-hour interval, for each patient (thus, multiple data points per patient).
-
-By checking "Show plot at script launch", the **plot** will be **displayed upon the script's loading**.
-
-&lt;br /&gt;&lt;img src="%plugin_folder%/plot_settings.png" width="950" style="border:dashed 1px; padding:10px;" /&gt;
-
-### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Display the Code
-
-By clicking on "**Generate Code**" from the "Plot" tab, the **code corresponding to the plot** will be **generated** in the text editor, in the "Code" tab.
-
-You can **edit this code** and **save** your changes.
-
-If you click on **Generate Code** again, your code will be deleted and replaced by the default code corresponding to the plot configured in the "Plot" tab.
-
-Click on "**Run code**" to display the plot corresponding to the code.
-
-By checking "Run code at script launch", the **code** will be **executed upon the script's loading**.
-
-&lt;br /&gt;&lt;img src="%plugin_folder%/plot_code.png" width="750" style="border:dashed 1px; padding:10px;" /&gt;
-
-&lt;/details&gt;
-
-## &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; Available Plots
-
-&lt;details open&gt;
-&lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
-Click here to show / hide content&lt;/span&gt;&lt;/summary&gt;
-
-### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Histogram (geom_histogram)
-
-Allows visualization of the distribution of a single continuous variable by dividing the x-axis into intervals and counting the number of observations in each interval.
-
-&lt;img src="%plugin_folder%/geom_histogram.png" width="700" /&gt;
-
-You can choose the **size of the bars** in two ways:
-
-- Either by the **size** of the bars, depending on the x-axis (a size of 50 means a bar will take up 50 of the unit specified on the x-axis).
-- Or by the **number** of total bars displayed.
-
-### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; Scatter Plot (geom_point)
-
-Allows visualization of the distribution of two continuous variables, one on the x-axis and the other on the y-axis.
-
-&lt;img src="%plugin_folder%/geom_point.png" width="700" /&gt;
-
-By default, only points having a **value at a given moment** both for the **x variable** and for the **y variable** will be displayed.
-
-For instance, if I choose systolic blood pressure for x and mean arterial pressure for y (as in the example), and I have an x value on a certain day at 18:37:10 and a y value on the same day at 18:37:11, since the moments aren't exactly the same, there won't be a corresponding point on the graph.
-
-To counter this, it is possible to **group data**, by patient or by time (see Usage section).
-
-&lt;/details&gt;</description_en>
     <creation_datetime>2023-06-28 22:01:19</creation_datetime>
-    <update_datetime>2023-09-30 21:34:33</update_datetime>
+    <update_datetime>2023-10-21 16:05:25</update_datetime>
     <images>geom_histogram.png;;;geom_point.png;;;ggplot2.png;;;plot_code.png;;;plot_settings.png;;;scripts_management.png</images>
   </plugin>
 </plugins>

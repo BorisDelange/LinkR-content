@@ -357,7 +357,7 @@ observeEvent(input$save_%widget_id%, {
     # Add new options
     new_options <- tibble::tibble(
         id = seq(last_row + 1, last_row + length(inputs)),
-        widget_id = %widget_id%, patient_id = NA_integer_, link_id = input$script_choice_%widget_id%,
+        widget_id = %widget_id%, person_id = NA_integer_, link_id = input$script_choice_%widget_id%,
         category = NA_character_, name = NA_character_, value = NA_character_, value_num = NA_real_,
         creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
     
@@ -486,7 +486,7 @@ observeEvent(input$add_script_%widget_id%, {
     last_id <- DBI::dbGetQuery(m$db, sql) %>% dplyr::pull()
     
     new_options <- tibble::tibble(
-        id = last_row + 1, widget_id = %widget_id%, patient_id = NA_integer_, link_id = NA_integer_,
+        id = last_row + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
         category = NA_character_, name = "script", value = input$script_name_%widget_id%, value_num = last_id + 1,
         creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
         
@@ -562,7 +562,7 @@ observeEvent(input$script_choice_%widget_id%, {
     last_row <- get_last_row(m$db, "aggregated_widgets_options")
     
     new_options <- tibble::tibble(
-        id = last_row + 1, widget_id = %widget_id%, patient_id = NA_integer_, link_id = NA_integer_,
+        id = last_row + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
         category = NA_character_, name = "selected_script", value = NA_character_, value_num = input$script_choice_%widget_id%,
         creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
         
@@ -649,7 +649,7 @@ observeEvent(input$save_scripts_%widget_id%, {
     
     new_options <- tibble::tibble(
         id = seq(last_row + 1, last_row + nrow(m$scripts_temp_%widget_id%)),
-        widget_id = %widget_id%, patient_id = NA_integer_, link_id = NA_integer_,
+        widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
         category = NA_character_, name = "script", value = m$scripts_temp_%widget_id%$name, value_num = m$scripts_temp_%widget_id%$id,
         creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
         
