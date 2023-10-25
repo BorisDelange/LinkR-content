@@ -130,5 +130,5 @@ for (i in 1:nrow(tables)){
   if (table$table_name %in% c("person", "care_site", "visit_occurrence", "visit_detail") & !all_tables_saved_as_csv) get_data()
   
   import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = get_data(), 
-    type = table$table_name, omop_version = "5.3", read_with = "vroom", save_as = "csv", rewrite = FALSE)
+    type = table$table_name, omop_version = %omop_version%, read_with = "vroom", save_as = "csv", rewrite = FALSE)
 }
