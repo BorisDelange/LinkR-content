@@ -1,1 +1,43 @@
 id,vocabulary_id,vocabulary_name,vocabulary_reference,vocabulary_version,vocabulary_concept_id,data_source_id,display_order,creator_id,creation_datetime,update_datetime,deleted
+1,Obs Period Type,OMOP Observation Period Type,OMOP generated,NA,44819149,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+2,Visit,OMOP Visit,OMOP generated,Visit 20211216,44819119,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+3,Plan Stop Reason,OMOP Plan Stop Reason,OMOP generated,NA,32474,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+4,Episode,OMOP Episode,OMOP generated,Episode 20201014,32523,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+5,Drug Type,OMOP Drug Exposure Type,OMOP generated,NA,44819126,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+6,UCUM,Unified Code for Units of Measure (Regenstrief Institute),http://aurora.regenstrief.org/~ucum/ucum.html#section-Alphabetic-Index,Version 1.8.2,44819107,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+7,Language,OMOP Language,OMOP generated,Language 20221030,33069,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+8,Device Type,OMOP Device Type,OMOP generated,NA,44819151,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+9,Condition Status,OMOP Condition Status,OMOP generated,NA,32887,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+10,Cost,OMOP Cost,OMOP generated,NA,581457,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+11,UB04 Pri Typ of Adm,UB04 Claim Inpatient Admission Type Code (CMS),https://www.resdac.org/cms-data/variables/Claim-Inpatient-Admission-Type-Code,NA,32046,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+12,Vocabulary,OMOP Vocabulary,OMOP generated,NA,44819232,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+13,Type Concept,OMOP Type Concept,OMOP generated,Type Concept 20221030,32808,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+14,UB04 Pt dis status,UB04 Patient Discharge Status Code (CMS),https://www.resdac.org/cms-data/variables/patient-discharge-status-code,NA,32047,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+15,OSM,OpenStreetMap (OSMF),"https://www.openstreetmap.org/copyright/en, https://wambachers-osm.website/boundaries/",OSM Release 2019-02-21,32541,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+16,Death Type,OMOP Death Type,OMOP generated,NA,44819135,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+17,SOPT,Source of Payment Typology (PHDSC),https://www.nahdo.org/sopt,SOPT Version 9.2,32473,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+18,Metadata,OMOP Metadata,OMOP generated,NA,32675,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+19,Observation Type,OMOP Observation Type,OMOP generated,NA,44819129,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+20,Korean Revenue Code,Korean Revenue Code (KNHIS),OMOP generated,NA,32724,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+21,Procedure Type,OMOP Procedure Occurrence Type,OMOP generated,NA,44819128,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+22,US Census,Census regions of the United States (USCB),https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html,US Census 2017 Release,32570,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+23,Cost Type,OMOP Cost Type,OMOP generated,NA,5029,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+24,Relationship,OMOP Relationship,OMOP generated,NA,44819235,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+25,CDM,OMOP Common DataModel,https://github.com/OHDSI/CommonDataModel,CDM v6.0.0,32485,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+26,Sponsor,OMOP Sponsor,OMOP generated,NA,32472,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+27,UB04 Point of Origin,UB04 Claim Source Inpatient Admission Code (CMS),https://www.resdac.org/cms-data/variables/Claim-Source-Inpatient-Admission-Code,NA,32045,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+28,UB04 Typ bill,UB04 Type of Bill - Institutional (USHIK),https://ushik.ahrq.gov/ViewItemDetails?&system=apcd&itemKey=196987000,NA,32044,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+29,Meas Type,OMOP Measurement Type,OMOP generated,NA,44819152,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+30,Note Type,OMOP Note Type,OMOP generated,NA,44819146,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+31,Condition Type,OMOP Condition Occurrence Type,OMOP generated,NA,44819127,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+32,Domain,OMOP Domain,OMOP generated,NA,44819147,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+33,Visit Type,OMOP Visit Type,OMOP generated,NA,44819150,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+34,None,OMOP Standardized Vocabularies,OMOP generated,v5.0 31-AUG-23,44819096,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+35,Concept Class,OMOP Concept Class,OMOP generated,NA,44819233,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+36,Cohort Type,OMOP Cohort Type,OMOP generated,NA,44819234,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+37,Plan,OMOP Health Plan,OMOP generated,NA,32471,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+38,Gender,OMOP Gender,OMOP generated,NA,44819108,NA,NA,NA,2023-10-25 13:46:53,2023-10-25 13:46:53,0
+39,NUCC,National Uniform Claim Committee Health Care Provider Taxonomy Code Set (NUCC),http://www.nucc.org/index.php?option=com_content&view=article&id=107&Itemid=132,2018-06-26 NUCC,44819137,NA,NA,NA,2023-10-25 13:47:54,2023-10-25 13:47:54,0
+40,Medicare Specialty,Medicare provider/supplier specialty codes (CMS),http://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/MedicareProviderSupEnroll/Taxonomy.html,2018-06-26 Specialty,44819138,NA,NA,NA,2023-10-25 13:48:08,2023-10-25 13:48:08,0
+41,CMS Place of Service,Place of Service Codes for Professional Claims (CMS),http://www.cms.gov/Medicare/Medicare-Fee-for-Service-Payment/PhysicianFeeSched/downloads//Website_POS_database.pdf,2009-01-11,44819110,NA,NA,NA,2023-10-25 13:48:24,2023-10-25 13:48:24,0
+42,LOINC,Logical Observation Identifiers Names and Codes (Regenstrief Institute),http://loinc.org/downloads/loinc,LOINC 2.73,44819102,NA,NA,NA,2023-10-25 13:57:10,2023-10-25 13:57:10,0

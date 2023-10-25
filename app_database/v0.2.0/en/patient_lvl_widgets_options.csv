@@ -1,1 +1,1 @@
-id,widget_id,patient_id,link_id,category,name,value,value_num,creator_id,datetime,deleted
+id,widget_id,person_id,link_id,category,name,value,value_num,creator_id,datetime,deleted
