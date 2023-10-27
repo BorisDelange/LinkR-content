@@ -1,6 +1,12 @@
 ## InterHop
 
-InterHop is a French association of doctors, engineers and data scientists, promoting free software in healthcare.
+<i class="fa fa-check" style="color: steelblue;"></i> InterHop is a French **non-profit association**. It promotes, develops and provides **free and open-source software for health**.
+
+<i class="fa fa-check" style="color: steelblue;"></i> InterHop unites **activists** advocating for **open source software** and the **self-managed utilization** of health data at the **local level**.
+
+<i class="fa fa-check" style="color: steelblue;"></i> We are a collective comprised of **engineers, lawyers, health professionals** and **patients**.
+
+<i class="fa fa-check" style="color: steelblue;"></i> Here's the **open-source content** we share for the **LinkR** application.
 
 ## <i class='fa fa-file-alt' style='color: steelblue;'></i> Studies
 
