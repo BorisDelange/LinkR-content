@@ -14,7 +14,13 @@ No studies available.
 
 ## <i class='fa fa-terminal' style='color: steelblue;'></i> Plugins - Patient-level data
 
-<details style = 'border:solid 1px; padding:10px; margin:1px 0px 1px 0px;'>
+<details style = 'border:solid 1px; padding:10px; margin:5px 0px 5px 0px;'>
+<summary><span style = 'font-size:15px;'>Notes</summary>
+
+
+</details>
+
+<details style = 'border:solid 1px; padding:10px; margin:5px 0px 5px 0px;'>
 <summary><span style = 'font-size:15px;'>R console</summary>
 
 ### <i class="fa fa-info-circle" style="color: steelblue;"></i> 1) Description
@@ -108,112 +114,12 @@ data$x %>%
 </details>
 </details>
 
-<details style = 'border:solid 1px; padding:10px; margin:1px 0px 1px 0px;'>
-<summary><span style = 'font-size:15px;'>Notes</summary>
-
-
-</details>
-
 
 
 
 ## <i class='fa fa-terminal' style='color: steelblue;'></i> Plugins - Aggregated data
 
-<details style = 'border:solid 1px; padding:10px; margin:1px 0px 1px 0px;'>
-<summary><span style = 'font-size:15px;'>R console</summary>
-
-### <i class="fa fa-info-circle" style="color: steelblue;"></i> 1) Description
-
-This plugin allows you to **execute code** in the R console and **save your code as scripts**.
-
-### <i class="fa fa-cogs" style="color: steelblue;"></i> 2) Usage
-
-<details>
-<summary><span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''">
-Click here to show / hide content</span></summary>
-
-### <span style = "margin-left:20px;"> a) Scripts management</span>
-
-Go to the "Scripts management" tab to **add, delete, or rename scripts**.
-
-A script is a **text file containing code**.
-
-Once a script is created, you can **edit** it in the "Script" tab and **execute the code**.<br /><br />
-
-### <span style = "margin-left:20px;"> b) R code</span>
-
-Write **R code** and execute it: the **result returned by the console** will appear below the text editor.
-
-To know the **data model** used by the application, click on the help button (question mark at the top right of the page) when you are on the "Data / Access Data" page.
-
-Example code (get the min, max, and average heart rate of our patients):
-
-```
-d$measurement %>%
-    dplyr::filter(measurement_concept_id == 3027018) %>%
-    dplyr::group_by(person_id) %>%
-    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
-    dplyr::ungroup()
-```
-
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/>
-
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_code_2.png" width="600" style="margin-left:-7px;"/><br />
-
-### <span style = "margin-left:20px;"> c) RMarkdown</span>
-
-You can also write code in **Rmarkdown**.
-
-This is **Markdown** to which you can add **R code**.
-
-For more information on RMarkdown, <a href="https://rmarkdown.rstudio.com/lesson-2.html" target="_blank">visit their site</a>.
-
-Example code (the same example as above, in RMarkdown - a backslash has been added to prevent code execution):
-
-```
-# Script on heart rate
-
-\```{r}
-d$measurement %>%
-dplyr::filter(measurement_concept_id == 3027018) %>%
-dplyr::group_by(person_id) %>%
-dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
-dplyr::ungroup()
-\```
-```
-
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" />
-
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/rmarkdown_2.png" width="700" style="border:dashed 1px; padding:10px;" /><br /><br />
-
-### <span style = "margin-left:20px;"> d) Figure</span>
-
-You can **create figures**, for example with the `ggplot2` library.
-
-Here's an example of code:
-
-```
-# A list containing the data for the plot
-data <- list()
-
-# Filter data
-data$x <- d$measurement %>% dplyr::filter(measurement_concept_id == 3027018)
-
-# Create ggplot2 plot
-data$x %>%
-    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
-    ggplot2::geom_histogram(bins = 50, fill = "#377EB8", color = "#FFFFFF") +
-    ggplot2::theme_minimal() +
-    ggplot2::labs(x = "Heart rate (bpm)", y = "")
-```
-
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" />
-
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" />
-</details>
-</details>
-
-<details style = 'border:solid 1px; padding:10px; margin:1px 0px 1px 0px;'>
+<details style = 'border:solid 1px; padding:10px; margin:5px 0px 5px 0px;'>
 <summary><span style = 'font-size:15px;'>Plot (ggplot2)</summary>
 
 ### <i class="fa fa-info-circle" style="color: steelblue;"></i> 1) Description
@@ -318,6 +224,100 @@ To counter this, it is possible to **group data**, by patient or by time (see Us
 </details>
 </details>
 
+<details style = 'border:solid 1px; padding:10px; margin:5px 0px 5px 0px;'>
+<summary><span style = 'font-size:15px;'>R console</summary>
+
+### <i class="fa fa-info-circle" style="color: steelblue;"></i> 1) Description
+
+This plugin allows you to **execute code** in the R console and **save your code as scripts**.
+
+### <i class="fa fa-cogs" style="color: steelblue;"></i> 2) Usage
+
+<details>
+<summary><span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''">
+Click here to show / hide content</span></summary>
+
+### <span style = "margin-left:20px;"> a) Scripts management</span>
+
+Go to the "Scripts management" tab to **add, delete, or rename scripts**.
+
+A script is a **text file containing code**.
+
+Once a script is created, you can **edit** it in the "Script" tab and **execute the code**.<br /><br />
+
+### <span style = "margin-left:20px;"> b) R code</span>
+
+Write **R code** and execute it: the **result returned by the console** will appear below the text editor.
+
+To know the **data model** used by the application, click on the help button (question mark at the top right of the page) when you are on the "Data / Access Data" page.
+
+Example code (get the min, max, and average heart rate of our patients):
+
+```
+d$measurement %>%
+    dplyr::filter(measurement_concept_id == 3027018) %>%
+    dplyr::group_by(person_id) %>%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
+    dplyr::ungroup()
+```
+
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/>
+
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_code_2.png" width="600" style="margin-left:-7px;"/><br />
+
+### <span style = "margin-left:20px;"> c) RMarkdown</span>
+
+You can also write code in **Rmarkdown**.
+
+This is **Markdown** to which you can add **R code**.
+
+For more information on RMarkdown, <a href="https://rmarkdown.rstudio.com/lesson-2.html" target="_blank">visit their site</a>.
+
+Example code (the same example as above, in RMarkdown - a backslash has been added to prevent code execution):
+
+```
+# Script on heart rate
+
+\```{r}
+d$measurement %>%
+dplyr::filter(measurement_concept_id == 3027018) %>%
+dplyr::group_by(person_id) %>%
+dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
+dplyr::ungroup()
+\```
+```
+
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" />
+
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/rmarkdown_2.png" width="700" style="border:dashed 1px; padding:10px;" /><br /><br />
+
+### <span style = "margin-left:20px;"> d) Figure</span>
+
+You can **create figures**, for example with the `ggplot2` library.
+
+Here's an example of code:
+
+```
+# A list containing the data for the plot
+data <- list()
+
+# Filter data
+data$x <- d$measurement %>% dplyr::filter(measurement_concept_id == 3027018)
+
+# Create ggplot2 plot
+data$x %>%
+    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+    ggplot2::geom_histogram(bins = 50, fill = "#377EB8", color = "#FFFFFF") +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(x = "Heart rate (bpm)", y = "")
+```
+
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" />
+
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" />
+</details>
+</details>
+
 
 
 
@@ -327,14 +327,14 @@ No scripts available.
 
 ## <i class='fa fa-database' style='color: steelblue;'></i> Datasets
 
-<details style = 'border:solid 1px; padding:10px; margin:1px 0px 1px 0px;'>
-<summary><span style = 'font-size:15px;'>MIMIC-IV demo</summary>
+<details style = 'border:solid 1px; padding:10px; margin:5px 0px 5px 0px;'>
+<summary><span style = 'font-size:15px;'>MIMIC-III</summary>
 
 
 </details>
 
-<details style = 'border:solid 1px; padding:10px; margin:1px 0px 1px 0px;'>
-<summary><span style = 'font-size:15px;'>MIMIC-III</summary>
+<details style = 'border:solid 1px; padding:10px; margin:5px 0px 5px 0px;'>
+<summary><span style = 'font-size:15px;'>MIMIC-IV demo</summary>
 
 
 </details>
@@ -344,13 +344,13 @@ No scripts available.
 
 ## <i class='fa fa-list' style='color: steelblue;'></i> Vocabularies
 
-<details style = 'border:solid 1px; padding:10px; margin:1px 0px 1px 0px;'>
+<details style = 'border:solid 1px; padding:10px; margin:5px 0px 5px 0px;'>
 <summary><span style = 'font-size:15px;'>MIMIC-III</summary>
 
 
 </details>
 
-<details style = 'border:solid 1px; padding:10px; margin:1px 0px 1px 0px;'>
+<details style = 'border:solid 1px; padding:10px; margin:5px 0px 5px 0px;'>
 <summary><span style = 'font-size:15px;'>MIMIC-IV demo</summary>
 
 
