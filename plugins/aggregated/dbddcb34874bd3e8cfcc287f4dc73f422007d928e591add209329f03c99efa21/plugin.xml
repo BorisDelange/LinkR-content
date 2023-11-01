@@ -4,7 +4,7 @@
     <app_version>0.2.0</app_version>
     <type>2</type>
     <unique_id>dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21</unique_id>
-    <version>0.0.1.9018</version>
+    <version>0.0.1.9019</version>
     <author>Boris Delange</author>
     <image>ggplot2.png</image>
     <name_en>Plot (ggplot2)</name_en>
@@ -21,7 +21,7 @@ This plugin uses the R library &lt;a href="https://ggplot2.tidyverse.org/" targe
 &lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
 Click here to show / hide content&lt;/span&gt;&lt;/summary&gt;
 
-#### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; a) Manage Scripts
+### &lt;span style = "margin-left:20px;"&gt; a) Manage scripts&lt;/span&gt;
 
 In order to **save multiple plots** to a single widget, you can **create scripts** from the "Scripts management" tab.
 
@@ -36,9 +36,9 @@ Once a **script is created**, **select it** from the "Plot" or "Code" tab.
 
 **Save** this script after making changes.
 
-&lt;br /&gt;&lt;img src="%plugin_folder%/scripts_management.png" width="850" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;br /&gt;&lt;img src="%plugin_folder%/scripts_management.png" width="850" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;&lt;br /&gt;
 
-#### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; b) Configure a Plot
+### &lt;span style = "margin-left:20px;"&gt; b) Configure a plot&lt;/span&gt;
 
 Go to the "Plot" tab.
 
@@ -61,9 +61,9 @@ For example:
 
 By checking "Show plot at script launch", the **plot** will be **displayed upon the script's loading**.
 
-&lt;br /&gt;&lt;img src="%plugin_folder%/plot_settings.png" width="950" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;br /&gt;&lt;img src="%plugin_folder%/plot_settings.png" width="950" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;&lt;br /&gt;
 
-#### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; c) Display the Code
+### &lt;span style = "margin-left:20px;"&gt; c) Display the code&lt;/span&gt;
 
 By clicking on "**Generate Code**" from the "Plot" tab, the **code corresponding to the plot** will be **generated** in the text editor, in the "Code" tab.
 
@@ -79,13 +79,13 @@ By checking "Run code at script launch", the **code** will be **executed upon th
 
 &lt;/details&gt;
 
-### &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; 3) Available Plots
+### &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; 3) Available plots
 
 &lt;details open&gt;
 &lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
 Click here to show / hide content&lt;/span&gt;&lt;/summary&gt;
 
-#### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; a) Histogram (geom_histogram)
+### &lt;span style = "margin-left:20px;"&gt; a) Histogram (geom_histogram)&lt;/span&gt;
 
 Allows visualization of the distribution of a single continuous variable by dividing the x-axis into intervals and counting the number of observations in each interval.
 
@@ -96,7 +96,9 @@ You can choose the **size of the bars** in two ways:
 - Either by the **size** of the bars, depending on the x-axis (a size of 50 means a bar will take up 50 of the unit specified on the x-axis).
 - Or by the **number** of total bars displayed.
 
-#### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; b) Scatter Plot (geom_point)
+&lt;br /&gt;&lt;br /&gt;
+
+### &lt;span style = "margin-left:20px;"&gt; b) Scatter plot (geom_point)&lt;/span&gt;
 
 Allows visualization of the distribution of two continuous variables, one on the x-axis and the other on the y-axis.
 
@@ -119,7 +121,7 @@ Ce plugin utilise la librairie R &lt;a href="https://ggplot2.tidyverse.org/" tar
 &lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
 Cliquez ici pour afficher / masquer le contenu&lt;/span&gt;&lt;/summary&gt;
 
-#### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; a) G&#xE9;rer les scripts
+### &lt;span style = "margin-left:20px;"&gt; a) G&#xE9;rer les scripts&lt;/span&gt;
 
 Afin de pouvoir **sauvegarder plusieurs figures** sur un m&#xEA;me widget, vous pouvez **cr&#xE9;er des scripts** depuis l'onglet "G&#xE9;rer les scripts".
 
@@ -134,9 +136,9 @@ Une fois un **script cr&#xE9;&#xE9;**, **s&#xE9;lectionnez-le** depuis l'onglet 
 
 **Sauvegardez** ce script une fois des modifications effectu&#xE9;es.
 
-&lt;br /&gt;&lt;img src="%plugin_folder%/scripts_management.png" width="850" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;br /&gt;&lt;img src="%plugin_folder%/scripts_management.png" width="850" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;&lt;br /&gt;
 
-#### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; b) Configurer une figure
+### &lt;span style = "margin-left:20px;"&gt; b) Configurer une figure&lt;/span&gt;
 
 Rendez-vous dans l'onglet "Figure".
 
@@ -159,9 +161,9 @@ Par exemple :
 
 En cochant "Afficher la figure au lancement du script", la **figure** sera **affich&#xE9;e au chargement au script**.
 
-&lt;br /&gt;&lt;img src="%plugin_folder%/plot_settings.png" width="950" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;br /&gt;&lt;img src="%plugin_folder%/plot_settings.png" width="950" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;&lt;br /&gt;
 
-#### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; c) Afficher le code
+### &lt;span style = "margin-left:20px;"&gt; c) Afficher le code&lt;/span&gt;
 
 En cliquant sur "**G&#xE9;n&#xE9;rer le code**" depuis l'onglet "Figure", le **code correspondant &#xE0; la figure** sera **g&#xE9;n&#xE9;r&#xE9;** dans l'&#xE9;diteur de texte, dans l'onglet "Code".
 
@@ -183,7 +185,7 @@ En cochant "Ex&#xE9;cuter le code au lancement du script", le **code** sera **ex
 &lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
 Cliquez ici pour afficher / masquer le contenu&lt;/span&gt;&lt;/summary&gt;
 
-#### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; a) Histogramme (geom_histogram)
+### &lt;span style = "margin-left:20px;"&gt; a) Histogramme (geom_histogram)&lt;/span&gt;
 
 Permet de visualiser la distribution d'une variable continue unique en divisant l'axe des x en intervalles et en comptant le nombre d'observations dans chaque intervalle.
 
@@ -194,7 +196,9 @@ Vous pouvez chosir la **taille des barres** selon deux modalit&#xE9;s :
 - soit par la **taille** des barres, en fonction de l'axe des x (une taille &#xE0; 50 voudra dire qu'une barre prendra 50 de l'unit&#xE9; renseign&#xE9;e sur l'axe des x)
 - soit par le **nombre** de barres totales affich&#xE9;es
 
-#### &lt;i class="fa fa-check" style="color: steelblue;"&gt;&lt;/i&gt; b) Diagramme de dispersion (geom_point)
+&lt;br /&gt;
+
+### &lt;span style = "margin-left:20px;"&gt; b) Diagramme de dispersion (geom_point)&lt;/span&gt;
 
 Permet de visualiser la distribution de deux variables continues, l'une sur l'axe des x, l'autre sur l'axe des y.
 
@@ -209,7 +213,7 @@ Pour contrer cela, il est possible de **grouper les donn&#xE9;es**, par patient 
 
 &lt;/details&gt;</description_fr>
     <creation_datetime>2023-06-28 22:01:19</creation_datetime>
-    <update_datetime>2023-11-01 17:12:42</update_datetime>
+    <update_datetime>2023-11-01 17:35:47</update_datetime>
     <images>geom_histogram.png;;;geom_point.png;;;ggplot2.png;;;plot_code.png;;;plot_settings.png;;;scripts_management.png</images>
   </plugin>
 </plugins>

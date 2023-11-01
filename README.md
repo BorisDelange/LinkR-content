@@ -17,11 +17,13 @@ No studies available.
 <details style = 'border:solid 1px; padding:10px;'>
 <summary><span style = 'font-size:15px;'>R console</summary>
 
-### <i class="fa fa-info-circle" style="color: steelblue;"></i> Description
+### <i class="fa fa-info-circle" style="color: steelblue;"></i> 1) Description
 
 This plugin allows you to **execute code** in the R console and **save your code as scripts**.
 
-### <i class="fa fa-cogs" style="color: steelblue;"></i> Scripts management
+### <i class="fa fa-cogs" style="color: steelblue;"></i> 2) Usage
+
+#### <i class="fa fa-cogs" style="color: steelblue;"></i> a) Scripts management
 
 Go to the "Scripts management" tab to **add, delete, or rename scripts**.
 
@@ -29,7 +31,7 @@ A script is a **text file containing code**.
 
 Once a script is created, you can **edit** it in the "Script" tab and **execute the code**.
 
-### <i class="fa fa-code" style="color: steelblue;"></i> R code
+#### <i class="fa fa-code" style="color: steelblue;"></i> b) R code
 
 Write **R code** and execute it: the **result returned by the console** will appear below the text editor.
 
@@ -45,11 +47,11 @@ d$measurement %>%
     dplyr::ungroup()
 ```
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/r_code_1.png" width="1100" style="border:dashed 1px; padding:10px;"/>
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/>
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/r_code_2.png" width="700" style="margin-left:-7px;"/>
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/r_code_2.png" width="600" style="margin-left:-7px;"/>
 
-### <i class="fa fa-file-code-o" style="color: steelblue;"></i> RMarkdown
+#### <i class="fa fa-file-code-o" style="color: steelblue;"></i> c) RMarkdown
 
 You can also write code in **Rmarkdown**.
 
@@ -71,11 +73,11 @@ dplyr::ungroup()
 \```
 ```
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/rmarkdown_1.png" width="1100" style="border:dashed 1px; padding:10px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" />
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/rmarkdown_2.png" width="900" style="border:dashed 1px; padding:10px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/rmarkdown_2.png" width="700" style="border:dashed 1px; padding:10px;" />
 
-### <i class="fa fa-bar-chart" style="color: steelblue;"></i> Figure
+#### <i class="fa fa-bar-chart" style="color: steelblue;"></i> d) Figure
 
 You can **create figures**, for example with the `ggplot2` library.
 
@@ -96,9 +98,9 @@ data$x %>%
     ggplot2::labs(x = "Heart rate (bpm)", y = "")
 ```
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/r_plot_1.png" width="750" style="border:dashed 1px; padding:10px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" />
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/r_plot_2.png" width="700" style="border:dashed 1px; padding:10px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" />
 </details>
 
 <details style = 'border:solid 1px; padding:10px;'>
@@ -115,11 +117,13 @@ data$x %>%
 <details style = 'border:solid 1px; padding:10px;'>
 <summary><span style = 'font-size:15px;'>R console</summary>
 
-## <i class="fa fa-info-circle" style="color: steelblue;"></i> Description
+### <i class="fa fa-info-circle" style="color: steelblue;"></i> 1) Description
 
 This plugin allows you to **execute code** in the R console and **save your code as scripts**.
 
-## <i class="fa fa-cogs" style="color: steelblue;"></i> Scripts management
+### <i class="fa fa-cogs" style="color: steelblue;"></i> 2) Usage
+
+#### <i class="fa fa-cogs" style="color: steelblue;"></i> a) Scripts management
 
 Go to the "Scripts management" tab to **add, delete, or rename scripts**.
 
@@ -127,7 +131,7 @@ A script is a **text file containing code**.
 
 Once a script is created, you can **edit** it in the "Script" tab and **execute the code**.
 
-## <i class="fa fa-code" style="color: steelblue;"></i> R code
+#### <i class="fa fa-code" style="color: steelblue;"></i> b) R code
 
 Write **R code** and execute it: the **result returned by the console** will appear below the text editor.
 
@@ -143,11 +147,11 @@ d$measurement %>%
     dplyr::ungroup()
 ```
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_code_1.png" width="1100" style="border:dashed 1px; padding:10px;"/>
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/>
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_code_2.png" width="700" style="margin-left:-7px;"/>
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_code_2.png" width="600" style="margin-left:-7px;"/>
 
-## <i class="fa fa-file-code-o" style="color: steelblue;"></i> RMarkdown
+#### <i class="fa fa-file-code-o" style="color: steelblue;"></i> c) RMarkdown
 
 You can also write code in **Rmarkdown**.
 
@@ -169,11 +173,11 @@ dplyr::ungroup()
 \```
 ```
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/rmarkdown_1.png" width="1100" style="border:dashed 1px; padding:10px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" />
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/rmarkdown_2.png" width="900" style="border:dashed 1px; padding:10px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/rmarkdown_2.png" width="700" style="border:dashed 1px; padding:10px;" />
 
-## <i class="fa fa-bar-chart" style="color: steelblue;"></i> Figure
+#### <i class="fa fa-bar-chart" style="color: steelblue;"></i> d) Figure
 
 You can **create figures**, for example with the `ggplot2` library.
 
@@ -194,25 +198,25 @@ data$x %>%
     ggplot2::labs(x = "Heart rate (bpm)", y = "")
 ```
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_plot_1.png" width="750" style="border:dashed 1px; padding:10px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" />
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_plot_2.png" width="700" style="border:dashed 1px; padding:10px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" />
 </details>
 
 <details style = 'border:solid 1px; padding:10px;'>
 <summary><span style = 'font-size:15px;'>Plot (ggplot2)</summary>
 
-### <i class="fa fa-info-circle" style="color: steelblue;"></i> Description
+### <i class="fa fa-info-circle" style="color: steelblue;"></i> 1) Description
 
 This plugin uses the R library <a href="https://ggplot2.tidyverse.org/" target="_blank">`ggplot2`</a>, allowing the creation of plots from data.
 
-### <i class="fa fa-cogs" style="color: steelblue;"></i> Usage
-
-#### <i class="fa fa-check" style="color: steelblue;"></i> Manage Scripts
+### <i class="fa fa-cogs" style="color: steelblue;"></i> 2) Usage
 
 <details>
 <summary><span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''">
 Click here to show / hide content</span></summary>
+
+#### <i class="fa fa-check" style="color: steelblue;"></i> a) Manage Scripts
 
 In order to **save multiple plots** to a single widget, you can **create scripts** from the "Scripts management" tab.
 
@@ -229,7 +233,7 @@ Once a **script is created**, **select it** from the "Plot" or "Code" tab.
 
 <br /><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21/scripts_management.png" width="850" style="border:dashed 1px; padding:10px;" />
 
-#### <i class="fa fa-check" style="color: steelblue;"></i> Configure a Plot
+#### <i class="fa fa-check" style="color: steelblue;"></i> b) Configure a Plot
 
 Go to the "Plot" tab.
 
@@ -254,7 +258,7 @@ By checking "Show plot at script launch", the **plot** will be **displayed upon 
 
 <br /><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21/plot_settings.png" width="950" style="border:dashed 1px; padding:10px;" />
 
-#### <i class="fa fa-check" style="color: steelblue;"></i> Display the Code
+#### <i class="fa fa-check" style="color: steelblue;"></i> c) Display the Code
 
 By clicking on "**Generate Code**" from the "Plot" tab, the **code corresponding to the plot** will be **generated** in the text editor, in the "Code" tab.
 
@@ -270,13 +274,13 @@ By checking "Run code at script launch", the **code** will be **executed upon th
 
 </details>
 
-### <i class="fa fa-bar-chart" style="color: steelblue;"></i> Available Plots
+### <i class="fa fa-bar-chart" style="color: steelblue;"></i> 3) Available Plots
 
 <details open>
 <summary><span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''">
 Click here to show / hide content</span></summary>
 
-#### <i class="fa fa-check" style="color: steelblue;"></i> Histogram (geom_histogram)
+#### <i class="fa fa-check" style="color: steelblue;"></i> a) Histogram (geom_histogram)
 
 Allows visualization of the distribution of a single continuous variable by dividing the x-axis into intervals and counting the number of observations in each interval.
 
@@ -287,7 +291,7 @@ You can choose the **size of the bars** in two ways:
 - Either by the **size** of the bars, depending on the x-axis (a size of 50 means a bar will take up 50 of the unit specified on the x-axis).
 - Or by the **number** of total bars displayed.
 
-#### <i class="fa fa-check" style="color: steelblue;"></i> Scatter Plot (geom_point)
+#### <i class="fa fa-check" style="color: steelblue;"></i> b) Scatter Plot (geom_point)
 
 Allows visualization of the distribution of two continuous variables, one on the x-axis and the other on the y-axis.
 
