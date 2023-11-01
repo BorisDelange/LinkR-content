@@ -37,15 +37,14 @@ To know the **data model** used by the application, click on the help button (qu
 
 Example code (get the min, max, and average heart rate of our patients):
 
-```
-d$measurement %&gt;%
+&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;d$measurement %&gt;%
     dplyr::filter(measurement_concept_id == 3027018) %&gt;%
     dplyr::group_by(person_id) %&gt;%
     dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
     dplyr::ungroup()
-```
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;img src="%plugin_folder%/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/&gt;
+&lt;img src="%plugin_folder%/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/&gt;&lt;br /&gt;
 
 &lt;img src="%plugin_folder%/r_code_2.png" width="600" style="margin-left:-7px;"/&gt;&lt;br /&gt;
 
@@ -59,19 +58,19 @@ For more information on RMarkdown, &lt;a href="https://rmarkdown.rstudio.com/les
 
 Example code (the same example as above, in RMarkdown - a backslash has been added to prevent code execution):
 
-```
-# Script on heart rate
+&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;# Script on heart rate
 
 \```{r}
 d$measurement %&gt;%
-dplyr::filter(measurement_concept_id == 3027018) %&gt;%
-dplyr::group_by(person_id) %&gt;%
-dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
-dplyr::ungroup()
+    dplyr::filter(measurement_concept_id == 3027018) %&gt;%
+    dplyr::group_by(person_id) %&gt;%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
+    dplyr::ungroup()
 \```
-```
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;img src="%plugin_folder%/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" /&gt;
+
+&lt;img src="%plugin_folder%/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;
 
 &lt;img src="%plugin_folder%/rmarkdown_2.png" width="700" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;&lt;br /&gt;
 
@@ -81,8 +80,7 @@ You can **create figures**, for example with the `ggplot2` library.
 
 Here's an example of code:
 
-```
-# A list containing the data for the plot
+&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;# A list containing the data for the plot
 data &lt;- list()
 
 # Filter data
@@ -94,9 +92,9 @@ data$x %&gt;%
     ggplot2::geom_histogram(bins = 50, fill = "#377EB8", color = "#FFFFFF") +
     ggplot2::theme_minimal() +
     ggplot2::labs(x = "Heart rate (bpm)", y = "")
-```
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;img src="%plugin_folder%/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;img src="%plugin_folder%/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;
 
 &lt;img src="%plugin_folder%/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;
 &lt;/details&gt;</description_en>
@@ -126,15 +124,14 @@ Pour conna&#xEE;tre le **mod&#xE8;le de donn&#xE9;es** utilis&#xE9; par l'applic
 
 Exemple de code (obtenir le min, max et moyenne de la fr&#xE9;quence cardiaque chez nos patients) :
 
-```
-d$measurement %&gt;%
+&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;d$measurement %&gt;%
     dplyr::filter(measurement_concept_id == 3027018) %&gt;%
     dplyr::group_by(person_id) %&gt;%
     dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
     dplyr::ungroup()
-```
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;img src="%plugin_folder%/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/&gt;
+&lt;img src="%plugin_folder%/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/&gt;&lt;br /&gt;
 
 &lt;img src="%plugin_folder%/r_code_2.png" width="600" style="margin-left:-7px;"/&gt;&lt;br /&gt;
 
@@ -148,8 +145,7 @@ Pour plus d'informations sur RMarkdown, &lt;a href="https://rmarkdown.rstudio.co
 
 Exemple de code (le m&#xEA;me exemple que ci-dessus, en RMarkdown - un backslash a &#xE9;t&#xE9; ajout&#xE9; pour &#xE9;viter l'&#xE9;x&#xE9;cution du code) :
 
-```
-# Script on heart rate
+&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;# Script on heart rate
 
 \```{r}
 d$measurement %&gt;%
@@ -158,9 +154,9 @@ d$measurement %&gt;%
     dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
     dplyr::ungroup()
 \```
-```
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;img src="%plugin_folder%/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;img src="%plugin_folder%/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;
 
 &lt;img src="%plugin_folder%/rmarkdown_2.png" width="700" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;&lt;br /&gt;
 
@@ -170,8 +166,7 @@ Vous pouvez **cr&#xE9;er des figures**, par exemple avec la librairie `ggplot2`.
 
 Voici un exemple de code :
 
-```
-# A list containing the data for the plot
+&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;# A list containing the data for the plot
 data &lt;- list()
 
 # Filter data
@@ -183,14 +178,14 @@ data$x %&gt;%
     ggplot2::geom_histogram(bins = 50, fill = "#377EB8", color = "#FFFFFF") +
     ggplot2::theme_minimal() +
     ggplot2::labs(x = "Heart rate (bpm)", y = "")
-```
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;img src="%plugin_folder%/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;img src="%plugin_folder%/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;
 
 &lt;img src="%plugin_folder%/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;
 &lt;/details&gt;</description_fr>
     <creation_datetime>2023-10-17 16:15:04</creation_datetime>
-    <update_datetime>2023-11-01 17:43:43</update_datetime>
+    <update_datetime>2023-11-01 18:08:42</update_datetime>
     <images>console_icon.png;;;r_code_1.png;;;r_code_2.png;;;r_plot_1.png;;;r_plot_2.png;;;rmarkdown_1.png;;;rmarkdown_2.png</images>
   </plugin>
 </plugins>

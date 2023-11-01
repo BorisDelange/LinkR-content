@@ -49,15 +49,14 @@ To know the **data model** used by the application, click on the help button (qu
 
 Example code (get the min, max, and average heart rate of our patients):
 
-```
-d$measurement %>%
+<pre style = "font-size:12px;"><code>d$measurement %>%
     dplyr::filter(measurement_concept_id == 3027018) %>%
     dplyr::group_by(person_id) %>%
     dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
     dplyr::ungroup()
-```
+</code></pre>
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/>
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/><br />
 
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/r_code_2.png" width="600" style="margin-left:-7px;"/><br />
 
@@ -71,19 +70,19 @@ For more information on RMarkdown, <a href="https://rmarkdown.rstudio.com/lesson
 
 Example code (the same example as above, in RMarkdown - a backslash has been added to prevent code execution):
 
-```
-# Script on heart rate
+<pre style = "font-size:12px;"><code># Script on heart rate
 
 \```{r}
 d$measurement %>%
-dplyr::filter(measurement_concept_id == 3027018) %>%
-dplyr::group_by(person_id) %>%
-dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
-dplyr::ungroup()
+    dplyr::filter(measurement_concept_id == 3027018) %>%
+    dplyr::group_by(person_id) %>%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
+    dplyr::ungroup()
 \```
-```
+</code></pre>
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" />
+
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" /><br />
 
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/rmarkdown_2.png" width="700" style="border:dashed 1px; padding:10px;" /><br /><br />
 
@@ -93,8 +92,7 @@ You can **create figures**, for example with the `ggplot2` library.
 
 Here's an example of code:
 
-```
-# A list containing the data for the plot
+<pre style = "font-size:12px;"><code># A list containing the data for the plot
 data <- list()
 
 # Filter data
@@ -106,9 +104,9 @@ data$x %>%
     ggplot2::geom_histogram(bins = 50, fill = "#377EB8", color = "#FFFFFF") +
     ggplot2::theme_minimal() +
     ggplot2::labs(x = "Heart rate (bpm)", y = "")
-```
+</code></pre>
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" /><br />
 
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/patient_lvl/3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" />
 </details>
@@ -253,15 +251,14 @@ To know the **data model** used by the application, click on the help button (qu
 
 Example code (get the min, max, and average heart rate of our patients):
 
-```
-d$measurement %>%
+<pre style = "font-size:12px;"><code>d$measurement %>%
     dplyr::filter(measurement_concept_id == 3027018) %>%
     dplyr::group_by(person_id) %>%
     dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
     dplyr::ungroup()
-```
+</code></pre>
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/>
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/><br />
 
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_code_2.png" width="600" style="margin-left:-7px;"/><br />
 
@@ -275,19 +272,19 @@ For more information on RMarkdown, <a href="https://rmarkdown.rstudio.com/lesson
 
 Example code (the same example as above, in RMarkdown - a backslash has been added to prevent code execution):
 
-```
-# Script on heart rate
+<pre style = "font-size:12px;"><code># Script on heart rate
 
 \```{r}
 d$measurement %>%
-dplyr::filter(measurement_concept_id == 3027018) %>%
-dplyr::group_by(person_id) %>%
-dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
-dplyr::ungroup()
+    dplyr::filter(measurement_concept_id == 3027018) %>%
+    dplyr::group_by(person_id) %>%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
+    dplyr::ungroup()
 \```
-```
+</code></pre>
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" />
+
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" /><br />
 
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/rmarkdown_2.png" width="700" style="border:dashed 1px; padding:10px;" /><br /><br />
 
@@ -297,8 +294,7 @@ You can **create figures**, for example with the `ggplot2` library.
 
 Here's an example of code:
 
-```
-# A list containing the data for the plot
+<pre style = "font-size:12px;"><code># A list containing the data for the plot
 data <- list()
 
 # Filter data
@@ -310,9 +306,9 @@ data$x %>%
     ggplot2::geom_histogram(bins = 50, fill = "#377EB8", color = "#FFFFFF") +
     ggplot2::theme_minimal() +
     ggplot2::labs(x = "Heart rate (bpm)", y = "")
-```
+</code></pre>
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" /><br />
 
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/plugins/aggregated/6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" />
 </details>
