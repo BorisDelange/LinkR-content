@@ -4,18 +4,20 @@
     <app_version>0.2.0</app_version>
     <type>1</type>
     <unique_id>3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68</unique_id>
-    <version>0.0.1.9008</version>
+    <version>0.0.1.9009</version>
     <author>Boris Delange</author>
     <image>console_icon.png</image>
     <name_en>R console</name_en>
     <name_fr>R console</name_fr>
     <category_en></category_en>
     <category_fr></category_fr>
-    <description_en>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; Description
+    <description_en>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; 1) Description
 
 This plugin allows you to **execute code** in the R console and **save your code as scripts**.
 
-### &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; Scripts management
+### &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; 2) Usage
+
+#### &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; a) Scripts management
 
 Go to the "Scripts management" tab to **add, delete, or rename scripts**.
 
@@ -23,7 +25,7 @@ A script is a **text file containing code**.
 
 Once a script is created, you can **edit** it in the "Script" tab and **execute the code**.
 
-### &lt;i class="fa fa-code" style="color: steelblue;"&gt;&lt;/i&gt; R code
+#### &lt;i class="fa fa-code" style="color: steelblue;"&gt;&lt;/i&gt; b) R code
 
 Write **R code** and execute it: the **result returned by the console** will appear below the text editor.
 
@@ -39,11 +41,11 @@ d$measurement %&gt;%
     dplyr::ungroup()
 ```
 
-&lt;img src="%plugin_folder%/r_code_1.png" width="1100" style="border:dashed 1px; padding:10px;"/&gt;
+&lt;img src="%plugin_folder%/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/&gt;
 
-&lt;img src="%plugin_folder%/r_code_2.png" width="700" style="margin-left:-7px;"/&gt;
+&lt;img src="%plugin_folder%/r_code_2.png" width="600" style="margin-left:-7px;"/&gt;
 
-### &lt;i class="fa fa-file-code-o" style="color: steelblue;"&gt;&lt;/i&gt; RMarkdown
+#### &lt;i class="fa fa-file-code-o" style="color: steelblue;"&gt;&lt;/i&gt; c) RMarkdown
 
 You can also write code in **Rmarkdown**.
 
@@ -65,11 +67,11 @@ dplyr::ungroup()
 \```
 ```
 
-&lt;img src="%plugin_folder%/rmarkdown_1.png" width="1100" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;img src="%plugin_folder%/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" /&gt;
 
-&lt;img src="%plugin_folder%/rmarkdown_2.png" width="900" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;img src="%plugin_folder%/rmarkdown_2.png" width="700" style="border:dashed 1px; padding:10px;" /&gt;
 
-### &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; Figure
+#### &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; d) Figure
 
 You can **create figures**, for example with the `ggplot2` library.
 
@@ -90,14 +92,16 @@ data$x %&gt;%
     ggplot2::labs(x = "Heart rate (bpm)", y = "")
 ```
 
-&lt;img src="%plugin_folder%/r_plot_1.png" width="750" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;img src="%plugin_folder%/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;
 
-&lt;img src="%plugin_folder%/r_plot_2.png" width="700" style="border:dashed 1px; padding:10px;" /&gt;</description_en>
-    <description_fr>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; Description
+&lt;img src="%plugin_folder%/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;</description_en>
+    <description_fr>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; 1) Description
 
 Ce plugin vous permet d'**ex&#xE9;cuter du code** dans la console R et de **sauvegarder votre code sous forme de scripts**.
 
-### &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; Gestion des scripts
+### &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; 2) Utilisation
+
+#### &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; a) Gestion des scripts
 
 Allez dans l'onglet "Gestion des scripts" pour **ajouter, supprimer ou renommer des scripts**.
 
@@ -105,7 +109,7 @@ Un script est un **fichier texte contenant du code**.
 
 Une fois un script cr&#xE9;&#xE9;, vous pouvez l'**&#xE9;diter** dans l'onglet "Script" et **ex&#xE9;cuter le code**.
 
-### &lt;i class="fa fa-code" style="color: steelblue;"&gt;&lt;/i&gt; Code R
+#### &lt;i class="fa fa-code" style="color: steelblue;"&gt;&lt;/i&gt; b) Code R
 
 Ecrivez du **code en R** et ex&#xE9;cutez-le : le **r&#xE9;sultat retourn&#xE9; par la console** appara&#xEE;tra en-dessous de l'&#xE9;diteur de texte.
 
@@ -121,11 +125,11 @@ d$measurement %&gt;%
     dplyr::ungroup()
 ```
 
-&lt;img src="%plugin_folder%/r_code_1.png" width="1100" style="border:dashed 1px; padding:10px;"/&gt;
+&lt;img src="%plugin_folder%/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/&gt;
 
-&lt;img src="%plugin_folder%/r_code_2.png" width="700" style="margin-left:-7px;"/&gt;
+&lt;img src="%plugin_folder%/r_code_2.png" width="600" style="margin-left:-7px;"/&gt;
 
-### &lt;i class="fa fa-file-code-o" style="color: steelblue;"&gt;&lt;/i&gt; RMarkdown
+#### &lt;i class="fa fa-file-code-o" style="color: steelblue;"&gt;&lt;/i&gt; c) RMarkdown
 
 Vous pouvez &#xE9;galement &#xE9;crire du code en **Rmarkdown**.
 
@@ -147,11 +151,11 @@ d$measurement %&gt;%
 \```
 ```
 
-&lt;img src="%plugin_folder%/rmarkdown_1.png" width="1100" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;img src="%plugin_folder%/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" /&gt;
 
-&lt;img src="%plugin_folder%/rmarkdown_2.png" width="900" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;img src="%plugin_folder%/rmarkdown_2.png" width="700" style="border:dashed 1px; padding:10px;" /&gt;
 
-### &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; Figure
+#### &lt;i class="fa fa-bar-chart" style="color: steelblue;"&gt;&lt;/i&gt; d) Figure
 
 Vous pouvez **cr&#xE9;er des figures**, par exemple avec la librairie `ggplot2`.
 
@@ -172,11 +176,11 @@ data$x %&gt;%
     ggplot2::labs(x = "Heart rate (bpm)", y = "")
 ```
 
-&lt;img src="%plugin_folder%/r_plot_1.png" width="750" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;img src="%plugin_folder%/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;
 
-&lt;img src="%plugin_folder%/r_plot_2.png" width="700" style="border:dashed 1px; padding:10px;" /&gt;</description_fr>
+&lt;img src="%plugin_folder%/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;</description_fr>
     <creation_datetime>2023-10-17 16:15:04</creation_datetime>
-    <update_datetime>2023-10-27 16:59:44</update_datetime>
+    <update_datetime>2023-11-01 17:19:35</update_datetime>
     <images>console_icon.png;;;r_code_1.png;;;r_code_2.png;;;r_plot_1.png;;;r_plot_2.png;;;rmarkdown_1.png;;;rmarkdown_2.png</images>
   </plugin>
 </plugins>
