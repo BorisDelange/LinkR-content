@@ -1,0 +1,14 @@
+base,en,fr
+code,Code,Code
+scripts_management,Scripts management,Gérer les scripts
+dygraph_parameters,Plot parameters,Paramètres de la figure
+unauthorized_access_to_console,You are not authorized to access the console,Vous n'avez pas l'autorisation pour accéder à la console
+time_series_singular,Time series,Série temporelle
+show,Show plot,Afficher la figure
+save,Save,Sauvegarder
+run_dygraph_at_script_launch,Show plot at script launch,Afficher la figure au lancement du script
+run_code_at_script_launch,Run code at script launch,Exécuter le code au lancement du script
+hide_params,Hide parameters,Masquer les paramètres
+dygraph_width,Plot width (%),Largeur de la figure (%)
+variables,Variables,Variables
+generate_code,Generate code,Générer le code

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<plugins>
+  <plugin>
+    <app_version>0.2.0</app_version>
+    <type>1</type>
+    <unique_id>1e0f0100cd2ec947f3494754eec1010700e41b91feae3d361ef8c164fe748a9b</unique_id>
+    <version>0.0.1.9000</version>
+    <author>Boris Delange</author>
+    <image></image>
+    <name_en>S&#xE9;ries temporelles {vistime}</name_en>
+    <name_fr>S&#xE9;ries temporelles {vistime}</name_fr>
+    <category_en></category_en>
+    <category_fr></category_fr>
+    <description_en></description_en>
+    <description_fr></description_fr>
+    <creation_datetime>2023-11-20 22:44:14</creation_datetime>
+    <update_datetime>2023-11-20 22:44:14</update_datetime>
+    <images></images>
+  </plugin>
+</plugins>
