@@ -1,34 +1,39 @@
 # Get widget options
-# sql <- glue::glue_sql("SELECT * FROM aggregated_widgets_options WHERE widget_id = %widget_id%", .con = r$db)
-# widget_options <- DBI::dbGetQuery(m$db, sql)
-# plots <- widget_options %>% dplyr::filter(name == "script") %>% dplyr::select(id = value_num, name = value)
-# selected_script <- NULL
-# selected_script_result <- widget_options %>% dplyr::filter(name == "selected_script")
-# if (nrow(selected_script_result) > 0) if ((selected_script_result %>% dplyr::pull(value_num)) %in% plots$id) selected_script <- selected_script_result %>% dplyr::pull(value_num)
+sql <- glue::glue_sql("SELECT * FROM patient_lvl_widgets_options WHERE widget_id = %widget_id%", .con = r$db)
+widget_options <- DBI::dbGetQuery(m$db, sql)
+plots <- widget_options %>% dplyr::filter(name == "script") %>% dplyr::select(id = value_num, name = value)
+selected_script <- NULL
+selected_script_result <- widget_options %>% dplyr::filter(name == "selected_script")
+if (nrow(selected_script_result) > 0) if ((selected_script_result %>% dplyr::pull(value_num)) %in% plots$id) selected_script <- selected_script_result %>% dplyr::pull(value_num)
 
 # Get concepts associated with this widget
-# concepts <- tibble::tibble(concept_id = 0L, concept_name = i18np$t("none")) %>% dplyr::bind_rows(selected_concepts %>% dplyr::select(concept_id, concept_name))
-# x_variables <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
+concepts <- tibble::tibble(concept_id = 0L, concept_name = i18np$t("none")) %>% dplyr::bind_rows(selected_concepts %>% dplyr::select(concept_id, concept_name))
+variables <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
 # y_variables <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
 
 # Get palettes from RColorBrewer
-# palettes <- convert_tibble_to_list(data = tibble::tibble(pal = c("Set1", "Set2", "Set3", "Reds", "Purples", "Oranges", "Greens", "Blues", "Greys")), key_col = "pal", text_col = "pal")
+palettes <- convert_tibble_to_list(data = tibble::tibble(pal = c("Set1", "Set2", "Set3", "Reds", "Purples", "Oranges", "Greens", "Blues", "Greys")), key_col = "pal", text_col = "pal")
 
 # List of inputs (to save & get saved params)
 
-# dropdowns <- c()
+dropdowns <- paste(unlist(sapply(c("variable", "colour_pal"), function(x) paste0(x, "_", 1:10))))
+# dropdowns <- c("plot_function", "plot_theme", "bins_type", "x_variable", "y_variable", "colour_pal", "group_by", "group_by_type", "summarize_fct")
 # textfields <- c("x_label", "y_label")
+textfields <- paste(unlist(sapply("variable_name", function(x) paste0(x, "_", 1:10))))
 # spin_buttons <- c("num_of_bins", "bin_width", "group_by_num")
+spin_buttons <- ""
+toggle_inputs <- ""
 # toggle_inputs <- c("group_data", "run_code_at_script_launch", "run_dygraph_at_script_launch")
 # colour_inputs <- "colour"
-# ace_inputs <- "code"
-# inputs <- c(dropdowns, textfields, spin_buttons, toggle_inputs, colour_inputs, ace_inputs)
+colour_inputs <- paste(unlist(sapply("colour", function(x) paste0(x, "_", 1:10))))
+ace_inputs <- "code"
+inputs <- c(dropdowns, textfields, spin_buttons, toggle_inputs, colour_inputs, ace_inputs)
 
-# default_values <- list()
+default_values <- list()
 # default_values$dygraph_function <- "geom_histogram"
 # default_values$dygraph_theme <- "theme_minimal"
 # default_values$bins_type <- "num_of_bins"
-# default_values$x_variable <- 0L
+# default_values$e <- 0L
 # default_values$y_variable <- 0L
 # default_values$colour_pal <- "Set1"
 # default_values$group_by <- "datetime"
@@ -41,25 +46,32 @@
 # default_values$group_by_num <- 4L
 # default_values$group_data <- FALSE
 # default_values$colour <- "#E41A1C"
-# default_values$run_code_at_script_launch <- FALSE
-# default_values$run_dygraph_at_script_launch <- FALSE
-# default_values$code <- ""
-# 
+default_values$run_code_at_script_launch <- FALSE
+default_values$run_plot_at_script_launch <- FALSE
+default_values$code <- ""
+
+for (i in 1:10){
+    default_values[[paste0("variable_", i)]] <- 0L
+    default_values[[paste0("variable_name_", i)]] <- ""
+    default_values[[paste0("colour_", i)]] <- "#E41A1C"
+    default_values[[paste0("colour_pal_", i)]] <- "Set1"
+}
+
 inputs_values <- list()
 
 # Get saved params for this widget
-# sql <- glue::glue_sql("SELECT * FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND link_id = {selected_script}", .con = r$db)
-# widget_options <- DBI::dbGetQuery(m$db, sql)
+sql <- glue::glue_sql("SELECT * FROM patient_lvl_widgets_options WHERE widget_id = %widget_id% AND link_id = {selected_script}", .con = r$db)
+widget_options <- DBI::dbGetQuery(m$db, sql)
 
-# for (input_name in inputs){
-#     widget_option <- widget_options %>% dplyr::filter(name == input_name)
-#     
-#     if (nrow(widget_option) > 0){
-#         if (input_name %in% spin_buttons || input_name %in% c("x_variable", "y_variable")) inputs_values[[input_name]] <- widget_option$value_num
-#         else inputs_values[[input_name]] <- widget_option$value
-#     }
-#     else inputs_values[[input_name]] <- default_values[[input_name]]
-# }
+for (input_name in inputs){
+    widget_option <- widget_options %>% dplyr::filter(name == input_name)
+    
+    if (nrow(widget_option) > 0){
+        if (input_name %in% spin_buttons || grepl("variable", input_name)) inputs_values[[input_name]] <- widget_option$value_num
+        else inputs_values[[input_name]] <- widget_option$value
+    }
+    else inputs_values[[input_name]] <- default_values[[input_name]]
+}
 
 # aceEditor div : show editor if user has access to the console
 ace_editor_div <- div(br(), shiny.fluent::MessageBar(i18np$t("unauthorized_access_to_console"), messageBarType = 5), br())
@@ -80,86 +92,111 @@ if (length(m$user_accesses) > 0) if ("data_console" %in% m$user_accesses) ace_ed
     shiny.fluent::PrimaryButton.shinyInput(ns("run_code_%widget_id%"), i18n$t("run_code")), br()
 )
 
+# Variables div
+
+for (i in 1:10){
+
+    variables_div_temp <- div(
+        id = ns(paste0("variable_div_", i)),
+        shiny.fluent::Dropdown.shinyInput(ns(paste0("variable_", i, "_%widget_id%")), label = i18np$t("variable"), options = variables, value = inputs_values[[paste0("variable_", i)]]),
+        shiny.fluent::TextField.shinyInput(ns(paste0("variable_name_", i, "_%widget_id%")), label = i18np$t("display_name"), value = inputs_values[[paste0("variable_name_", i)]]),
+        shiny.fluent::Dropdown.shinyInput(ns(paste0("colour_pal_", i, "_%widget_id%")), options = palettes,  value = inputs_values[[paste0("colour_pal_", i)]], label = i18np$t("palette")),
+        uiOutput(ns(paste0("colour_ui_", i, "_%widget_id%")))
+    )
+    
+    if (i == 1) variables_div <- variables_div_temp
+    else variables_div <- tagList(variables_div, shinyjs::hidden(variables_div_temp))
+}
+
+variables_div <- div(
+    shiny.fluent::Dropdown.shinyInput(ns("variable_num_%widget_id%"), label = i18np$t("variable_num"), 
+    options = convert_tibble_to_list(tibble::tibble(num = 1:10), key_col = "num", text_col = "num"), value = 1L),
+    variables_div
+)
+
+if (!requireNamespace("dygraphs", quietly = TRUE)) dygraph_div <- shiny.fluent::MessageBar(i18np$t("dygraphs_lib_not_installed"), messageBarType = 5)
+if (requireNamespace("dygraphs", quietly = TRUE)) dygraph_div <- dygraphs::dygraphOutput(ns("dygraph_%widget_id%"))
+
 tagList(
     shiny.fluent::reactOutput(ns("delete_confirm_%widget_id%")),
     shiny.fluent::Pivot(
         id = ns("pivot_%widget_id%"),
         onLinkClick = htmlwidgets::JS(paste0("item => Shiny.setInputValue('", id, "-current_tab_%widget_id%', item.props.id)")),
-        shiny.fluent::PivotItem(id = "dygraph_%widget_id%", itemKey = "plot", headerText = i18np$t("time_series_singular")),
-        shiny.fluent::PivotItem(id = "code_%widget_id%", itemKey = "code", headerText = i18np$t("code")),
-        shiny.fluent::PivotItem(id = "scripts_management_%widget_id%", itemKey = "scripts_management", headerText = i18np$t("scripts_management"))
+        shiny.fluent::PivotItem(id = "plot_tab_%widget_id%", itemKey = "plot", headerText = i18np$t("plot")),
+        shiny.fluent::PivotItem(id = "code_tab_%widget_id%", itemKey = "code", headerText = i18np$t("code")),
+        shiny.fluent::PivotItem(id = "scripts_management_tab_%widget_id%", itemKey = "scripts_management", headerText = i18np$t("scripts_management"))
     ),
-    conditionalPanel(
-        condition = "input.current_tab_%widget_id% == 'dygraph_%widget_id%' || input.current_tab_%widget_id% == 'code_%widget_id%' || input.current_tab_%widget_id% == null", ns = ns, br(),
+    div(
+        id = ns("plot_and_code_tab_header_%widget_id%"),
+        br(),
         shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
             div(shiny.fluent::Dropdown.shinyInput(ns("script_choice_%widget_id%")), style = "width:300px"),
             shiny.fluent::DefaultButton.shinyInput(ns("save_%widget_id%"), i18np$t("save")),
-            conditionalPanel(
-                condition = "input.current_tab_%widget_id% == 'dygraph_%widget_id%' || input.current_tab_%widget_id% == null", ns = ns,
+            div(
+                id = ns("plot_tab_header_%widget_id%"),
                 shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                    shiny.fluent::Toggle.shinyInput(ns("run_dygraph_at_script_launch_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
-                    div(class = "toggle_title", i18np$t("run_dygraph_at_script_launch"), style = "padding-top:5px;")
+                    shiny.fluent::Toggle.shinyInput(ns("run_plot_at_script_launch_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
+                    div(class = "toggle_title", i18np$t("run_plot_at_script_launch"), style = "padding-top:5px;")
                 )
             ),
-            conditionalPanel(
-                condition = "input.current_tab_%widget_id% == 'code_%widget_id%'", ns = ns,
-                shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                    shiny.fluent::Toggle.shinyInput(ns("run_code_at_script_launch_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
-                    div(class = "toggle_title", i18np$t("run_code_at_script_launch"), style = "padding-top:5px;")
+            shinyjs::hidden(
+                div(
+                    id = ns("code_tab_header_%widget_id%"),
+                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                        shiny.fluent::Toggle.shinyInput(ns("run_code_at_script_launch_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
+                        div(class = "toggle_title", i18np$t("run_code_at_script_launch"), style = "padding-top:5px;")
+                    )
                 )
             )
         )
     ),
-    conditionalPanel(
-        condition = "input.current_tab_%widget_id% == 'dygraph_%widget_id%' || input.current_tab_%widget_id% == null", ns = ns,
+    div(
+        id = ns("plot_tab_%widget_id%"),
         div(
-            id = ns("dygraph_tab_%widget_id%"),
-            div(
-                style = "display:flex;",
-                div(id = ns("split_layout_left_%widget_id%"),
-                    style = "padding-right:10px; width:50%;",
-                    div(
-                        id = ns("dygraph_div_%widget_id%"), br()#,
-#                         plotOutput(ns("dygraph_output_%widget_id%"))
-                    ), br(),
-                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                        shiny.fluent::Toggle.shinyInput(ns("hide_params_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
-                        div(class = "toggle_title", i18np$t("hide_params"), style = "padding-top:5px;"),
-                        div(strong(i18np$t("dygraph_width")), style = "margin-top:6px;"),
-                        div(shiny.fluent::Slider.shinyInput(ns("dygraph_width_%widget_id%"), value = 100, min = 1, max = 100), style = "width:300px; margin-left:0px; padding-top:4px;")
-                    )
+            style = "display:flex;",
+            div(id = ns("split_layout_left_%widget_id%"),
+                style = "padding-right:10px; width:50%;",
+                div(
+                    id = ns("dygraph_div_%widget_id%"), br(), dygraph_div
+                ), br(),
+                shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                    shiny.fluent::Toggle.shinyInput(ns("hide_params_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
+                    div(class = "toggle_title", i18np$t("hide_params"), style = "padding-top:5px;"),
+                    div(strong(i18np$t("dygraph_width")), style = "margin-top:6px;"),
+                    div(shiny.fluent::Slider.shinyInput(ns("dygraph_width_%widget_id%"), value = 100, min = 1, max = 100), style = "width:300px; margin-left:0px; padding-top:4px;")
+                )
+            ),
+            div(id = ns("split_layout_right_%widget_id%"),
+                style = "padding-left:10px; width:50%;",
+                shiny.fluent::Pivot(
+                    id = ns("plot_pivot_%widget_id%"),
+                    onLinkClick = htmlwidgets::JS(paste0("item => Shiny.setInputValue('", id, "-plot_current_tab_%widget_id%', item.props.id)")),
+                    shiny.fluent::PivotItem(id = "plot_parameters_tab_%widget_id%", itemKey = "plot_parameters", headerText = i18np$t("plot_parameters")),
+                    shiny.fluent::PivotItem(id = "variables_tab_%widget_id%", itemKey = "variables", headerText = i18np$t("variables"))
                 ),
-                div(id = ns("split_layout_right_%widget_id%"),
-                    style = "padding-left:10px; width:50%;",
-                    shiny.fluent::Pivot(
-                        id = ns("dygraph_pivot_%widget_id%"),
-                        onLinkClick = htmlwidgets::JS(paste0("item => Shiny.setInputValue('", id, "-dygraph_current_tab_%widget_id%', item.props.id)")),
-                        shiny.fluent::PivotItem(id = "dygraph_parameters_%widget_id%", itemKey = "dygraph_parameters", headerText = i18np$t("dygraph_parameters")),
-                        shiny.fluent::PivotItem(id = "variables_%widget_id%", itemKey = "variables", headerText = i18np$t("variables"))
-                    ),
-                    shinyjs::hidden(
-                        div(
-                            id = ns("variables_div_%widget_id%"), br()
-                            
-                        )
-                    ), br(), br(),
-                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                        shiny.fluent::PrimaryButton.shinyInput(ns("show_%widget_id%"), i18np$t("show")),
-                        shiny.fluent::DefaultButton.shinyInput(ns("generate_code_%widget_id%"), i18np$t("generate_code"))
+                div(
+                    id = ns("parameters_tab_%widget_id%")
+                ),
+                shinyjs::hidden(
+                    div(
+                        id = ns("variables_tab_%widget_id%"), br(),
+                        variables_div
                     )
+                ), br(), br(),
+                shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                    shiny.fluent::PrimaryButton.shinyInput(ns("show_%widget_id%"), i18np$t("show")),
+                    shiny.fluent::DefaultButton.shinyInput(ns("generate_code_%widget_id%"), i18np$t("generate_code"))
                 )
             )
         )
     ),
-    conditionalPanel(
-        condition = "input.current_tab_%widget_id% == 'code_%widget_id%'", ns = ns,
+    shinyjs::hidden(
         div(
             id = ns("code_tab_%widget_id%"),
             ace_editor_div
         )
     ),
-    conditionalPanel(
-        condition = "input.current_tab_%widget_id% == 'scripts_management_%widget_id%'", ns = ns,
+    shinyjs::hidden(
         div(
             id = ns("scripts_management_tab_%widget_id%"),
             shiny.fluent::Stack(

@@ -1,14 +1,25 @@
 base,en,fr
+plot,Plot,Figure
 code,Code,Code
 scripts_management,Scripts management,Gérer les scripts
-dygraph_parameters,Plot parameters,Paramètres de la figure
+plot_parameters,Plot parameters,Paramètres de la figure
 unauthorized_access_to_console,You are not authorized to access the console,Vous n'avez pas l'autorisation pour accéder à la console
 time_series_singular,Time series,Série temporelle
 show,Show plot,Afficher la figure
 save,Save,Sauvegarder
-run_dygraph_at_script_launch,Show plot at script launch,Afficher la figure au lancement du script
+run_plot_at_script_launch,Show plot at script launch,Afficher la figure au lancement du script
 run_code_at_script_launch,Run code at script launch,Exécuter le code au lancement du script
 hide_params,Hide parameters,Masquer les paramètres
 dygraph_width,Plot width (%),Largeur de la figure (%)
 variables,Variables,Variables
 generate_code,Generate code,Générer le code
+script_added,Script added,Script ajouté
+confirm_deletion_title,Delete scripts,Supprimer des scripts
+confirm_deletion_subtext,Do you want to delete these scripts ?,Confirmer la suppression de ces scripts ?
+script_deleted,Script(s) deleted,Script(s) supprimé(s)
+dygraphs_lib_not_installed,Dygraphs library is not installed. Install this library and restart the app., La librairie dygraphs n'est pas installée. Installez cette librairie et relancez l'application.
+none,None,Aucune
+variable_num,Variable number,Variable n°
+variable,Variable,Variable
+palette,Palette,Palette
+display_name,Display name,Nom d'affichage
