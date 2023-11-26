@@ -17,9 +17,18 @@ script_added,Script added,Script ajouté
 confirm_deletion_title,Delete scripts,Supprimer des scripts
 confirm_deletion_subtext,Do you want to delete these scripts ?,Confirmer la suppression de ces scripts ?
 script_deleted,Script(s) deleted,Script(s) supprimé(s)
-dygraphs_lib_not_installed,Dygraphs library is not installed. Install this library and restart the app., La librairie dygraphs n'est pas installée. Installez cette librairie et relancez l'application.
+dygraphs_and_xts_not_installed,Dygraphs & xts libraries are not installed. Install these libraries and restart the app., Les librairies dygraphs et xts ne sont pas installées. Installez ces librairies puis relancez l'application.
 none,None,Aucune
 variable_num,Variable number,Variable n°
 variable,Variable,Variable
 palette,Palette,Palette
 display_name,Display name,Nom d'affichage
+show_range_selector,Show range selector,Afficher le sélecteur d'intervalle
+draw_points,Draw points,Tracer les points
+stay_data_only,Current stay data only,Données du séjour sélectionné uniquement
+y_min,Min value of Y axis,Valeur minimale de Y
+y_max,Max value of Y axis,Valeur maximale de Y
+synchronize_timelines,Synchronize timelines,Synchroniser les intervalles
+smooth_curves,Smooth curves,Lisser les courbes
+roll_period,Roll period,Période d'amortissement
+show_stays,Show stays,Afficher les séjours

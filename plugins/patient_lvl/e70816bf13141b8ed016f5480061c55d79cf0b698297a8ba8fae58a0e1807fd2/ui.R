@@ -17,35 +17,14 @@ palettes <- convert_tibble_to_list(data = tibble::tibble(pal = c("Set1", "Set2",
 # List of inputs (to save & get saved params)
 
 dropdowns <- paste(unlist(sapply(c("variable", "colour_pal"), function(x) paste0(x, "_", 1:10))))
-# dropdowns <- c("plot_function", "plot_theme", "bins_type", "x_variable", "y_variable", "colour_pal", "group_by", "group_by_type", "summarize_fct")
-# textfields <- c("x_label", "y_label")
 textfields <- paste(unlist(sapply("variable_name", function(x) paste0(x, "_", 1:10))))
-# spin_buttons <- c("num_of_bins", "bin_width", "group_by_num")
 spin_buttons <- ""
 toggle_inputs <- ""
-# toggle_inputs <- c("group_data", "run_code_at_script_launch", "run_dygraph_at_script_launch")
-# colour_inputs <- "colour"
 colour_inputs <- paste(unlist(sapply("colour", function(x) paste0(x, "_", 1:10))))
 ace_inputs <- "code"
 inputs <- c(dropdowns, textfields, spin_buttons, toggle_inputs, colour_inputs, ace_inputs)
 
 default_values <- list()
-# default_values$dygraph_function <- "geom_histogram"
-# default_values$dygraph_theme <- "theme_minimal"
-# default_values$bins_type <- "num_of_bins"
-# default_values$e <- 0L
-# default_values$y_variable <- 0L
-# default_values$colour_pal <- "Set1"
-# default_values$group_by <- "datetime"
-# default_values$group_by_type <- "hours"
-# default_values$summarize_fct <- "mean"
-# default_values$x_label <- ""
-# default_values$y_label <- ""
-# default_values$num_of_bins <- 50L
-# default_values$bin_width <- 10L
-# default_values$group_by_num <- 4L
-# default_values$group_data <- FALSE
-# default_values$colour <- "#E41A1C"
 default_values$run_code_at_script_launch <- FALSE
 default_values$run_plot_at_script_launch <- FALSE
 default_values$code <- ""
@@ -114,10 +93,7 @@ variables_div <- div(
     variables_div
 )
 
-if (!requireNamespace("dygraphs", quietly = TRUE)) dygraph_div <- shiny.fluent::MessageBar(i18np$t("dygraphs_lib_not_installed"), messageBarType = 5)
-if (requireNamespace("dygraphs", quietly = TRUE)) dygraph_div <- dygraphs::dygraphOutput(ns("dygraph_%widget_id%"))
-
-tagList(
+result <- tagList(
     shiny.fluent::reactOutput(ns("delete_confirm_%widget_id%")),
     shiny.fluent::Pivot(
         id = ns("pivot_%widget_id%"),
@@ -157,7 +133,9 @@ tagList(
             div(id = ns("split_layout_left_%widget_id%"),
                 style = "padding-right:10px; width:50%;",
                 div(
-                    id = ns("dygraph_div_%widget_id%"), br(), dygraph_div
+                    id = ns("dygraph_div_%widget_id%"), br(),
+                    shinyjs::hidden(dygraphs::dygraphOutput(ns("dygraph_%widget_id%"))),
+                    div(id = ns("empty_dygraph_%widget_id%"), style = "height:400px; background-color:#EBEBEB;")
                 ), br(),
                 shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
                     shiny.fluent::Toggle.shinyInput(ns("hide_params_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
@@ -175,11 +153,47 @@ tagList(
                     shiny.fluent::PivotItem(id = "variables_tab_%widget_id%", itemKey = "variables", headerText = i18np$t("variables"))
                 ),
                 div(
-                    id = ns("parameters_tab_%widget_id%")
+                    id = ns("plot_parameters_tab_%widget_id%"), br(),
+                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                        shiny.fluent::Toggle.shinyInput(ns("show_stays_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
+                        div(class = "toggle_title", i18np$t("show_stays"), style = "padding-top:5px;")
+                    ),
+                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                        shiny.fluent::Toggle.shinyInput(ns("stay_data_only_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
+                        div(class = "toggle_title", i18np$t("stay_data_only"), style = "padding-top:5px;")
+                    ), br(),
+                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                        shiny.fluent::Toggle.shinyInput(ns("show_range_selector_%widget_id%"), value = TRUE, style = "margin-top:5px;"),
+                        div(class = "toggle_title", i18np$t("show_range_selector"), style = "padding-top:5px;")
+                    ), 
+                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                        shiny.fluent::Toggle.shinyInput(ns("synchronize_timelines_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
+                        div(class = "toggle_title", i18np$t("synchronize_timelines"), style = "padding-top:5px;")
+                    ), br(),
+                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                        shiny.fluent::Toggle.shinyInput(ns("smooth_curves_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
+                        div(class = "toggle_title", i18np$t("smooth_curves"), style = "padding-top:5px;")
+                    ),
+                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                        shiny.fluent::Toggle.shinyInput(ns("draw_points_%widget_id%"), value = TRUE, style = "margin-top:5px;"),
+                        div(class = "toggle_title", i18np$t("draw_points"), style = "padding-top:5px;")
+                    ), br(),
+                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                        div(
+                            div(class = "input_title", i18np$t("y_min")),
+                            shiny.fluent::SpinButton.shinyInput(ns("y_min_%widget_id%"), value = NULL, step = 1),
+                            style = "width:250px"
+                        ),
+                        div(
+                            div(class = "input_title", i18np$t("y_max")),
+                            shiny.fluent::SpinButton.shinyInput(ns("y_max_%widget_id%"), value = NULL, step = 1),
+                            style = "width:250px"
+                        )
+                    )
                 ),
                 shinyjs::hidden(
                     div(
-                        id = ns("variables_tab_%widget_id%"), br(),
+                        id = ns("variables_tab_%widget_id%"),
                         variables_div
                     )
                 ), br(), br(),
@@ -213,3 +227,7 @@ tagList(
         )
     )
 )
+
+if (!requireNamespace("dygraphs", quietly = TRUE) | !requireNamespace("xts", quietly = TRUE)) result <- shiny.fluent::MessageBar(i18np$t("dygraphs_and_xts_not_installed"), messageBarType = 5)
+
+result

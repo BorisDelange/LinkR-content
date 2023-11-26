@@ -141,15 +141,6 @@ observeEvent(input$show_%widget_id%, {
     %req%
     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$show_%widget_id%"))
     
-    # Blank plot
-    req(requireNamespace("dygraphs", quietly = TRUE))
-    
-    output$plot_output_%widget_id% <- dygraphs::renderDygraph({
-        %req%
-        if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - output$plot_output_%widget_id%"))
-        dygraphs::dygraph()
-    })
-    
     # Then load plot
     m$create_plot_type_%widget_id% <- "show_plot"
     m$create_plot_trigger_%widget_id% <- Sys.time()
@@ -160,81 +151,108 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
     %req%
     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer m$create_plot_trigger_%widget_id%"))
     
-    req(requireNamespace("dygraphs", quietly = TRUE), requireNamespace("xts", quietly = TRUE))
+    req(requireNamespace("dygraphs", quietly = TRUE), requireNamespace("xts", quietly = TRUE), length(input$variable_1_%widget_id%) > 0)
     
-    create_plot_type <- isolate(m$create_plot_type_%widget_id%)
-    
-    # At each step of the code, we put the code in the code variable, for the shinyAce code editor (tab "Code")
-    
-    req(length(isolate(input$colour_1_%widget_id%)) > 0)
-    
-    data <- tibble::tibble(concept_id = integer(), datetime = lubridate::ymd_hms(), value_as_number = numeric())
-#     code <- "# A tibble containing the data for the plot\ndata <- tibble::tibble()\n"
-    code <- ""
-    
-    for (i in 1:10){
-        if (input[[paste0("variable_", i, "_%widget_id%")]] != 0L){
-            variable <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == input[[paste0("variable_", i, "_%widget_id%")]], is.na(relationship_id))
-            
-            table_name <- tolower(variable$domain_id)
-            
-            if (table_name %in% c("observation", "measurement")){
-                concept_id <- variable$concept_id_1
-                concept_name <- variable$concept_name_1
+    tryCatch({
+        create_plot_type <- isolate(m$create_plot_type_%widget_id%)
+        
+        # At each step of the code, we put the code in the code variable, for the shinyAce code editor (tab "Code")
+        
+        req(length(isolate(input$colour_1_%widget_id%)) > 0)
+        
+        data <- tibble::tibble(concept_id = integer(), datetime = lubridate::ymd_hms(), value_as_number = numeric())
+    #     code <- "# A tibble containing the data for the plot\ndata <- tibble::tibble()\n"
+        code <- ""
+        
+        # Keep track of used concept_ids for dygraph plot
+        concept_ids <- integer()
+        
+        for (i in 1:10){
+            if (input[[paste0("variable_", i, "_%widget_id%")]] != 0L){
+                concept_id <- input[[paste0("variable_", i, "_%widget_id%")]]
                 
-                if ("tbl_lazy" %in% class(d[[table_name]])) data <- data %>% 
-                    dplyr::bind_rows(
-                        d[[table_name]] %>% dplyr::filter(rlang::sym(paste0(table_name, "_concept_id")) == !!concept_id) %>% 
-                            dplyr::select(concept_id = paste0(table_name, "_concept_id"), datetime = paste0(table_name, "_datetime"), value_as_number) %>% 
-                            dplyr::mutate(concept_name = concept_name) %>%
-                            dplyr::collect()
-                    )
-                
-                else data <- data %>% 
-                    dplyr::bind_rows(
-                        d[[table_name]] %>% dplyr::filter(get(paste0(table_name, "_concept_id")) == !!concept_id) %>%
-                            dplyr::select(concept_id = paste0(table_name, "_concept_id"), datetime = paste0(table_name, "_datetime"), value_as_number) %>%
-                            dplyr::mutate(concept_name = concept_name)
-                    )
+                if (concept_id %not_in% concept_ids){
+            
+                    variable <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == concept_id, is.na(relationship_id))
+                    
+                    table_name <- tolower(variable$domain_id)
+                    
+                    if (table_name %in% c("observation", "measurement")){
+                        concept_name <- variable$concept_name_1
+                        
+                        if ("tbl_lazy" %in% class(d[[table_name]]))
+                        data <- data %>% 
+                            dplyr::bind_rows(
+                                d[[table_name]] %>% 
+                                    dplyr::filter(person_id == m$selected_person, rlang::sym(paste0(table_name, "_concept_id")) == !!concept_id) %>% 
+                                    dplyr::select(concept_id = paste0(table_name, "_concept_id"), datetime = paste0(table_name, "_datetime"), value_as_number) %>% 
+                                    dplyr::mutate(concept_name = concept_name) %>%
+                                    dplyr::collect()
+                            )
+                        
+                        else data <- data %>% 
+                            dplyr::bind_rows(
+                                d[[table_name]] %>% 
+                                    dplyr::filter(person_id == m$selected_person, get(paste0(table_name, "_concept_id")) == !!concept_id) %>%
+                                    dplyr::select(concept_id = paste0(table_name, "_concept_id"), datetime = paste0(table_name, "_datetime"), value_as_number) %>%
+                                    dplyr::mutate(concept_name = concept_name)
+                            )
+                    }
+                    
+                    concept_ids <- c(concept_ids, concept_id)
+                }
             }
         }
-    }
-    
-    # Pivot data
-    pivoted_data <- data %>% tidyr::pivot_wider(names_from = "concept_name", values_from = "value_as_number", id_cols = "datetime", values_fn = mean)
-    pivoted_data <- xts::xts(pivoted_data[,-1], order.by = as.POSIXct(pivoted_data$datetime))
-    
-    req(nrow(pivoted_data) > 0)
-    
-    # Create dygraph
-    result <- pivoted_data %>% dygraphs::dygraph()
-    
-    for (i in 1:10){
-    
-        concept_id <- input[[paste0("variable_", i, "_%widget_id%")]]
-        if (concept_id != 0){
-            concept_name <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == concept_id, is.na(relationship_id)) %>% dplyr::pull(concept_name_1)
-            result <- result %>% dygraphs::dySeries(concept_name, label = input[[paste0("variable_name_", i, "_%widget_id%")]], color = input[[paste0("colour_", i, "_%widget_id%")]])
+        
+        req(nrow(data) > 0)
+        
+        # Pivot data
+        pivoted_data <- data %>% tidyr::pivot_wider(names_from = "concept_name", values_from = "value_as_number", id_cols = "datetime", values_fn = mean)
+        pivoted_data <- xts::xts(pivoted_data[,-1], order.by = as.POSIXct(pivoted_data$datetime))
+        
+        # Create dygraph
+        result <- pivoted_data %>% dygraphs::dygraph()
+        
+        concept_ids <- integer()
+        
+        for (i in 1:10){
+        
+            if (concept_id %not_in% concept_ids){
+                concept_id <- input[[paste0("variable_", i, "_%widget_id%")]]
+                if (concept_id != 0){
+                    concept_name <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == concept_id, is.na(relationship_id)) %>% dplyr::pull(concept_name_1)
+                    result <- result %>% 
+                        dygraphs::dySeries(concept_name, label = input[[paste0("variable_name_", i, "_%widget_id%")]], color = input[[paste0("colour_", i, "_%widget_id%")]], drawPoints = TRUE)
+                }
+                
+                concept_ids <- c(concept_ids, concept_id)
+            }
         }
-    }
-    
-    # Update shinyAce code editor
-    if (create_plot_type == "generate_code"){
-        shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
         
-        # Go to "Code" tab
-        shinyjs::runjs(glue::glue("$('#{id}-pivot_%widget_id% button[name=\"{i18np$t('code')}\"]').click();"))
-    }
-    
-    # Final object of dygraph figure
-    
-    if (create_plot_type == "show_plot") output$dygraph_%widget_id% <- dygraphs::renderDygraph({
-        %req%
-        if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - output$dygraph_%widget_id%"))
+        # Add range selector
+        if (input$show_range_selector_%widget_id%) result <- result %>% dygraphs::dyRangeSelector()
         
-        result
-#         eval(parse(text = code))
-    })
+        # Update shinyAce code editor
+        if (create_plot_type == "generate_code"){
+            shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
+            
+            # Go to "Code" tab
+            shinyjs::runjs(glue::glue("$('#{id}-pivot_%widget_id% button[name=\"{i18np$t('code')}\"]').click();"))
+        }
+        
+        # Final object of dygraph figure
+        
+        shinyjs::show("dygraph_%widget_id%")
+        shinyjs::hide("empty_dygraph_%widget_id%")
+        
+        if (create_plot_type == "show_plot") output$dygraph_%widget_id% <- dygraphs::renderDygraph({
+            %req%
+            if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - output$dygraph_%widget_id%"))
+            
+            result
+    #         eval(parse(text = code))
+        })
+    }, error = function(e) print(e))
 })
 
 # ------------
