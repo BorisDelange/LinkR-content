@@ -179,6 +179,10 @@ result <- tagList(
                         div(class = "toggle_title", i18np$t("draw_points"), style = "padding-top:5px;")
                     ), br(),
                     shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                        shiny.fluent::Toggle.shinyInput(ns("change_y_values_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
+                        div(class = "toggle_title", i18np$t("change_y_values"), style = "padding-top:5px;")
+                    ),
+                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
                         div(
                             div(class = "input_title", i18np$t("y_min")),
                             shiny.fluent::SpinButton.shinyInput(ns("y_min_%widget_id%"), value = NULL, step = 1),

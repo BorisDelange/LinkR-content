@@ -117,7 +117,7 @@ sapply(1:10, function(i){
         
         concept_id <- input[[paste0("variable_", i, "_%widget_id%")]]
         req(concept_id != 0L, length(concept_id) > 0)
-        table_name <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == concept_id) %>% dplyr::pull(domain_id) %>% tolower()
+        table_name <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == concept_id, is.na(relationship_id)) %>% dplyr::pull(domain_id) %>% tolower()
         
         unit_concept_name <- ""
         
@@ -127,9 +127,9 @@ sapply(1:10, function(i){
         else unit_concept_id <- d[[table_name]] %>% dplyr::filter(get(paste0(table_name, "_concept_id")) == !!concept_id) %>%
             dplyr::distinct(unit_concept_id) %>% dplyr::pull(unit_concept_id)
             
-        if (length(unit_concept_id) > 0) unit_concept_name <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 %in% unit_concept_id) %>% dplyr::slice(1) %>% dplyr::pull(concept_name_1)
+        if (length(unit_concept_id) > 0) unit_concept_name <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 %in% unit_concept_id, is.na(relationship_id)) %>% dplyr::slice(1) %>% dplyr::pull(concept_name_1)
         
-        concept_name <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == concept_id) %>% dplyr::pull(concept_name_1)
+        concept_name <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == concept_id, is.na(relationship_id)) %>% dplyr::pull(concept_name_1)
         if (unit_concept_name != "") concept_name <- paste0(concept_name, " (", unit_concept_name, ")")
         
         shiny.fluent::updateTextField.shinyInput(session, paste0("variable_name_", i, "_%widget_id%"), value = concept_name)
@@ -164,6 +164,9 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
     #     code <- "# A tibble containing the data for the plot\ndata <- tibble::tibble()\n"
         code <- ""
         
+        # Prevents a bug with filter on a list element (m$selected_person) which doesn't work on lazy tibbles
+        selected_person <- m$selected_person
+        
         # Keep track of used concept_ids for dygraph plot
         concept_ids <- integer()
         
@@ -180,21 +183,26 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
                     if (table_name %in% c("observation", "measurement")){
                         concept_name <- variable$concept_name_1
                         
-                        if ("tbl_lazy" %in% class(d[[table_name]]))
-                        data <- data %>% 
-                            dplyr::bind_rows(
-                                d[[table_name]] %>% 
-                                    dplyr::filter(person_id == m$selected_person, rlang::sym(paste0(table_name, "_concept_id")) == !!concept_id) %>% 
-                                    dplyr::select(concept_id = paste0(table_name, "_concept_id"), datetime = paste0(table_name, "_datetime"), value_as_number) %>% 
-                                    dplyr::mutate(concept_name = concept_name) %>%
-                                    dplyr::collect()
-                            )
+                        data_filtered <- d[[table_name]] %>% dplyr::filter(person_id == selected_person, !!rlang::sym(paste0(table_name, "_concept_id")) == !!concept_id)
                         
-                        else data <- data %>% 
+                        if (length(input$stay_data_only_%widget_id%) > 0) if (input$stay_data_only_%widget_id% & !is.na(m$selected_visit_detail)){
+                        
+                            selected_visit_detail_id <- m$selected_visit_detail
+                            selected_visit_detail <- d$visit_detail %>% dplyr::filter(visit_detail_id == selected_visit_detail_id)
+                        
+                            data_filtered <- data_filtered %>% 
+                                dplyr::filter(
+                                    !!rlang::sym(paste0(table_name, "_datetime")) >= selected_visit_detail$visit_detail_start_datetime,
+                                    !!rlang::sym(paste0(table_name, "_datetime")) <= selected_visit_detail$visit_detail_end_datetime
+                                )
+                        }
+                        
+                        data_filtered <- data_filtered %>% dplyr::collect()
+                        
+                        if (nrow(data_filtered) > 0) data <- data %>% 
                             dplyr::bind_rows(
-                                d[[table_name]] %>% 
-                                    dplyr::filter(person_id == m$selected_person, get(paste0(table_name, "_concept_id")) == !!concept_id) %>%
-                                    dplyr::select(concept_id = paste0(table_name, "_concept_id"), datetime = paste0(table_name, "_datetime"), value_as_number) %>%
+                                data_filtered %>%
+                                    dplyr::select(concept_id = paste0(table_name, "_concept_id"), datetime = paste0(table_name, "_datetime"), value_as_number) %>% 
                                     dplyr::mutate(concept_name = concept_name)
                             )
                     }
@@ -204,6 +212,11 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
             }
         }
         
+        if (nrow(data) == 0){
+            shinyjs::hide("dygraph_%widget_id%")
+            shinyjs::show("empty_dygraph_%widget_id%")
+        }
+        
         req(nrow(data) > 0)
         
         # Pivot data
@@ -211,7 +224,7 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
         pivoted_data <- xts::xts(pivoted_data[,-1], order.by = as.POSIXct(pivoted_data$datetime))
         
         # Create dygraph
-        result <- pivoted_data %>% dygraphs::dygraph()
+        result <- pivoted_data %>% dygraphs::dygraph() %>% dygraphs::dyOptions(useDataTimezone = TRUE)
         
         concept_ids <- integer()
         
@@ -221,16 +234,55 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
                 concept_id <- input[[paste0("variable_", i, "_%widget_id%")]]
                 if (concept_id != 0){
                     concept_name <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == concept_id, is.na(relationship_id)) %>% dplyr::pull(concept_name_1)
+                    
+                    draw_points <- FALSE
+                    if (length(input$draw_points_%widget_id%) > 0) if(input$draw_points_%widget_id%) draw_points <- TRUE
+                    
                     result <- result %>% 
-                        dygraphs::dySeries(concept_name, label = input[[paste0("variable_name_", i, "_%widget_id%")]], color = input[[paste0("colour_", i, "_%widget_id%")]], drawPoints = TRUE)
+                        dygraphs::dySeries(concept_name, label = input[[paste0("variable_name_", i, "_%widget_id%")]], color = input[[paste0("colour_", i, "_%widget_id%")]], drawPoints = draw_points)
                 }
                 
                 concept_ids <- c(concept_ids, concept_id)
             }
         }
         
+        # Show patient stays
+        if (length(input$show_stays_%widget_id%) > 0) if(input$show_stays_%widget_id%){
+            
+            visit_details <-
+                d$visit_detail %>% 
+                dplyr::filter(person_id == selected_person) %>%
+                dplyr::collect() %>%
+                dplyr::left_join(d$dataset_all_concepts %>% dplyr::select(visit_detail_concept_id = concept_id_1, visit_detail_concept_name = concept_name_1), by = "visit_detail_concept_id")
+                
+            visit_details <-
+                visit_details %>%
+                dplyr::distinct(visit_detail_start_datetime) %>%
+                dplyr::rename(datetime = visit_detail_start_datetime) %>%
+                dplyr::left_join(visit_details %>% dplyr::select(unit_in = visit_detail_concept_name, datetime = visit_detail_start_datetime), by = "datetime") %>%
+                dplyr::left_join(visit_details %>% dplyr::select(unit_out = visit_detail_concept_name, datetime = visit_detail_end_datetime), by = "datetime") %>%
+                dplyr::mutate(text = dplyr::case_when(
+                    !is.na(unit_out) ~ paste0(unit_out, " - ", unit_in),
+                    TRUE ~ unit_in
+                )) %>%
+                dplyr::mutate(text = ifelse(is.na(text), "", text))
+                
+            for (i in 1:nrow(visit_details)){
+                row <- visit_details[i, ]
+                result <- result %>% dygraphs::dyEvent(row$datetime, row$text)
+            }
+        }
+        
         # Add range selector
-        if (input$show_range_selector_%widget_id%) result <- result %>% dygraphs::dyRangeSelector()
+        if (length(input$show_range_selector_%widget_id% > 0)) if(input$show_range_selector_%widget_id% > 0) result <- result %>% dygraphs::dyRangeSelector()
+        
+        # Smooth curves
+        if (length(input$smooth_curves_%widget_id%) > 0) if (input$smooth_curves_%widget_id%) result <- result %>% dygraphs::dyRoller(rollPeriod = 5)
+        
+        # Y range values
+        if (length(input$change_y_values_%widget_id%) > 0 & length(input$y_min_%widget_id%) > 0 & length(input$y_max_%widget_id%)){
+            if (input$change_y_values_%widget_id%) result <- result %>% dygraphs::dyAxis("y", valueRange = c(input$y_min_%widget_id%, input$y_max_%widget_id%))
+        }
         
         # Update shinyAce code editor
         if (create_plot_type == "generate_code"){
