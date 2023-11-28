@@ -1,5 +1,5 @@
 # Get saved params for this widget
-sql <- glue::glue_sql("SELECT * FROM patient_lvl_widgets_options WHERE widget_id = %widget_id%", .con = r$db)
+sql <- glue::glue_sql("SELECT * FROM patient_lvl_widgets_options WHERE widget_id = %widget_id%", .con = m$db)
 widget_options <- DBI::dbGetQuery(m$db, sql)
 
 m$widget_options_%widget_id% <- widget_options
@@ -9,34 +9,34 @@ m$reload_dt_%widget_id% <- Sys.time()
 
 # List of inputs (to save & get saved params)
 
-# dropdowns <- c("plot_function", "plot_theme", "bins_type", "x_variable", "y_variable", "colour_pal", "group_by", "group_by_type", "summarize_fct")
-# textfields <- c("x_label", "y_label")
-# spin_buttons <- c("num_of_bins", "bin_width", "group_by_num")
-# toggle_inputs <- c("group_data", "run_code_at_script_launch", "run_plot_at_script_launch")
-# colour_inputs <- "colour"
-# ace_inputs <- "code"
-# inputs <- c(dropdowns, textfields, spin_buttons, toggle_inputs, colour_inputs, ace_inputs)
-# 
-# default_values <- list()
-# default_values$plot_function <- "geom_histogram"
-# default_values$plot_theme <- "theme_minimal"
-# default_values$bins_type <- "num_of_bins"
-# default_values$x_variable <- 0L
-# default_values$y_variable <- 0L
-# default_values$colour_pal <- "Set1"
-# default_values$group_by <- "datetime"
-# default_values$group_by_type <- "hours"
-# default_values$summarize_fct <- "mean"
-# default_values$x_label <- ""
-# default_values$y_label <- ""
-# default_values$num_of_bins <- 50L
-# default_values$bin_width <- 10L
-# default_values$group_by_num <- 4L
-# default_values$group_data <- FALSE
-# default_values$colour <- "#E41A1C"
-# default_values$run_code_at_script_launch <- FALSE
-# default_values$run_plot_at_script_launch <- FALSE
-# default_values$code <- ""
+dropdowns <- paste(unlist(sapply(c("variable", "colour_pal"), function(x) paste0(x, "_", 1:10))))
+textfields <- paste(unlist(sapply("variable_name", function(x) paste0(x, "_", 1:10))))
+spin_buttons <- c("y_min", "y_max")
+toggle_inputs <- c("show_stays", "stay_data_only", "show_range_selector", "synchronize_timelines", "smooth_curves", "draw_points", "change_y_values")
+colour_inputs <- paste(unlist(sapply("colour", function(x) paste0(x, "_", 1:10))))
+ace_inputs <- "code"
+inputs <- c(dropdowns, textfields, spin_buttons, toggle_inputs, colour_inputs, ace_inputs)
+
+default_values <- list()
+default_values$run_code_at_script_launch <- FALSE
+default_values$run_plot_at_script_launch <- FALSE
+default_values$y_min <- NULL
+default_values$y_max <- NULL
+default_values$show_stays <- FALSE
+default_values$stay_data_only <- FALSE
+default_values$show_range_selector <- TRUE
+default_values$synchronize_timelines <- FALSE
+default_values$smooth_curves <- FALSE
+default_values$draw_points <- TRUE
+default_values$change_y_values <- FALSE
+default_values$code <- ""
+
+for (i in 1:10){
+    default_values[[paste0("variable_", i)]] <- 0L
+    default_values[[paste0("variable_name_", i)]] <- ""
+    default_values[[paste0("colour_", i)]] <- "#E41A1C"
+    default_values[[paste0("colour_pal_", i)]] <- "Set1"
+}
 
 # -------------------------
 # --- Show / hide divs ----
@@ -77,11 +77,9 @@ observeEvent(input$variable_num_%widget_id%, {
 # -------------
 
 # Update x & y variables dropdowns
-# concepts <- tibble::tibble(concept_id = 0L, concept_name = i18np$t("none")) %>% dplyr::bind_rows(selected_concepts %>% dplyr::select(concept_id, concept_name))
-# x_variables <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
-# shiny.fluent::updateDropdown.shinyInput(session, "x_variable_%widget_id%", options = x_variables)
-# y_variables <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
-# shiny.fluent::updateDropdown.shinyInput(session, "y_variable_%widget_id%", options = y_variables)
+concepts <- tibble::tibble(concept_id = 0L, concept_name = i18np$t("none")) %>% dplyr::bind_rows(selected_concepts %>% dplyr::select(concept_id, concept_name))
+variables <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
+for (i in 1:10) shiny.fluent::updateDropdown.shinyInput(session, paste0("variable_", i, "_%widget_id%"), options = variables)   
 
 sapply(1:10, function(i){
 
@@ -98,7 +96,7 @@ sapply(1:10, function(i){
         # Get saved colour
         value <- pal[1]
         if (length(input$script_choice_%widget_id%) > 0){
-            sql <- glue::glue_sql("SELECT * FROM patient_lvl_widgets_options WHERE widget_id = %widget_id% AND link_id = {input$script_choice_%widget_id%} AND name = {paste0('colour_', i}", .con = r$db)
+            sql <- glue::glue_sql("SELECT * FROM patient_lvl_widgets_options WHERE widget_id = %widget_id% AND link_id = {input$script_choice_%widget_id%} AND name = {paste0('colour_', i)}", .con = m$db)
             colour <- DBI::dbGetQuery(m$db, sql)
             if (nrow(colour) > 0) if (colour %>% dplyr::pull(value) %in% pal) value <- colour %>% dplyr::pull(value)   
         }
@@ -147,165 +145,244 @@ observeEvent(input$show_%widget_id%, {
 })
 
 # Generate code and update aceEditor or render plot
+
 observeEvent(m$create_plot_trigger_%widget_id%, {
     %req%
     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer m$create_plot_trigger_%widget_id%"))
     
     req(requireNamespace("dygraphs", quietly = TRUE), requireNamespace("xts", quietly = TRUE), length(input$variable_1_%widget_id%) > 0)
     
-    tryCatch({
-        create_plot_type <- isolate(m$create_plot_type_%widget_id%)
-        
-        # At each step of the code, we put the code in the code variable, for the shinyAce code editor (tab "Code")
-        
-        req(length(isolate(input$colour_1_%widget_id%)) > 0)
-        
-        data <- tibble::tibble(concept_id = integer(), datetime = lubridate::ymd_hms(), value_as_number = numeric())
-    #     code <- "# A tibble containing the data for the plot\ndata <- tibble::tibble()\n"
-        code <- ""
-        
-        # Prevents a bug with filter on a list element (m$selected_person) which doesn't work on lazy tibbles
-        selected_person <- m$selected_person
-        
-        # Keep track of used concept_ids for dygraph plot
-        concept_ids <- integer()
-        
-        for (i in 1:10){
-            if (input[[paste0("variable_", i, "_%widget_id%")]] != 0L){
-                concept_id <- input[[paste0("variable_", i, "_%widget_id%")]]
-                
-                if (concept_id %not_in% concept_ids){
+    create_plot_type <- isolate(m$create_plot_type_%widget_id%)
+    
+    # At each step of the code, we put the code in the code variable, for the shinyAce code editor (tab "Code")
+    
+    req(length(isolate(input$colour_1_%widget_id%)) > 0)
+    
+    data <- tibble::tibble(concept_id = integer(), datetime = lubridate::ymd_hms(), value_as_number = numeric())
+#     code <- "# A tibble containing the data for the plot\ndata <- tibble::tibble()\n"
+    code <- ""
+    
+    # Prevents a bug with filter on a list element (m$selected_person) which doesn't work on lazy tibbles
+    selected_person <- m$selected_person
+    
+    # Keep track of used concept_ids for dygraph plot
+    concept_ids <- integer()
+    
+    for (i in 1:10){
+        if (input[[paste0("variable_", i, "_%widget_id%")]] != 0L){
+            concept_id <- input[[paste0("variable_", i, "_%widget_id%")]]
             
-                    variable <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == concept_id, is.na(relationship_id))
+            if (concept_id %not_in% concept_ids){
+        
+                variable <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == concept_id, is.na(relationship_id))
+                
+                table_name <- tolower(variable$domain_id)
+                
+                if (table_name %in% c("observation", "measurement")){
+                    concept_name <- variable$concept_name_1
                     
-                    table_name <- tolower(variable$domain_id)
+                    data_filtered <- d[[table_name]] %>% dplyr::filter(person_id == selected_person, !!rlang::sym(paste0(table_name, "_concept_id")) == !!concept_id)
                     
-                    if (table_name %in% c("observation", "measurement")){
-                        concept_name <- variable$concept_name_1
-                        
-                        data_filtered <- d[[table_name]] %>% dplyr::filter(person_id == selected_person, !!rlang::sym(paste0(table_name, "_concept_id")) == !!concept_id)
-                        
-                        if (length(input$stay_data_only_%widget_id%) > 0) if (input$stay_data_only_%widget_id% & !is.na(m$selected_visit_detail)){
-                        
-                            selected_visit_detail_id <- m$selected_visit_detail
-                            selected_visit_detail <- d$visit_detail %>% dplyr::filter(visit_detail_id == selected_visit_detail_id)
-                        
-                            data_filtered <- data_filtered %>% 
-                                dplyr::filter(
-                                    !!rlang::sym(paste0(table_name, "_datetime")) >= selected_visit_detail$visit_detail_start_datetime,
-                                    !!rlang::sym(paste0(table_name, "_datetime")) <= selected_visit_detail$visit_detail_end_datetime
-                                )
-                        }
-                        
-                        data_filtered <- data_filtered %>% dplyr::collect()
-                        
-                        if (nrow(data_filtered) > 0) data <- data %>% 
-                            dplyr::bind_rows(
-                                data_filtered %>%
-                                    dplyr::select(concept_id = paste0(table_name, "_concept_id"), datetime = paste0(table_name, "_datetime"), value_as_number) %>% 
-                                    dplyr::mutate(concept_name = concept_name)
+                    if (length(input$stay_data_only_%widget_id%) > 0) if (input$stay_data_only_%widget_id% & !is.na(m$selected_visit_detail)){
+                    
+                        selected_visit_detail_id <- m$selected_visit_detail
+                        selected_visit_detail <- d$visit_detail %>% dplyr::filter(visit_detail_id == selected_visit_detail_id)
+                    
+                        data_filtered <- data_filtered %>% 
+                            dplyr::filter(
+                                !!rlang::sym(paste0(table_name, "_datetime")) >= selected_visit_detail$visit_detail_start_datetime,
+                                !!rlang::sym(paste0(table_name, "_datetime")) <= selected_visit_detail$visit_detail_end_datetime
                             )
                     }
                     
-                    concept_ids <- c(concept_ids, concept_id)
-                }
-            }
-        }
-        
-        if (nrow(data) == 0){
-            shinyjs::hide("dygraph_%widget_id%")
-            shinyjs::show("empty_dygraph_%widget_id%")
-        }
-        
-        req(nrow(data) > 0)
-        
-        # Pivot data
-        pivoted_data <- data %>% tidyr::pivot_wider(names_from = "concept_name", values_from = "value_as_number", id_cols = "datetime", values_fn = mean)
-        pivoted_data <- xts::xts(pivoted_data[,-1], order.by = as.POSIXct(pivoted_data$datetime))
-        
-        # Create dygraph
-        result <- pivoted_data %>% dygraphs::dygraph() %>% dygraphs::dyOptions(useDataTimezone = TRUE)
-        
-        concept_ids <- integer()
-        
-        for (i in 1:10){
-        
-            if (concept_id %not_in% concept_ids){
-                concept_id <- input[[paste0("variable_", i, "_%widget_id%")]]
-                if (concept_id != 0){
-                    concept_name <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == concept_id, is.na(relationship_id)) %>% dplyr::pull(concept_name_1)
+                    data_filtered <- data_filtered %>% dplyr::collect()
                     
-                    draw_points <- FALSE
-                    if (length(input$draw_points_%widget_id%) > 0) if(input$draw_points_%widget_id%) draw_points <- TRUE
-                    
-                    result <- result %>% 
-                        dygraphs::dySeries(concept_name, label = input[[paste0("variable_name_", i, "_%widget_id%")]], color = input[[paste0("colour_", i, "_%widget_id%")]], drawPoints = draw_points)
+                    if (nrow(data_filtered) > 0) data <- data %>% 
+                        dplyr::bind_rows(
+                            data_filtered %>%
+                                dplyr::select(concept_id = paste0(table_name, "_concept_id"), datetime = paste0(table_name, "_datetime"), value_as_number) %>% 
+                                dplyr::mutate(concept_name = concept_name)
+                        )
                 }
                 
                 concept_ids <- c(concept_ids, concept_id)
             }
         }
+    }
+    
+    if (nrow(data) == 0){
+        shinyjs::hide("dygraph_%widget_id%")
+        shinyjs::show("empty_dygraph_%widget_id%")
+    }
         
-        # Show patient stays
-        if (length(input$show_stays_%widget_id%) > 0) if(input$show_stays_%widget_id%){
-            
-            visit_details <-
-                d$visit_detail %>% 
-                dplyr::filter(person_id == selected_person) %>%
-                dplyr::collect() %>%
-                dplyr::left_join(d$dataset_all_concepts %>% dplyr::select(visit_detail_concept_id = concept_id_1, visit_detail_concept_name = concept_name_1), by = "visit_detail_concept_id")
+    req(nrow(data) > 0)
+    
+    # Pivot data
+    pivoted_data <- data %>% tidyr::pivot_wider(names_from = "concept_name", values_from = "value_as_number", id_cols = "datetime", values_fn = mean)
+    pivoted_data <- xts::xts(pivoted_data[,-1], order.by = as.POSIXct(pivoted_data$datetime))
+    
+    # Create dygraph
+    result <- pivoted_data %>% dygraphs::dygraph() %>% dygraphs::dyOptions(useDataTimezone = TRUE)
+    
+    concept_ids <- integer()
+    
+    for (i in 1:10){
+    
+        if (concept_id %not_in% concept_ids){
+            concept_id <- input[[paste0("variable_", i, "_%widget_id%")]]
+            if (concept_id != 0){
+                concept_name <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == concept_id, is.na(relationship_id)) %>% dplyr::pull(concept_name_1)
                 
-            visit_details <-
-                visit_details %>%
-                dplyr::distinct(visit_detail_start_datetime) %>%
-                dplyr::rename(datetime = visit_detail_start_datetime) %>%
-                dplyr::left_join(visit_details %>% dplyr::select(unit_in = visit_detail_concept_name, datetime = visit_detail_start_datetime), by = "datetime") %>%
-                dplyr::left_join(visit_details %>% dplyr::select(unit_out = visit_detail_concept_name, datetime = visit_detail_end_datetime), by = "datetime") %>%
-                dplyr::mutate(text = dplyr::case_when(
-                    !is.na(unit_out) ~ paste0(unit_out, " - ", unit_in),
-                    TRUE ~ unit_in
-                )) %>%
-                dplyr::mutate(text = ifelse(is.na(text), "", text))
+                draw_points <- FALSE
+                if (length(input$draw_points_%widget_id%) > 0) if(input$draw_points_%widget_id%) draw_points <- TRUE
                 
-            for (i in 1:nrow(visit_details)){
-                row <- visit_details[i, ]
-                result <- result %>% dygraphs::dyEvent(row$datetime, row$text)
+                result <- result %>% 
+                    dygraphs::dySeries(concept_name, label = input[[paste0("variable_name_", i, "_%widget_id%")]], color = input[[paste0("colour_", i, "_%widget_id%")]], drawPoints = draw_points)
             }
-        }
-        
-        # Add range selector
-        if (length(input$show_range_selector_%widget_id% > 0)) if(input$show_range_selector_%widget_id% > 0) result <- result %>% dygraphs::dyRangeSelector()
-        
-        # Smooth curves
-        if (length(input$smooth_curves_%widget_id%) > 0) if (input$smooth_curves_%widget_id%) result <- result %>% dygraphs::dyRoller(rollPeriod = 5)
-        
-        # Y range values
-        if (length(input$change_y_values_%widget_id%) > 0 & length(input$y_min_%widget_id%) > 0 & length(input$y_max_%widget_id%)){
-            if (input$change_y_values_%widget_id%) result <- result %>% dygraphs::dyAxis("y", valueRange = c(input$y_min_%widget_id%, input$y_max_%widget_id%))
-        }
-        
-        # Update shinyAce code editor
-        if (create_plot_type == "generate_code"){
-            shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
             
-            # Go to "Code" tab
-            shinyjs::runjs(glue::glue("$('#{id}-pivot_%widget_id% button[name=\"{i18np$t('code')}\"]').click();"))
+            concept_ids <- c(concept_ids, concept_id)
         }
+    }
+    
+    # Show patient stays
+    if (length(input$show_stays_%widget_id%) > 0) if(input$show_stays_%widget_id%){
         
-        # Final object of dygraph figure
-        
-        shinyjs::show("dygraph_%widget_id%")
-        shinyjs::hide("empty_dygraph_%widget_id%")
-        
-        if (create_plot_type == "show_plot") output$dygraph_%widget_id% <- dygraphs::renderDygraph({
-            %req%
-            if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - output$dygraph_%widget_id%"))
+        visit_details <-
+            d$visit_detail %>% 
+            dplyr::filter(person_id == selected_person) %>%
+            dplyr::collect() %>%
+            dplyr::left_join(d$dataset_all_concepts %>% dplyr::select(visit_detail_concept_id = concept_id_1, visit_detail_concept_name = concept_name_1), by = "visit_detail_concept_id")
             
-            result
-    #         eval(parse(text = code))
-        })
-    }, error = function(e) print(e))
+        visit_details <-
+            visit_details %>%
+            dplyr::distinct(visit_detail_start_datetime) %>%
+            dplyr::rename(datetime = visit_detail_start_datetime) %>%
+            dplyr::left_join(visit_details %>% dplyr::select(unit_in = visit_detail_concept_name, datetime = visit_detail_start_datetime), by = "datetime") %>%
+            dplyr::left_join(visit_details %>% dplyr::select(unit_out = visit_detail_concept_name, datetime = visit_detail_end_datetime), by = "datetime") %>%
+            dplyr::mutate(text = dplyr::case_when(
+                !is.na(unit_out) ~ paste0(unit_out, " - ", unit_in),
+                TRUE ~ unit_in
+            )) %>%
+            dplyr::mutate(text = ifelse(is.na(text), "", text))
+            
+        for (i in 1:nrow(visit_details)){
+            row <- visit_details[i, ]
+            result <- result %>% dygraphs::dyEvent(row$datetime, row$text)
+        }
+    }
+    
+    # Add range selector
+    if (length(input$show_range_selector_%widget_id% > 0)) if(input$show_range_selector_%widget_id% > 0) result <- result %>% dygraphs::dyRangeSelector()
+    
+    # Smooth curves
+    if (length(input$smooth_curves_%widget_id%) > 0) if (input$smooth_curves_%widget_id%) result <- result %>% dygraphs::dyRoller(rollPeriod = 5)
+    
+    # Y range values
+    if (length(input$change_y_values_%widget_id%) > 0 & length(input$y_min_%widget_id%) > 0 & length(input$y_max_%widget_id%)){
+        if (input$change_y_values_%widget_id%) result <- result %>% dygraphs::dyAxis("y", valueRange = c(input$y_min_%widget_id%, input$y_max_%widget_id%))
+    }
+    
+    # Update shinyAce code editor
+    if (create_plot_type == "generate_code"){
+        shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
+        
+        # Go to "Code" tab
+        shinyjs::runjs(glue::glue("$('#{id}-pivot_%widget_id% button[name=\"{i18np$t('code')}\"]').click();"))
+    }
+    
+    # Final object of dygraph figure
+    
+    shinyjs::show("dygraph_%widget_id%")
+    shinyjs::hide("empty_dygraph_%widget_id%")
+    
+    if (create_plot_type == "show_plot") output$dygraph_%widget_id% <- dygraphs::renderDygraph({
+        %req%
+        if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - output$dygraph_%widget_id%"))
+        
+        result
+#         eval(parse(text = code))
+    })
 })
+
+# Save widget parameters
+observeEvent(input$save_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$save_%widget_id%"))
+    
+    req(length(input$script_choice_%widget_id%) > 0)
+    
+    # Delete old options
+    sql <- glue::glue_sql("DELETE FROM patient_lvl_widgets_options WHERE widget_id = {%widget_id%} AND link_id = {input$script_choice_%widget_id%}", .con = m$db)
+    DBI::dbSendStatement(m$db, sql) -> query
+    DBI::dbClearResult(query)
+    
+    last_row <- get_last_row(m$db, "patient_lvl_widgets_options")
+    
+    # Add new options
+    new_options <- tibble::tibble(
+        id = seq(last_row + 1, last_row + length(inputs)),
+        widget_id = %widget_id%, person_id = NA_integer_, link_id = input$script_choice_%widget_id%,
+        category = NA_character_, name = NA_character_, value = NA_character_, value_num = NA_real_,
+        creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
+    
+    new_options_values <- tibble::tibble(name = character(), value = character(), value_num = numeric())
+    
+    for (input_name in inputs){
+        if (input_name %in% spin_buttons || grepl("variable_[0-9]", input_name)){
+            value_num <- NA_real_
+            if (length(input[[paste0(input_name, "_%widget_id%")]]) > 0) value_num <- input[[paste0(input_name, "_%widget_id%")]]
+            new_options_values <- new_options_values %>% dplyr::bind_rows(tibble::tibble(name = input_name, value = NA_character_, value_num = value_num))
+        } 
+        else {
+            value <- NA_character_
+            if (length(input[[paste0(input_name, "_%widget_id%")]]) > 0) value <- as.character(input[[paste0(input_name, "_%widget_id%")]])
+            new_options_values <- new_options_values %>% dplyr::bind_rows(tibble::tibble(name = input_name, value = value, value_num = NA_real_))
+        } 
+    }
+    
+    for (col in c("name", "value", "value_num")) new_options[[col]] <- new_options_values[[col]]
+    
+    DBI::dbAppendTable(m$db, "patient_lvl_widgets_options", new_options)
+    
+    m$widget_options_%widget_id% <- m$widget_options_%widget_id% %>% dplyr::filter(link_id != input$script_choice_%widget_id%) %>% dplyr::bind_rows(new_options)
+    
+    # Notify user
+    show_message_bar(output, "modif_saved", "success", i18n = i18n, ns = ns)
+})
+
+# Hide parameters div
+# observeEvent(input$hide_params_%widget_id%, {
+#     %req%
+#     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$hide_params_%widget_id%"))
+# 
+#     if (input$hide_params_%widget_id%){
+#         shinyjs::hide("split_layout_right_%widget_id%")
+#         shinyjs::delay(100, shinyjs::runjs(glue::glue("$('#{id}-split_layout_left_%widget_id%').css('width', '100%');")))
+#     }
+#     else {
+#         shinyjs::runjs(glue::glue("$('#{id}-split_layout_left_%widget_id%').css('width', '50%');"))
+#         shinyjs::delay(100, shinyjs::show("split_layout_right_%widget_id%"))
+#     }
+# })
+
+# Plot width
+# observeEvent(input$plot_width_%widget_id%, {
+#     %req%
+#     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_width_%widget_id%"))
+#     shinyjs::runjs(glue::glue("$('#{id}-plot_div_%widget_id%').css('width', '{isolate(input$plot_width_%widget_id%)}%');")) %>% throttle(1000)
+# })
+
+# Run plot / code at script launch
+# observeEvent(input$run_plot_at_script_launch_%widget_id%, {
+#     %req%
+#     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_plot_at_script_launch_%widget_id%"))
+#     if (input$run_plot_at_script_launch_%widget_id%) shiny.fluent::updateToggle.shinyInput(session, "run_code_at_script_launch_%widget_id%", value = FALSE)
+# })
+# observeEvent(input$run_code_at_script_launch_%widget_id%, {
+#     %req%
+#     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_code_at_script_launch_%widget_id%"))
+#     if (input$run_code_at_script_launch_%widget_id%) shiny.fluent::updateToggle.shinyInput(session, "run_plot_at_script_launch_%widget_id%", value = FALSE)
+# })
 
 # ------------
 # --- Code ---
@@ -360,7 +437,7 @@ observeEvent(input$add_script_%widget_id%, {
     shiny.fluent::updateTextField.shinyInput(session, "script_name_%widget_id%", errorMessage = NULL)
     
     # Check if name is not already used
-    sql <- glue::glue_sql("SELECT * FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND name = 'script' AND value = {input$script_name_%widget_id%}", .con = m$db)
+    sql <- glue::glue_sql("SELECT * FROM patient_lvl_widgets_options WHERE widget_id = %widget_id% AND name = 'script' AND value = {input$script_name_%widget_id%}", .con = m$db)
     already_used_name <- DBI::dbGetQuery(m$db, sql) %>% nrow() >= 1
     if (already_used_name) shiny.fluent::updateTextField.shinyInput(session, "script_name_%widget_id%", errorMessage = i18n$t("name_already_used"))
     req(!already_used_name)
@@ -368,8 +445,8 @@ observeEvent(input$add_script_%widget_id%, {
     
     # Add script to database
     
-    last_row <- get_last_row(m$db, "aggregated_widgets_options")
-    sql <- glue::glue_sql("SELECT COALESCE(MAX(value_num), 0) FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND name = 'script'", .con = m$db)
+    last_row <- get_last_row(m$db, "patient_lvl_widgets_options")
+    sql <- glue::glue_sql("SELECT COALESCE(MAX(value_num), 0) FROM patient_lvl_widgets_options WHERE widget_id = %widget_id% AND name = 'script'", .con = m$db)
     last_id <- DBI::dbGetQuery(m$db, sql) %>% dplyr::pull()
     
     new_options <- tibble::tibble(
@@ -377,7 +454,7 @@ observeEvent(input$add_script_%widget_id%, {
         category = NA_character_, name = "script", value = input$script_name_%widget_id%, value_num = last_id + 1,
         creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
         
-    DBI::dbAppendTable(m$db, "aggregated_widgets_options", new_options)
+    DBI::dbAppendTable(m$db, "patient_lvl_widgets_options", new_options)
     
     # Reset TextField
     shiny.fluent::updateTextField.shinyInput(session, "script_name_%widget_id%", value = "")
@@ -399,61 +476,62 @@ observeEvent(input$script_choice_%widget_id%, {
     %req%
     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$script_choice_%widget_id%"))
     
-#     widget_options <- m$widget_options_%widget_id% %>% dplyr::filter(link_id == input$script_choice_%widget_id%)
-#     
-#     run_code_at_script_launch <- FALSE
-#     run_plot_at_script_launch <- FALSE
-#     code <- ""
+    widget_options <- m$widget_options_%widget_id% %>% dplyr::filter(link_id == input$script_choice_%widget_id%)
     
-#     for (input_name in inputs){
-#         widget_option <- widget_options %>% dplyr::filter(name == input_name)
-#         
-#         # Update inputs with saved values
-#         if (nrow(widget_option) > 0){
-#             if (input_name %in% dropdowns){
-#                 if (input_name %in% c("x_variable", "y_variable")) value <- widget_option$value_num else value <- widget_option$value
-#                 shiny.fluent::updateDropdown.shinyInput(session, paste0(input_name, "_%widget_id%"), value = value)
-#             }
-#             if (input_name %in% textfields) shiny.fluent::updateTextField.shinyInput(session, paste0(input_name, "_%widget_id%"), value = widget_option$value)
-#             if (input_name %in% spin_buttons) shiny.fluent::updateSpinButton.shinyInput(session, paste0(input_name, "_%widget_id%"), value = widget_option$value_num)
-#             if (input_name %in% toggle_inputs) shiny.fluent::updateToggle.shinyInput(session, paste0(input_name, "_%widget_id%"), value = as.logical(widget_option$value))
-#             if (input_name %in% colour_inputs) shiny.fluent::updateSwatchColorPicker.shinyInput(session, paste0(input_name, "_%widget_id%"), value = widget_option$value)
-#             if (input_name %in% ace_inputs) shinyAce::updateAceEditor(session, paste0(input_name, "_%widget_id%"), value = widget_option$value)
-#             
-#             if (input_name == "run_code_at_script_launch") run_code_at_script_launch <- as.logical(widget_option$value)
-#             if (input_name == "run_plot_at_script_launch") run_plot_at_script_launch <- as.logical(widget_option$value)
-#             if (input_name == "code") code <- widget_option$value
-#         }
-#         if (nrow(widget_option) == 0){
-#             if (input_name %in% dropdowns) shiny.fluent::updateDropdown.shinyInput(session, paste0(input_name, "_%widget_id%"), value = default_values[[input_name]])
-#             if (input_name %in% textfields) shiny.fluent::updateTextField.shinyInput(session, paste0(input_name, "_%widget_id%"), value = default_values[[input_name]])
-#             if (input_name %in% spin_buttons) shiny.fluent::updateSpinButton.shinyInput(session, paste0(input_name, "_%widget_id%"), value = default_values[[input_name]])
-#             if (input_name %in% toggle_inputs) shiny.fluent::updateToggle.shinyInput(session, paste0(input_name, "_%widget_id%"), value = default_values[[input_name]])
-#             if (input_name %in% colour_inputs) shiny.fluent::updateSwatchColorPicker.shinyInput(session, paste0(input_name, "_%widget_id%"), value = default_values[[input_name]])
-#             if (input_name %in% ace_inputs) shinyAce::updateAceEditor(session, paste0(input_name, "_%widget_id%"), value = default_values[[input_name]])
-#         }
-#     }
+    run_code_at_script_launch <- FALSE
+    run_plot_at_script_launch <- FALSE
+    code <- ""
     
-#     # Render this plot
-#     if (run_code_at_script_launch){
-#         m$run_code_%widget_id% <- code
-#         m$run_code_trigger_%widget_id% <- Sys.time()
-#     }
-#     else if (run_plot_at_script_launch) shinyjs::delay(500, shinyjs::click("show_%widget_id%"))
+    for (input_name in inputs){
+        widget_option <- widget_options %>% dplyr::filter(name == input_name)
+        
+        # Update inputs with saved values
+        if (nrow(widget_option) > 0){
+        
+            if (input_name %in% dropdowns){
+                if (grepl("variable_[0-9]", input_name)) value <- widget_option$value_num else value <- widget_option$value
+                shiny.fluent::updateDropdown.shinyInput(session, paste0(input_name, "_%widget_id%"), value = value)
+            }
+            if (input_name %in% textfields) shiny.fluent::updateTextField.shinyInput(session, paste0(input_name, "_%widget_id%"), value = widget_option$value)
+            if (input_name %in% spin_buttons) shiny.fluent::updateSpinButton.shinyInput(session, paste0(input_name, "_%widget_id%"), value = widget_option$value_num)
+            if (input_name %in% toggle_inputs) shiny.fluent::updateToggle.shinyInput(session, paste0(input_name, "_%widget_id%"), value = as.logical(widget_option$value))
+            if (input_name %in% colour_inputs) shiny.fluent::updateSwatchColorPicker.shinyInput(session, paste0(input_name, "_%widget_id%"), value = widget_option$value)
+            if (input_name %in% ace_inputs) shinyAce::updateAceEditor(session, paste0(input_name, "_%widget_id%"), value = widget_option$value)
+            
+            if (input_name == "run_code_at_script_launch") run_code_at_script_launch <- as.logical(widget_option$value)
+            if (input_name == "run_plot_at_script_launch") run_plot_at_script_launch <- as.logical(widget_option$value)
+            if (input_name == "code") code <- widget_option$value
+        }
+        if (nrow(widget_option) == 0){
+            if (input_name %in% dropdowns) shiny.fluent::updateDropdown.shinyInput(session, paste0(input_name, "_%widget_id%"), value = default_values[[input_name]])
+            if (input_name %in% textfields) shiny.fluent::updateTextField.shinyInput(session, paste0(input_name, "_%widget_id%"), value = default_values[[input_name]])
+            if (input_name %in% spin_buttons) shiny.fluent::updateSpinButton.shinyInput(session, paste0(input_name, "_%widget_id%"), value = default_values[[input_name]])
+            if (input_name %in% toggle_inputs) shiny.fluent::updateToggle.shinyInput(session, paste0(input_name, "_%widget_id%"), value = default_values[[input_name]])
+            if (input_name %in% colour_inputs) shiny.fluent::updateSwatchColorPicker.shinyInput(session, paste0(input_name, "_%widget_id%"), value = default_values[[input_name]])
+            if (input_name %in% ace_inputs) shinyAce::updateAceEditor(session, paste0(input_name, "_%widget_id%"), value = default_values[[input_name]])
+        }
+    }
 #     
-#     # Save that this script is selected
-#     sql <- glue::glue_sql("DELETE FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND name = 'selected_script'", .con = m$db)
-#     query <- DBI::dbSendStatement(m$db, sql)
-#     DBI::dbClearResult(query)
-#     
-#     last_row <- get_last_row(m$db, "aggregated_widgets_options")
-#     
-#     new_options <- tibble::tibble(
-#         id = last_row + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
-#         category = NA_character_, name = "selected_script", value = NA_character_, value_num = input$script_choice_%widget_id%,
-#         creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
-#         
-#     DBI::dbAppendTable(m$db, "aggregated_widgets_options", new_options)
+    # Render this plot
+    if (run_code_at_script_launch){
+        m$run_code_%widget_id% <- code
+        m$run_code_trigger_%widget_id% <- Sys.time()
+    }
+    else if (run_plot_at_script_launch) shinyjs::delay(500, shinyjs::click("show_%widget_id%"))
+    
+    # Save that this script is selected
+    sql <- glue::glue_sql("DELETE FROM patient_lvl_widgets_options WHERE widget_id = %widget_id% AND name = 'selected_script'", .con = m$db)
+    query <- DBI::dbSendStatement(m$db, sql)
+    DBI::dbClearResult(query)
+    
+    last_row <- get_last_row(m$db, "patient_lvl_widgets_options")
+    
+    new_options <- tibble::tibble(
+        id = last_row + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
+        category = NA_character_, name = "selected_script", value = NA_character_, value_num = input$script_choice_%widget_id%,
+        creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
+        
+    DBI::dbAppendTable(m$db, "patient_lvl_widgets_options", new_options)
 })
 
 # Var for delete confirm react
@@ -527,12 +605,12 @@ observeEvent(input$save_scripts_%widget_id%, {
     req(nrow(m$scripts_temp_%widget_id%) > 0)
     
     # Delete old options
-    sql <- glue::glue_sql("DELETE FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND name = 'script'", .con = m$db)
+    sql <- glue::glue_sql("DELETE FROM patient_lvl_widgets_options WHERE widget_id = %widget_id% AND name = 'script'", .con = m$db)
     query <- DBI::dbSendStatement(m$db, sql)
     DBI::dbClearResult(query)
     
     # Add new options
-    last_row <- get_last_row(m$db, "aggregated_widgets_options")
+    last_row <- get_last_row(m$db, "patient_lvl_widgets_options")
     
     new_options <- tibble::tibble(
         id = seq(last_row + 1, last_row + nrow(m$scripts_temp_%widget_id%)),
@@ -540,7 +618,7 @@ observeEvent(input$save_scripts_%widget_id%, {
         category = NA_character_, name = "script", value = m$scripts_temp_%widget_id%$name, value_num = m$scripts_temp_%widget_id%$id,
         creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
         
-    DBI::dbAppendTable(m$db, "aggregated_widgets_options", new_options)
+    DBI::dbAppendTable(m$db, "patient_lvl_widgets_options", new_options)
     
     # Update scripts dropdown
     value <- NULL
@@ -622,7 +700,7 @@ observeEvent(input$scripts_delete_confirmed_%widget_id%, {
     ids_to_del <- m$delete_scripts_%widget_id%
     
     # Delete scripts in DB
-    sql <- glue::glue_sql(paste0("DELETE FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND (",
+    sql <- glue::glue_sql(paste0("DELETE FROM patient_lvl_widgets_options WHERE widget_id = %widget_id% AND (",
         "(name = 'script' AND value_num IN ({ids_to_del*})) OR ",
         "(link_id IN ({ids_to_del*})))"), .con = m$db)
     query <- DBI::dbSendStatement(m$db, sql)
