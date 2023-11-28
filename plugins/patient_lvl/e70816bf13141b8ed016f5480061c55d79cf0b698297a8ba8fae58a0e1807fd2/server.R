@@ -183,6 +183,7 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
                     
                     data_filtered <- d[[table_name]] %>% dplyr::filter(person_id == selected_person, !!rlang::sym(paste0(table_name, "_concept_id")) == !!concept_id)
                     
+                    print(input$stay_data_only_%widget_id%)
                     if (length(input$stay_data_only_%widget_id%) > 0) if (input$stay_data_only_%widget_id% & !is.na(m$selected_visit_detail)){
                     
                         selected_visit_detail_id <- m$selected_visit_detail
@@ -227,9 +228,9 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
     concept_ids <- integer()
     
     for (i in 1:10){
-    
+        concept_id <- input[[paste0("variable_", i, "_%widget_id%")]]
+        
         if (concept_id %not_in% concept_ids){
-            concept_id <- input[[paste0("variable_", i, "_%widget_id%")]]
             if (concept_id != 0){
                 concept_name <- d$dataset_all_concepts %>% dplyr::filter(concept_id_1 == concept_id, is.na(relationship_id)) %>% dplyr::pull(concept_name_1)
                 
@@ -373,16 +374,16 @@ observeEvent(input$save_%widget_id%, {
 # })
 
 # Run plot / code at script launch
-# observeEvent(input$run_plot_at_script_launch_%widget_id%, {
-#     %req%
-#     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_plot_at_script_launch_%widget_id%"))
-#     if (input$run_plot_at_script_launch_%widget_id%) shiny.fluent::updateToggle.shinyInput(session, "run_code_at_script_launch_%widget_id%", value = FALSE)
-# })
-# observeEvent(input$run_code_at_script_launch_%widget_id%, {
-#     %req%
-#     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_code_at_script_launch_%widget_id%"))
-#     if (input$run_code_at_script_launch_%widget_id%) shiny.fluent::updateToggle.shinyInput(session, "run_plot_at_script_launch_%widget_id%", value = FALSE)
-# })
+observeEvent(input$run_plot_at_script_launch_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_plot_at_script_launch_%widget_id%"))
+    if (input$run_plot_at_script_launch_%widget_id%) shiny.fluent::updateToggle.shinyInput(session, "run_code_at_script_launch_%widget_id%", value = FALSE)
+})
+observeEvent(input$run_code_at_script_launch_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_code_at_script_launch_%widget_id%"))
+    if (input$run_code_at_script_launch_%widget_id%) shiny.fluent::updateToggle.shinyInput(session, "run_plot_at_script_launch_%widget_id%", value = FALSE)
+})
 
 # ------------
 # --- Code ---
