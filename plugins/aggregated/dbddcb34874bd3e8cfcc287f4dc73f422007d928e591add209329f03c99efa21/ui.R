@@ -192,73 +192,71 @@ tagList(
                         )
                     )
                 ),
-                shinyjs::hidden(
-                    div(
-                        id = ns("variables_div_%widget_id%"), br(),
-                        shiny.fluent::Dropdown.shinyInput(ns("x_variable_%widget_id%"), label = i18np$t("x_variable"),
-                            options = x_variables, value = inputs_values$x_variable),
-                        shinyjs::hidden(
-                            div(
-                                id = ns("y_variable_div_%widget_id%"),
-                                shiny.fluent::Dropdown.shinyInput(ns("y_variable_%widget_id%"), label = i18np$t("y_variable"),
-                                    options = y_variables, value = inputs_values$y_variable)
-                            )
-                        ),
-                        shiny.fluent::Dropdown.shinyInput(ns("colour_pal_%widget_id%"), options = palettes, 
-                            value = inputs_values$colour_pal, label = i18np$t("palette")),
-                        uiOutput(ns("colour_ui_%widget_id%")),
-                        shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                            shiny.fluent::Toggle.shinyInput(ns("group_data_%widget_id%"), 
-                                value = inputs_values$group_data, style = "margin-top:5px;"),
-                            div(class = "toggle_title", i18np$t("group_data"), style = "padding-top:5px;")
-                        ),
+                div(
+                    id = ns("variables_div_%widget_id%"), br(),
+                    shiny.fluent::Dropdown.shinyInput(ns("x_variable_%widget_id%"), label = i18np$t("x_variable"),
+                        options = x_variables, value = inputs_values$x_variable),
+                    shinyjs::hidden(
                         div(
-                            id = ns("group_data_div_%widget_id%"),
-                            shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                                div(
-                                    shiny.fluent::Dropdown.shinyInput(ns("group_by_%widget_id%"), 
-                                        options = list(
-                                            list(key = "person_id", text = i18np$t("person")),
-                                            list(key = "datetime", text = i18np$t("duration"))
-                                        ), 
-                                        value = inputs_values$group_by, label = i18np$t("group_by")),
-                                    style = "width:33%"
-                                ),
-                                div(
-                                    div(
-                                        id = ns("group_by_datetime_div_%widget_id%"),
-                                        shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                                            div(
-                                                shiny.fluent::SpinButton.shinyInput(ns("group_by_num_%widget_id%"), label = "", 
-                                                    value = inputs_values$group_by_num, step = 1, min = 0, max = 2000), 
-                                                style = "width:50%; margin-top:29px;"
-                                            ),
-                                            div(
-                                                shiny.fluent::Dropdown.shinyInput(ns("group_by_type_%widget_id%"), 
-                                                    options = list(
-                                                        list(key = "minutes", text = i18np$t("minutes")),
-                                                        list(key = "hours", text = i18np$t("hours")),
-                                                        list(key = "days", text = i18np$t("days"))
-                                                    ), 
-                                                    value = inputs_values$group_by_type, label = i18np$t("duration")),
-                                                style = "width:50%"
-                                            )
-                                        )
-                                    ),
-                                    style = "width:67%"
-                                )
+                            id = ns("y_variable_div_%widget_id%"),
+                            shiny.fluent::Dropdown.shinyInput(ns("y_variable_%widget_id%"), label = i18np$t("y_variable"),
+                                options = y_variables, value = inputs_values$y_variable)
+                        )
+                    ),
+                    shiny.fluent::Dropdown.shinyInput(ns("colour_pal_%widget_id%"), options = palettes, 
+                        value = inputs_values$colour_pal, label = i18np$t("palette")),
+                    uiOutput(ns("colour_ui_%widget_id%")),
+                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                        shiny.fluent::Toggle.shinyInput(ns("group_data_%widget_id%"), 
+                            value = inputs_values$group_data, style = "margin-top:5px;"),
+                        div(class = "toggle_title", i18np$t("group_data"), style = "padding-top:5px;")
+                    ),
+                    div(
+                        id = ns("group_data_div_%widget_id%"),
+                        shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                            div(
+                                shiny.fluent::Dropdown.shinyInput(ns("group_by_%widget_id%"), 
+                                    options = list(
+                                        list(key = "person_id", text = i18np$t("person")),
+                                        list(key = "datetime", text = i18np$t("duration"))
+                                    ), 
+                                    value = inputs_values$group_by, label = i18np$t("group_by")),
+                                style = "width:33%"
                             ),
                             div(
-                                shiny.fluent::Dropdown.shinyInput(ns("summarize_fct_%widget_id%"), 
-                                    options = list(
-                                        list(key = "min", text = i18np$t("min")),
-                                        list(key = "max", text = i18np$t("max")),
-                                        list(key = "mean", text = i18np$t("mean"))
-                                    ), 
-                                    value = inputs_values$summarize_fct, label = i18np$t("summarize_fct")
+                                div(
+                                    id = ns("group_by_datetime_div_%widget_id%"),
+                                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                                        div(
+                                            shiny.fluent::SpinButton.shinyInput(ns("group_by_num_%widget_id%"), label = "", 
+                                                value = inputs_values$group_by_num, step = 1, min = 0, max = 2000), 
+                                            style = "width:50%; margin-top:29px;"
+                                        ),
+                                        div(
+                                            shiny.fluent::Dropdown.shinyInput(ns("group_by_type_%widget_id%"), 
+                                                options = list(
+                                                    list(key = "minutes", text = i18np$t("minutes")),
+                                                    list(key = "hours", text = i18np$t("hours")),
+                                                    list(key = "days", text = i18np$t("days"))
+                                                ), 
+                                                value = inputs_values$group_by_type, label = i18np$t("duration")),
+                                            style = "width:50%"
+                                        )
+                                    )
                                 ),
-                                style = "width:33%"
+                                style = "width:67%"
                             )
+                        ),
+                        div(
+                            shiny.fluent::Dropdown.shinyInput(ns("summarize_fct_%widget_id%"), 
+                                options = list(
+                                    list(key = "min", text = i18np$t("min")),
+                                    list(key = "max", text = i18np$t("max")),
+                                    list(key = "mean", text = i18np$t("mean"))
+                                ), 
+                                value = inputs_values$summarize_fct, label = i18np$t("summarize_fct")
+                            ),
+                            style = "width:33%"
                         )
                     )
                 ), br(), br(),

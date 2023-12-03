@@ -1,19 +1,2 @@
 <?xml version="1.0"?>
-<studies>
-  <study>
-    <app_version>0.2.0</app_version>
-    <unique_id>3d37940f738672f1bdd507ab7887be424abfe77028dd55fb9e1e90b344734846</unique_id>
-    <version>0.0.1.9000</version>
-    <author>Boris Delange</author>
-    <description_en>NA</description_en>
-    <name_en>Etude 7</name_en>
-    <category_en>NA</category_en>
-    <description_fr>NA</description_fr>
-    <name_fr>Etude 7</name_fr>
-    <category_fr>NA</category_fr>
-    <creation_datetime>2023-11-29 22:43:06</creation_datetime>
-    <update_datetime>2023-11-29 22:43:06</update_datetime>
-    <code></code>
-    <images></images>
-  </study>
-</studies>
+<studies/>

@@ -88,6 +88,12 @@ observeEvent(input$plot_function_%widget_id%, {
     if (input$plot_function_%widget_id% == "geom_histogram") shinyjs::show("plot_function_geom_histogram_div_%widget_id%")
 })
 
+observeEvent(input$plot_function_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_function_%widget_id% (only once)"))
+    shinyjs::delay(500, shinyjs::hide("variables_div_%widget_id%"))
+}, once = TRUE)
+
 observeEvent(input$bins_type_%widget_id%, {
      %req%
     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$bins_type_%widget_id%"))
@@ -111,7 +117,7 @@ shiny.fluent::updateDropdown.shinyInput(session, "y_variable_%widget_id%", optio
 observeEvent(input$plot_function_%widget_id%, {
     %req%
     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_function_%widget_id%"))
-
+    
     # Get run_code_at_script_launch & run_plot_at_script_launch option values
     plots <- widget_options %>% dplyr::filter(name == "script") %>% dplyr::select(id = value_num, name = value)
     selected_script <- NULL
@@ -122,8 +128,10 @@ observeEvent(input$plot_function_%widget_id%, {
     run_plot_at_script_launch <- FALSE
     
     if (length(selected_script) > 0){
-        run_code_at_script_launch <- widget_options %>% dplyr::filter(link_id == selected_script, name == "run_code_at_script_launch") %>% dplyr::pull(value) %>% as.logical()
-        run_plot_at_script_launch <- widget_options %>% dplyr::filter(link_id == selected_script, name == "run_plot_at_script_launch") %>% dplyr::pull(value) %>% as.logical()
+        run_code_at_script_launch_row <- widget_options %>% dplyr::filter(link_id == selected_script, name == "run_code_at_script_launch")
+        if (nrow(run_code_at_script_launch_row) > 0) run_code_at_script_launch <- run_code_at_script_launch_row %>% dplyr::pull(value) %>% as.logical()
+        run_plot_at_script_launch_row <- widget_options %>% dplyr::filter(link_id == selected_script, name == "run_plot_at_script_launch")
+        if (nrow(run_plot_at_script_launch_row) > 0) run_plot_at_script_launch <- run_plot_at_script_launch_row %>% dplyr::pull(value) %>% as.logical()
     }
     
     # We put an extra delay (2000 ms), cause the 500 ms delay in observeEvent(input$script_choice_%widget_id%, __) is not enough to load all UI elements
@@ -156,12 +164,6 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
     create_plot_type <- isolate(m$create_plot_type_%widget_id%)
     
     # At each step of the code, we put the code in the code variable, for the shinyAce code editor (tab "Code")
-    
-    # If pivot item has not been clicked, input variables are not initiated
-    #if (length(isolate(input$colour_%widget_id%)) == 0){
-    #    shinyjs::show("variables_div_%widget_id%")
-    #    shinyjs::delay(500, shinyjs::hide("variables_div_%widget_id%"))
-    #}
     
     req(length(isolate(input$colour_%widget_id%)) > 0)
     
