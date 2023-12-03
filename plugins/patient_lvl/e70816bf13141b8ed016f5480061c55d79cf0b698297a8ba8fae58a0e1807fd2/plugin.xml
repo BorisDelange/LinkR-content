@@ -4,7 +4,7 @@
     <app_version>0.2.0</app_version>
     <type>1</type>
     <unique_id>e70816bf13141b8ed016f5480061c55d79cf0b698297a8ba8fae58a0e1807fd2</unique_id>
-    <version>0.0.1.9009</version>
+    <version>0.0.1.9010</version>
     <author>Boris Delange</author>
     <image>dygraphs.png</image>
     <name_en>S&#xE9;ries temporelles {dygraphs}</name_en>
@@ -14,7 +14,7 @@
     <description_en></description_en>
     <description_fr></description_fr>
     <creation_datetime>2023-11-20 22:43:59</creation_datetime>
-    <update_datetime>2023-11-28 23:39:00</update_datetime>
+    <update_datetime>2023-12-03 18:14:13</update_datetime>
     <images>dygraphs.png</images>
   </plugin>
 </plugins>

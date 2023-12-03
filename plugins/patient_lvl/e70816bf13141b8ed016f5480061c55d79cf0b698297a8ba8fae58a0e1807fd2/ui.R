@@ -1,5 +1,5 @@
 # Get widget options
-sql <- glue::glue_sql("SELECT * FROM patient_lvl_widgets_options WHERE widget_id = %widget_id%", .con = m$db)
+sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id%", .con = m$db)
 widget_options <- DBI::dbGetQuery(m$db, sql)
 plots <- widget_options %>% dplyr::filter(name == "script") %>% dplyr::select(id = value_num, name = value)
 selected_script <- NULL
@@ -47,7 +47,7 @@ for (i in 1:10){
 inputs_values <- list()
 
 # Get saved params for this widget
-sql <- glue::glue_sql("SELECT * FROM patient_lvl_widgets_options WHERE widget_id = %widget_id% AND link_id = {selected_script}", .con = m$db)
+sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id% AND link_id = {selected_script}", .con = m$db)
 widget_options <- DBI::dbGetQuery(m$db, sql)
 
 for (input_name in inputs){

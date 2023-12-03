@@ -1,5 +1,5 @@
 # Get widget options
-sql <- glue::glue_sql("SELECT * FROM aggregated_widgets_options WHERE widget_id = %widget_id%", .con = r$db)
+sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id%", .con = r$db)
 widget_options <- DBI::dbGetQuery(m$db, sql)
 scripts <- widget_options %>% dplyr::filter(name == "script") %>% dplyr::select(id = value_num, name = value)
 selected_script <- NULL
@@ -47,11 +47,11 @@ tagList(
     shiny.fluent::Pivot(
         id = ns("pivot_%widget_id%"),
         onLinkClick = htmlwidgets::JS(paste0("item => Shiny.setInputValue('", id, "-current_tab_%widget_id%', item.props.id)")),
-        shiny.fluent::PivotItem(id = "script_%widget_id%", itemKey = "script", headerText = i18np$t("script")),
-        shiny.fluent::PivotItem(id = "scripts_management_%widget_id%", itemKey = "scripts_management", headerText = i18np$t("scripts_management"))
+        shiny.fluent::PivotItem(id = "script_div_%widget_id%", itemKey = "script", headerText = i18np$t("script")),
+        shiny.fluent::PivotItem(id = "scripts_management_div_%widget_id%", itemKey = "scripts_management", headerText = i18np$t("scripts_management"))
     ),
-    conditionalPanel(
-        condition = "input.current_tab_%widget_id% == 'script_%widget_id%' || input.current_tab_%widget_id% == null", ns = ns, br(),
+    div(
+        id = ns("script_div_%widget_id%"),
         shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
             div(shiny.fluent::Dropdown.shinyInput(ns("script_choice_%widget_id%"), 
                 options = convert_tibble_to_list(scripts, key_col = "id", text_col = "name"), value = selected_script), style = "width:300px;"),
@@ -90,18 +90,20 @@ tagList(
             )
         )
     ),
-    conditionalPanel(
-        condition = "input.current_tab_%widget_id% == 'scripts_management_%widget_id%'", ns = ns, br(),
-        shiny.fluent::Stack(
-            horizontal = TRUE, tokens = list(childrenGap = 10),
-            make_textfield(i18n = i18n, ns = ns, label = "name", id = "script_name_%widget_id%", width = "300px"),
-            div(shiny.fluent::PrimaryButton.shinyInput(ns("add_script_%widget_id%"), i18n$t("add")), style = "margin-top:38px;")
-        ),
-        DT::DTOutput(ns("scripts_management_datatable_%widget_id%")),
-        shiny.fluent::Stack(
-            horizontal = TRUE, tokens = list(childrenGap = 10),
-            shiny.fluent::PrimaryButton.shinyInput(ns("save_scripts_%widget_id%"), i18n$t("save")),
-            shiny.fluent::DefaultButton.shinyInput(ns("delete_scripts_%widget_id%"), i18n$t("delete_selection"))
+    shinyjs::hidden(
+        div(
+            id = ns("scripts_management_div_%widget_id%"),
+            shiny.fluent::Stack(
+                horizontal = TRUE, tokens = list(childrenGap = 10),
+                make_textfield(i18n = i18n, ns = ns, label = "name", id = "script_name_%widget_id%", width = "300px"),
+                div(shiny.fluent::PrimaryButton.shinyInput(ns("add_script_%widget_id%"), i18n$t("add")), style = "margin-top:38px;")
+            ),
+            DT::DTOutput(ns("scripts_management_datatable_%widget_id%")),
+            shiny.fluent::Stack(
+                horizontal = TRUE, tokens = list(childrenGap = 10),
+                shiny.fluent::PrimaryButton.shinyInput(ns("save_scripts_%widget_id%"), i18n$t("save")),
+                shiny.fluent::DefaultButton.shinyInput(ns("delete_scripts_%widget_id%"), i18n$t("delete_selection"))
+            )
         )
     )
 )

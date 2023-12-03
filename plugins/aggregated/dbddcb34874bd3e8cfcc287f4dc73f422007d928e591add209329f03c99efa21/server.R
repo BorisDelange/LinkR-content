@@ -1,5 +1,5 @@
 # Get saved params for this widget
-sql <- glue::glue_sql("SELECT * FROM aggregated_widgets_options WHERE widget_id = %widget_id%", .con = r$db)
+sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id%", .con = r$db)
 widget_options <- DBI::dbGetQuery(m$db, sql)
 
 m$widget_options_%widget_id% <- widget_options
@@ -38,6 +38,64 @@ default_values$run_code_at_script_launch <- FALSE
 default_values$run_plot_at_script_launch <- FALSE
 default_values$code <- ""
 
+# -------------------------
+# --- Show / hide divs ----
+# -------------------------
+
+observeEvent(input$current_tab_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$current_tab_%widget_id%"))
+    
+    sapply(c("plot_and_code_div_%widget_id%", "plot_div_%widget_id%", "code_div_%widget_id%", "scripts_management_div_%widget_id%"), shinyjs::hide)
+    shinyjs::show(input$current_tab_%widget_id%)
+    if (input$current_tab_%widget_id% %in% c("plot_div_%widget_id%", "code_div_%widget_id%")){
+        sapply(c("toggle_run_plot_div_%widget_id%", "toggle_run_code_div_%widget_id%"), shinyjs::hide)
+        sapply(c(paste0("toggle_run_", input$current_tab_%widget_id%), "plot_and_code_div_%widget_id%"), shinyjs::show)
+    }
+})
+
+observeEvent(input$plot_current_tab_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_current_tab_%widget_id%"))
+    
+    sapply(c("plot_parameters_div_%widget_id%", "variables_div_%widget_id%"), shinyjs::hide)
+    shinyjs::show(input$plot_current_tab_%widget_id%)
+})
+
+observeEvent(input$group_data_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$group_data_%widget_id%"))
+    
+    if (input$group_data_%widget_id%) shinyjs::show("group_data_div_%widget_id%")
+    else shinyjs::hide("group_data_div_%widget_id%")
+})
+
+observeEvent(input$group_by_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$group_by_%widget_id%"))
+    
+    if (input$group_by_%widget_id% == "datetime") shinyjs::show("group_by_datetime_div_%widget_id%")
+    else shinyjs::hide("group_by_datetime_div_%widget_id%")
+})
+
+observeEvent(input$plot_function_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_function_%widget_id%"))
+    
+    sapply(c("y_variable_div_%widget_id%", "plot_function_geom_histogram_div_%widget_id%"), shinyjs::hide)
+    
+    if (input$plot_function_%widget_id% == "geom_point") shinyjs::show("y_variable_div_%widget_id%")
+    if (input$plot_function_%widget_id% == "geom_histogram") shinyjs::show("plot_function_geom_histogram_div_%widget_id%")
+})
+
+observeEvent(input$bins_type_%widget_id%, {
+     %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$bins_type_%widget_id%"))
+    
+    sapply(c("num_of_bins_div_%widget_id%", "bin_width_div_%widget_id%"), shinyjs::hide)
+    shinyjs::show(paste0(input$bins_type_%widget_id%, "_div_%widget_id%"))
+})
+
 # -------------
 # --- Plot ----
 # -------------
@@ -53,11 +111,7 @@ shiny.fluent::updateDropdown.shinyInput(session, "y_variable_%widget_id%", optio
 observeEvent(input$plot_function_%widget_id%, {
     %req%
     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_function_%widget_id%"))
-    
-    # Initiate variables div
-    shinyjs::show("variables_div_%widget_id%")
-    shinyjs::delay(500, shinyjs::hide("variables_div_%widget_id%"))
-    
+
     # Get run_code_at_script_launch & run_plot_at_script_launch option values
     plots <- widget_options %>% dplyr::filter(name == "script") %>% dplyr::select(id = value_num, name = value)
     selected_script <- NULL
@@ -92,14 +146,6 @@ observeEvent(input$show_%widget_id%, {
     # Then load plot
     m$create_plot_type_%widget_id% <- "show_plot"
     m$create_plot_trigger_%widget_id% <- Sys.time()
-})
-
-# Show or hide "Variables" tab
-observeEvent(input$plot_current_tab_%widget_id%, {
-    %req%
-    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_current_tab_%widget_id%"))
-    if (input$plot_current_tab_%widget_id% == "variables_%widget_id%") shinyjs::show("variables_div_%widget_id%")
-    else shinyjs::hide("variables_div_%widget_id%")
 })
 
 # Generate code and update aceEditor or render plot
@@ -328,7 +374,7 @@ observeEvent(input$colour_pal_%widget_id%, {
     # Get saved colour
     value <- pal[1]
     if (length(input$script_choice_%widget_id%) > 0){
-        sql <- glue::glue_sql("SELECT * FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND link_id = {input$script_choice_%widget_id%} AND name = 'colour'", .con = r$db)
+        sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id% AND link_id = {input$script_choice_%widget_id%} AND name = 'colour'", .con = r$db)
         colour <- DBI::dbGetQuery(m$db, sql)
         if (nrow(colour) > 0) if (colour %>% dplyr::pull(value) %in% pal) value <- colour %>% dplyr::pull(value)   
     }
@@ -348,11 +394,11 @@ observeEvent(input$save_%widget_id%, {
     req(length(input$script_choice_%widget_id%) > 0)
 
     # Delete old options
-    sql <- glue::glue_sql("DELETE FROM aggregated_widgets_options WHERE widget_id = {%widget_id%} AND link_id = {input$script_choice_%widget_id%}", .con = m$db)
+    sql <- glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = {%widget_id%} AND link_id = {input$script_choice_%widget_id%}", .con = m$db)
     DBI::dbSendStatement(m$db, sql) -> query
     DBI::dbClearResult(query)
     
-    last_row <- get_last_row(m$db, "aggregated_widgets_options")
+    last_row <- get_last_row(m$db, "widgets_options")
     
     # Add new options
     new_options <- tibble::tibble(
@@ -378,7 +424,7 @@ observeEvent(input$save_%widget_id%, {
     
     for (col in c("name", "value", "value_num")) new_options[[col]] <- new_options_values[[col]]
     
-    DBI::dbAppendTable(m$db, "aggregated_widgets_options", new_options)
+    DBI::dbAppendTable(m$db, "widgets_options", new_options)
     
     m$widget_options_%widget_id% <- m$widget_options_%widget_id% %>% dplyr::filter(link_id != input$script_choice_%widget_id%) %>% dplyr::bind_rows(new_options)
     
@@ -473,7 +519,7 @@ observeEvent(input$add_script_%widget_id%, {
     shiny.fluent::updateTextField.shinyInput(session, "script_name_%widget_id%", errorMessage = NULL)
     
     # Check if name is not already used
-    sql <- glue::glue_sql("SELECT * FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND name = 'script' AND value = {input$script_name_%widget_id%}", .con = m$db)
+    sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id% AND name = 'script' AND value = {input$script_name_%widget_id%}", .con = m$db)
     already_used_name <- DBI::dbGetQuery(m$db, sql) %>% nrow() >= 1
     if (already_used_name) shiny.fluent::updateTextField.shinyInput(session, "script_name_%widget_id%", errorMessage = i18n$t("name_already_used"))
     req(!already_used_name)
@@ -481,8 +527,8 @@ observeEvent(input$add_script_%widget_id%, {
     
     # Add script to database
     
-    last_row <- get_last_row(m$db, "aggregated_widgets_options")
-    sql <- glue::glue_sql("SELECT COALESCE(MAX(value_num), 0) FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND name = 'script'", .con = m$db)
+    last_row <- get_last_row(m$db, "widgets_options")
+    sql <- glue::glue_sql("SELECT COALESCE(MAX(value_num), 0) FROM widgets_options WHERE widget_id = %widget_id% AND name = 'script'", .con = m$db)
     last_id <- DBI::dbGetQuery(m$db, sql) %>% dplyr::pull()
     
     new_options <- tibble::tibble(
@@ -490,7 +536,7 @@ observeEvent(input$add_script_%widget_id%, {
         category = NA_character_, name = "script", value = input$script_name_%widget_id%, value_num = last_id + 1,
         creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
         
-    DBI::dbAppendTable(m$db, "aggregated_widgets_options", new_options)
+    DBI::dbAppendTable(m$db, "widgets_options", new_options)
     
     # Reset TextField
     shiny.fluent::updateTextField.shinyInput(session, "script_name_%widget_id%", value = "")
@@ -555,18 +601,18 @@ observeEvent(input$script_choice_%widget_id%, {
     else if (run_plot_at_script_launch) shinyjs::delay(500, shinyjs::click("show_%widget_id%"))
     
     # Save that this script is selected
-    sql <- glue::glue_sql("DELETE FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND name = 'selected_script'", .con = m$db)
+    sql <- glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND name = 'selected_script'", .con = m$db)
     query <- DBI::dbSendStatement(m$db, sql)
     DBI::dbClearResult(query)
     
-    last_row <- get_last_row(m$db, "aggregated_widgets_options")
+    last_row <- get_last_row(m$db, "widgets_options")
     
     new_options <- tibble::tibble(
         id = last_row + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
         category = NA_character_, name = "selected_script", value = NA_character_, value_num = input$script_choice_%widget_id%,
         creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
         
-    DBI::dbAppendTable(m$db, "aggregated_widgets_options", new_options)
+    DBI::dbAppendTable(m$db, "widgets_options", new_options)
 })
 
 # Var for delete confirm react
@@ -640,12 +686,12 @@ observeEvent(input$save_scripts_%widget_id%, {
     req(nrow(m$scripts_temp_%widget_id%) > 0)
     
     # Delete old options
-    sql <- glue::glue_sql("DELETE FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND name = 'script'", .con = m$db)
+    sql <- glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND name = 'script'", .con = m$db)
     query <- DBI::dbSendStatement(m$db, sql)
     DBI::dbClearResult(query)
     
     # Add new options
-    last_row <- get_last_row(m$db, "aggregated_widgets_options")
+    last_row <- get_last_row(m$db, "widgets_options")
     
     new_options <- tibble::tibble(
         id = seq(last_row + 1, last_row + nrow(m$scripts_temp_%widget_id%)),
@@ -653,7 +699,7 @@ observeEvent(input$save_scripts_%widget_id%, {
         category = NA_character_, name = "script", value = m$scripts_temp_%widget_id%$name, value_num = m$scripts_temp_%widget_id%$id,
         creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
         
-    DBI::dbAppendTable(m$db, "aggregated_widgets_options", new_options)
+    DBI::dbAppendTable(m$db, "widgets_options", new_options)
     
     # Update scripts dropdown
     value <- NULL
@@ -735,7 +781,7 @@ observeEvent(input$scripts_delete_confirmed_%widget_id%, {
     ids_to_del <- m$delete_scripts_%widget_id%
     
     # Delete scripts in DB
-    sql <- glue::glue_sql(paste0("DELETE FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND (",
+    sql <- glue::glue_sql(paste0("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND (",
         "(name = 'script' AND value_num IN ({ids_to_del*})) OR ",
         "(link_id IN ({ids_to_del*})))"), .con = m$db)
     query <- DBI::dbSendStatement(m$db, sql)
@@ -749,5 +795,5 @@ observeEvent(input$scripts_delete_confirmed_%widget_id%, {
     m$reload_dt_%widget_id% <- Sys.time()
     
     # Notify user
-    show_message_bar(output, "script_deleted", "severeWarning", i18n = i18np, ns = ns)
+    show_message_bar(output, "script_deleted", "warning", i18n = i18np, ns = ns)
 })

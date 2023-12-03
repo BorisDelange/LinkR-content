@@ -1,11 +1,23 @@
 # Get saved params for this widget
-sql <- glue::glue_sql("SELECT * FROM aggregated_widgets_options WHERE widget_id = %widget_id%", .con = r$db)
+sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id%", .con = r$db)
 widget_options <- DBI::dbGetQuery(m$db, sql)
 
 m$widget_options_%widget_id% <- widget_options
 m$scripts_%widget_id% <- widget_options %>% dplyr::filter(name == "script") %>% dplyr::select(id = value_num, name = value)
 m$scripts_temp_%widget_id% <- m$scripts_%widget_id% %>% dplyr::mutate(modified = FALSE)
 m$reload_dt_%widget_id% <- Sys.time()
+
+# ------------------------
+# --- Show / hide divs ---
+# ------------------------
+
+observeEvent(input$current_tab_%widget_id%, {
+    %req%
+    if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$current_tab_%widget_id%_run_selection"))
+    
+    sapply(c("script_div_%widget_id%", "scripts_management_div_%widget_id%"), shinyjs::hide)
+    shinyjs::show(input$current_tab_%widget_id%)
+})
 
 # -------------------
 # --- Script code ---
@@ -119,12 +131,12 @@ observeEvent(m$save_code_trigger_%widget_id%, {
     req(input$script_choice_%widget_id%)
     
     # Delete old options
-    sql <- glue::glue_sql("DELETE FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND name IN ('script_code', 'script_type') AND link_id = {input$script_choice_%widget_id%}", .con = m$db)
+    sql <- glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND name IN ('script_code', 'script_type') AND link_id = {input$script_choice_%widget_id%}", .con = m$db)
     query <- DBI::dbSendStatement(m$db, sql)
     DBI::dbClearResult(query)
     
     # Add new options
-    last_row <- get_last_row(m$db, "aggregated_widgets_options")
+    last_row <- get_last_row(m$db, "widgets_options")
     
     new_options <- tibble::tibble(
         id = seq(last_row + 1, last_row + 2),
@@ -135,9 +147,9 @@ observeEvent(m$save_code_trigger_%widget_id%, {
     new_options$name <- c("script_code", "script_type")
     new_options$value <- c(input$script_code_%widget_id%, input$script_type_%widget_id%)
     
-    DBI::dbAppendTable(m$db, "aggregated_widgets_options", new_options)
+    DBI::dbAppendTable(m$db, "widgets_options", new_options)
     
-    sql <- glue::glue_sql("SELECT * FROM aggregated_widgets_options WHERE widget_id = %widget_id%", .con = r$db)
+    sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id%", .con = r$db)
     widget_options <- DBI::dbGetQuery(m$db, sql)
     
     m$widget_options_%widget_id% <- widget_options
@@ -166,18 +178,18 @@ observeEvent(input$script_choice_%widget_id%, {
     shiny.fluent::updateChoiceGroup.shinyInput(session, "script_type_%widget_id%", value = script_type)
     
     # Save that this script is selected
-    sql <- glue::glue_sql("DELETE FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND name = 'selected_script'", .con = m$db)
+    sql <- glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND name = 'selected_script'", .con = m$db)
     query <- DBI::dbSendStatement(m$db, sql)
     DBI::dbClearResult(query)
     
-    last_row <- get_last_row(m$db, "aggregated_widgets_options")
+    last_row <- get_last_row(m$db, "widgets_options")
     
     new_options <- tibble::tibble(
         id = last_row + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
         category = NA_character_, name = "selected_script", value = NA_character_, value_num = input$script_choice_%widget_id%,
         creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
         
-    DBI::dbAppendTable(m$db, "aggregated_widgets_options", new_options)
+    DBI::dbAppendTable(m$db, "widgets_options", new_options)
 })
 
 # Plot width
@@ -249,7 +261,7 @@ observeEvent(input$add_script_%widget_id%, {
     shiny.fluent::updateTextField.shinyInput(session, "script_name_%widget_id%", errorMessage = NULL)
     
     # Check if name is not already used
-    sql <- glue::glue_sql("SELECT * FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND name = 'script' AND value = {input$script_name_%widget_id%}", .con = m$db)
+    sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id% AND name = 'script' AND value = {input$script_name_%widget_id%}", .con = m$db)
     already_used_name <- DBI::dbGetQuery(m$db, sql) %>% nrow() >= 1
     if (already_used_name) shiny.fluent::updateTextField.shinyInput(session, "script_name_%widget_id%", errorMessage = i18n$t("name_already_used"))
     req(!already_used_name)
@@ -257,8 +269,8 @@ observeEvent(input$add_script_%widget_id%, {
     
     # Add script to database
     
-    last_row <- get_last_row(m$db, "aggregated_widgets_options")
-    sql <- glue::glue_sql("SELECT COALESCE(MAX(value_num), 0) FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND name = 'script'", .con = m$db)
+    last_row <- get_last_row(m$db, "widgets_options")
+    sql <- glue::glue_sql("SELECT COALESCE(MAX(value_num), 0) FROM widgets_options WHERE widget_id = %widget_id% AND name = 'script'", .con = m$db)
     last_id <- DBI::dbGetQuery(m$db, sql) %>% dplyr::pull()
     
     new_options <- tibble::tibble(
@@ -266,7 +278,7 @@ observeEvent(input$add_script_%widget_id%, {
         category = NA_character_, name = "script", value = input$script_name_%widget_id%, value_num = last_id + 1,
         creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
         
-    DBI::dbAppendTable(m$db, "aggregated_widgets_options", new_options)
+    DBI::dbAppendTable(m$db, "widgets_options", new_options)
     
     # Reset TextField
     shiny.fluent::updateTextField.shinyInput(session, "script_name_%widget_id%", value = "")
@@ -310,12 +322,12 @@ observeEvent(input$save_scripts_%widget_id%, {
     req(nrow(m$scripts_temp_%widget_id%) > 0)
     
     # Delete old options
-    sql <- glue::glue_sql("DELETE FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND name = 'script'", .con = m$db)
+    sql <- glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND name = 'script'", .con = m$db)
     query <- DBI::dbSendStatement(m$db, sql)
     DBI::dbClearResult(query)
     
     # Add new options
-    last_row <- get_last_row(m$db, "aggregated_widgets_options")
+    last_row <- get_last_row(m$db, "widgets_options")
     
     new_options <- tibble::tibble(
         id = seq(last_row + 1, last_row + nrow(m$scripts_temp_%widget_id%)),
@@ -323,7 +335,7 @@ observeEvent(input$save_scripts_%widget_id%, {
         category = NA_character_, name = "script", value = m$scripts_temp_%widget_id%$name, value_num = m$scripts_temp_%widget_id%$id,
         creator_id = NA_integer_, datetime = as.character(Sys.time()), deleted = FALSE)
         
-    DBI::dbAppendTable(m$db, "aggregated_widgets_options", new_options)
+    DBI::dbAppendTable(m$db, "widgets_options", new_options)
     
     # Update scripts dropdown
     value <- NULL
@@ -405,7 +417,7 @@ observeEvent(input$scripts_delete_confirmed_%widget_id%, {
     ids_to_del <- m$delete_scripts_%widget_id%
     
     # Delete scripts in DB
-    sql <- glue::glue_sql(paste0("DELETE FROM aggregated_widgets_options WHERE widget_id = %widget_id% AND (",
+    sql <- glue::glue_sql(paste0("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND (",
         "(name = 'script' AND value_num IN ({ids_to_del*})) OR ",
         "(link_id IN ({ids_to_del*})))"), .con = m$db)
     query <- DBI::dbSendStatement(m$db, sql)
