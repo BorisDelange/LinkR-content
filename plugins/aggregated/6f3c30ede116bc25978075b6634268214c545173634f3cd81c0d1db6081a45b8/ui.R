@@ -51,7 +51,7 @@ tagList(
         shiny.fluent::PivotItem(id = "scripts_management_div_%widget_id%", itemKey = "scripts_management", headerText = i18np$t("scripts_management"))
     ),
     div(
-        id = ns("script_div_%widget_id%"),
+        id = ns("script_div_%widget_id%"), br(),
         shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
             div(shiny.fluent::Dropdown.shinyInput(ns("script_choice_%widget_id%"), 
                 options = convert_tibble_to_list(scripts, key_col = "id", text_col = "name"), value = selected_script), style = "width:300px;"),
