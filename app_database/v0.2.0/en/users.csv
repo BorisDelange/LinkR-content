@@ -1,6 +1,6 @@
 id,username,firstname,lastname,password,user_access_id,user_status_id,datetime,deleted
-1,admin,Alan,Turing,53c23a3a2745ee17dbecc576a3c1d1c8,1,1,2023-10-25 13:40:36,0
-2,test1,Ada,Lovelace,3de73b64d386b0804a8ecf10a2aa1bda,2,1,2023-10-25 13:40:36,0
-3,test2,John,McCarthy,f641ebbe0edc142bb958e4e79cf4cfcb,2,1,2023-10-25 13:40:36,0
-4,test3,Marvin,Minski,e7acb0febdab5fc362f2e5b67b39b5ac,2,1,2023-10-25 13:40:36,0
-5,test4,Hadley,Wickham,a0e707bd232447ecd53bba4adaac1083,2,1,2023-10-25 13:40:36,1
+1,admin,Alan,Turing,53c23a3a2745ee17dbecc576a3c1d1c8,1,1,2023-12-03 17:41:01,0
+2,test1,Ada,Lovelace,3de73b64d386b0804a8ecf10a2aa1bda,2,1,2023-12-03 17:41:01,0
+3,test2,Yann,LeCun,f641ebbe0edc142bb958e4e79cf4cfcb,2,1,2023-12-03 17:41:01,0
+4,test3,Andrew,Ng,e7acb0febdab5fc362f2e5b67b39b5ac,2,1,2023-12-03 17:41:01,0
+5,test4,Hadley,Wickham,a0e707bd232447ecd53bba4adaac1083,2,1,2023-12-03 17:41:01,0
