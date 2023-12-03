@@ -38,6 +38,13 @@ default_values$run_code_at_script_launch <- FALSE
 default_values$run_plot_at_script_launch <- FALSE
 default_values$code <- ""
 
+# In case of widget settings, update dropdowns of variables
+concepts <- tibble::tibble(concept_id = 0L, concept_name = i18np$t("none")) %>% dplyr::bind_rows(selected_concepts %>% dplyr::select(concept_id, concept_name))
+x_variables <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
+y_variables <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
+if (length(input$x_variable_%widget_id%) > 0) shinyjs::delay(100, shiny.fluent::updateDropdown.shinyInput(session, "x_variable_%widget_id%", options = x_variables, value = input$x_variable_%widget_id%))
+if (length(input$y_variable_%widget_id%) > 0) shinyjs::delay(100, shiny.fluent::updateDropdown.shinyInput(session, "y_variable_%widget_id%", options = y_variables, value = input$y_variable_%widget_id%))
+
 # -------------------------
 # --- Show / hide divs ----
 # -------------------------
@@ -112,32 +119,6 @@ x_variables <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col
 shiny.fluent::updateDropdown.shinyInput(session, "x_variable_%widget_id%", options = x_variables)
 y_variables <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
 shiny.fluent::updateDropdown.shinyInput(session, "y_variable_%widget_id%", options = y_variables)
-
-# Render plot the first time the widget is launched
-observeEvent(input$plot_function_%widget_id%, {
-    %req%
-    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_function_%widget_id%"))
-    
-    # Get run_code_at_script_launch & run_plot_at_script_launch option values
-    plots <- widget_options %>% dplyr::filter(name == "script") %>% dplyr::select(id = value_num, name = value)
-    selected_script <- NULL
-    selected_script_result <- widget_options %>% dplyr::filter(name == "selected_script")
-    if (nrow(selected_script_result) > 0) if ((selected_script_result %>% dplyr::pull(value_num)) %in% plots$id) selected_script <- selected_script_result %>% dplyr::pull(value_num)
-    
-    run_code_at_script_launch <- FALSE
-    run_plot_at_script_launch <- FALSE
-    
-    if (length(selected_script) > 0){
-        run_code_at_script_launch_row <- widget_options %>% dplyr::filter(link_id == selected_script, name == "run_code_at_script_launch")
-        if (nrow(run_code_at_script_launch_row) > 0) run_code_at_script_launch <- run_code_at_script_launch_row %>% dplyr::pull(value) %>% as.logical()
-        run_plot_at_script_launch_row <- widget_options %>% dplyr::filter(link_id == selected_script, name == "run_plot_at_script_launch")
-        if (nrow(run_plot_at_script_launch_row) > 0) run_plot_at_script_launch <- run_plot_at_script_launch_row %>% dplyr::pull(value) %>% as.logical()
-    }
-    
-    # We put an extra delay (2000 ms), cause the 500 ms delay in observeEvent(input$script_choice_%widget_id%, __) is not enough to load all UI elements
-    # This is not a problem when we run script code
-    if (!run_code_at_script_launch & run_plot_at_script_launch) shinyjs::delay(2000, shinyjs::click("show_%widget_id%"))
-}, once = TRUE)
 
 # Render plot from "plot" tab
 observeEvent(input$show_%widget_id%, {
