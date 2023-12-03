@@ -40,10 +40,17 @@ default_values$code <- ""
 
 # In case of widget settings, update dropdowns of variables
 concepts <- tibble::tibble(concept_id = 0L, concept_name = i18np$t("none")) %>% dplyr::bind_rows(selected_concepts %>% dplyr::select(concept_id, concept_name))
-x_variables <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
-y_variables <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
-if (length(input$x_variable_%widget_id%) > 0) shinyjs::delay(100, shiny.fluent::updateDropdown.shinyInput(session, "x_variable_%widget_id%", options = x_variables, value = input$x_variable_%widget_id%))
-if (length(input$y_variable_%widget_id%) > 0) shinyjs::delay(100, shiny.fluent::updateDropdown.shinyInput(session, "y_variable_%widget_id%", options = y_variables, value = input$y_variable_%widget_id%))
+variables <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
+
+shinyjs::delay(100, {
+    for (i in c("x", "y")){
+        if (length(input[[paste0(i, "_variable_%widget_id%")]]) > 0){
+            value <- 0L
+            if (input[[paste0(i, "_variable_%widget_id%")]] %in% selected_concepts$concept_id) value <- input[[paste0(i, "_variable_%widget_id%")]]
+            shiny.fluent::updateDropdown.shinyInput(session, paste0(i, "_variable_%widget_id%"), options = variables, value = value)
+        }
+    }
+})
 
 # -------------------------
 # --- Show / hide divs ----

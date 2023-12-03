@@ -31,12 +31,26 @@ default_values$draw_points <- TRUE
 default_values$change_y_values <- FALSE
 default_values$code <- ""
 
+concepts <- tibble::tibble(concept_id = 0L, concept_name = i18np$t("none")) %>% dplyr::bind_rows(selected_concepts %>% dplyr::select(concept_id, concept_name))
+variables <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
+
 for (i in 1:10){
     default_values[[paste0("variable_", i)]] <- 0L
     default_values[[paste0("variable_name_", i)]] <- ""
     default_values[[paste0("colour_", i)]] <- "#E41A1C"
     default_values[[paste0("colour_pal_", i)]] <- "Set1"
 }
+
+shinyjs::delay(100, {
+    for (i in 1:10){
+        # In case of widget settings, update dropdowns of variables
+        if (length(input[[paste0("variable_", i, "_%widget_id%")]]) > 0){
+            value <- 0L
+            if (input[[paste0("variable_", i, "_%widget_id%")]] %in% selected_concepts$concept_id) value <- input[[paste0("variable_", i, "_%widget_id%")]]
+            shiny.fluent::updateDropdown.shinyInput(session, paste0("variable_", i, "_%widget_id%"), options = variables, value = value)
+        }
+    }
+})
 
 # -------------------------
 # --- Show / hide divs ----
