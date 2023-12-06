@@ -18,14 +18,15 @@ palettes <- convert_tibble_to_list(data = tibble::tibble(pal = c("Set1", "Set2",
 dropdowns <- paste(unlist(sapply(c("variable", "colour_pal"), function(x) paste0(x, "_", 1:10))))
 textfields <- paste(unlist(sapply("variable_name", function(x) paste0(x, "_", 1:10))))
 spin_buttons <- c("y_min", "y_max")
-toggle_inputs <- c("show_stays", "stay_data_only", "show_range_selector", "synchronize_timelines", "smooth_curves", "draw_points", "change_y_values")
+toggle_inputs <- c("show_stays", "stay_data_only", "show_range_selector", "synchronize_timelines", "smooth_curves", "draw_points", "change_y_values", 
+    "run_plot_at_patient_changeover", "run_code_at_patient_changeover")
 colour_inputs <- paste(unlist(sapply("colour", function(x) paste0(x, "_", 1:10))))
 ace_inputs <- "code"
 inputs <- c(dropdowns, textfields, spin_buttons, toggle_inputs, colour_inputs, ace_inputs)
 
 default_values <- list()
-default_values$run_code_at_script_launch <- FALSE
-default_values$run_plot_at_script_launch <- FALSE
+default_values$run_code_at_patient_changeover <- FALSE
+default_values$run_plot_at_patient_changeover <- FALSE
 default_values$y_min <- NULL
 default_values$y_max <- NULL
 default_values$show_stays <- FALSE
@@ -120,16 +121,16 @@ result <- tagList(
             div(
                 id = ns("plot_tab_header_%widget_id%"),
                 shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                    shiny.fluent::Toggle.shinyInput(ns("run_plot_at_script_launch_%widget_id%"), value = as.logical(inputs_values$run_plot_at_script_launch), style = "margin-top:5px;"),
-                    div(class = "toggle_title", i18np$t("run_plot_at_script_launch"), style = "padding-top:5px;")
+                    shiny.fluent::Toggle.shinyInput(ns("run_plot_at_patient_changeover_%widget_id%"), value = as.logical(inputs_values$run_plot_at_patient_changeover), style = "margin-top:5px;"),
+                    div(class = "toggle_title", i18np$t("run_plot_at_patient_changeover"), style = "padding-top:5px;")
                 )
             ),
             shinyjs::hidden(
                 div(
                     id = ns("code_tab_header_%widget_id%"),
                     shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                        shiny.fluent::Toggle.shinyInput(ns("run_code_at_script_launch_%widget_id%"), value = as.logical(inputs_values$run_code_at_script_launch), style = "margin-top:5px;"),
-                        div(class = "toggle_title", i18np$t("run_code_at_script_launch"), style = "padding-top:5px;")
+                        shiny.fluent::Toggle.shinyInput(ns("run_code_at_patient_changeover_%widget_id%"), value = as.logical(inputs_values$run_code_at_patient_changeover), style = "margin-top:5px;"),
+                        div(class = "toggle_title", i18np$t("run_code_at_patient_changeover"), style = "padding-top:5px;")
                     )
                 )
             )
@@ -147,10 +148,23 @@ result <- tagList(
                     shinyjs::hidden(div(id = ns("empty_dygraph_%widget_id%"), style = "height:400px; background-color:#EBEBEB;"))
                 ), br(),
                 shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                    shiny.fluent::Toggle.shinyInput(ns("hide_params_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
-                    div(class = "toggle_title", i18np$t("hide_params"), style = "padding-top:5px;"),
-                    div(strong(i18np$t("dygraph_width")), style = "margin-top:6px;"),
-                    div(shiny.fluent::Slider.shinyInput(ns("dygraph_width_%widget_id%"), value = 100, min = 1, max = 100), style = "width:300px; margin-left:0px; padding-top:4px;")
+                    div(
+                        div(strong(i18np$t("plot_width")), style = "margin-top:6px;"),
+                        div(shiny.fluent::Slider.shinyInput(ns("plot_width_%widget_id%"), value = 100, min = 1, max = 100), style = "width:200px; margin-left:-8px; padding-top:4px;"),
+                        style = "width:200px"
+                    ),
+                    div(
+                        div(strong(i18np$t("plot_height")), style = "margin-top:6px;"),
+                        div(shiny.fluent::Slider.shinyInput(ns("plot_height_%widget_id%"), value = 100, min = 1, max = 100), style = "width:200px; margin-left:-8px; padding-top:4px;"),
+                        style = "width:200px"
+                    ),
+                    div(
+                        shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                            shiny.fluent::Toggle.shinyInput(ns("hide_params_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
+                            div(class = "toggle_title", i18np$t("hide_params"), style = "padding-top:5px;")
+                        ),
+                        style = "width:200px; margin-top:15px;"
+                    )
                 )
             ),
             div(id = ns("split_layout_right_%widget_id%"),
@@ -164,28 +178,46 @@ result <- tagList(
                 div(
                     id = ns("plot_parameters_tab_%widget_id%"), br(),
                     shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                        shiny.fluent::Toggle.shinyInput(ns("show_stays_%widget_id%"), value = as.logical(inputs_values$show_stays), style = "margin-top:5px;"),
-                        div(class = "toggle_title", i18np$t("show_stays"), style = "padding-top:5px;")
+                        div(
+                            shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                                shiny.fluent::Toggle.shinyInput(ns("show_stays_%widget_id%"), value = as.logical(inputs_values$show_stays), style = "margin-top:5px;"),
+                                div(class = "toggle_title", i18np$t("show_stays"), style = "padding-top:5px;")
+                            ), style = "width:300px;"
+                        ),
+                        div(
+                            shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                                shiny.fluent::Toggle.shinyInput(ns("stay_data_only_%widget_id%"), value = as.logical(inputs_values$stay_data_only), style = "margin-top:5px;"),
+                                div(class = "toggle_title", i18np$t("stay_data_only"), style = "padding-top:5px;")
+                            ), style = "width:300px;"
+                        )
                     ),
                     shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                        shiny.fluent::Toggle.shinyInput(ns("stay_data_only_%widget_id%"), value = as.logical(inputs_values$stay_data_only), style = "margin-top:5px;"),
-                        div(class = "toggle_title", i18np$t("stay_data_only"), style = "padding-top:5px;")
-                    ), br(),
-                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                        shiny.fluent::Toggle.shinyInput(ns("show_range_selector_%widget_id%"), value = as.logical(inputs_values$show_range_selector), style = "margin-top:5px;"),
-                        div(class = "toggle_title", i18np$t("show_range_selector"), style = "padding-top:5px;")
-                    ), 
-                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                        shiny.fluent::Toggle.shinyInput(ns("synchronize_timelines_%widget_id%"), value = as.logical(inputs_values$synchronize_timelines), style = "margin-top:5px;"),
-                        div(class = "toggle_title", i18np$t("synchronize_timelines"), style = "padding-top:5px;")
-                    ), br(),
-                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                        shiny.fluent::Toggle.shinyInput(ns("smooth_curves_%widget_id%"), value = as.logical(inputs_values$smooth_curves), style = "margin-top:5px;"),
-                        div(class = "toggle_title", i18np$t("smooth_curves"), style = "padding-top:5px;")
+                        div(
+                            shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                                shiny.fluent::Toggle.shinyInput(ns("show_range_selector_%widget_id%"), value = as.logical(inputs_values$show_range_selector), style = "margin-top:5px;"),
+                                div(class = "toggle_title", i18np$t("show_range_selector"), style = "padding-top:5px;")
+                            ), style = "width:300px;"
+                        ),
+                        div(
+                            shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                                shiny.fluent::Toggle.shinyInput(ns("synchronize_timelines_%widget_id%"), value = as.logical(inputs_values$synchronize_timelines), style = "margin-top:5px;"),
+                                div(class = "toggle_title", i18np$t("synchronize_timelines"), style = "padding-top:5px;")
+                            ), style = "width:300px;"
+                        )
                     ),
                     shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                        shiny.fluent::Toggle.shinyInput(ns("draw_points_%widget_id%"), value = as.logical(inputs_values$draw_points), style = "margin-top:5px;"),
-                        div(class = "toggle_title", i18np$t("draw_points"), style = "padding-top:5px;")
+                        div(
+                            shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                                shiny.fluent::Toggle.shinyInput(ns("smooth_curves_%widget_id%"), value = as.logical(inputs_values$smooth_curves), style = "margin-top:5px;"),
+                                div(class = "toggle_title", i18np$t("smooth_curves"), style = "padding-top:5px;")
+                            ), style = "width:300px;"
+                        ),
+                        div(
+                            shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                                shiny.fluent::Toggle.shinyInput(ns("draw_points_%widget_id%"), value = as.logical(inputs_values$draw_points), style = "margin-top:5px;"),
+                                div(class = "toggle_title", i18np$t("draw_points"), style = "padding-top:5px;")
+                            ), style = "width:300px;"
+                        )
                     ), br(),
                     shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
                         shiny.fluent::Toggle.shinyInput(ns("change_y_values_%widget_id%"), value = as.logical(inputs_values$change_y_values), style = "margin-top:5px;"),
@@ -195,21 +227,19 @@ result <- tagList(
                         div(
                             div(class = "input_title", i18np$t("y_min")),
                             shiny.fluent::SpinButton.shinyInput(ns("y_min_%widget_id%"), value = inputs_values$y_min, step = 1),
-                            style = "width:250px"
+                            style = "width:300px"
                         ),
                         div(
                             div(class = "input_title", i18np$t("y_max")),
                             shiny.fluent::SpinButton.shinyInput(ns("y_max_%widget_id%"), value = inputs_values$y_max, step = 1),
-                            style = "width:250px"
+                            style = "width:300px"
                         )
                     )
                 ),
-                shinyjs::hidden(
-                    div(
-                        id = ns("variables_tab_%widget_id%"),
-                        variables_div
-                    )
-                ), br(), br(),
+                div(
+                    id = ns("variables_tab_%widget_id%"),
+                    variables_div
+                ), br(),
                 shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
                     shiny.fluent::PrimaryButton.shinyInput(ns("show_%widget_id%"), i18np$t("show")),
                     shiny.fluent::DefaultButton.shinyInput(ns("generate_code_%widget_id%"), i18np$t("generate_code"))
