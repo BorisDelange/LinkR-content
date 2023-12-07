@@ -103,6 +103,8 @@ variables_div <- div(
 )
 
 result <- tagList(
+    actionButton(ns("minimize_%widget_id%"), "", icon = icon("minus"), style = "position:absolute; top:8px; right:62px; z-index:10;"),
+    shinyjs::hidden(actionButton(ns("maximize_%widget_id%"), "", icon = icon("plus"), style = "position:absolute; top:8px; right:62px; z-index:10;")),
     shiny.fluent::reactOutput(ns("delete_confirm_%widget_id%")),
     shiny.fluent::Pivot(
         id = ns("pivot_%widget_id%"),
@@ -143,27 +145,30 @@ result <- tagList(
             div(id = ns("split_layout_left_%widget_id%"),
                 style = "padding-right:10px; width:50%;",
                 div(
-                    id = ns("dygraph_div_%widget_id%"), br(),
-                    dygraphs::dygraphOutput(ns("dygraph_%widget_id%")),
+                    id = ns("plot_div_%widget_id%"), br(),
+                    dygraphs::dygraphOutput(ns("dygraph_%widget_id%"), width = "100%", height = 400),
                     shinyjs::hidden(div(id = ns("empty_dygraph_%widget_id%"), style = "height:400px; background-color:#EBEBEB;"))
                 ), br(),
-                shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                    div(
-                        div(strong(i18np$t("plot_width")), style = "margin-top:6px;"),
-                        div(shiny.fluent::Slider.shinyInput(ns("plot_width_%widget_id%"), value = 100, min = 1, max = 100), style = "width:200px; margin-left:-8px; padding-top:4px;"),
-                        style = "width:200px"
-                    ),
-                    div(
-                        div(strong(i18np$t("plot_height")), style = "margin-top:6px;"),
-                        div(shiny.fluent::Slider.shinyInput(ns("plot_height_%widget_id%"), value = 100, min = 1, max = 100), style = "width:200px; margin-left:-8px; padding-top:4px;"),
-                        style = "width:200px"
-                    ),
-                    div(
-                        shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                            shiny.fluent::Toggle.shinyInput(ns("hide_params_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
-                            div(class = "toggle_title", i18np$t("hide_params"), style = "padding-top:5px;")
+                div(
+                    id = ns("plot_size_div_%widget_id%"),
+                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                        div(
+                            div(strong(i18np$t("plot_width")), style = "margin-top:6px;"),
+                            div(shiny.fluent::Slider.shinyInput(ns("plot_width_%widget_id%"), value = 100, min = 1, max = 100), style = "width:200px; margin-left:-8px; padding-top:4px;"),
+                            style = "width:200px"
                         ),
-                        style = "width:200px; margin-top:15px;"
+                        div(
+                            div(strong(i18np$t("plot_height")), style = "margin-top:6px;"),
+                            div(shiny.fluent::Slider.shinyInput(ns("plot_height_%widget_id%"), value = 100, min = 1, max = 100), style = "width:200px; margin-left:-8px; padding-top:4px;"),
+                            style = "width:200px"
+                        ),
+                        div(
+                            shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                                shiny.fluent::Toggle.shinyInput(ns("hide_params_%widget_id%"), value = FALSE, style = "margin-top:5px;"),
+                                div(class = "toggle_title", i18np$t("hide_params"), style = "padding-top:5px;")
+                            ),
+                            style = "width:200px; margin-top:15px;"
+                        )
                     )
                 )
             ),

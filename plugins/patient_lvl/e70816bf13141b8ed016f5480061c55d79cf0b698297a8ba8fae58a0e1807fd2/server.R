@@ -113,6 +113,34 @@ observeEvent(input$hide_params_%widget_id%, {
     m$create_plot_trigger_%widget_id% <- Sys.time()
 })
 
+divs <- c("plot_and_code_tab_header_%widget_id%", "split_layout_right_%widget_id%", "plot_size_div_%widget_id%", "pivot_%widget_id%")
+
+# Minimize widget
+observeEvent(input$minimize_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$minimize_%widget_id%"))
+    shinyjs::runjs(glue::glue("$('#{id}-split_layout_left_%widget_id%').css('width', '100%');"))
+    shinyjs::delay(100, {
+        shinyjs::show("maximize_%widget_id%")
+        sapply(c("minimize_%widget_id%", divs), shinyjs::hide)
+        m$create_plot_type_%widget_id% <- "show_plot"
+        m$create_plot_trigger_%widget_id% <- Sys.time()
+    })
+})
+
+# Maximize widget
+observeEvent(input$maximize_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$maximize_%widget_id%"))
+    shinyjs::runjs(glue::glue("$('#{id}-split_layout_left_%widget_id%').css('width', '50%');"))
+    shinyjs::delay(100, {
+        shinyjs::hide("maximize_%widget_id%")
+        sapply(c("minimize_%widget_id%", divs), shinyjs::show)
+        m$create_plot_type_%widget_id% <- "show_plot"
+        m$create_plot_trigger_%widget_id% <- Sys.time()
+    })
+})
+
 # -------------
 # --- Plot ----
 # -------------
@@ -220,15 +248,16 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
     req(length(isolate(input$colour_1_%widget_id%)) > 0)
     
     data <- tibble::tibble(concept_id = integer(), datetime = lubridate::ymd_hms(), value_as_number = numeric())
-#     code <- "# A tibble containing the data for the plot\ndata <- tibble::tibble()\n"
-    code <- ""
+    code <- "# A tibble containing the data for the plot\ndata <- tibble::tibble(concept_id = integer(), datetime = lubridate::ymd_hms(), value_as_number = numeric())\n\n"
     
     # Prevents a bug with filter on a list element (m$selected_person) which doesn't work on lazy tibbles
     selected_person <- m$selected_person
+    code <- paste0(code, "selected_person <- m$selected_person\n\n")
     
     # Keep track of used concept_ids for dygraph plot
     concept_ids <- integer()
     
+    j <- 0
     for (i in 1:10){
         if (input[[paste0("variable_", i, "_%widget_id%")]] != 0L){
             concept_id <- input[[paste0("variable_", i, "_%widget_id%")]]
@@ -243,6 +272,11 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
                     concept_name <- variable$concept_name_1
                     
                     data_filtered <- d[[table_name]] %>% dplyr::filter(person_id == selected_person, !!rlang::sym(paste0(table_name, "_concept_id")) == !!concept_id)
+                    
+#                     if (nrow(data_filtered) > 0){
+#                         code <- paste0(code, "data <- d$", table_name, " %>%\n",
+#                         "    dplyr::filter(person_id == selected_person, ", table_name, "_concept_id == concept_id)")   
+#                     }
                     
                     if (length(input$stay_data_only_%widget_id%) > 0) if (input$stay_data_only_%widget_id% & !is.na(m$selected_visit_detail)){
                     
@@ -429,21 +463,20 @@ observeEvent(input$run_code_at_patient_changeover_%widget_id%, {
     if (input$run_code_at_patient_changeover_%widget_id%) shiny.fluent::updateToggle.shinyInput(session, "run_plot_at_patient_changeover_%widget_id%", value = FALSE)
 })
 
-# Plot width
-# observeEvent(input$plot_width_%widget_id%, {
-#     %req%
-#     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_width_%widget_id%"))
-#     m$plot_width_%widget_id% <- input$plot_width_%widget_id% %>% throttle(1000) %>% debounce(1000)
-# }
-# 
-# observeEvent(m$plot_width_%widget_id%, {
-#     %req%
-#     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer m$plot_width_%widget_id%"))
-#     
-#     shinyjs::runjs(glue::glue("$('#{id}-plot_div_%widget_id%').css('width', '{m$plot_width_%widget_id%()}%');")) 
-#     m$create_plot_type_%widget_id% <- "show_plot"
-#     m$create_plot_trigger_%widget_id% <- Sys.time()
-# })
+# Plot width & height
+sapply(c("width", "height"), function(name){
+    observeEvent(input[[paste0("plot_", name, "_%widget_id%")]], {
+        %req%
+        if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_", name, "_%widget_id%"))
+        
+        if (name == "width") value <- paste0(input$plot_width_%widget_id%, "%")
+        else value <- input$plot_height_%widget_id% * 0.01 * 400
+        
+        shinyjs::runjs(glue::glue("$('#{id}-dygraph_%widget_id%').css('{name}', '{value}');")) 
+        m$create_plot_type_%widget_id% <- "show_plot"
+        m$create_plot_trigger_%widget_id% <- Sys.time()
+    }) %>% throttle(1000) %>% debounce(1000)
+})
 
 # ------------
 # --- Code ---
