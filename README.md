@@ -112,6 +112,24 @@ data$x %>%
 </details>
 </details>
 
+<details style = 'border:solid 1px; padding:10px; margin:5px 0px 5px 0px;'>
+<summary><span style = 'font-size:15px;'>Séries temporelles {dygraphs}</summary>
+
+
+</details>
+
+<details style = 'border:solid 1px; padding:10px; margin:5px 0px 5px 0px;'>
+<summary><span style = 'font-size:15px;'>Séries temporelles {vistime}</summary>
+
+
+</details>
+
+<details style = 'border:solid 1px; padding:10px; margin:5px 0px 5px 0px;'>
+<summary><span style = 'font-size:15px;'>Tableau {DT}</summary>
+
+
+</details>
+
 
 
 
@@ -349,8 +367,4 @@ No scripts available.
 <details style = 'border:solid 1px; padding:10px; margin:5px 0px 5px 0px;'>
 <summary><span style = 'font-size:15px;'>MIMIC-IV demo</summary>
 
-
 </details>
-
-
-
