@@ -1,0 +1,233 @@
+id,widget_id,person_id,link_id,category,name,value,value_num,creator_id,datetime,deleted
+1,1,NA,NA,NA,script,Height & weight,1,NA,2023-12-13 16:22:23,0
+2,1,NA,NA,NA,script,Height,2,NA,2023-12-13 16:22:25,0
+3,1,NA,NA,NA,script,Weight,3,NA,2023-12-13 16:22:27,0
+4,1,NA,1,NA,plot_function,geom_point,NA,NA,2023-12-13 16:23:25,0
+5,1,NA,1,NA,plot_theme,theme_minimal,NA,NA,2023-12-13 16:23:25,0
+6,1,NA,1,NA,bins_type,num_of_bins,NA,NA,2023-12-13 16:23:25,0
+7,1,NA,1,NA,x_variable,NA,3036277,NA,2023-12-13 16:23:25,0
+8,1,NA,1,NA,y_variable,NA,3025315,NA,2023-12-13 16:23:25,0
+9,1,NA,1,NA,colour_pal,Set1,NA,NA,2023-12-13 16:23:25,0
+10,1,NA,1,NA,group_by,datetime,NA,NA,2023-12-13 16:23:25,0
+11,1,NA,1,NA,group_by_type,hours,NA,NA,2023-12-13 16:23:25,0
+12,1,NA,1,NA,summarize_fct,mean,NA,NA,2023-12-13 16:23:25,0
+13,1,NA,1,NA,x_label,Height,NA,NA,2023-12-13 16:23:25,0
+14,1,NA,1,NA,y_label,Weight,NA,NA,2023-12-13 16:23:25,0
+15,1,NA,1,NA,num_of_bins,NA,50,NA,2023-12-13 16:23:25,0
+16,1,NA,1,NA,bin_width,NA,10,NA,2023-12-13 16:23:25,0
+17,1,NA,1,NA,group_by_num,NA,4,NA,2023-12-13 16:23:25,0
+18,1,NA,1,NA,group_data,FALSE,NA,NA,2023-12-13 16:23:25,0
+19,1,NA,1,NA,run_code_at_script_launch,FALSE,NA,NA,2023-12-13 16:23:25,0
+20,1,NA,1,NA,run_plot_at_script_launch,FALSE,NA,NA,2023-12-13 16:23:25,0
+21,1,NA,1,NA,colour,#E41A1C,NA,NA,2023-12-13 16:23:25,0
+22,1,NA,1,NA,code,"# A list containing the data for the plot
+data <- list()
+
+# Filter data
+data$x <- d$measurement %>% dplyr::filter(measurement_concept_id == 3036277) %>% dplyr::collect()
+data$y <- d$measurement %>% dplyr::filter(measurement_concept_id == 3025315) %>% dplyr::collect()
+
+# Prepare data for ggplot2 plot
+fig_data <-
+    data$x %>%
+    dplyr::rename(datetime = measurement_datetime) %>%
+    dplyr::transmute(datetime, variable = ""x"", value_as_number) %>%
+    dplyr::bind_rows(
+        data$y %>%
+        dplyr::rename(datetime = measurement_datetime) %>%
+        dplyr::transmute(datetime, variable = ""y"", value_as_number)
+    ) %>%
+    dplyr::mutate(n = 1:dplyr::n()) %>%
+    tidyr::pivot_wider(names_from = ""variable"", values_from = ""value_as_number"") %>%
+    dplyr::select(-n) %>%
+    dplyr::group_by(datetime) %>%
+    dplyr::summarize(x = dplyr::first(na.omit(x)), y = dplyr::first(na.omit(y))) %>%
+    dplyr::ungroup()
+
+# Create ggplot2 plot
+fig_data %>%
+    ggplot2::ggplot(ggplot2::aes(x = x, y = y)) +
+    ggplot2::geom_point(colour = ""#E41A1C"") +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(x = ""Height"", y = ""Weight"")",NA,NA,2023-12-13 16:23:25,0
+23,1,NA,2,NA,plot_function,geom_histogram,NA,NA,2023-12-13 16:23:32,0
+24,1,NA,2,NA,plot_theme,theme_minimal,NA,NA,2023-12-13 16:23:32,0
+25,1,NA,2,NA,bins_type,num_of_bins,NA,NA,2023-12-13 16:23:32,0
+26,1,NA,2,NA,x_variable,NA,3036277,NA,2023-12-13 16:23:32,0
+27,1,NA,2,NA,y_variable,NA,0,NA,2023-12-13 16:23:32,0
+28,1,NA,2,NA,colour_pal,Set1,NA,NA,2023-12-13 16:23:32,0
+29,1,NA,2,NA,group_by,datetime,NA,NA,2023-12-13 16:23:32,0
+30,1,NA,2,NA,group_by_type,hours,NA,NA,2023-12-13 16:23:32,0
+31,1,NA,2,NA,summarize_fct,mean,NA,NA,2023-12-13 16:23:32,0
+32,1,NA,2,NA,x_label,,NA,NA,2023-12-13 16:23:32,0
+33,1,NA,2,NA,y_label,,NA,NA,2023-12-13 16:23:32,0
+34,1,NA,2,NA,num_of_bins,NA,50,NA,2023-12-13 16:23:32,0
+35,1,NA,2,NA,bin_width,NA,10,NA,2023-12-13 16:23:32,0
+36,1,NA,2,NA,group_by_num,NA,4,NA,2023-12-13 16:23:32,0
+37,1,NA,2,NA,group_data,FALSE,NA,NA,2023-12-13 16:23:32,0
+38,1,NA,2,NA,run_code_at_script_launch,FALSE,NA,NA,2023-12-13 16:23:32,0
+39,1,NA,2,NA,run_plot_at_script_launch,FALSE,NA,NA,2023-12-13 16:23:32,0
+40,1,NA,2,NA,colour,#377EB8,NA,NA,2023-12-13 16:23:32,0
+41,1,NA,2,NA,code,"# A list containing the data for the plot
+data <- list()
+
+# Filter data
+data$x <- d$measurement %>% dplyr::filter(measurement_concept_id == 3036277) %>% dplyr::collect()
+
+# Create ggplot2 plot
+data$x %>%
+    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+    ggplot2::geom_histogram(bins = 50, fill = ""#377EB8"", color = ""#FFFFFF"") +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(x = """", y = """")",NA,NA,2023-12-13 16:23:32,0
+42,1,NA,3,NA,plot_function,geom_histogram,NA,NA,2023-12-13 16:23:37,0
+43,1,NA,3,NA,plot_theme,theme_minimal,NA,NA,2023-12-13 16:23:37,0
+44,1,NA,3,NA,bins_type,num_of_bins,NA,NA,2023-12-13 16:23:37,0
+45,1,NA,3,NA,x_variable,NA,3025315,NA,2023-12-13 16:23:37,0
+46,1,NA,3,NA,y_variable,NA,0,NA,2023-12-13 16:23:37,0
+47,1,NA,3,NA,colour_pal,Set1,NA,NA,2023-12-13 16:23:37,0
+48,1,NA,3,NA,group_by,datetime,NA,NA,2023-12-13 16:23:37,0
+49,1,NA,3,NA,group_by_type,hours,NA,NA,2023-12-13 16:23:37,0
+50,1,NA,3,NA,summarize_fct,mean,NA,NA,2023-12-13 16:23:37,0
+51,1,NA,3,NA,x_label,,NA,NA,2023-12-13 16:23:37,0
+52,1,NA,3,NA,y_label,,NA,NA,2023-12-13 16:23:37,0
+53,1,NA,3,NA,num_of_bins,NA,50,NA,2023-12-13 16:23:37,0
+54,1,NA,3,NA,bin_width,NA,10,NA,2023-12-13 16:23:37,0
+55,1,NA,3,NA,group_by_num,NA,4,NA,2023-12-13 16:23:37,0
+56,1,NA,3,NA,group_data,FALSE,NA,NA,2023-12-13 16:23:37,0
+57,1,NA,3,NA,run_code_at_script_launch,FALSE,NA,NA,2023-12-13 16:23:37,0
+58,1,NA,3,NA,run_plot_at_script_launch,FALSE,NA,NA,2023-12-13 16:23:37,0
+59,1,NA,3,NA,colour,#4DAF4A,NA,NA,2023-12-13 16:23:37,0
+60,1,NA,3,NA,code,"# A list containing the data for the plot
+data <- list()
+
+# Filter data
+data$x <- d$measurement %>% dplyr::filter(measurement_concept_id == 3025315) %>% dplyr::collect()
+
+# Create ggplot2 plot
+data$x %>%
+    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+    ggplot2::geom_histogram(bins = 50, fill = ""#4DAF4A"", color = ""#FFFFFF"") +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(x = """", y = """")",NA,NA,2023-12-13 16:23:37,0
+61,1,NA,NA,NA,selected_script,NA,1,NA,2023-12-13 16:23:38,0
+62,2,NA,NA,NA,script,Weight,1,NA,2023-12-13 16:24:19,0
+63,2,NA,NA,NA,script,Height,2,NA,2023-12-13 16:24:21,0
+64,2,NA,1,NA,variable_1,NA,3025315,NA,2023-12-13 16:25:21,0
+65,2,NA,1,NA,variable_2,NA,0,NA,2023-12-13 16:25:21,0
+66,2,NA,1,NA,variable_3,NA,0,NA,2023-12-13 16:25:21,0
+67,2,NA,1,NA,variable_4,NA,0,NA,2023-12-13 16:25:21,0
+68,2,NA,1,NA,variable_5,NA,0,NA,2023-12-13 16:25:21,0
+69,2,NA,1,NA,variable_6,NA,0,NA,2023-12-13 16:25:21,0
+70,2,NA,1,NA,variable_7,NA,0,NA,2023-12-13 16:25:21,0
+71,2,NA,1,NA,variable_8,NA,0,NA,2023-12-13 16:25:21,0
+72,2,NA,1,NA,variable_9,NA,0,NA,2023-12-13 16:25:21,0
+73,2,NA,1,NA,variable_10,NA,0,NA,2023-12-13 16:25:21,0
+74,2,NA,1,NA,colour_pal_1,Set1,NA,NA,2023-12-13 16:25:21,0
+75,2,NA,1,NA,colour_pal_2,Set1,NA,NA,2023-12-13 16:25:21,0
+76,2,NA,1,NA,colour_pal_3,Set1,NA,NA,2023-12-13 16:25:21,0
+77,2,NA,1,NA,colour_pal_4,Set1,NA,NA,2023-12-13 16:25:21,0
+78,2,NA,1,NA,colour_pal_5,Set1,NA,NA,2023-12-13 16:25:21,0
+79,2,NA,1,NA,colour_pal_6,Set1,NA,NA,2023-12-13 16:25:21,0
+80,2,NA,1,NA,colour_pal_7,Set1,NA,NA,2023-12-13 16:25:21,0
+81,2,NA,1,NA,colour_pal_8,Set1,NA,NA,2023-12-13 16:25:21,0
+82,2,NA,1,NA,colour_pal_9,Set1,NA,NA,2023-12-13 16:25:21,0
+83,2,NA,1,NA,colour_pal_10,Set1,NA,NA,2023-12-13 16:25:21,0
+84,2,NA,1,NA,variable_name_1,Body weight (kilogram),NA,NA,2023-12-13 16:25:21,0
+85,2,NA,1,NA,variable_name_2,,NA,NA,2023-12-13 16:25:21,0
+86,2,NA,1,NA,variable_name_3,,NA,NA,2023-12-13 16:25:21,0
+87,2,NA,1,NA,variable_name_4,,NA,NA,2023-12-13 16:25:21,0
+88,2,NA,1,NA,variable_name_5,,NA,NA,2023-12-13 16:25:21,0
+89,2,NA,1,NA,variable_name_6,,NA,NA,2023-12-13 16:25:21,0
+90,2,NA,1,NA,variable_name_7,,NA,NA,2023-12-13 16:25:21,0
+91,2,NA,1,NA,variable_name_8,,NA,NA,2023-12-13 16:25:21,0
+92,2,NA,1,NA,variable_name_9,,NA,NA,2023-12-13 16:25:21,0
+93,2,NA,1,NA,variable_name_10,,NA,NA,2023-12-13 16:25:21,0
+94,2,NA,1,NA,y_min,NA,NA,NA,2023-12-13 16:25:21,0
+95,2,NA,1,NA,y_max,NA,NA,NA,2023-12-13 16:25:21,0
+96,2,NA,1,NA,show_stays,FALSE,NA,NA,2023-12-13 16:25:21,0
+97,2,NA,1,NA,stay_data_only,FALSE,NA,NA,2023-12-13 16:25:21,0
+98,2,NA,1,NA,show_range_selector,TRUE,NA,NA,2023-12-13 16:25:21,0
+99,2,NA,1,NA,synchronize_timelines,FALSE,NA,NA,2023-12-13 16:25:21,0
+100,2,NA,1,NA,smooth_curves,FALSE,NA,NA,2023-12-13 16:25:21,0
+101,2,NA,1,NA,draw_points,TRUE,NA,NA,2023-12-13 16:25:21,0
+102,2,NA,1,NA,change_y_values,FALSE,NA,NA,2023-12-13 16:25:21,0
+103,2,NA,1,NA,run_plot_at_patient_changeover,FALSE,NA,NA,2023-12-13 16:25:21,0
+104,2,NA,1,NA,run_code_at_patient_changeover,FALSE,NA,NA,2023-12-13 16:25:21,0
+105,2,NA,1,NA,colour_1,#E41A1C,NA,NA,2023-12-13 16:25:21,0
+106,2,NA,1,NA,colour_2,NA,NA,NA,2023-12-13 16:25:21,0
+107,2,NA,1,NA,colour_3,NA,NA,NA,2023-12-13 16:25:21,0
+108,2,NA,1,NA,colour_4,NA,NA,NA,2023-12-13 16:25:21,0
+109,2,NA,1,NA,colour_5,NA,NA,NA,2023-12-13 16:25:21,0
+110,2,NA,1,NA,colour_6,NA,NA,NA,2023-12-13 16:25:21,0
+111,2,NA,1,NA,colour_7,NA,NA,NA,2023-12-13 16:25:21,0
+112,2,NA,1,NA,colour_8,NA,NA,NA,2023-12-13 16:25:21,0
+113,2,NA,1,NA,colour_9,NA,NA,NA,2023-12-13 16:25:21,0
+114,2,NA,1,NA,colour_10,NA,NA,NA,2023-12-13 16:25:21,0
+115,2,NA,1,NA,code,"# A tibble containing the data for the plot
+data <- tibble::tibble(concept_id = integer(), datetime = lubridate::ymd_hms(), value_as_number = numeric())
+
+selected_person <- m$selected_person
+selected_visit_detail_id <- m$selected_visit_detail
+
+data <-
+    d$measurement %>%
+    dplyr::filter(
+        person_id == selected_person, 
+        measurement_concept_id == 3025315
+    ) %>% 
+    dplyr::select(concept_id = measurement_concept_id, datetime = measurement_datetime, value_as_number) %>%
+    dplyr::mutate(concept_name = ""Body weight"")",NA,NA,2023-12-13 16:25:21,0
+116,2,NA,NA,NA,selected_script,NA,2,NA,2023-12-13 16:25:23,0
+117,2,NA,2,NA,variable_1,NA,3036277,NA,2023-12-13 16:25:44,0
+118,2,NA,2,NA,variable_2,NA,0,NA,2023-12-13 16:25:44,0
+119,2,NA,2,NA,variable_3,NA,0,NA,2023-12-13 16:25:44,0
+120,2,NA,2,NA,variable_4,NA,0,NA,2023-12-13 16:25:44,0
+121,2,NA,2,NA,variable_5,NA,0,NA,2023-12-13 16:25:44,0
+122,2,NA,2,NA,variable_6,NA,0,NA,2023-12-13 16:25:44,0
+123,2,NA,2,NA,variable_7,NA,0,NA,2023-12-13 16:25:44,0
+124,2,NA,2,NA,variable_8,NA,0,NA,2023-12-13 16:25:44,0
+125,2,NA,2,NA,variable_9,NA,0,NA,2023-12-13 16:25:44,0
+126,2,NA,2,NA,variable_10,NA,0,NA,2023-12-13 16:25:44,0
+127,2,NA,2,NA,colour_pal_1,Set1,NA,NA,2023-12-13 16:25:44,0
+128,2,NA,2,NA,colour_pal_2,Set1,NA,NA,2023-12-13 16:25:44,0
+129,2,NA,2,NA,colour_pal_3,Set1,NA,NA,2023-12-13 16:25:44,0
+130,2,NA,2,NA,colour_pal_4,Set1,NA,NA,2023-12-13 16:25:44,0
+131,2,NA,2,NA,colour_pal_5,Set1,NA,NA,2023-12-13 16:25:44,0
+132,2,NA,2,NA,colour_pal_6,Set1,NA,NA,2023-12-13 16:25:44,0
+133,2,NA,2,NA,colour_pal_7,Set1,NA,NA,2023-12-13 16:25:44,0
+134,2,NA,2,NA,colour_pal_8,Set1,NA,NA,2023-12-13 16:25:44,0
+135,2,NA,2,NA,colour_pal_9,Set1,NA,NA,2023-12-13 16:25:44,0
+136,2,NA,2,NA,colour_pal_10,Set1,NA,NA,2023-12-13 16:25:44,0
+137,2,NA,2,NA,variable_name_1,Body height (centimeter),NA,NA,2023-12-13 16:25:44,0
+138,2,NA,2,NA,variable_name_2,,NA,NA,2023-12-13 16:25:44,0
+139,2,NA,2,NA,variable_name_3,,NA,NA,2023-12-13 16:25:44,0
+140,2,NA,2,NA,variable_name_4,,NA,NA,2023-12-13 16:25:44,0
+141,2,NA,2,NA,variable_name_5,,NA,NA,2023-12-13 16:25:44,0
+142,2,NA,2,NA,variable_name_6,,NA,NA,2023-12-13 16:25:44,0
+143,2,NA,2,NA,variable_name_7,,NA,NA,2023-12-13 16:25:44,0
+144,2,NA,2,NA,variable_name_8,,NA,NA,2023-12-13 16:25:44,0
+145,2,NA,2,NA,variable_name_9,,NA,NA,2023-12-13 16:25:44,0
+146,2,NA,2,NA,variable_name_10,,NA,NA,2023-12-13 16:25:44,0
+147,2,NA,2,NA,y_min,NA,NA,NA,2023-12-13 16:25:44,0
+148,2,NA,2,NA,y_max,NA,NA,NA,2023-12-13 16:25:44,0
+149,2,NA,2,NA,show_stays,FALSE,NA,NA,2023-12-13 16:25:44,0
+150,2,NA,2,NA,stay_data_only,FALSE,NA,NA,2023-12-13 16:25:44,0
+151,2,NA,2,NA,show_range_selector,TRUE,NA,NA,2023-12-13 16:25:44,0
+152,2,NA,2,NA,synchronize_timelines,FALSE,NA,NA,2023-12-13 16:25:44,0
+153,2,NA,2,NA,smooth_curves,FALSE,NA,NA,2023-12-13 16:25:44,0
+154,2,NA,2,NA,draw_points,TRUE,NA,NA,2023-12-13 16:25:44,0
+155,2,NA,2,NA,change_y_values,FALSE,NA,NA,2023-12-13 16:25:44,0
+156,2,NA,2,NA,run_plot_at_patient_changeover,FALSE,NA,NA,2023-12-13 16:25:44,0
+157,2,NA,2,NA,run_code_at_patient_changeover,FALSE,NA,NA,2023-12-13 16:25:44,0
+158,2,NA,2,NA,colour_1,#377EB8,NA,NA,2023-12-13 16:25:44,0
+159,2,NA,2,NA,colour_2,NA,NA,NA,2023-12-13 16:25:44,0
+160,2,NA,2,NA,colour_3,NA,NA,NA,2023-12-13 16:25:44,0
+161,2,NA,2,NA,colour_4,NA,NA,NA,2023-12-13 16:25:44,0
+162,2,NA,2,NA,colour_5,NA,NA,NA,2023-12-13 16:25:44,0
+163,2,NA,2,NA,colour_6,NA,NA,NA,2023-12-13 16:25:44,0
+164,2,NA,2,NA,colour_7,NA,NA,NA,2023-12-13 16:25:44,0
+165,2,NA,2,NA,colour_8,NA,NA,NA,2023-12-13 16:25:44,0
+166,2,NA,2,NA,colour_9,NA,NA,NA,2023-12-13 16:25:44,0
+167,2,NA,2,NA,colour_10,NA,NA,NA,2023-12-13 16:25:44,0
+168,2,NA,2,NA,code,,NA,NA,2023-12-13 16:25:44,0

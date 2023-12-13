@@ -1,0 +1,3 @@
+id,category,name,description,tab_group_id,parent_tab_id,display_order,creator_id,datetime,deleted
+1,patient_lvl,Demographics,,1,NA,1,NA,2023-12-13 16:21:03,0
+2,aggregated,Exploratory data analysis,,2,NA,1,NA,2023-12-13 16:21:16,0
