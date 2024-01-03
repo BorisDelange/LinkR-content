@@ -1,0 +1,399 @@
+id,category,link_id,name,value,value_num,creator_id,datetime,deleted
+1,plugin,1,users_allowed_read_group,everybody,1,1,2023-12-03 18:21:51,0
+2,plugin,1,version,0.0.1.9026,NA,1,2023-12-03 18:21:51,0
+3,plugin,1,unique_id,dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21,NA,1,2023-12-03 18:21:51,0
+4,plugin,1,author,Boris Delange,NA,1,2023-12-03 18:21:51,0
+5,plugin,1,image,ggplot2.png,NA,1,2023-12-03 18:21:51,0
+6,plugin,1,downloaded_from,InterHop,NA,1,2023-12-03 18:21:51,0
+7,plugin,1,downloaded_from_url,https://framagit.org/interhop/linkr/LinkR-content,NA,1,2023-12-03 18:21:51,0
+8,plugin,1,category_en,,NA,1,2023-12-03 18:21:51,0
+9,plugin,1,description_en,"### <i class=""fa fa-info-circle"" style=""color: steelblue;""></i> 1) Description
+
+This plugin uses the R library <a href=""https://ggplot2.tidyverse.org/"" target=""_blank"">`ggplot2`</a>, allowing the creation of plots from data.
+
+### <i class=""fa fa-cogs"" style=""color: steelblue;""></i> 2) Usage
+
+<details>
+<summary><span style=""--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;"" onmouseover=""this.style.color=this.style.getPropertyValue(''--hover-color'')"" onmouseout=""this.style.color=''''"">
+Click here to show / hide content</span></summary>
+
+### <span style = ""margin-left:20px;""> a) Manage scripts</span>
+
+In order to **save multiple plots** to a single widget, you can **create scripts** from the ""Scripts management"" tab.
+
+You can also **rename** and **delete** scripts from this tab.
+
+A script includes:
+
+- The **parameters** saved on a plot, from the ""Plot"" tab.
+- The **code** corresponding to that plot, from the ""Code"" tab.
+
+Once a **script is created**, **select it** from the ""Plot"" or ""Code"" tab.
+
+**Save** this script after making changes.
+
+<br /><img src=""%plugin_folder%/scripts_management.png"" width=""850"" style=""border:dashed 1px; padding:10px;"" /><br /><br />
+
+### <span style = ""margin-left:20px;""> b) Configure a plot</span>
+
+Go to the ""Plot"" tab.
+
+**Choose the variable** to display on each axis in the ""Variables"" tab.
+
+Some plots will have a **variable on only one axis** (geom_histogram), while others will only display **if variables are specified on both axes** (geom_point).
+
+For each plot, choose:
+
+- The **theme** of the plot.
+- The **text** for the **x** axis.
+- The **text** for the **y** axis (whether a variable is assigned to it or not).
+
+In the ""Variables"" tab, it''s possible to **group data**, by patient or by time. Then choose the **function** to apply to group the data.
+
+For example:
+
+- Group data by **patient** by selecting the **""maximum""** function: the maximum value of the parameter, across all stays, will be chosen for each patient.
+- Group data every **4 hours** by selecting the **""average""** function: the maximum value will be chosen for each 4-hour interval, for each patient (thus, multiple data points per patient).
+
+By checking ""Show plot at script launch"", the **plot** will be **displayed upon the script''s loading**.
+
+<br /><img src=""%plugin_folder%/plot_settings.png"" width=""950"" style=""border:dashed 1px; padding:10px;"" /><br /><br />
+
+### <span style = ""margin-left:20px;""> c) Display the code</span>
+
+By clicking on ""**Generate Code**"" from the ""Plot"" tab, the **code corresponding to the plot** will be **generated** in the text editor, in the ""Code"" tab.
+
+You can **edit this code** and **save** your changes.
+
+If you click on **Generate Code** again, your code will be deleted and replaced by the default code corresponding to the plot configured in the ""Plot"" tab.
+
+Click on ""**Run code**"" to display the plot corresponding to the code.
+
+By checking ""Run code at script launch"", the **code** will be **executed upon the script''s loading**.
+
+<br /><img src=""%plugin_folder%/plot_code.png"" width=""750"" style=""border:dashed 1px; padding:10px;"" />
+
+</details>
+
+### <i class=""fa fa-bar-chart"" style=""color: steelblue;""></i> 3) Available plots
+
+<details>
+<summary><span style=""--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;"" onmouseover=""this.style.color=this.style.getPropertyValue(''--hover-color'')"" onmouseout=""this.style.color=''''"">
+Click here to show / hide content</span></summary>
+
+### <span style = ""margin-left:20px;""> a) Histogram (geom_histogram)</span>
+
+Allows visualization of the distribution of a single continuous variable by dividing the x-axis into intervals and counting the number of observations in each interval.
+
+<img src=""%plugin_folder%/geom_histogram.png"" width=""700"" />
+
+You can choose the **size of the bars** in two ways:
+
+- Either by the **size** of the bars, depending on the x-axis (a size of 50 means a bar will take up 50 of the unit specified on the x-axis).
+- Or by the **number** of total bars displayed.
+
+<br /><br />
+
+### <span style = ""margin-left:20px;""> b) Scatter plot (geom_point)</span>
+
+Allows visualization of the distribution of two continuous variables, one on the x-axis and the other on the y-axis.
+
+<img src=""%plugin_folder%/geom_point.png"" width=""700"" />
+
+By default, only points having a **value at a given moment** both for the **x variable** and for the **y variable** will be displayed.
+
+For instance, if I choose systolic blood pressure for x and mean arterial pressure for y (as in the example), and I have an x value on a certain day at 18:37:10 and a y value on the same day at 18:37:11, since the moments aren''t exactly the same, there won''t be a corresponding point on the graph.
+
+To counter this, it is possible to **group data**, by patient or by time (see Usage section).
+
+</details>",NA,1,2023-12-03 18:21:51,0
+10,plugin,1,name_en,Plot (ggplot2),NA,1,2023-12-03 18:21:51,0
+11,plugin,1,category_fr,,NA,1,2023-12-03 18:21:51,0
+12,plugin,1,description_fr,"### <i class=""fa fa-info-circle"" style=""color: steelblue;""></i> 1) Description
+
+Ce plugin utilise la librairie R <a href=""https://ggplot2.tidyverse.org/"" target=""_blank"">`ggplot2`</a>, permettant de créer des graphiques à partir des données.
+
+### <i class=""fa fa-cogs"" style=""color: steelblue;""></i> 2) Utilisation
+
+<details>
+<summary><span style=""--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;"" onmouseover=""this.style.color=this.style.getPropertyValue(''--hover-color'')"" onmouseout=""this.style.color=''''"">
+Cliquez ici pour afficher / masquer le contenu</span></summary>
+
+### <span style = ""margin-left:20px;""> a) Gérer les scripts</span>
+
+Afin de pouvoir **sauvegarder plusieurs figures** sur un même widget, vous pouvez **créer des scripts** depuis l''onglet ""Gérer les scripts"".
+
+Vous pouvez également **renommer** et **supprimer** des scripts depuis cet onglet.
+
+Un script comprend :
+
+- Les **paramètres** enregistrés sur une figure, depuis l''onglet ""Figure""
+- Le **code** correspond à cette figure, depuis l''onglet ""Code""
+
+Une fois un **script créé**, **sélectionnez-le** depuis l''onglet ""Figure"" ou ""Code"".
+
+**Sauvegardez** ce script une fois des modifications effectuées.
+
+<br /><img src=""%plugin_folder%/scripts_management.png"" width=""850"" style=""border:dashed 1px; padding:10px;"" /><br /><br />
+
+### <span style = ""margin-left:20px;""> b) Configurer une figure</span>
+
+Rendez-vous dans l''onglet ""Figure"".
+
+**Choisissez la variable** à afficher sur chacun des axes dans l''onglet ""Variables"".
+
+Certaines figures n''auront une **variable que sur un axe** (geom_histogram), d''autres ne s''afficheront que **si des variables sont renseignées sur les deux axes** (geom_point).
+
+Pour chaque figure, choisissez :
+
+- le **thème** de la figure
+- le **texte** de l''axe des **x**
+- le **texte** de l''axe des **y** (qu''une variable y soit attribuée ou non)
+
+Dans l''onglet ""Variables"", il est possible de **grouper les données**, par patient ou par moment. Choisissez ensuite la **fonction** à appliquer pour grouper les données.
+
+Par exemple :
+
+- grouper les données par **patient** en choisissant la fonction **""maximum""** : la valeur maximale du paramètre, tous séjours confondus, sera retenue pour chaque patient
+- grouper les données par **4 heures** en choisissant la fonction **""moyenne""** : la valeur maximale sera retenue sur chaque intervalle de 4 heures, pour chaque patient (donc plusieurs données par patient)
+
+En cochant ""Afficher la figure au lancement du script"", la **figure** sera **affichée au chargement au script**.
+
+<br /><img src=""%plugin_folder%/plot_settings.png"" width=""950"" style=""border:dashed 1px; padding:10px;"" /><br /><br />
+
+### <span style = ""margin-left:20px;""> c) Afficher le code</span>
+
+En cliquant sur ""**Générer le code**"" depuis l''onglet ""Figure"", le **code correspondant à la figure** sera **généré** dans l''éditeur de texte, dans l''onglet ""Code"".
+
+Vous pouvez **modifier ce code**, et **sauvegarder** vos modifications.
+
+Si vous cliquez de nouveau sur **Générer le code**, votre code sera supprimé et remplacé par le code par défaut correspondant à la figure configurée dans l''onglet ""Figure"".
+
+Cliquez sur ""**Exécuter**"" pour afficher la figure correspond au code.
+
+En cochant ""Exécuter le code au lancement du script"", le **code** sera **exécuté au chargement au script**.
+
+<br /><img src=""%plugin_folder%/plot_code.png"" width=""750"" style=""border:dashed 1px; padding:10px;"" />
+
+</details>
+
+### <i class=""fa fa-bar-chart"" style=""color: steelblue;""></i> 3) Figures disponibles
+
+<details open>
+<summary><span style=""--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;"" onmouseover=""this.style.color=this.style.getPropertyValue(''--hover-color'')"" onmouseout=""this.style.color=''''"">
+Cliquez ici pour afficher / masquer le contenu</span></summary>
+
+### <span style = ""margin-left:20px;""> a) Histogramme (geom_histogram)</span>
+
+Permet de visualiser la distribution d''une variable continue unique en divisant l''axe des x en intervalles et en comptant le nombre d''observations dans chaque intervalle.
+
+<img src=""%plugin_folder%/geom_histogram.png"" width=""700"" />
+
+Vous pouvez chosir la **taille des barres** selon deux modalités :
+
+- soit par la **taille** des barres, en fonction de l''axe des x (une taille à 50 voudra dire qu''une barre prendra 50 de l''unité renseignée sur l''axe des x)
+- soit par le **nombre** de barres totales affichées
+
+<br />
+
+### <span style = ""margin-left:20px;""> b) Diagramme de dispersion (geom_point)</span>
+
+Permet de visualiser la distribution de deux variables continues, l''une sur l''axe des x, l''autre sur l''axe des y.
+
+<img src=""%plugin_folder%/geom_point.png"" width=""700"" />
+
+Par défaut, uniquement les points ayant une **valeur à un moment donné** à la fois pour la **variable en x** et pour la **variable en y** seront affichés.
+
+Par exemple, si je choisis la pression artérielle systolique en x et la pression artérielle moyenne en y (tel que dans l''example),
+que j''ai une valeur de x tel jour à 18:37:10 et une valeur de y le même jour à 18:37:11, le moment n''étant pas exactement le même, il n''y aura pas de point correspondant sur la graphique.
+
+Pour contrer cela, il est possible de **grouper les données**, par patient ou par moment (cf paragraphe Utilisation).
+
+</details>",NA,1,2023-12-03 18:21:51,0
+13,plugin,1,name_fr,Figure {ggplot2},NA,1,2023-12-03 18:21:51,0
+14,plugin,2,users_allowed_read_group,everybody,1,1,2023-12-03 18:21:58,0
+15,plugin,2,version,0.0.1.9015,NA,1,2023-12-03 18:21:58,0
+16,plugin,2,unique_id,6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8,NA,1,2023-12-03 18:21:58,0
+17,plugin,2,author,Boris Delange,NA,1,2023-12-03 18:21:58,0
+18,plugin,2,image,r_console.png,NA,1,2023-12-03 18:21:58,0
+19,plugin,2,downloaded_from,InterHop,NA,1,2023-12-03 18:21:58,0
+20,plugin,2,downloaded_from_url,https://framagit.org/interhop/linkr/LinkR-content,NA,1,2023-12-03 18:21:58,0
+21,plugin,2,category_en,,NA,1,2023-12-03 18:21:58,0
+22,plugin,2,description_en,"### <i class=""fa fa-info-circle"" style=""color: steelblue;""></i> 1) Description
+
+This plugin allows you to **execute code** in the R console and **save your code as scripts**.
+
+### <i class=""fa fa-cogs"" style=""color: steelblue;""></i> 2) Usage
+
+<details>
+<summary><span style=""--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;"" onmouseover=""this.style.color=this.style.getPropertyValue(''--hover-color'')"" onmouseout=""this.style.color=''''"">
+Click here to show / hide content</span></summary>
+
+### <span style = ""margin-left:20px;""> a) Scripts management</span>
+
+Go to the ""Scripts management"" tab to **add, delete, or rename scripts**.
+
+A script is a **text file containing code**.
+
+Once a script is created, you can **edit** it in the ""Script"" tab and **execute the code**.<br /><br />
+
+### <span style = ""margin-left:20px;""> b) R code</span>
+
+Write **R code** and execute it: the **result returned by the console** will appear below the text editor.
+
+To know the **data model** used by the application, click on the help button (question mark at the top right of the page) when you are on the ""Data / Access Data"" page.
+
+Example code (get the min, max, and average heart rate of our patients):
+
+<pre style = ""font-size:12px;""><code>d$measurement %>%
+    dplyr::filter(measurement_concept_id == 3027018) %>%
+    dplyr::group_by(person_id) %>%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
+    dplyr::ungroup()
+</code></pre>
+
+<img src=""%plugin_folder%/r_code_1.png"" width=""900"" style=""border:dashed 1px; padding:10px;""/><br />
+
+<img src=""%plugin_folder%/r_code_2.png"" width=""600"" style=""margin-left:-7px;""/><br />
+
+### <span style = ""margin-left:20px;""> c) RMarkdown</span>
+
+You can also write code in **Rmarkdown**.
+
+This is **Markdown** to which you can add **R code**.
+
+For more information on RMarkdown, <a href=""https://rmarkdown.rstudio.com/lesson-2.html"" target=""_blank"">visit their site</a>.
+
+Example code (the same example as above, in RMarkdown - a backslash has been added to prevent code execution):
+
+<pre style = ""font-size:12px;""><code># Script on heart rate
+
+\```{r}
+d$measurement %>%
+    dplyr::filter(measurement_concept_id == 3027018) %>%
+    dplyr::group_by(person_id) %>%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
+    dplyr::ungroup()
+\```
+</code></pre>
+
+
+<img src=""%plugin_folder%/rmarkdown_1.png"" width=""900"" style=""border:dashed 1px; padding:10px;"" /><br />
+
+<img src=""%plugin_folder%/rmarkdown_2.png"" width=""700"" style=""border:dashed 1px; padding:10px;"" /><br /><br />
+
+### <span style = ""margin-left:20px;""> d) Figure</span>
+
+You can **create figures**, for example with the `ggplot2` library.
+
+Here''s an example of code:
+
+<pre style = ""font-size:12px;""><code># A list containing the data for the plot
+data <- list()
+
+# Filter data
+data$x <- d$measurement %>% dplyr::filter(measurement_concept_id == 3027018)
+
+# Create ggplot2 plot
+data$x %>%
+    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+    ggplot2::geom_histogram(bins = 50, fill = ""#377EB8"", color = ""#FFFFFF"") +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(x = ""Heart rate (bpm)"", y = """")
+</code></pre>
+
+<img src=""%plugin_folder%/r_plot_1.png"" width=""600"" style=""border:dashed 1px; padding:10px;"" /><br />
+
+<img src=""%plugin_folder%/r_plot_2.png"" width=""600"" style=""border:dashed 1px; padding:10px;"" />
+</details>",NA,1,2023-12-03 18:21:58,0
+23,plugin,2,name_en,R console,NA,1,2023-12-03 18:21:58,0
+24,plugin,2,category_fr,,NA,1,2023-12-03 18:21:58,0
+25,plugin,2,description_fr,"### <i class=""fa fa-info-circle"" style=""color: steelblue;""></i> 1) Description
+
+Ce plugin vous permet d''**exécuter du code** dans la console R et de **sauvegarder votre code sous forme de scripts**.
+
+### <i class=""fa fa-cogs"" style=""color: steelblue;""></i> 2) Utilisation
+
+<details>
+<summary><span style=""--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;"" onmouseover=""this.style.color=this.style.getPropertyValue(''--hover-color'')"" onmouseout=""this.style.color=''''"">
+Cliquez ici pour afficher / masquer le contenu</span></summary>
+
+### <span style = ""margin-left:20px;""> a) Gestion des scripts</span>
+
+Allez dans l''onglet ""Gestion des scripts"" pour **ajouter, supprimer ou renommer des scripts**.
+
+Un script est un **fichier texte contenant du code**.
+
+Une fois un script créé, vous pouvez l''**éditer** dans l''onglet ""Script"" et **exécuter le code**.<br /><br />
+
+### <span style = ""margin-left:20px;""> b) Code R</span>
+
+Ecrivez du **code en R** et exécutez-le : le **résultat retourné par la console** apparaîtra en-dessous de l''éditeur de texte.
+
+Pour connaître le **modèle de données** utilisé par l''application, cliquez sur le bouton d''aide (point d''interrogation en haut à droite de la page) lorsque vous êtes sur la page ""Données / Accéder aux données"".
+
+Exemple de code (obtenir le min, max et moyenne de la fréquence cardiaque chez nos patients) :
+
+<pre style = ""font-size:12px;""><code>d$measurement %>%
+    dplyr::filter(measurement_concept_id == 3027018) %>%
+    dplyr::group_by(person_id) %>%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
+    dplyr::ungroup()
+</code></pre>
+
+<img src=""%plugin_folder%/r_code_1.png"" width=""900"" style=""border:dashed 1px; padding:10px;""/><br />
+
+<img src=""%plugin_folder%/r_code_2.png"" width=""600"" style=""margin-left:-7px;""/><br />
+
+### <span style = ""margin-left:20px;""> c) RMarkdown</span>
+
+Vous pouvez également écrire du code en **Rmarkdown**.
+
+Il s''agit d''un **Markdown** auquel vous pouvez ajouter du **code R**.
+
+Pour plus d''informations sur RMarkdown, <a href=""https://rmarkdown.rstudio.com/lesson-2.html"" target=""_blank"">rendez-vous sur leur site</a>.
+
+Exemple de code (le même exemple que ci-dessus, en RMarkdown - un backslash a été ajouté pour éviter l''éxécution du code) :
+
+<pre style = ""font-size:12px;""><code># Script on heart rate
+
+\```{r}
+d$measurement %>%
+    dplyr::filter(measurement_concept_id == 3027018) %>%
+    dplyr::group_by(person_id) %>%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %>%
+    dplyr::ungroup()
+\```
+</code></pre>
+
+<img src=""%plugin_folder%/rmarkdown_1.png"" width=""900"" style=""border:dashed 1px; padding:10px;"" /><br />
+
+<img src=""%plugin_folder%/rmarkdown_2.png"" width=""700"" style=""border:dashed 1px; padding:10px;"" /><br /><br />
+
+### <span style = ""margin-left:20px;""> d) Figure</span>
+
+Vous pouvez **créer des figures**, par exemple avec la librairie `ggplot2`.
+
+Voici un exemple de code :
+
+<pre style = ""font-size:12px;""><code># A list containing the data for the plot
+data <- list()
+
+# Filter data
+data$x <- d$measurement %>% dplyr::filter(measurement_concept_id == 3027018)
+
+# Create ggplot2 plot
+data$x %>%
+    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+    ggplot2::geom_histogram(bins = 50, fill = ""#377EB8"", color = ""#FFFFFF"") +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(x = ""Heart rate (bpm)"", y = """")
+</code></pre>
+
+<img src=""%plugin_folder%/r_plot_1.png"" width=""600"" style=""border:dashed 1px; padding:10px;"" /><br />
+
+<img src=""%plugin_folder%/r_plot_2.png"" width=""600"" style=""border:dashed 1px; padding:10px;"" />
+</details>",NA,1,2023-12-03 18:21:58,0
+26,plugin,2,name_fr,Console R,NA,1,2023-12-03 18:21:58,0
+27,plugin,2,user_allowed_read,,NA,1,2023-12-03 19:34:01,0
+28,plugin,1,user_allowed_read,,NA,1,2024-01-02 14:54:40,0
