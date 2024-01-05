@@ -2,17 +2,17 @@ page,type,category,key,title,markdown_file,display_order,datetime
 home,pivot_item,overview,overview,Présentation,,1,2023-04-10 08:00:00
 home,pivot_item,news,news,News,,2,2023-04-10 08:00:00
 home,pivot_item,versions,versions,Versions,,3,2023-04-10 08:00:00
-home,card,overview,overview,,2023-05-29_overview.Md,1,2023-05-29 08:00:00
+home,card,overview,overview,,2023-05-29_overview.md,1,2023-05-29 08:00:00
 get_started,pivot_item,app_structure,app_structure,Structure de l'application,,1,2023-07-05 00:00:00
 get_started,pivot_item,default_data,default_data,Données par défaut,,1,2023-06-05 00:00:00
 get_started,pivot_item,first_study,first_study,Votre première étude,,1,2023-06-05 00:00:00
-get_started,card,app_structure,div1,1) Structure globale,2023-07-06_global_structure.Md,1,2023-07-06 00:00:00
-get_started,card,app_structure,div2,2) Accueil,2023-07-06_home.Md,2,2023-07-06 00:00:00
-get_started,card,app_structure,div3,3) Données,2023-07-06_data.Md,3,2023-07-06 00:00:00
-get_started,card,app_structure,div4,4) Terminologies,2023-07-06_vocabularies.Md,4,2023-07-06 00:00:00
-get_started,card,app_structure,div5,5) Messages,2023-07-07_messages.Md,5,2023-07-07 00:00:00
+get_started,card,app_structure,div1,1) Structure globale,2023-07-06_global_structure.md,1,2023-07-06 00:00:00
+get_started,card,app_structure,div2,2) Accueil,2023-07-06_home.md,2,2023-07-06 00:00:00
+get_started,card,app_structure,div3,3) Données,2023-07-06_data.md,3,2023-07-06 00:00:00
+get_started,card,app_structure,div4,4) Terminologies,2023-07-06_vocabularies.md,4,2023-07-06 00:00:00
+get_started,card,app_structure,div5,5) Messages,2023-07-07_messages.md,5,2023-07-07 00:00:00
 get_started,card,app_structure,div6,6) Scripts & plugins,,6,2023-07-05 00:00:00
 get_started,card,app_structure,div7,7) Paramètres,,7,2023-07-05 00:00:00
 tutorials,pivot_item,linkr,linkr,LinkR,,1,2023-12-20 00:00:00
-tutorials,card,linkr,div1,Importer des données,2023-12-20_tutorial_import_data.Md,1,2023-12-20 00:00:00
-tutorials,card,linkr,div2,Créer un plugin,2023-12-20_tutorial_create_plugins.Md,2,2023-12-20 00:00:00
+tutorials,card,linkr,div1,- Importer des données,2023-12-20_tutorial_import_data.md,1,2023-12-20 00:00:00
+tutorials,card,linkr,div2,- Créer un plugin,2023-12-20_tutorial_create_plugins.md,2,2023-12-20 00:00:00
