@@ -1,53 +1,80 @@
-### <i class="fa fa-info-circle" style="color:steelblue;"></i> Présentation
+### <i class="fa fa-info-circle" style="color:steelblue;"></i> Introduction
 
 Dans ce tutorial, nous allons voir comment **importer des données** dans l'application.
 
-### <i class="fa fa-hospital-o" style="color:steelblue;"></i> Entrepôts de données de santé et modèles de données
+Nous verrons d'abord comment **créer un set de données** dans LinkR, puis nous **importerons un premier set de donneés**.
 
-Pour savoir ce qu'est un entrepôt de données de santé, lisez le tutoriel ***Entrepôts de données de santé et collecte des données médicales*** dans la rubrique ***Données de santé*** de la page *Ressources*.
+Nous **testerons** nos données en **créant une étude**.
 
-Lisez égalemet le tutoriel *Modèles de données*, également dans la rubrique *Données de santé* de la page *Ressources*.
+Nous importerons ensuite un plus grand set de données au format OMOP, en utilisant les données de la base **MIMIC-IV**.
+
+Nous finirons en **partageant** notre code via notre dépôt git.
+
+<img src="tutorial_import_data_intro.png" alt="Settings icon" style="height:200px;" />
+
+**Plan** :
+
+- Entrepôts de données de santé et modèles de données
+- Créer un set de données
+- Créer des données au format OMOP
+- Importer les données dans LinkR
+- Afficher nos données
+- Avec un peu plus de tables
+- Test avec les données MIMIC-IV
+- Partageons notre code
+
+<br />
+### <i class="fa fa-database" style="color:steelblue;"></i> Entrepôts de données de santé et modèles de données
+
+Pour savoir ce qu'est un entrepôt de données de santé, lisez le tutoriel ***Entrepôts de données de santé et collecte des données médicales*** dans la rubrique *Données de santé* de la page *Ressources*.
+
+Lisez également le tutoriel ***Modèles de données***, également dans la rubrique *Données de santé* de la page *Ressources*.
 
 Le modèle de données utilisé par LinkR est le modèle **<a href = "https://ohdsi.github.io/CommonDataModel/" target = "_blank">OMOP</a>**.
 
-### <i class="fa fa-plus-square" style="color:steelblue;"></i> Créer un set de données
+<br />
+### <i class="fa fa-table" style="color:steelblue;"></i> Créer un set de données
 
-Pour commencer, rendez-vous sur la page *Set de données*, depuis la page des *Paramètres* en haut à droite de la page.
+Pour commencer, rendez-vous sur la page ***Set de données***, depuis la page des *Paramètres* en haut à droite de la page.
 
-*Screenshot*
+<img src="tutorial_import_data_settings_icon.png" alt="Settings icon" style="height:50px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /><br />
+<img src="tutorial_import_data_settings_menu.png" alt="Settings menu" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px;" />
 
-Allez ensuite dans l'onglet *Gestion des sets de données*, puis créez un nouveau set, que vous appellerez par exemple 'Set de données tutoriel'.
+Allez ensuite dans l'onglet ***Gestion des sets***, puis créez un nouveau set, que vous appellerez par exemple 'Set de données tutoriel'.
 
-*Screenshot*
+<img src="tutorial_import_data_create_dataset.png" alt="Create a dataset" style="height:200px; border:dashed 1px; margin:5px 0px 5px 0px;" />
 
 Une fois le set de données créé, vous devriez le voir apparaître dans le tableau au milieu de la page.
 
 Sur la ligne correspondant à votre nouveau set de données, cliquez sur l'icône de rouages afin d'**accéder aux options** de votre set.
 
-Choisissez la version OMOP 6.0 dans le menu déroulant correspondant.
+Choisissez la **version OMOP 6.0** dans le menu déroulant correspondant.
 
-Pour en savoir plus sur les options, cliquez sur le point d'interrogation en haut à droite de la page, puis sur *Options du set*. Il existe une page d'aide pour chaque onglet.
+<img src="tutorial_import_data_dataset_options.png" alt="Dataset options" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px;" />
 
-*Screenshot*
+Pour **en savoir plus sur les options**, cliquez sur le point d'interrogation en haut à droite de la page, puis sur *Options du set*. Il existe **une page d'aide pour chaque onglet**.
+
+<img src="tutorial_import_data_help_icon.png" alt="Help icon" style="height:50px; border:dashed 1px; margin:5px 0px 5px 0px;" /><br />
+<img src="tutorial_import_data_dataset_help.png" alt="Dataset options" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px; padding-bottom:5px;" />
 
 Nous allons maintenant pouvoir **éditer le code** de notre set de données. Rendez-vous pour cela dans l'onglet *Editer le code*.
 
-L'éditeur auquel vous avez accès fonctionne comme une **console R**, executez le code en cliquant sur 'Exécuter' ou en utilisant les raccourcis :
+L'éditeur auquel vous avez accès fonctionne comme une **console R**, exécutez le code en cliquant sur 'Exécuter' ou en utilisant les raccourcis :
 
 - CMD/CTRL + SHIFT + ENTER : exécute l'ensemble du code
 - CMD/CTRL + ENTER : exécute le code sélectionné
 - CMD/CTRL + SHIFT + C : commente le code sélectionné
 
-Pensez à sauvegarder votre code. Vous pouvez également utiliser le raccourdi CMD/CTRL + S.
+Pensez à sauvegarder votre code. Vous pouvez également utiliser le raccourci CMD/CTRL + S.
 
-### <i class="fa fa-puzzle-piece" style="color:steelblue;"></i> Créer des données OMOP
+<br />
+### <i class="fa fa-table" style="color:steelblue;"></i> Créer des données au format OMOP
 
 Pour commencer, nous allons créer des données factices au format OMOP, nous verrons ensuite comment des données réelles via la base de données MIMIC-IV.
 
 Créons une fonction *person*, qui contiendra les données de 100 patients.
 
-```{r}
-person <- function(){
+<pre><code class = "r code_highlight">person <- function(){
   tibble::tibble(
     person_id = 1:100,
     gender_concept_id = sample(c(8507L, 8532L), 100, replace = TRUE),
@@ -75,7 +102,7 @@ person <- function(){
 }
 
 person()
-```
+</code></pre>
 
 En exécutant ce code, vous devriez voir apparaître votre set de données de 100 patients en bas de l'écran.
 
@@ -95,16 +122,21 @@ Par exemple, le version 5.3 ne comprend par la colonne *death_datetime* dans la 
 
 Voilà nos données prêtes, nous allons pouvoir les importer dans LinkR.
 
+<br />
 ### <i class="fa fa-upload" style="color:steelblue;"></i> Importer les données dans LinkR
 
+<br />
 ### <i class="fa fa-eye" style="color:steelblue;"></i> Afficher nos données
 
 Créer une étude ...
 
+<br />
 ### <i class="fa fa-table" style="color:steelblue;"></i> Avec un peu plus de tables
 
 Tables observation_period, visit_occurrence, visit_detail.
 
+<br />
 ### <i class="fa fa-vial" style="color:steelblue;"></i> Test avec les données MIMIC-IV
 
+<br />
 ### <i class="fa fa-share-alt" style="color:steelblue;"></i> Partageons notre code
