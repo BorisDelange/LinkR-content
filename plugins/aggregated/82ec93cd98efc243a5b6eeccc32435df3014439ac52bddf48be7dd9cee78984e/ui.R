@@ -18,8 +18,8 @@ tagList(
                 id = ns("split_layout_left_%widget_id%"),
                 style = "padding-right:10px; width:50%;", br(),
                 uiOutput(ns("title_%widget_id%")),
-                div(plotOutput(ns("plot_%widget_id%")), style = "border:solid 1px;"),
-                div(tableOutput(ns("table_%widget_id%")), style = "border:solid 1px; margin-top:5px;")
+                div(plotOutput(ns("plot_%widget_id%")), style = "border:solid 2px #EFEEEE;"),
+                div(tableOutput(ns("table_%widget_id%")), style = "border:solid 2px #EFEEEE; margin-top:5px;")
             ),
             div(
                 id = ns("split_layout_right_%widget_id%"),
