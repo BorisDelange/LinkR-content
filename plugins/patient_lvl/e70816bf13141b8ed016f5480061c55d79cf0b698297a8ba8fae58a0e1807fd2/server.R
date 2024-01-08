@@ -1,3 +1,6 @@
+# Config
+use_debounce <- TRUE
+
 # Get saved params for this widget
 sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id%", .con = m$db)
 widget_options <- DBI::dbGetQuery(m$db, sql)
@@ -115,27 +118,30 @@ observeEvent(input$hide_params_%widget_id%, {
 
 divs <- c("plot_and_code_tab_header_%widget_id%", "split_layout_right_%widget_id%", "plot_size_div_%widget_id%", "pivot_%widget_id%")
 
-# Minimize widget
-observeEvent(input$minimize_%widget_id%, {
+# Additional buttons for this plugin
+output$additional_buttons_%widget_id% <- renderUI(actionButton(ns("maximize_fig_%widget_id%"), "", icon = icon("maximize")))
+
+# Maximize fig
+observeEvent(input$maximize_fig_%widget_id%, {
     %req%
-    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$minimize_%widget_id%"))
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$maximize_fig_%widget_id%"))
     shinyjs::runjs(glue::glue("$('#{id}-split_layout_left_%widget_id%').css('width', '100%');"))
     shinyjs::delay(100, {
-        shinyjs::show("maximize_%widget_id%")
-        sapply(c("minimize_%widget_id%", divs), shinyjs::hide)
+        output$additional_buttons_%widget_id% <- renderUI(actionButton(ns("minimize_fig_%widget_id%"), "", icon = icon("minimize")))
+        sapply(divs, shinyjs::hide)
         m$create_plot_type_%widget_id% <- "show_plot"
         m$create_plot_trigger_%widget_id% <- Sys.time()
     })
 })
 
-# Maximize widget
-observeEvent(input$maximize_%widget_id%, {
+# Minimize fig
+observeEvent(input$minimize_fig_%widget_id%, {
     %req%
-    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$maximize_%widget_id%"))
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$minimize_fig_%widget_id%"))
     shinyjs::runjs(glue::glue("$('#{id}-split_layout_left_%widget_id%').css('width', '50%');"))
     shinyjs::delay(100, {
-        shinyjs::hide("maximize_%widget_id%")
-        sapply(c("minimize_%widget_id%", divs), shinyjs::show)
+        output$additional_buttons_%widget_id% <- renderUI(actionButton(ns("maximize_fig_%widget_id%"), "", icon = icon("maximize")))
+        sapply(divs, shinyjs::show)
         m$create_plot_type_%widget_id% <- "show_plot"
         m$create_plot_trigger_%widget_id% <- Sys.time()
     })
@@ -252,7 +258,9 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
     
     # Prevents a bug with filter on a list element (m$selected_person) which doesn't work on lazy tibbles
     selected_person <- m$selected_person
-    code <- paste0(code, "selected_person <- m$selected_person\n\n")
+    code <- paste0(code, 
+        "selected_person <- m$selected_person\n",
+        "selected_visit_detail_id <- m$selected_visit_detail")
     
     # Keep track of used concept_ids for dygraph plot
     concept_ids <- integer()
@@ -271,12 +279,48 @@ observeEvent(m$create_plot_trigger_%widget_id%, {
                 if (table_name %in% c("observation", "measurement")){
                     concept_name <- variable$concept_name_1
                     
-                    data_filtered <- d[[table_name]] %>% dplyr::filter(person_id == selected_person, !!rlang::sym(paste0(table_name, "_concept_id")) == !!concept_id)
+                    code_stays_filter <- ""
                     
-#                     if (nrow(data_filtered) > 0){
-#                         code <- paste0(code, "data <- d$", table_name, " %>%\n",
-#                         "    dplyr::filter(person_id == selected_person, ", table_name, "_concept_id == concept_id)")   
-#                     }
+                    if (j == 0){
+                        if (length(input$stay_data_only_%widget_id%) > 0) if (input$stay_data_only_%widget_id% & !is.na(m$selected_visit_detail)) code_stays_filter <- paste0(",\n",
+                            "        ", table_name, "_datetime", " >= selected_visit_detail$visit_detail_start_datetime,\n",
+                            "        ", table_name, "_datetime", " <= selected_visit_detail$visit_detail_end_datetime"
+                        )
+                    
+                        code <- paste0(code, "\n\ndata <-\n",
+                            "    d$", table_name, " %>%\n",
+                            "    dplyr::filter(\n",
+                            "        person_id == selected_person, \n", 
+                            "        ", table_name, "_concept_id == ", concept_id, "\n",
+                            code_stays_filter,
+                            "    ) %>% \n",
+                            "    dplyr::select(concept_id = ", table_name, "_concept_id, datetime = ", table_name, "_datetime, value_as_number) %>%\n",
+                            "    dplyr::mutate(concept_name = \"", concept_name, "\")"
+                        )
+                    }
+                    
+                    if (j > 0){
+                        if (length(input$stay_data_only_%widget_id%) > 0) if (input$stay_data_only_%widget_id% & !is.na(m$selected_visit_detail)) code_stays_filter <- paste0(",\n",
+                            "            ", table_name, "_datetime", " >= selected_visit_detail$visit_detail_start_datetime,\n",
+                            "            ", table_name, "_datetime", " <= selected_visit_detail$visit_detail_end_datetime"
+                        )
+                        
+                        code <- paste0(code, " %>%\n",
+                            "    dplyr::bind_rows(\n",
+                            "        d$", table_name, " %>%\n",
+                            "        dplyr::filter(\n",
+                            "            person_id == selected_person,\n", 
+                            "            ", table_name, "_concept_id == ", concept_id, "\n",
+                            code_stays_filter,
+                            "        ) %>% \n",
+                            "        dplyr::select(concept_id = ", table_name, "_concept_id, datetime = ", table_name, "_datetime, value_as_number) %>%\n",
+                            "        dplyr::mutate(concept_name = \"", concept_name, "\")\n",
+                            "    )"
+                        )
+                    }
+                    j <- 1
+                    
+                    data_filtered <- d[[table_name]] %>% dplyr::filter(person_id == selected_person, !!rlang::sym(paste0(table_name, "_concept_id")) == !!concept_id)
                     
                     if (length(input$stay_data_only_%widget_id%) > 0) if (input$stay_data_only_%widget_id% & !is.na(m$selected_visit_detail)){
                     
@@ -464,18 +508,41 @@ observeEvent(input$run_code_at_patient_changeover_%widget_id%, {
 })
 
 # Plot width & height
+
 sapply(c("width", "height"), function(name){
-    observeEvent(input[[paste0("plot_", name, "_%widget_id%")]], {
+    
+    if (use_debounce) observeEvent(input[[paste0("plot_", name, "_%widget_id%")]], {
         %req%
         if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_", name, "_%widget_id%"))
         
         if (name == "width") value <- paste0(input$plot_width_%widget_id%, "%")
         else value <- input$plot_height_%widget_id% * 0.01 * 400
         
-        shinyjs::runjs(glue::glue("$('#{id}-dygraph_%widget_id%').css('{name}', '{value}');")) 
+        shinyjs::runjs(glue::glue("$('#{id}-dygraph_%widget_id%').css('{name}', '{value}');"))
         m$create_plot_type_%widget_id% <- "show_plot"
         m$create_plot_trigger_%widget_id% <- Sys.time()
-    }) %>% throttle(1000) %>% debounce(1000)
+    }) %>% debounce(1000)
+    
+    else {
+        m[[paste0("debounce_plot_", name, "_%widget_id%")]] <- Sys.time()
+        observeEvent(input[[paste0("plot_", name, "_%widget_id%")]], {
+            %req%
+            if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_", name, "_%widget_id%"))
+            
+            if (name == "width") value <- paste0(input$plot_width_%widget_id%, "%")
+            else value <- input$plot_height_%widget_id% * 0.01 * 400
+            
+            # Manual debounce (it seems debounce doesn't work everywhere)
+            
+            if (difftime(Sys.time(), m[[paste0("debounce_plot_", name, "_%widget_id%")]], units = "secs") > 1){
+                m[[paste0("debounce_plot_", name, "_%widget_id%")]] <- Sys.time()
+                
+                shinyjs::runjs(glue::glue("$('#{id}-dygraph_%widget_id%').css('{name}', '{value}');"))
+                m$create_plot_type_%widget_id% <- "show_plot"
+                m$create_plot_trigger_%widget_id% <- Sys.time()
+            }
+        })
+    }
 })
 
 # ------------

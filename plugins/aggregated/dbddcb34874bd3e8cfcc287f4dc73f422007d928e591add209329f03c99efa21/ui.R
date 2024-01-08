@@ -85,12 +85,12 @@ tagList(
     shiny.fluent::Pivot(
         id = ns("pivot_%widget_id%"),
         onLinkClick = htmlwidgets::JS(paste0("item => Shiny.setInputValue('", id, "-current_tab_%widget_id%', item.props.id)")),
-        shiny.fluent::PivotItem(id = "plot_div_%widget_id%", itemKey = "plot", headerText = i18np$t("plot")),
-        shiny.fluent::PivotItem(id = "code_div_%widget_id%", itemKey = "code", headerText = i18np$t("code")),
-        shiny.fluent::PivotItem(id = "scripts_management_div_%widget_id%", itemKey = "scripts_management", headerText = i18np$t("scripts_management"))
+        shiny.fluent::PivotItem(id = "plot_tab_%widget_id%", itemKey = "plot", headerText = i18np$t("plot")),
+        shiny.fluent::PivotItem(id = "code_tab_%widget_id%", itemKey = "code", headerText = i18np$t("code")),
+        shiny.fluent::PivotItem(id = "scripts_management_tab_%widget_id%", itemKey = "scripts_management", headerText = i18np$t("scripts_management"))
     ),
     div(
-        id = ns("plot_and_code_div_%widget_id%"), br(),
+        id = ns("plot_and_code_tab_header_%widget_id%"), br(),
         shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
             div(shiny.fluent::Dropdown.shinyInput(ns("script_choice_%widget_id%"),
                 options = convert_tibble_to_list(plots, key_col = "id", text_col = "name"), value = selected_script), style = "width:300px"),
@@ -114,11 +114,12 @@ tagList(
         )
     ),
     div(
-        id = ns("plot_div_%widget_id%"),
+        id = ns("plot_tab_%widget_id%"),
         div(
             style = "display:flex;",
             div(id = ns("split_layout_left_%widget_id%"),
                 style = "padding-right:10px; width:50%;",
+                
                 div(
                     id = ns("plot_div_%widget_id%"), br(),
                     plotOutput(ns("plot_output_%widget_id%"))
@@ -269,26 +270,23 @@ tagList(
     ),
     shinyjs::hidden(
         div(
-            id = ns("code_div_%widget_id%"),
+            id = ns("code_tab_%widget_id%"),
             ace_editor_div
         )
     ),
     shinyjs::hidden(
         div(
-            id = ns("scripts_management_div_%widget_id%"),
-            div(
-                id = ns("scripts_management_tab_%widget_id%"),
-                shiny.fluent::Stack(
-                    horizontal = TRUE, tokens = list(childrenGap = 10),
-                    make_textfield(i18n = i18n, ns = ns, label = "name", id = "script_name_%widget_id%", width = "300px"),
-                    div(shiny.fluent::PrimaryButton.shinyInput(ns("add_script_%widget_id%"), i18n$t("add")), style = "margin-top:38px;")
-                ),
-                DT::DTOutput(ns("scripts_management_datatable_%widget_id%")),
-                shiny.fluent::Stack(
-                    horizontal = TRUE, tokens = list(childrenGap = 10),
-                    shiny.fluent::PrimaryButton.shinyInput(ns("save_scripts_%widget_id%"), i18n$t("save")),
-                    shiny.fluent::DefaultButton.shinyInput(ns("delete_scripts_%widget_id%"), i18n$t("delete_selection"))
-                )
+            id = ns("scripts_management_tab_%widget_id%"),
+            shiny.fluent::Stack(
+                horizontal = TRUE, tokens = list(childrenGap = 10),
+                make_textfield(i18n = i18n, ns = ns, label = "name", id = "script_name_%widget_id%", width = "300px"),
+                div(shiny.fluent::PrimaryButton.shinyInput(ns("add_script_%widget_id%"), i18n$t("add")), style = "margin-top:38px;")
+            ),
+            DT::DTOutput(ns("scripts_management_datatable_%widget_id%")),
+            shiny.fluent::Stack(
+                horizontal = TRUE, tokens = list(childrenGap = 10),
+                shiny.fluent::PrimaryButton.shinyInput(ns("save_scripts_%widget_id%"), i18n$t("save")),
+                shiny.fluent::DefaultButton.shinyInput(ns("delete_scripts_%widget_id%"), i18n$t("delete_selection"))
             )
         )
     )

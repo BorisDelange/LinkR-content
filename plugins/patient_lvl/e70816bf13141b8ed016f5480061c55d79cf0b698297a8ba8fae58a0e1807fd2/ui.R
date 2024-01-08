@@ -103,8 +103,6 @@ variables_div <- div(
 )
 
 result <- tagList(
-    actionButton(ns("minimize_%widget_id%"), "", icon = icon("minus"), style = "position:absolute; top:8px; right:62px; z-index:10;"),
-    shinyjs::hidden(actionButton(ns("maximize_%widget_id%"), "", icon = icon("plus"), style = "position:absolute; top:8px; right:62px; z-index:10;")),
     shiny.fluent::reactOutput(ns("delete_confirm_%widget_id%")),
     shiny.fluent::Pivot(
         id = ns("pivot_%widget_id%"),

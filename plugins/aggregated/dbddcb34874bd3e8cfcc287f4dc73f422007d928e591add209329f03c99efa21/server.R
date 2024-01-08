@@ -60,11 +60,11 @@ observeEvent(input$current_tab_%widget_id%, {
     %req%
     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$current_tab_%widget_id%"))
     
-    sapply(c("plot_and_code_div_%widget_id%", "plot_div_%widget_id%", "code_div_%widget_id%", "scripts_management_div_%widget_id%"), shinyjs::hide)
+    sapply(c("plot_and_code_tab_header_%widget_id%", "plot_tab_%widget_id%", "code_tab_%widget_id%", "scripts_management_tab_%widget_id%"), shinyjs::hide)
     shinyjs::show(input$current_tab_%widget_id%)
-    if (input$current_tab_%widget_id% %in% c("plot_div_%widget_id%", "code_div_%widget_id%")){
+    if (input$current_tab_%widget_id% %in% c("plot_tab_%widget_id%", "code_tab_%widget_id%")){
         sapply(c("toggle_run_plot_div_%widget_id%", "toggle_run_code_div_%widget_id%"), shinyjs::hide)
-        sapply(c(paste0("toggle_run_", input$current_tab_%widget_id%), "plot_and_code_div_%widget_id%"), shinyjs::show)
+        sapply(c(paste0("toggle_run_", input$current_tab_%widget_id%), "plot_and_code_tab_header_%widget_id%"), shinyjs::show)
     }
 })
 
@@ -441,8 +441,11 @@ observeEvent(input$hide_params_%widget_id%, {
 observeEvent(input$plot_width_%widget_id%, {
     %req%
     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$plot_width_%widget_id%"))
-    shinyjs::runjs(glue::glue("$('#{id}-plot_div_%widget_id%').css('width', '{isolate(input$plot_width_%widget_id%)}%');")) %>% throttle(1000)
-})
+    
+    shinyjs::delay(100, shinyjs::runjs(glue::glue("$('#{id}-plot_output_%widget_id%').css('width', '{isolate(input$plot_width_%widget_id%)}%');")))
+    
+    m$create_plot_trigger_%widget_id% <- Sys.time()
+}) %>% throttle(1000)
 
 # Run plot / code at script launch
 observeEvent(input$run_plot_at_script_launch_%widget_id%, {
@@ -587,8 +590,12 @@ observeEvent(input$script_choice_%widget_id%, {
     if (run_code_at_script_launch){
         m$run_code_%widget_id% <- code
         m$run_code_trigger_%widget_id% <- Sys.time()
+        m$create_plot_type_%widget_id% <- "generate_code"
     }
-    else if (run_plot_at_script_launch) shinyjs::delay(500, shinyjs::click("show_%widget_id%"))
+    else if (run_plot_at_script_launch){
+        m$create_plot_type_%widget_id% <- "show_plot"
+        shinyjs::delay(500, shinyjs::click("show_%widget_id%"))
+    }
     
     # Save that this script is selected
     sql <- glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND name = 'selected_script'", .con = m$db)
