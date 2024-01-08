@@ -1,0 +1,17 @@
+base,en,fr
+patients,Patients,Patients
+stays,Stays,Séjours hospitaliers
+age,Age,Age
+gender,Gender,Sexe
+mortality,Mortality,Mortalité
+length_of_stay,Length of stay,Durées de séjour
+readmissions,Readmissions,Réadmissions
+stay_age_occurrences,Number of stays,Nombre de séjours
+variable,Variable,Variable
+value,Value,Valeur
+mean,Mean,Moyenne
+median,Median,Médiane
+iq1,IQ1,IQ1
+iq3,IQ3,IQ3
+min,Minimum,Minimum
+max,Maximum,Maximum
