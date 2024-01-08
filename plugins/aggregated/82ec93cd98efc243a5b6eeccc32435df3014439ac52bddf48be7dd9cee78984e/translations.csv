@@ -15,3 +15,5 @@ iq1,IQ1,IQ1
 iq3,IQ3,IQ3
 min,Minimum,Minimum
 max,Maximum,Maximum
+missing_data,Missing data,Données manquantes
+n_rows,Number of rows,Nombre de lignes

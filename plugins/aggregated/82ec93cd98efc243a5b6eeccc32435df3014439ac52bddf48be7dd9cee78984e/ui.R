@@ -9,12 +9,6 @@ var_choice_options <- list(
 )
 
 tagList(
-    #shiny.fluent::Pivot(
-    #    id = ns("pivot_%widget_id%"),
-    #    onLinkClick = htmlwidgets::JS(paste0("item => Shiny.setInputValue('", id, "-current_tab_%widget_id%', item.props.id)")),
-    #    shiny.fluent::PivotItem(id = "patients_tab_%widget_id%", itemKey = "plot", headerText = i18np$t("patients")),
-    #    shiny.fluent::PivotItem(id = "stays_tab_%widget_id%", itemKey = "code", headerText = i18np$t("stays"))
-    #),
     div(
         br(),
         div(shiny.fluent::Dropdown.shinyInput(ns("var_choice_%widget_id%"), options = var_choice_options, value = "age"), style = "width:300px"),

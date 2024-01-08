@@ -5,17 +5,19 @@ stats_functions <- list(
     "median"  = function(x) median(x, na.rm = TRUE) %>% round(1),
     "iq3"  = function(x) quantile(x, probs = 0.75, na.rm = TRUE) %>% round(1),
     "min"  = function(x) min(x, na.rm = TRUE) %>% round(1),
-    "max"  = function(x) max(x, na.rm = TRUE) %>% round(1)
+    "max"  = function(x) max(x, na.rm = TRUE) %>% round(1),
+    "missing_data" = function(x) sum(is.na(x)) %>% round(0),
+    "n_rows" = function(x) length(x) %>% round(0)
 )
 
 # Stats functions per variable
 var_stats_functions <- list(
-    "age" = c("mean", "iq1", "median", "iq3", "min", "max"),
-    "gender" = "",
-    "mortality" = "",
-    "stays" = "",
-    "length_of_stay" = "",
-    "readmissions" = ""
+    "age" = c("n_rows", "missing_data", "mean", "iq1", "median", "iq3", "min", "max"),
+    "gender" = c("n_rows", "missing_data"),
+    "mortality" = character(),
+    "stays" = character(),
+    "length_of_stay" = character(),
+    "readmissions" = character()
 )
 
 # When a var is selected
@@ -53,9 +55,7 @@ observeEvent(input$var_choice_%widget_id%, {
             dplyr::left_join(
                 d$death %>% dplyr::select(person_id, death_datetime),
                 by = "person_id"
-            ) %>%
-            dplyr::collect() %>%
-            dplyr::mutate(age = lubridate::interval(birth_datetime, visit_detail_start_datetime) / lubridate::years(1))
+            )
     }
     else if (m$omop_version == "6.0"){
         data <-
@@ -65,14 +65,20 @@ observeEvent(input$var_choice_%widget_id%, {
                 d$person %>% dplyr::select(person_id, birth_datetime, death_datetime, gender_concept_id),
                 by = "person_id"
             ) %>%
-            dplyr::relocate(gender_concept_id, .after = "person_id") %>%
-            dplyr::collect() %>%
-            dplyr::mutate(age = lubridate::interval(birth_datetime, visit_detail_start_datetime) / lubridate::years(1))
+            dplyr::relocate(gender_concept_id, .after = "person_id")
     }
+    
+    data <-
+        data %>%
+        dplyr::collect() %>%
+        dplyr::mutate(age = lubridate::interval(birth_datetime, visit_detail_start_datetime) / lubridate::years(1)) %>%
+        dplyr::left_join(
+            d$dataset_all_concepts %>% dplyr::filter(domain_id == "Gender") %>% dplyr::select(gender_concept_name = concept_name_1, gender_concept_id = concept_id_1),
+            by = "gender_concept_id"
+        )
     
     # Age
     if (var_choice == "age"){
-        
         result_plot <- 
             data %>%
             dplyr::filter(!is.na(age)) %>%
@@ -87,8 +93,49 @@ observeEvent(input$var_choice_%widget_id%, {
             ) +
             ggplot2::scale_x_continuous(limits = c(-1, NA), breaks = seq(0.000, max(data$age, na.rm = TRUE), by = 10))
             
+        # Apply stats functions
         for (stat_name in var_stats_functions[[var_choice]]){
             stat_value <- stats_functions[[stat_name]](data$age)
+            result_table <- result_table %>% dplyr::bind_rows(
+                tibble::tibble(var = i18np$t(stat_name), value = stat_value)
+            )
+        }
+        
+        result_table <-
+            result_table %>%
+            dplyr::mutate(
+                value = dplyr::case_when(
+                    var %in% c(i18np$t("missing_data"), i18np$t("n_rows")) ~ as.character(as.integer(value)),
+                    TRUE ~ as.character(value)
+                )
+            )
+    }
+    
+    # Gender
+    else if (var_choice == "gender"){
+        result_plot <-
+            data %>%
+            dplyr::filter(!is.na(gender_concept_name)) %>%
+            dplyr::select(gender = gender_concept_name) %>%
+            dplyr::group_by(gender) %>%
+            dplyr::summarize(count = dplyr::n()) %>%
+            dplyr::mutate(percentage = count / sum(count)) %>%
+            ggplot2::ggplot(ggplot2::aes(x = "", y = count, fill = gender)) +
+            ggplot2::geom_bar(stat = "identity", width = 1, color = "#FFFFFF") +
+            ggplot2::geom_text(ggplot2::aes(label = scales::percent(percentage)), position = ggplot2::position_stack(vjust = 0.5), color = "gray40") +
+            ggplot2::coord_polar("y") +
+            ggplot2::theme_minimal() +
+            ggplot2::scale_fill_brewer(palette = "Blues", name = i18np$t("gender")) +
+            ggplot2::labs(x = "", y = "") +
+            ggplot2::theme(
+                axis.text.x = ggplot2::element_blank(),
+                axis.ticks.x = ggplot2::element_blank(),
+                panel.grid  = ggplot2::element_blank()
+            )
+        
+        # Apply stats functions
+        for (stat_name in var_stats_functions[[var_choice]]){
+            stat_value <- stats_functions[[stat_name]](data$gender_concept_id)
             result_table <- result_table %>% dplyr::bind_rows(
                 tibble::tibble(var = i18np$t(stat_name), value = stat_value)
             )
