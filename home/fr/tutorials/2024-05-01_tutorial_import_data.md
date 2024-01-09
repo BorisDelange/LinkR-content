@@ -42,12 +42,12 @@ Le modèle de données utilisé par LinkR est le modèle **<a href = "https://oh
 
 Pour commencer, rendez-vous sur la page ***Set de données***, depuis la page des *Paramètres* en haut à droite de la page.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorialstutorial_import_data_settings_icon.png" alt="Settings icon" style="height:50px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /><br />
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorialstutorial_import_data_settings_menu.png" alt="Settings menu" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_settings_icon.png" alt="Settings icon" style="height:50px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /><br />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_settings_menu.png" alt="Settings menu" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px;" />
 
 Allez ensuite dans l'onglet ***Gestion des sets***, puis créez un nouveau set, que vous appellerez par exemple 'Set de données tutoriel'.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorialstutorial_import_data_create_dataset.png" alt="Create a dataset" style="height:200px; border:dashed 1px; margin:5px 0px 5px 0px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_create_dataset.png" alt="Create a dataset" style="height:200px; border:dashed 1px; margin:5px 0px 5px 0px;" />
 
 Une fois le set de données créé, vous devriez le voir apparaître dans le tableau au milieu de la page.
 
@@ -55,12 +55,12 @@ Sur la ligne correspondant à votre nouveau set de données, cliquez sur l'icôn
 
 Choisissez la **version OMOP 6.0** dans le menu déroulant correspondant.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorialstutorial_import_data_dataset_options.png" alt="Dataset options" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_dataset_options.png" alt="Dataset options" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px;" />
 
 Pour **en savoir plus sur les options**, cliquez sur le point d'interrogation en haut à droite de la page, puis sur *Options du set*. Il existe **une page d'aide pour chaque onglet**.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorialstutorial_import_data_help_icon.png" alt="Help icon" style="height:50px; border:dashed 1px; margin:5px 0px 5px 0px;" /><br />
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorialstutorial_import_data_dataset_help.png" alt="Dataset options" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px; padding-bottom:5px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_help_icon.png" alt="Help icon" style="height:50px; border:dashed 1px; margin:5px 0px 5px 0px;" /><br />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_dataset_help.png" alt="Dataset options" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px; padding-bottom:5px;" />
 
 Nous allons maintenant pouvoir **éditer le code** de notre set de données. Rendez-vous pour cela dans l'onglet *Editer le code*.
 
@@ -118,13 +118,13 @@ Rendez-vous sur la page **Editer le code du set**, puis **copiez-y le code** ci-
 
 En **exécutant** ce code, vous devriez voir apparaître votre set de données de 100 patients en bas de l'écran.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorialstutorial_import_data_execute_person_code.png" alt="Result of code execution" style="height:900px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_execute_person_code.png" alt="Result of code execution" style="height:900px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
 
 Pour plus d'informations sur la **structure** de la **base de données OMOP**, rendez-vous dans la **page d'aide** ***Modèles de données*** via le point d'interrogation en haut de l'écran. Vous y trouverez un lien vers le <a href = "https://ohdsi.github.io/CommonDataModel/" target = "_blank">site d'OHDSI, détaillant le modèle OMOP</a>.
 
 Regardez la structure de la table *Person*, vous retrouvez bien les colonnes que nous avons créées pour notre variable *person*.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorialstutorial_import_data_omop_person_detail.png" alt="OMOP person table documentation" style="height:650px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_omop_person_detail.png" alt="OMOP person table documentation" style="height:650px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
 
 Attention, les **colonnes** et les **tables** peuvent **changer** en fonction des **versions** d'OMOP.
 
