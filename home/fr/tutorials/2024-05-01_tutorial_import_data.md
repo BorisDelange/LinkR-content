@@ -18,12 +18,17 @@ Nous finirons en **partageant** notre code via notre dépôt git.
 - Créer un set de données
 - Créer des données au format OMOP
 - Importer les données dans LinkR
-- Afficher nos données
 - Avec un peu plus de tables
 - Test avec les données MIMIC-IV
+- Afficher nos données
 - Partageons notre code
 
-<br />
+<br /><hr />
+<div style = "text-align:center;">
+  <div style = "background-color:#0076ba; font-size:16px; font-weight:bold; color:white; font-family: 'Helvetica Neue';
+    padding:10px 20px; border-radius:5px; display:inline-block;">Créer un set de données</div>
+</div>
+
 ### <i class="fa fa-database" style="color:steelblue;"></i> Entrepôts de données de santé et modèles de données
 
 Pour savoir ce qu'est un entrepôt de données de santé, lisez le tutoriel ***Entrepôts de données de santé et collecte des données médicales*** dans la rubrique *Données de santé* de la page *Ressources*.
@@ -67,14 +72,19 @@ L'éditeur auquel vous avez accès fonctionne comme une **console R**, exécutez
 
 Pensez à sauvegarder votre code. Vous pouvez également utiliser le raccourci CMD/CTRL + S.
 
-<br />
+<br /><hr />
+<div style = "text-align:center;">
+  <div style = "background-color:#feae03; font-size:16px; font-weight:bold; color:white; font-family: 'Helvetica Neue';
+    padding:10px 20px; border-radius:5px; display:inline-block;">Importer des données</div>
+</div>
+
 ### <i class="fa fa-table" style="color:steelblue;"></i> Créer des données au format OMOP
 
-Pour commencer, nous allons créer des données factices au format OMOP, nous verrons ensuite comment des données réelles via la base de données MIMIC-IV.
+Pour commencer, nous allons créer des **données factices** au **format OMOP**, nous verrons ensuite comment des données réelles via la base de données MIMIC-IV.
 
 Créons une fonction *person*, qui contiendra les données de 100 patients.
 
-<pre><code class = "r code_highlight">person <- function(){
+<pre><code class = "r code_highlight" style = "font-size:12px;">person <- function(){
   tibble::tibble(
     person_id = 1:100,
     gender_concept_id = sample(c(8507L, 8532L), 100, replace = TRUE),
@@ -104,31 +114,46 @@ Créons une fonction *person*, qui contiendra les données de 100 patients.
 person()
 </code></pre>
 
-En exécutant ce code, vous devriez voir apparaître votre set de données de 100 patients en bas de l'écran.
+Rendez-vous sur la page **Editer le code du set**, puis **copiez-y le code** ci-dessus.
 
-*Screenshot*
+En **exécutant** ce code, vous devriez voir apparaître votre set de données de 100 patients en bas de l'écran.
 
-Pour plus d'informations sur la structure de la base de données OMOP, rendez-vous dans la page d'aide *Modèles de données* via le point d'interrogation en haut de l'écran. Vous y trouverez un lien vers le site d'OHDSI, détaillant le modèle OMOP.
+<img src="tutorial_import_data_execute_person_code.png" alt="Result of code execution" style="height:900px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+
+Pour plus d'informations sur la **structure** de la **base de données OMOP**, rendez-vous dans la **page d'aide** ***Modèles de données*** via le point d'interrogation en haut de l'écran. Vous y trouverez un lien vers le <a href = "https://ohdsi.github.io/CommonDataModel/" target = "_blank">site d'OHDSI, détaillant le modèle OMOP</a>.
 
 Regardez la structure de la table *Person*, vous retrouvez bien les colonnes que nous avons créées pour notre variable *person*.
 
-*Screenshot*
+<img src="tutorial_import_data_omop_person_detail.png" alt="OMOP person table documentation" style="height:650px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
 
-Attention, les colonnes et les tables peuvent changer en fonction des versions d'OMOP.
+Attention, les **colonnes** et les **tables** peuvent **changer** en fonction des **versions** d'OMOP.
 
 Par exemple, le version 5.3 ne comprend par la colonne *death_datetime* dans la table *Person*, elle a à la place une table *Death*.
 
-*Screenshot* (pour afficher version 5.3)
+Vous pouvez choisir la version via le menu déroulant en haut de la page présentée ci-dessus.
 
-Voilà nos données prêtes, nous allons pouvoir les importer dans LinkR.
+Voilà **nos données prêtes**, nous allons pouvoir les **importer** dans LinkR.
 
 <br />
 ### <i class="fa fa-upload" style="color:steelblue;"></i> Importer les données dans LinkR
 
-<br />
-### <i class="fa fa-eye" style="color:steelblue;"></i> Afficher nos données
+Pour importer des données dans LinkR, nous allons utiliser la fonction <a href = "https://interhop.frama.io/linkr/linkr/reference/import_dataset.html" target = "_blank">***import_dataset***</a>.
 
-Créer une étude ...
+Consultez également la **documentation depuis l'application**, via le point d'interrogation.
+
+La fonction *import_dataset* comprend les arguments suivants :
+
+- *output, ns, i18n, r, d* : qui sont les variables permettant le fonctionnement de l'application
+- *dataset_id* : où vous indiquez **l'ID du dataset** actuel, via la balise *%dataset_id%*
+- *data* : où vous indiquez la **fonction qui chargera les données** pour une variable (exemple : *person()* de notre code ci-dessus)
+- *omop_table* : où vous indiquez la **variable que vous souhaitez importer** (*person*, *measurement*...)
+- *omop_version* : où vous indiquez la **version utilisée** du modèle de données OMOP
+- *read_with* : indiquez avec quelle **librairie R** vous voulez **lire les données** importées
+- *save_as* : indiquez sous quel **format** vous voulez enregistrer les données après les avoir importées
+- *rewrite* : indiquez si vous souhaitez **écraser** l'ancien fichier de données pour le remplacer par le nouveau
+- *allow_numeric_instead_integer* : indiquez si vous autorisez que les colonnes au format numérique puissent être laissées telles quelles plutôt que converties au format integer
+- *allow_dttm_instead_date* : indiquez si vous autorisez que les colonnes au format datetime puissent être laissées telles quelles plutôt que converties au format date
+
 
 <br />
 ### <i class="fa fa-table" style="color:steelblue;"></i> Avec un peu plus de tables
@@ -138,5 +163,20 @@ Tables observation_period, visit_occurrence, visit_detail.
 <br />
 ### <i class="fa fa-vial" style="color:steelblue;"></i> Test avec les données MIMIC-IV
 
-<br />
+<br /><hr />
+<div style = "text-align:center;">
+  <div style = "background-color:#1bb100; font-size:16px; font-weight:bold; color:white; font-family: 'Helvetica Neue';
+    padding:10px 20px; border-radius:5px; display:inline-block;">Tester notre set</div>
+</div>
+
+### <i class="fa fa-eye" style="color:steelblue;"></i> Afficher nos données
+
+Créer une étude ...
+
+<br /><hr />
+<div style = "text-align:center;">
+  <div style = "background-color:#00a1ff; font-size:16px; font-weight:bold; color:white; font-family: 'Helvetica Neue';
+    padding:10px 20px; border-radius:5px; display:inline-block;">Partager notre code</div>
+</div>
+
 ### <i class="fa fa-share-alt" style="color:steelblue;"></i> Partageons notre code

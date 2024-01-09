@@ -15,7 +15,7 @@ get_started,card,app_structure,div6,6) Scripts & plugins,,6,2023-07-05 00:00:00
 get_started,card,app_structure,div7,7) Paramètres,,7,2023-07-05 00:00:00
 tutorials,pivot_item,linkr,linkr,LinkR,,1,2023-12-20 00:00:00
 tutorials,card,linkr,div1,- Importer des données,2024-05-01_tutorial_import_data.md,1,2023-12-20 00:00:00
-tutorials,card,linkr,div2,- Créer un plugin,2023-12-20_tutorial_create_plugins.md,2,2023-12-20 00:00:00
+tutorials,card,linkr,div2,- Créer un plugin,,2,2023-12-20 00:00:00
 resources,pivot_item,health_data,health_data,Données de santé,,,
-resources,card,health_data,div1,- Entrepôts de données de santé,2024-01-05_resources_clinical_data_warehouses.md,1,2024-05-01 00:00:00
-resources,card,health_data,div2,- Modèles de données,2024-01-05_resources_data_models.md,2,2024-05-01 00:00:00
+resources,card,health_data,div1,- Entrepôts de données de santé,,1,2024-05-01 00:00:00
+resources,card,health_data,div2,- Modèles de données,,2,2024-05-01 00:00:00
