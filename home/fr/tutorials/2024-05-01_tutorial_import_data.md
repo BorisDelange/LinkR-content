@@ -159,18 +159,171 @@ Voici le code qui nous permettra d'importer nos données.
 <pre><code class = "r code_highlight" style = "font-size:12px;">import_dataset(
     dataset_id = %dataset_id%, # Cette balise sera remplacée par la valeur du set de données actuellement sélectionné
     data = person(), # En appelant notre fonction person(), nous obtiendrons les données que nous avons créées
-    omop_table = %omop_table%, # Cette balise sera remplacée par la valeur de la version OMOP du set de données actuellement sélectionné
+    omop_table = "person", # Le nom de la table OMOP que nous souhaitons importer
+    omop_version = %omop_version%, # Cette balise sera remplacée par la valeur de la version OMOP du set de données actuellement sélectionné
     output = output, ns = ns, i18n = i18n, r = r, d = d
 )
 </code></pre>
 
-<br />
-### <i class="fa fa-table" style="color:steelblue;"></i> Avec un peu plus de tables
+Vous devriez voir apparaître un message vous indiquant que vos données ont bien été importées.
 
-Tables observation_period, visit_occurrence, visit_detail.
+Si vous cochez 'Afficher les données importées' en dessous de l'éditeur de code, vous verrez **combien de lignes** sont **importées** par table OMOP.
+
+Nous voyons que nous avons bien **importé 100 lignes** dans la table person.
+
+<img src="tutorial_import_data_table_imported_data.png" alt="Table showing imported data" style="height:250px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+
+A chaque fois que vous chargerez un set de données depuis la page 'Données', c'est ce **code** qui sera **exécuté**.
+
+On comprend alors l'intérêt d'**utiliser une fonction** pour charger nos données : les données ne seront chargées **que si la fonction est appelée**.
+
+Si j'ai utilisé l'argument *save_as*, par exemple avec la valeur 'csv', mes données seront enregistrées au format CSV si le fichier n'existe pas déjà.
+
+La fonction *person()* ne sera appelée que la première fois : elle ne sera plus appelée si le fichier CSV correspondant à notre table (*person.csv*) existe.
+
+Si les données que j'importe ont changé entre-temps, je peux toujours **remplacer le fichier** CSV en mettant l'argument *rewrite* à 'TRUE'.
+
+Voici un exemple.
+
+<pre><code class = "r code_highlight" style = "font-size:12px;">import_dataset(
+    dataset_id = %dataset_id%,
+    data = person(),
+    omop_table = "person",
+    omop_version = %omop_version%,
+    save_as = "csv", # Les données contenues dans la fonction person() seront sauvegardées au format CSV
+    read_with = "vroom", # Les données enregistrées en CSV seront lues avec la librairie vroom
+    rewrite = FALSE, # Si le fichier person.csv existe dans le dossier de notre set de données, le fichier existant sera conservé
+    output = output, ns = ns, i18n = i18n, r = r, d = d
+)
+</code></pre>
+
+Si maintenant les données contenues dans la fonction *person()* changent, par exemple parce qu'il s'agit d'une connexion à une base de données avec des données mises à jour régulièrement, je peux vouloir remplacer la fichier *person.csv* existant.
+
+Je mettrai l'argument *rewrite* à TRUE pour remplacer le fichier, puis modifierai de nouveau l'argument *rewrite* pour FALSE, afin que la fonction chargeant les données ne soit pas chargée à chaque fois.
+
+<pre><code class = "r code_highlight" style = "font-size:12px;">import_dataset(
+    dataset_id = %dataset_id%,
+    data = person(),
+    omop_table = "person",
+    omop_version = %omop_version%,
+    save_as = "csv",
+    read_with = "vroom",
+    rewrite = TRUE, # Je modifie cet argument juste une fois, le temps que le fichier CSV soit remplacé avec mes nouvelles données
+    output = output, ns = ns, i18n = i18n, r = r, d = d
+)
+</code></pre>
+
+Voyons maintenant les **différentes façons** d'**importer des données** dans LinkR.
+
+La fonction qui charge nos données doit charger les données sous forme :
+
+- de data.frame
+- de tibble
+- de lazy tibble, dans le cas d'une connexion à une base de données
+
+Je décide alors si je veux **sauvegarder ces données**, et si oui avec **quel format**.
+
+L'argument *save_as* peut prendre les valeurs suivantes : 'none' (par défaut), 'csv' et 'parquet'.
+
+Je décide ensuite avec **quelle librairie** je veux **lire ces données**, avec l'argument *read_with*.
+
+*read_width* peut prendre les valeurs suivantes : 'none', 'vroom', 'duckdb', 'spark', 'arrow'.
+
+Toutes les **associations** entre *save_as* et *read_width* ne sont pas possibles.
+
+Voici les associations possibles (*read_with* et *save_as*) :
+
+- vroom / csv
+- arrow / parquet
+- duckdb / csv
+- duckdb / parquet
+- duckdb / none
+- spark / csv
+- spark / parquet
+- spark / none
+
+L'avantage du format *parquet* est que c'est un **format de stockage optimisé** pour les **hauts volumes** de données.
+
+Utiliser *duckdb* permet de ne **pas charger toutes les données en mémoire**, les données ne seront chargées qu'au moment de la "collecte".
+
+Nous pouvons ainsi filtrer nos données sans charger les tables entières, ce qui **optimise les performances**.
+
+En pratique :
+
+- **chargez des données** à partir de **bases de données** autant que possible : ceci permet de charger le moins possible les données en mémoire, les performances seront optimisées
+- si vous avez besoin de **stocker les données** localement, par exemple si vous devez faire des modifications des données après les avoir chargées depuis une base de données, utilisez le stockage par ***parquet*** et la lecture par ***duckdb***
+- si vous avez besoin de **réaliser du calcul distribué** sur **plusieurs serveurs**, utilisez la lecture par ***spark***, avec une connexion à une base de données (argument 'none' pour read_with)
 
 <br />
-### <i class="fa fa-vial" style="color:steelblue;"></i> Test avec les données MIMIC-IV
+### <i class="fa fa-database" style="color:steelblue;"></i> Test avec les données MIMIC-IV
+
+Nous allons maintenant charger des données depuis la **base de données <a href = "https://mimic.mit.edu/" target = "_blank">MIMIC-IV</a>**.
+
+Il s'agit d'une base de données des services de soins intensifs du BIDMC (Beth Israel Deaconess Medical Center).
+
+Nous avons accès publiquement aux **données de 100 patients** via <a href = "https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/" target = "_blank">ce lien</a>.
+
+Nous allons **importer** quelques-unes de ces tables puis **tester nos données** en **créant une étude** au sein de l'application.
+
+Commençons avec la table ***person***.
+
+<pre><code class = "r code_highlight" style = "font-size:12px;">
+person <- function(){
+  # Chargement de la table person.csv depuis le site physionet.org
+  vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/person.csv", progress = FALSE) %>%
+    dplyr::mutate(person_id = 1:dplyr::n()) # Les index de person_id n'étant pas adéquats, nous les réindexons de 1 à 100
+}
+
+import_dataset(
+    dataset_id = %dataset_id%,
+    data = person(),
+    omop_table = "person",
+    omop_version = %omop_version%,
+    output = output, ns = ns, i18n = i18n, r = r, d = d
+)
+</pre></code>
+
+Si vous exécutez ce code depuis le même set de données que nous avons créé au début du tutoriel, vous devriez avoir ce message d'erreur :
+
+<img src="tutorial_import_data_error_message_1.png" alt="Settings icon" style="height:70px;" />
+
+Ceci est dû au fait que les colonnes de notre table *person* ne correspondent pas avec la version OMOP sélectionée.
+
+Allez dans les options, **changez la version OMOP** pour 5.3, pensez à **sauvegarder** les options puis **exécutez** de nouveau le **code**.
+
+Vous devriez avoir un nouveau message d'erreur, vous indiquant que la colonne *ethnicity_source_concept_id* doit être de type integer.
+
+En effet, cette colonne a été chargée au format *numeric*, étant donné que l'on n'a pas précisé à la fonction *vroom* quels étaient les types de colonnes attendus (ce que l'on peut faire avec l'argument *col_types*).
+
+Deux solutions :
+
+- soit nous changeons la colonne pour la transformer en *integer*
+- soit nous acceptons de charger des colonnes au format *numeric* plutôt qu'*integer* avec l'argument *allow_numeric_instead_integer*
+
+Pourquoi accepter le format *numeric* plutôt qu'*integer* ?
+
+Parfois, en chargeant des données depuis une base de données, il est impossible de transformer les types de colonnes, en fonction de la librairie utilisée pour la connexion à la base de données.
+
+Pour notre exemple, il est plus simple de préciser le type de colonne attendu pour chaque colonne.
+
+<pre><code class = "r code_highlight" style = "font-size:12px;">person <- function(){
+    # Utilisation de l'argument col_types en précisant le type de colonne attendu
+    vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/person.csv", col_types = "niiiiTiiiiiccicici", progress = FALSE) %>%
+        dplyr::mutate(person_id = 1:dplyr::n())
+}
+
+import_dataset(
+    dataset_id = %dataset_id%,
+    data = person(),
+    omop_table = "person",
+    omop_version = %omop_version%,
+    output = output, ns = ns, i18n = i18n, r = r, d = d
+)
+</pre></code>
+
+Le chargement devrait se faire correctement.
+
+Chargeons maintenant les autres tables.
 
 <br /><hr />
 <div style = "text-align:center;">
