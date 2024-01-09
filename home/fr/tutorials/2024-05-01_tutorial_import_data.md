@@ -82,7 +82,7 @@ Pensez à sauvegarder votre code. Vous pouvez également utiliser le raccourci C
 
 Pour commencer, nous allons créer des **données factices** au **format OMOP**, nous verrons ensuite comment des données réelles via la base de données MIMIC-IV.
 
-Créons une fonction *person*, qui contiendra les données de 100 patients.
+Créons une fonction *person*, qui contiendra les **données de 100 patients**.
 
 <pre><code class = "r code_highlight" style = "font-size:12px;">person <- function(){
   tibble::tibble(
@@ -147,13 +147,22 @@ La fonction *import_dataset* comprend les arguments suivants :
 - *dataset_id* : où vous indiquez **l'ID du dataset** actuel, via la balise *%dataset_id%*
 - *data* : où vous indiquez la **fonction qui chargera les données** pour une variable (exemple : *person()* de notre code ci-dessus)
 - *omop_table* : où vous indiquez la **variable que vous souhaitez importer** (*person*, *measurement*...)
-- *omop_version* : où vous indiquez la **version utilisée** du modèle de données OMOP
+- *omop_version* : où vous indiquez la **version utilisée** du modèle de données OMOP. Utilisez la balise *%omop_version%* qui prendra la version configurée dans les options du set de données.
 - *read_with* : indiquez avec quelle **librairie R** vous voulez **lire les données** importées
 - *save_as* : indiquez sous quel **format** vous voulez enregistrer les données après les avoir importées
 - *rewrite* : indiquez si vous souhaitez **écraser** l'ancien fichier de données pour le remplacer par le nouveau
 - *allow_numeric_instead_integer* : indiquez si vous autorisez que les colonnes au format numérique puissent être laissées telles quelles plutôt que converties au format integer
 - *allow_dttm_instead_date* : indiquez si vous autorisez que les colonnes au format datetime puissent être laissées telles quelles plutôt que converties au format date
 
+Voici le code qui nous permettra d'importer nos données.
+
+<pre><code class = "r code_highlight" style = "font-size:12px;">import_dataset(
+    dataset_id = %dataset_id%, # Cette balise sera remplacée par la valeur du set de données actuellement sélectionné
+    data = person(), # En appelant notre fonction person(), nous obtiendrons les données que nous avons créées
+    omop_table = %omop_table%, # Cette balise sera remplacée par la valeur de la version OMOP du set de données actuellement sélectionné
+    output = output, ns = ns, i18n = i18n, r = r, d = d
+)
+</code></pre>
 
 <br />
 ### <i class="fa fa-table" style="color:steelblue;"></i> Avec un peu plus de tables
