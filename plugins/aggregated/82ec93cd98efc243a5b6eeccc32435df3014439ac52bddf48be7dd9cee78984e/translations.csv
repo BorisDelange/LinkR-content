@@ -17,3 +17,10 @@ min,Minimum,Minimum
 max,Maximum,Maximum
 missing_data,Missing data,Données manquantes
 n_rows,Number of rows,Nombre de lignes
+n_unique_patients,Number of unique patients,Nombre de patients uniques
+n_stays,Number of stays,Nombre de séjours
+show_params,Show parameters,Afficher les paramètres
+plot_width,Plot width (%),Largeur de la figure (%)
+plot_height,Plot height (%),Hauteur de la figure (%)
+show_stats,Show stats,Afficher les statistiques
+table_plot_side_by_side,Plot & table side by side,Figure & tableau côte-à-côte
