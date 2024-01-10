@@ -131,7 +131,7 @@ for (i in 1:nrow(tables)){
   if (table$table_name %in% c(""person"", ""care_site"", ""visit_occurrence"", ""visit_detail"") & !all_tables_saved_as_csv) get_data()
   
   import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = get_data(), 
-    type = table$table_name, omop_version = %omop_version%, read_with = ""vroom"", save_as = ""csv"", rewrite = FALSE)
+    omop_table = table$table_name, omop_version = %omop_version%, read_with = ""vroom"", save_as = ""csv"", rewrite = FALSE)
 }",1,2023-10-15 17:08:40,0
 2,vocabulary,1,"folder <- ""https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/""
 
