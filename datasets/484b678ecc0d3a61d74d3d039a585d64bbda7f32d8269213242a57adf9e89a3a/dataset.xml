@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<datasets>
+  <dataset>
+    <app_version>0.2.0</app_version>
+    <unique_id>484b678ecc0d3a61d74d3d039a585d64bbda7f32d8269213242a57adf9e89a3a</unique_id>
+    <version>0.0.1.9000</version>
+    <author>Boris Delange</author>
+    <name_en>Set de donn&#xE9;es tutoriel</name_en>
+    <name_fr>Set de donn&#xE9;es tutoriel</name_fr>
+    <category_en></category_en>
+    <category_fr></category_fr>
+    <description_en></description_en>
+    <description_fr></description_fr>
+    <creation_datetime>2024-01-07 22:11:47</creation_datetime>
+    <update_datetime>2024-01-10 23:01:46</update_datetime>
+    <code>data &lt;- list()
+
+data$person &lt;- function(){
+    # Utilisation de l'argument col_types en pr&#xE9;cisant le type de colonne attendu pour chaque colonne
+    vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/person.csv", col_types = "niiiiTiiiiiccicici", progress = FALSE) %&gt;%
+        dplyr::mutate(person_id = 1:dplyr::n())
+}
+
+data$visit_detail &lt;- function(){
+    vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/visit_detail.csv", col_types = "nniDTDTiiniinciccin", progress = FALSE) %&gt;%
+        # Nous faisons une jointure avec la table person afin de r&#xE9;cup&#xE9;rer les person_id que nous avons modifi&#xE9;s
+        dplyr::left_join(
+            vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/person.csv", progress = FALSE) %&gt;%
+            dplyr::transmute(person_id, new_person_id = 1:dplyr::n()),
+            by = "person_id"
+        ) %&gt;%
+        dplyr::relocate(new_person_id, .before = "person_id") %&gt;%
+        dplyr::select(-person_id) %&gt;%
+        dplyr::rename(person_id = new_person_id) %&gt;%
+        # Les colonnes ne sont pas dans l'ordre dans le CSV import&#xE9;, nous les remettons &#xE0; la bonne place
+        dplyr::relocate(visit_detail_source_value, visit_detail_source_concept_id, .after = "care_site_id") %&gt;%
+        dplyr::relocate(admitting_source_value, admitting_source_concept_id, discharge_to_source_value, discharge_to_concept_id, .after = "visit_detail_source_concept_id") %&gt;%
+        # Nous modifions visit_detail_id, de la m&#xEA;me fa&#xE7;on que nous avons modifi&#xE9; person_id plus t&#xF4;t
+        dplyr::mutate(visit_detail_id = 1:dplyr::n())
+}
+
+data$death &lt;- function(){
+    vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/death.csv", col_types = "nDTiici", progress = FALSE) %&gt;%
+        dplyr::left_join(
+            vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/person.csv", progress = FALSE) %&gt;%
+            dplyr::transmute(person_id, new_person_id = 1:dplyr::n()),
+            by = "person_id"
+        ) %&gt;%
+        dplyr::relocate(new_person_id, .before = "person_id") %&gt;%
+        dplyr::select(-person_id) %&gt;%
+        dplyr::rename(person_id = new_person_id)
+}
+
+for (omop_table in c("person", "visit_detail", "death")){ # Nous cr&#xE9;ons une boucle pour appliquer la variable import_dataset &#xE0; chacune de nos tables
+    if (omop_table != "person") cat("\n")
+    cat(paste0(strong(toupper(omop_table)), "\n\n"))
+    import_dataset(
+        dataset_id = %dataset_id%,
+        data = data[omop_table],
+        omop_table = omop_table,
+        omop_version = %omop_version%,
+        read_with = "vroom",
+        save_as = "csv",
+        # Dans la variable visit_detail, il reste la colonne visit_occurrence_id qui est au format numeric, que nous n'avons pas modifi&#xE9;e
+        # Nous autorisons donc le chargement de cette colonne au format numeric plut&#xF4;t que integer, parce que cette colonne ne nous sera pas utile dans notre exemple
+        # En pratique, il faut s'efforcer d'obtenir le bon type de colonne lorsque c'est possible
+        allow_numeric_instead_integer = TRUE,
+        output = output, ns = ns, i18n = i18n, r = r, d = d
+    )
+}</code>
+    <omop_version>5.3</omop_version>
+    <images></images>
+  </dataset>
+</datasets>
