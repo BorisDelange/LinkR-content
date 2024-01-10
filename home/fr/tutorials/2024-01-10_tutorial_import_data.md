@@ -171,7 +171,7 @@ Si vous cochez 'Afficher les données importées' en dessous de l'éditeur de co
 
 Nous voyons que nous avons bien **importé 100 lignes** dans la table person.
 
-<img src="tutorial_import_data_table_imported_data.png" alt="Table showing imported data" style="height:250px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_table_imported_data.png" alt="Table showing imported data" style="height:250px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
 
 A chaque fois que vous chargerez un set de données depuis la page 'Données', c'est ce **code** qui sera **exécuté**.
 
@@ -285,7 +285,7 @@ import_dataset(
 
 Si vous exécutez ce code depuis le même set de données que nous avons créé au début du tutoriel, vous devriez avoir ce message d'erreur :
 
-<img src="tutorial_import_data_error_message_1.png" alt="Settings icon" style="height:70px;" />
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_error_message_1.png" alt="Settings icon" style="height:70px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
 
 Ceci est dû au fait que les colonnes de notre table *person* ne correspondent pas avec la version OMOP sélectionée.
 
@@ -304,10 +304,10 @@ Pourquoi accepter le format *numeric* plutôt qu'*integer* ?
 
 Parfois, en chargeant des données depuis une base de données, il est impossible de transformer les types de colonnes, en fonction de la librairie utilisée pour la connexion à la base de données.
 
-Pour notre exemple, il est plus simple de préciser le type de colonne attendu pour chaque colonne.
+Pour notre exemple, il est plus simple de préciser le **type de colonne attendu** pour chaque colonne.
 
 <pre><code class = "r code_highlight" style = "font-size:12px;">person <- function(){
-    # Utilisation de l'argument col_types en précisant le type de colonne attendu
+    # Utilisation de l'argument col_types en précisant le type de colonne attendu pour chaque colonne
     vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/person.csv", col_types = "niiiiTiiiiiccicici", progress = FALSE) %>%
         dplyr::mutate(person_id = 1:dplyr::n())
 }
@@ -323,7 +323,70 @@ import_dataset(
 
 Le chargement devrait se faire correctement.
 
-Chargeons maintenant les autres tables.
+Chargeons maintenant les **autres tables**.
+
+<pre><code class = "r code_highlight" style = "font-size:12px;">data <- list()
+
+data$person <- function(){
+    # Utilisation de l'argument col_types en précisant le type de colonne attendu pour chaque colonne
+    vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/person.csv", col_types = "niiiiTiiiiiccicici", progress = FALSE) %>%
+        dplyr::mutate(person_id = 1:dplyr::n())
+}
+
+data$visit_detail <- function(){
+    vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/visit_detail.csv", col_types = "nniDTDTiiniinciccin", progress = FALSE) %>%
+        # Nous faisons une jointure avec la table person afin de récupérer les person_id que nous avons modifiés
+        dplyr::left_join(
+            vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/person.csv", progress = FALSE) %>%
+            dplyr::transmute(person_id, new_person_id = 1:dplyr::n()),
+            by = "person_id"
+        ) %>%
+        dplyr::relocate(new_person_id, .before = "person_id") %>%
+        dplyr::select(-person_id) %>%
+        dplyr::rename(person_id = new_person_id) %>%
+        # Les colonnes ne sont pas dans l'ordre dans le CSV importé, nous les remettons à la bonne place
+        dplyr::relocate(visit_detail_source_value, visit_detail_source_concept_id, .after = "care_site_id") %>%
+        dplyr::relocate(admitting_source_value, admitting_source_concept_id, discharge_to_source_value, discharge_to_concept_id, .after = "visit_detail_source_concept_id") %>%
+        # Nous modifions visit_detail_id, de la même façon que nous avons modifié person_id plus tôt
+        dplyr::mutate(visit_detail_id = 1:dplyr::n())
+}
+
+data$death <- function(){
+    vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/death.csv", col_types = "nDTiici", progress = FALSE) %>%
+        dplyr::left_join(
+            vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/person.csv", progress = FALSE) %>%
+            dplyr::transmute(person_id, new_person_id = 1:dplyr::n()),
+            by = "person_id"
+        ) %>%
+        dplyr::relocate(new_person_id, .before = "person_id") %>%
+        dplyr::select(-person_id) %>%
+        dplyr::rename(person_id = new_person_id)
+}
+
+for (omop_table in c("person", "visit_detail", "death")){ # Nous créons une boucle pour appliquer la variable import_dataset à chacune de nos tables
+    if (omop_table != "person") cat("\n")
+    cat(paste0(strong(toupper(omop_table)), "\n\n"))
+    import_dataset(
+        dataset_id = %dataset_id%,
+        data = data[[omop_table]](),
+        omop_table = omop_table,
+        omop_version = %omop_version%,
+        read_with = "vroom",
+        save_as = "csv",
+        # Dans la variable visit_detail, il reste la colonne visit_occurrence_id qui est au format numeric, que nous n'avons pas modifiée
+        # Nous autorisons donc le chargement de cette colonne au format numeric plutôt que integer, parce que cette colonne ne nous sera pas utile dans notre exemple
+        # En pratique, il faut s'efforcer d'obtenir le bon type de colonne lorsque c'est possible
+        allow_numeric_instead_integer = TRUE,
+        output = output, ns = ns, i18n = i18n, r = r, d = d
+    )
+}
+</pre></code>
+
+Nous avons donc **chargé** les tables ***person*** et ***visit_detail***, qui sont les tables contenant les patients et les séjours dans les services hospitaliers.
+
+Nous pourrions également charger les autres tables. Consultez pour cela le code du set de données ***MIMIC-IV demo*** qui a été téléchargé lors du premier chargement de l'application.
+
+Nous allons maintenant **créer une étude** pour afficher nos données.
 
 <br /><hr />
 <div style = "text-align:center;">
@@ -333,7 +396,79 @@ Chargeons maintenant les autres tables.
 
 ### <i class="fa fa-eye" style="color:steelblue;"></i> Afficher nos données
 
-Créer une étude ...
+Commençons par **créer une étude**.
+
+Rendez-vous sur la page ***Mes études*** depuis le menu *Données* en haut de l'écran.
+
+Chargez le set de données que nous venons de créer en le sélectionnant dans le menu déroulant à gauche de l'écran.
+
+Allez dans l'onglet ***Gestion des études*** puis créez une étude, par exemple 'Etude test'.
+
+De la même façon que pour les sets de données, vous pouvez accéder aux **options de l'étude** avec l'icône de rouages, et vous pouvez consulter les **pages d'aides** en cliquant sur le point d'interrogation en haut à droite.
+
+Une fois l'**étude créée**, allez sur la page ***Accéder aux données*** depuis l'onglet *Données*.
+
+Vous aurez une **étude vide**, qui est séparée en deux parties :
+
+- **Données individuelles** : où vous accéderez aux données patient par patient, le but est de construire ici l'équivalent d'un dossier médical pour consulter les données de chaque patients
+- **Données agrégées** : où vous réaliserez les différentes étapes de votre étude, tel que la visualisation de la distribution des données, l'exclusion des données aberrantes, la réalisation des statistiques etc
+
+A gauche de l'écran, sélectionnez les **données agrégées**.
+
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_selected_aggregated_data.png" alt="Selected aggregated data button" style="height:300px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+
+Créez un onglet en cliquant sur ***Ajouter un onglet***, nommez-le 'Démographie' par exemple.
+
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_create_tab.png" alt="Create a new tab" style="height:300px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+
+Une fois l'onglet créé, ajoutez votre **premier widget** en cliquant sur *Ajouter un widget*.
+
+Le principe est simple :
+
+- Vous choisissez un **nom**
+- Vous choisissez un **plugin** dans le menu déroulant
+- Vous choisissez les **concepts** que vous voulez afficher : choisissez une terminologie puis choisissez les concepts
+
+Vous trouverez **plus d'informations** sur les widgets et les plugins dans la page d'aide via le point d'interrogation, ou dans les tutoriels dédiés depuis la page *Accueil*.
+
+Nous avons donc besoin de **choisir un plugin**.
+
+Nous allons pour cela **télécharger** le plugin '**Données démographiques**' depuis le **dépôt git d'InterHop**.
+
+Rendez-vous sur la page *Plugins > Données agrégées* en haut de l'écran.
+
+Depuis l'onglet 'Tous les plugins', choisissez les plugins sur dépôt git distant, et choisissez 'Interhop' dans le menu déroulant.
+
+Vous allez voir tous les plugins de données agrégées proposés sur le dépôt git d'InterHop.
+
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_plugins_catalog.png" alt="Remote git plugins catalog" style="height:600px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+
+Cliquez sur le plugin 'Données démographiques', puis cliquez sur '**Installer le plugin**'.
+
+Retournons maintenant sur notre étude.
+
+**Ajoutez un widget** en sélectionnant le plugin que nous venons d'installer.
+
+Il n'y a pas besoin de sélectionner de concepts pour ce plugin.
+
+Cliquez sur 'Ajouter le widget'.
+
+Vous devriez voir apparaître la **distribution de l'âge** des patients de votre set de données.
+
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_demographics_widget.png" alt="Demographics widget" style="height:700px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+
+Essayez maintenant de télécharger le **plugin 'Console R'** et d'ajouter un widget avec.
+
+Vous pouvez afficher les données dans la console via ce code.
+
+<pre><code class = "r code_highlight" style = "font-size:12px;">d$person
+</pre></code>
+
+Pour plus d'informations, allez voir la page d'aide 'Modèle de données'.
+
+Vous devriez maintenant être en mesure d'importer les données depuis n'importe quelle source de données !
+
+Comme tout travail réalisé sur LinkR, nous pouvons le **partager**, ce que nous allons faire dans le prochain paragraphe.
 
 <br /><hr />
 <div style = "text-align:center;">
@@ -342,3 +477,39 @@ Créer une étude ...
 </div>
 
 ### <i class="fa fa-share-alt" style="color:steelblue;"></i> Partageons notre code
+
+Il n'est pas toujours utile de partager le code source d'un script d'import de données.
+
+Cela peut être utile si vous importez une **base de données** qui est **accessible à plusieurs personnes**, notamment pour les bases de données "ouvertes" (sous réserve d'une demande sur leurs sites respectifs), telles que la MIMIC ou AmsterdamUMCdb.
+
+Il peut également être utile de placer votre script sur un dépôt git privé à usage personnel, afin de **faire une sauvegarde** et de récupérer ce code facilement.
+
+Pour cela, allez dans les paramètres en cliquant sur l'onglet de rouages en haut à droite de la page.
+
+Cliquez sur 'Dépôts git distants' à gauche, puis sur l'onglet 'Ajouter un dépôt git' > 'Avec un lien'.
+
+Vous devrez au préalable avoir créé un dépôt git.
+
+Il peut être public, dans ce cas il n'y a pas besoin d'ajouter un clef API ici, qui sert à la lecture.
+
+Il peut aussi être privé, vous devrez dans ce cas ajouter un **clef API de lecture** (il ne faut pas une clef d'écriture ici).
+
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_add_git_repo.png" alt="Add a git repo" style="height:500px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+
+Une fois le dépôt git ajouté, allez sur l'onglet 'Modifier un dépôt git'.
+
+Sélectionnez votre dépôt git, ajoutez une clef API : cette fois il s'agit d'une **clef de lecture et d'écriture**..
+
+Sélectionnez la catégorie 'Sets de données', sélectionnez votre set dans le menu 'Ajouter des fichiers', puis cliquez sur 'Ajouter'.
+
+Votre set s'affichera dans le tableau.
+
+Il ne reste plus qu'à **réaliser un commit**, en écrivant un message dans 'Message de commit' puis en cliquant sur 'Commit & push'.
+
+Pour s'assurer que cela a fonctionné, rechargez l'application puis allez sur la page 'Paramètres > Sets de données'.
+
+En sélectionnant votre dépôt git, vous devriez **voir apparaître votre set de données**, ce qui signifie qu'il sera accessible à toute personne ayant l'adresse de votre git et, s'il s'agit d'un dépôt privé, d'une clef API.
+
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_remote_git_datasets.png" alt="Remote git datasets" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+
+Pour plus d'informations sur la gestion des dépôts git depuis LinkR, consultez le **tutoriel dédié**.
