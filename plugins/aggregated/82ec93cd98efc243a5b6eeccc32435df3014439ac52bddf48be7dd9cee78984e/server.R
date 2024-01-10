@@ -165,6 +165,7 @@ observeEvent(m$render_results_%widget_id%, {
     
     # Requires that data is loaded
     req(d$person %>% dplyr::count() %>% dplyr::pull() > 0)
+    req(d$visit_detail %>% dplyr::count() %>% dplyr::pull() > 0)
     req(m$omop_version)
         
     result_ui <- tagList()
@@ -174,6 +175,8 @@ observeEvent(m$render_results_%widget_id%, {
     data <- tibble::tibble()
     
     if (m$omop_version %in% c("5.3", "5.4")){
+        req(d$death %>% dplyr::count() %>% dplyr::pull() > 0)
+        
         data <-
             d$visit_detail %>%
             dplyr::select(person_id, visit_detail_id, visit_detail_start_datetime, visit_detail_end_datetime) %>%
