@@ -1,8 +1,11 @@
+<span style = "color:grey;">Auteur : Boris Delange</span><br />
+<span style = "color:grey;">Dernière modification : 10/01/2023</span>
+
 ### <i class="fa fa-info-circle" style="color:steelblue;"></i> Introduction
 
-Dans ce tutorial, nous allons voir comment **importer des données** dans l'application.
+Dans ce tutoriel, nous allons voir comment **importer des données** dans LinkR.
 
-Nous verrons d'abord comment **créer un set de données** dans LinkR, puis nous **importerons un premier set de donneés**.
+Nous verrons d'abord comment **créer un set de données**, puis nous **importerons** un premier **set de donneés**.
 
 Nous **testerons** nos données en **créant une étude**.
 
@@ -18,8 +21,7 @@ Nous finirons en **partageant** notre code via notre dépôt git.
 - Créer un set de données
 - Créer des données au format OMOP
 - Importer les données dans LinkR
-- Avec un peu plus de tables
-- Test avec les données MIMIC-IV
+- Test avec les données de la base MIMIC-IV
 - Afficher nos données
 - Partageons notre code
 
@@ -33,14 +35,14 @@ Nous finirons en **partageant** notre code via notre dépôt git.
 
 Pour savoir ce qu'est un entrepôt de données de santé, lisez le tutoriel ***Entrepôts de données de santé et collecte des données médicales*** dans la rubrique *Données de santé* de la page *Ressources*.
 
-Lisez également le tutoriel ***Modèles de données***, également dans la rubrique *Données de santé* de la page *Ressources*.
+Lisez également le tutoriel ***Modèles de données*** dans la même rubrique.
 
 Le modèle de données utilisé par LinkR est le modèle **<a href = "https://ohdsi.github.io/CommonDataModel/" target = "_blank">OMOP</a>**.
 
 <br />
 ### <i class="fa fa-table" style="color:steelblue;"></i> Créer un set de données
 
-Pour commencer, rendez-vous sur la page ***Set de données***, depuis la page des *Paramètres* en haut à droite de la page.
+Pour commencer, rendez-vous sur la page ***Set de données***, depuis la page *Paramètres* en haut à droite de l'écran.
 
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_settings_icon.png" alt="Settings icon" style="height:50px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /><br />
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_settings_menu.png" alt="Settings menu" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px;" />
@@ -64,7 +66,7 @@ Pour **en savoir plus sur les options**, cliquez sur le point d'interrogation en
 
 Nous allons maintenant pouvoir **éditer le code** de notre set de données. Rendez-vous pour cela dans l'onglet *Editer le code*.
 
-L'éditeur auquel vous avez accès fonctionne comme une **console R**, exécutez le code en cliquant sur 'Exécuter' ou en utilisant les raccourcis :
+L'éditeur auquel vous avez accès fonctionne comme une **console R**, exécutez le code en cliquant sur *Exécuter* ou en utilisant les raccourcis :
 
 - CMD/CTRL + SHIFT + ENTER : exécute l'ensemble du code
 - CMD/CTRL + ENTER : exécute le code sélectionné
@@ -80,7 +82,7 @@ Pensez à sauvegarder votre code. Vous pouvez également utiliser le raccourci C
 
 ### <i class="fa fa-table" style="color:steelblue;"></i> Créer des données au format OMOP
 
-Pour commencer, nous allons créer des **données factices** au **format OMOP**, nous verrons ensuite comment des données réelles via la base de données MIMIC-IV.
+Pour commencer, nous allons créer des **données factices** au **format OMOP**, nous verrons ensuite comment importer les données la base MIMIC-IV.
 
 Créons une fonction *person*, qui contiendra les **données de 100 patients**.
 
@@ -132,6 +134,8 @@ Par exemple, le version 5.3 ne comprend par la colonne *death_datetime* dans la 
 
 Vous pouvez choisir la version via le menu déroulant en haut de la page présentée ci-dessus.
 
+<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_omop_version.png" alt="Result of code execution" style="height:180px; border:dashed 1px; margin:5px 0px 5px 0px; padding:0px 0px 5px 0px;" />
+
 Voilà **nos données prêtes**, nous allons pouvoir les **importer** dans LinkR.
 
 <br />
@@ -151,8 +155,8 @@ La fonction *import_dataset* comprend les arguments suivants :
 - *read_with* : indiquez avec quelle **librairie R** vous voulez **lire les données** importées
 - *save_as* : indiquez sous quel **format** vous voulez enregistrer les données après les avoir importées
 - *rewrite* : indiquez si vous souhaitez **écraser** l'ancien fichier de données pour le remplacer par le nouveau
-- *allow_numeric_instead_integer* : indiquez si vous autorisez que les colonnes au format numérique puissent être laissées telles quelles plutôt que converties au format integer
-- *allow_dttm_instead_date* : indiquez si vous autorisez que les colonnes au format datetime puissent être laissées telles quelles plutôt que converties au format date
+- *allow_numeric_instead_integer* : indiquez si vous autorisez que les colonnes au format numérique soient laissées telles quelles plutôt que converties au format integer
+- *allow_dttm_instead_date* : indiquez si vous autorisez que les colonnes au format datetime soient laissées telles quelles plutôt que converties au format date
 
 Voici le code qui nous permettra d'importer nos données.
 
@@ -173,7 +177,7 @@ Nous voyons que nous avons bien **importé 100 lignes** dans la table person.
 
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_table_imported_data.png" alt="Table showing imported data" style="height:250px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
 
-A chaque fois que vous chargerez un set de données depuis la page 'Données', c'est ce **code** qui sera **exécuté**.
+A chaque fois que vous chargerez un set de données depuis la page *Données*, c'est ce **code** qui sera **exécuté**.
 
 On comprend alors l'intérêt d'**utiliser une fonction** pour charger nos données : les données ne seront chargées **que si la fonction est appelée**.
 
@@ -199,7 +203,7 @@ Voici un exemple.
 
 Si maintenant les données contenues dans la fonction *person()* changent, par exemple parce qu'il s'agit d'une connexion à une base de données avec des données mises à jour régulièrement, je peux vouloir remplacer la fichier *person.csv* existant.
 
-Je mettrai l'argument *rewrite* à TRUE pour remplacer le fichier, puis modifierai de nouveau l'argument *rewrite* pour FALSE, afin que la fonction chargeant les données ne soit pas chargée à chaque fois.
+Je mettrai l'argument *rewrite* à TRUE pour remplacer le fichier, puis modifierai de nouveau l'argument *rewrite* pour FALSE, afin que la fonction chargeant les données ne soit pas exécutée à chaque fois.
 
 <pre><code class = "r code_highlight" style = "font-size:12px;">import_dataset(
     dataset_id = %dataset_id%,
@@ -215,7 +219,7 @@ Je mettrai l'argument *rewrite* à TRUE pour remplacer le fichier, puis modifier
 
 Voyons maintenant les **différentes façons** d'**importer des données** dans LinkR.
 
-La fonction qui charge nos données doit charger les données sous forme :
+La fonction qui charge nos données (par exemple la fonction *person()*) doit charger les données sous forme :
 
 - de data.frame
 - de tibble
@@ -227,11 +231,11 @@ L'argument *save_as* peut prendre les valeurs suivantes : 'none' (par défaut), 
 
 Je décide ensuite avec **quelle librairie** je veux **lire ces données**, avec l'argument *read_with*.
 
-*read_width* peut prendre les valeurs suivantes : 'none', 'vroom', 'duckdb', 'spark', 'arrow'.
+*read_with* peut prendre les valeurs suivantes : 'none', 'vroom', 'duckdb', 'spark' et 'arrow'.
 
 Toutes les **associations** entre *save_as* et *read_width* ne sont pas possibles.
 
-Voici les associations possibles (*read_with* et *save_as*) :
+Voici les associations possibles (entre *read_with* et *save_as*) :
 
 - vroom / csv
 - arrow / parquet
@@ -242,7 +246,7 @@ Voici les associations possibles (*read_with* et *save_as*) :
 - spark / parquet
 - spark / none
 
-L'avantage du format *parquet* est que c'est un **format de stockage optimisé** pour les **hauts volumes** de données.
+L'avantage du format *parquet* est que c'est un **format de stockage optimisé** pour les **grands volumes** de données.
 
 Utiliser *duckdb* permet de ne **pas charger toutes les données en mémoire**, les données ne seront chargées qu'au moment de la "collecte".
 
@@ -251,11 +255,11 @@ Nous pouvons ainsi filtrer nos données sans charger les tables entières, ce qu
 En pratique :
 
 - **chargez des données** à partir de **bases de données** autant que possible : ceci permet de charger le moins possible les données en mémoire, les performances seront optimisées
-- si vous avez besoin de **stocker les données** localement, par exemple si vous devez faire des modifications des données après les avoir chargées depuis une base de données, utilisez le stockage par ***parquet*** et la lecture par ***duckdb***
-- si vous avez besoin de **réaliser du calcul distribué** sur **plusieurs serveurs**, utilisez la lecture par ***spark***, avec une connexion à une base de données (argument 'none' pour read_with)
+- si vous avez besoin de **stocker les données** localement, par exemple si vous devez faire des modifications sur les données après les avoir chargées depuis une base de données, utilisez le stockage par ***parquet*** et la lecture par ***duckdb***
+- si vous avez besoin de **réaliser du calcul distribué** sur **plusieurs serveurs**, utilisez la lecture par ***spark***, avec une connexion à une base de données (argument 'none' pour *save_as*)
 
 <br />
-### <i class="fa fa-database" style="color:steelblue;"></i> Test avec les données MIMIC-IV
+### <i class="fa fa-database" style="color:steelblue;"></i> Test avec les données de la base MIMIC-IV
 
 Nous allons maintenant charger des données depuis la **base de données <a href = "https://mimic.mit.edu/" target = "_blank">MIMIC-IV</a>**.
 
@@ -307,7 +311,7 @@ Parfois, en chargeant des données depuis une base de données, il est impossibl
 Pour notre exemple, il est plus simple de préciser le **type de colonne attendu** pour chaque colonne.
 
 <pre><code class = "r code_highlight" style = "font-size:12px;">person <- function(){
-    # Utilisation de l'argument col_types en précisant le type de colonne attendu pour chaque colonne
+    # Utilisation de l'argument col_types en précisant le type attendu pour chaque colonne
     vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/person.csv", col_types = "niiiiTiiiiiccicici", progress = FALSE) %>%
         dplyr::mutate(person_id = 1:dplyr::n())
 }
@@ -328,7 +332,7 @@ Chargeons maintenant les **autres tables**.
 <pre><code class = "r code_highlight" style = "font-size:12px;">data <- list()
 
 data$person <- function(){
-    # Utilisation de l'argument col_types en précisant le type de colonne attendu pour chaque colonne
+    # Utilisation de l'argument col_types en précisant le type attendu pour chaque colonne
     vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/person.csv", col_types = "niiiiTiiiiiccicici", progress = FALSE) %>%
         dplyr::mutate(person_id = 1:dplyr::n())
 }
@@ -375,7 +379,7 @@ for (omop_table in c("person", "visit_detail", "death")){ # Nous créons une bou
         save_as = "csv",
         # Dans la variable visit_detail, il reste la colonne visit_occurrence_id qui est au format numeric, que nous n'avons pas modifiée
         # Nous autorisons donc le chargement de cette colonne au format numeric plutôt que integer, parce que cette colonne ne nous sera pas utile dans notre exemple
-        # En pratique, il faut s'efforcer d'obtenir le bon type de colonne lorsque c'est possible
+        # En pratique, il faut s'efforcer d'obtenir le bon type de colonne lorsque cela est possible
         allow_numeric_instead_integer = TRUE,
         output = output, ns = ns, i18n = i18n, r = r, d = d
     )
@@ -404,14 +408,14 @@ Chargez le set de données que nous venons de créer en le sélectionnant dans l
 
 Allez dans l'onglet ***Gestion des études*** puis créez une étude, par exemple 'Etude test'.
 
-De la même façon que pour les sets de données, vous pouvez accéder aux **options de l'étude** avec l'icône de rouages, et vous pouvez consulter les **pages d'aides** en cliquant sur le point d'interrogation en haut à droite.
+De la même façon que pour les sets de données, vous pouvez accéder aux **options de l'étude** avec l'icône de rouages, et vous pouvez consulter les **pages d'aides** en cliquant sur le point d'interrogation en haut à droite de l'écran.
 
-Une fois l'**étude créée**, allez sur la page ***Accéder aux données*** depuis l'onglet *Données*.
+Une fois l'**étude créée**, allez sur la page ***Accéder aux données*** depuis le menu *Données*.
 
 Vous aurez une **étude vide**, qui est séparée en deux parties :
 
-- **Données individuelles** : où vous accéderez aux données patient par patient, le but est de construire ici l'équivalent d'un dossier médical pour consulter les données de chaque patients
-- **Données agrégées** : où vous réaliserez les différentes étapes de votre étude, tel que la visualisation de la distribution des données, l'exclusion des données aberrantes, la réalisation des statistiques etc
+- **Données individuelles** : où vous accéderez aux données patient par patient, le but est de construire ici l'équivalent d'un dossier médical pour consulter les données de chaque patient
+- **Données agrégées** : où vous réaliserez les différentes étapes de votre étude, telles que la visualisation de la distribution des données, l'exclusion des données aberrantes, la réalisation des statistiques etc
 
 A gauche de l'écran, sélectionnez les **données agrégées**.
 
@@ -421,7 +425,7 @@ Créez un onglet en cliquant sur ***Ajouter un onglet***, nommez-le 'Démographi
 
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_create_tab.png" alt="Create a new tab" style="height:300px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
 
-Une fois l'onglet créé, ajoutez votre **premier widget** en cliquant sur *Ajouter un widget*.
+Une fois l'onglet créé, ajoutez un **widget** en cliquant sur *Ajouter un widget*.
 
 Le principe est simple :
 
@@ -431,19 +435,19 @@ Le principe est simple :
 
 Vous trouverez **plus d'informations** sur les widgets et les plugins dans la page d'aide via le point d'interrogation, ou dans les tutoriels dédiés depuis la page *Accueil*.
 
-Nous avons donc besoin de **choisir un plugin**.
+Nous devons donc **choisir un plugin**.
 
-Nous allons pour cela **télécharger** le plugin '**Données démographiques**' depuis le **dépôt git d'InterHop**.
+Interrompons la création de notre widget le temps de **télécharger** le plugin *Données démographiques* depuis le **dépôt git d'InterHop**.
 
 Rendez-vous sur la page *Plugins > Données agrégées* en haut de l'écran.
 
-Depuis l'onglet 'Tous les plugins', choisissez les plugins sur dépôt git distant, et choisissez 'Interhop' dans le menu déroulant.
+Depuis l'onglet *Tous les plugins*, choisissez les plugins sur dépôt git distant, et choisissez 'Interhop' dans le menu déroulant.
 
-Vous allez voir tous les plugins de données agrégées proposés sur le dépôt git d'InterHop.
+Vous allez voir tous les plugins de données agrégées présents sur le dépôt git d'InterHop.
 
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_plugins_catalog.png" alt="Remote git plugins catalog" style="height:600px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
 
-Cliquez sur le plugin 'Données démographiques', puis cliquez sur '**Installer le plugin**'.
+Cliquez sur le plugin 'Données démographiques', puis cliquez sur *Installer le plugin*.
 
 Retournons maintenant sur notre étude.
 
@@ -451,9 +455,9 @@ Retournons maintenant sur notre étude.
 
 Il n'y a pas besoin de sélectionner de concepts pour ce plugin.
 
-Cliquez sur 'Ajouter le widget'.
+Cliquez sur *Ajouter le widget*.
 
-Vous devriez voir apparaître la **distribution de l'âge** des patients de votre set de données.
+Vous devriez voir apparaître la **distribution de l'âge et du sexe** des patients de votre set de données.
 
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_demographics_widget.png" alt="Demographics widget" style="height:700px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
 
@@ -464,9 +468,9 @@ Vous pouvez afficher les données dans la console via ce code.
 <pre><code class = "r code_highlight" style = "font-size:12px;">d$person
 </pre></code>
 
-Pour plus d'informations, allez voir la page d'aide 'Modèle de données'.
+Pour plus d'informations sur l'accès aux données de notre set depuis la console, rendez vous sur la page d'aide 'Modèle de données'.
 
-Vous devriez maintenant être en mesure d'importer les données depuis n'importe quelle source de données !
+Vous devriez maintenant être en mesure d'**importer des données** depuis **n'importe quelle source** !
 
 Comme tout travail réalisé sur LinkR, nous pouvons le **partager**, ce que nous allons faire dans le prochain paragraphe.
 
@@ -486,30 +490,44 @@ Il peut également être utile de placer votre script sur un dépôt git privé 
 
 Pour cela, allez dans les paramètres en cliquant sur l'onglet de rouages en haut à droite de la page.
 
-Cliquez sur 'Dépôts git distants' à gauche, puis sur l'onglet 'Ajouter un dépôt git' > 'Avec un lien'.
+Cliquez sur *Dépôts git distants* à gauche, puis sur l'onglet *Ajouter un dépôt git > Avec un lien*.
 
-Vous devrez au préalable avoir créé un dépôt git.
+Vous devrez au préalable avoir créé un dépôt git (sur gitlab, framagit ou github par exemple).
 
-Il peut être public, dans ce cas il n'y a pas besoin d'ajouter un clef API ici, qui sert à la lecture.
+Il peut être public, dans ce cas il n'y a pas besoin d'ajouter une clef API ici, qui sert à la lecture.
 
-Il peut aussi être privé, vous devrez dans ce cas ajouter un **clef API de lecture** (il ne faut pas une clef d'écriture ici).
+Il peut aussi être privé, vous devrez dans ce cas ajouter une **clef API de lecture** (il ne faut pas une clef d'écriture ici).
 
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_add_git_repo.png" alt="Add a git repo" style="height:500px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
 
-Une fois le dépôt git ajouté, allez sur l'onglet 'Modifier un dépôt git'.
+Une fois le dépôt git ajouté, allez sur l'onglet *Modifier un dépôt git*.
 
 Sélectionnez votre dépôt git, ajoutez une clef API : cette fois il s'agit d'une **clef de lecture et d'écriture**..
 
-Sélectionnez la catégorie 'Sets de données', sélectionnez votre set dans le menu 'Ajouter des fichiers', puis cliquez sur 'Ajouter'.
+Sélectionnez la catégorie *Sets de données*, sélectionnez votre set dans le menu *Ajouter des fichiers*, puis cliquez sur *Ajouter*.
 
 Votre set s'affichera dans le tableau.
 
-Il ne reste plus qu'à **réaliser un commit**, en écrivant un message dans 'Message de commit' puis en cliquant sur 'Commit & push'.
+Il ne reste plus qu'à **réaliser un commit**, en écrivant un message dans *Message de commit* puis en cliquant sur *Commit & push*.
 
-Pour s'assurer que cela a fonctionné, rechargez l'application puis allez sur la page 'Paramètres > Sets de données'.
+Pour s'assurer que cela a fonctionné, rechargez l'application puis allez sur la page *Paramètres > Sets de données*.
 
 En sélectionnant votre dépôt git, vous devriez **voir apparaître votre set de données**, ce qui signifie qu'il sera accessible à toute personne ayant l'adresse de votre git et, s'il s'agit d'un dépôt privé, d'une clef API.
 
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_remote_git_datasets.png" alt="Remote git datasets" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
 
 Pour plus d'informations sur la gestion des dépôts git depuis LinkR, consultez le **tutoriel dédié**.
+
+<br /><hr />
+<div style = "text-align:center;">
+  <div style = "background-color:#0076ba; font-size:16px; font-weight:bold; color:white; font-family: 'Helvetica Neue';
+    padding:10px 20px; border-radius:5px; display:inline-block;">Conclusion</div>
+</div>
+
+Vous disposez maintenant de tous les éléments pour importer vos données sur LinkR.
+
+Efforcez-vous au maximum d'**importer** des données **depuis une connexion** à **une base de données** plutôt qu'avec des fichiers, cela **améliorera les performances** de l'application.
+
+Si vous partagez le code du script de l'import de données, attention à **ne pas y laisser de logs** de connexion.
+
+Si vous avez des questions ou des remarques sur ce tutoriel, **contactez-nous** à l'adresse suivante : <a href="mailto:linkr-app@pm.me">linkr-app@pm.me</a>.
