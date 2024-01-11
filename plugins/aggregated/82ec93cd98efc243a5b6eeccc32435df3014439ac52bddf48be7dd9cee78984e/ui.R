@@ -9,8 +9,8 @@ var_choice_options <- list(
 )
 
 if (d$visit_detail %>% dplyr::count() %>% dplyr::pull() > 0){
-    min_visit_detail_start_datetime <- min(d$visit_detail$visit_detail_start_datetime, na.rm = TRUE)
-    max_visit_detail_end_datetime <- max(d$visit_detail$visit_detail_end_datetime, na.rm = TRUE)
+    min_visit_detail_start_datetime <- d$visit_detail %>% dplyr::summarize(minimum = min(visit_detail_start_datetime, na.rm = TRUE)) %>% dplyr::pull(minimum)
+    max_visit_detail_end_datetime <- d$visit_detail %>% dplyr::summarize(maximum = max(visit_detail_end_datetime, na.rm = TRUE)) %>% dplyr::pull(maximum)
 } else {
     min_visit_detail_start_datetime <- ""
     max_visit_detail_end_datetime <- ""
