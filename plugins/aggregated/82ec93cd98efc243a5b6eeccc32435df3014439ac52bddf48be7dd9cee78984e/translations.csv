@@ -24,3 +24,10 @@ plot_width,Plot width (%),Largeur de la figure (%)
 plot_height,Plot height (%),Hauteur de la figure (%)
 show_stats,Show stats,Afficher les statistiques
 table_plot_side_by_side,Plot & table side by side,Figure & tableau côte-à-côte
+start_datetime,Start of interval,Début de l'intervalle
+end_datetime,End of interval,Fin de l'intervalle
+show_plot,Show plot,Afficher
+status,Status,Statut
+alive,Alive,Vivant
+dead,Dead,Décédé
+percentage,Percentage,Pourcentage

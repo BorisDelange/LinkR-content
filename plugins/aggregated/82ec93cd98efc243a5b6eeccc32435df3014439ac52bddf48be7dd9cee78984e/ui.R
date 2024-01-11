@@ -8,6 +8,14 @@ var_choice_options <- list(
     list(key = "readmissions", text = i18np$t("readmissions"))
 )
 
+if (d$visit_detail %>% dplyr::count() %>% dplyr::pull() > 0){
+    min_visit_detail_start_datetime <- min(d$visit_detail$visit_detail_start_datetime, na.rm = TRUE)
+    max_visit_detail_end_datetime <- max(d$visit_detail$visit_detail_end_datetime, na.rm = TRUE)
+} else {
+    min_visit_detail_start_datetime <- ""
+    max_visit_detail_end_datetime <- ""
+}
+
 tagList(
     div(
         br(),
@@ -21,7 +29,7 @@ tagList(
                 div(
                     id = ns("table_and_plot_div_%widget_id%"),
                     div(id = ns("plot_div_%widget_id%"), plotOutput(ns("plot_%widget_id%")), style = "border:solid 2px #EFEEEE; width:70%;"),
-                    div(id = ns("table_div_%widget_id%"), tableOutput(ns("table_%widget_id%")), style = "border:solid 2px #EFEEEE; margin-top:5px; width:30%;"),
+                    div(id = ns("table_div_%widget_id%"), tableOutput(ns("table_%widget_id%")), style = "border:solid 2px #EFEEEE; margin-left:5px; width:30%;"),
                     style = "display:flex;"
                 ),
                 br(),
@@ -51,6 +59,21 @@ tagList(
             div(
                 id = ns("split_layout_right_%widget_id%"),
                 style = "padding-left:10px; width:50%; margin-top:60px;",
+                shiny.fluent::Stack(
+                    horizontal = TRUE, tokens = list(childrenGap = 10),
+                    div(
+                        div(strong(i18np$t("start_datetime")), style = "margin-bottom:10px;"),
+                        shiny.fluent::DatePicker.shinyInput(ns("start_datetime_%widget_id%"), value = min_visit_detail_start_datetime),
+                        style = "width:50%;"
+                    ),
+                    div(
+                        div(strong(i18np$t("end_datetime")), style = "margin-bottom:10px;"),
+                        shiny.fluent::DatePicker.shinyInput(ns("end_datetime_%widget_id%"), value = max_visit_detail_end_datetime),
+                        style = "width:50%;"
+                    ),
+                    div(shiny.fluent::PrimaryButton.shinyInput(ns("show_plot_%widget_id%"), i18np$t("show_plot")), style = "margin-top:28px;")
+                ),
+                br(), hr(), br(),
                 shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
                     shiny.fluent::Toggle.shinyInput(ns("show_stats_%widget_id%"), value = TRUE, style = "margin-top:5px;"),
                     div(class = "toggle_title", i18np$t("show_stats"), style = "padding-top:5px;")

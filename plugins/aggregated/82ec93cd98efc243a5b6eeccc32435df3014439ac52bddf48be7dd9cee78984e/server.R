@@ -15,9 +15,9 @@ stats_functions <- list(
 
 # Stats functions per variable
 var_stats_functions <- list(
-    "age" = c("missing_data", "mean", "iq1", "median", "iq3", "min", "max"),
+    "age" = c("missing_data", "min", "iq1", "median", "mean", "iq3", "max"),
     "gender" = c("n_rows", "missing_data"),
-    "mortality" = character(),
+    "mortality" = c("n_rows"),
     "stays" = character(),
     "length_of_stay" = character(),
     "readmissions" = character()
@@ -82,8 +82,7 @@ observeEvent(input$show_params_%widget_id%, {
     }
     
     # Reload plot
-    m$create_plot_type_%widget_id% <- "show_plot"
-    m$create_plot_trigger_%widget_id% <- Sys.time()
+    m$render_results_%widget_id% <- Sys.time()  
 })
 
 # Table & plot side by side
@@ -105,6 +104,8 @@ observeEvent(input$side_by_side_%widget_id%, {
         shinyjs::runjs(glue::glue("$('#{id}-table_div_%widget_id%').css('margin-top', '5px');"))
         shinyjs::runjs(glue::glue("$('#{id}-table_div_%widget_id%').css('margin-left', '0');"))
     }
+    
+    # Reload plot
     m$render_results_%widget_id% <- Sys.time()  
 })
 
@@ -244,12 +245,12 @@ observeEvent(m$render_results_%widget_id%, {
         result_table <-
             result_table %>%
             dplyr::mutate(n = 1:dplyr::n()) %>%
-            dplyr::mutate(n = dplyr::case_when(n >= 2 ~ n + 2, TRUE ~ n)) %>%
+            dplyr::mutate(n = dplyr::case_when(n >= 1 ~ n + 2, TRUE ~ n)) %>%
             dplyr::bind_rows(
                 tibble::tribble(
                     ~var, ~value, ~n,
-                    i18np$t("n_stays"), length(data$age), 1,
-                    i18np$t("n_unique_patients"), n_unique_patients, 2,
+                    i18np$t("n_unique_patients"), n_unique_patients, 1,
+                    i18np$t("n_stays"), length(data$age), 2
                 )
             ) %>%
             dplyr::mutate(
@@ -264,6 +265,13 @@ observeEvent(m$render_results_%widget_id%, {
     
     # Gender
     else if (var_choice == "gender"){
+    
+        data <-
+            data %>%
+            dplyr::group_by(person_id) %>%
+            dplyr::slice(1) %>%
+            dplyr::ungroup()
+    
         result_plot <-
             data %>%
             dplyr::filter(!is.na(gender_concept_name)) %>%
@@ -291,6 +299,71 @@ observeEvent(m$render_results_%widget_id%, {
                 tibble::tibble(var = i18np$t(stat_name), value = stat_value)
             )
         }
+        
+        result_table <-
+            result_table %>%
+            dplyr::mutate(
+                value = dplyr::case_when(
+                    var %in% c(i18np$t("missing_data"), i18np$t("n_rows")) ~ as.character(as.integer(value)),
+                    TRUE ~ as.character(value)
+                ),
+                var = dplyr::case_when(var == i18np$t("n_rows") ~ i18np$t("n_unique_patients"), TRUE ~ var)
+            )
+    }
+    
+    # Mortality
+    else if (var_choice == "mortality"){
+        data <-
+            data %>%
+            dplyr::group_by(person_id) %>%
+            dplyr::slice(1) %>%
+            dplyr::ungroup()
+    
+        result_plot <-
+            data %>%
+            dplyr::mutate(status = dplyr::case_when(
+                !is.na(death_datetime) & death_datetime <= visit_detail_end_datetime ~ i18np$t("dead"),
+                TRUE ~ i18np$t("alive")
+            )) %>%
+            dplyr::group_by(gender_concept_name, status) %>%
+            dplyr::summarize(count = dplyr::n()) %>%
+            dplyr::mutate(percentage = count / sum(count) * 100) %>%
+            dplyr::ungroup() %>%
+            dplyr::arrange(gender_concept_name, desc(status)) %>%
+            dplyr::group_by(gender_concept_name) %>%
+            dplyr::mutate(cum_percentage = cumsum(percentage) - 0.5 * percentage) %>%
+            ggplot2::ggplot(ggplot2::aes(x = gender_concept_name, y = percentage, fill = status)) +
+            ggplot2::geom_bar(stat = "identity", width = 0.6) +
+            ggplot2::geom_text(ggplot2::aes(y = cum_percentage, label = sprintf("%.1f%%", percentage)), color = "gray40") +
+            ggplot2::scale_fill_brewer(palette = "Blues", name = i18np$t("status")) +
+            ggplot2::theme_minimal() +
+            ggplot2::labs(x = i18np$t("gender"), y = i18np$t("percentage")) +
+            ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+            ggplot2::theme(
+                axis.title.x = ggplot2::element_text(color = "gray40"),
+                axis.title.y = ggplot2::element_text(color = "gray40"),
+                plot.title = ggplot2::element_blank(),
+                legend.text = ggplot2::element_text(color = "gray40"),
+                legend.title = ggplot2::element_text(color = "gray40")
+            )
+        
+        # Apply stats functions
+        for (stat_name in var_stats_functions[[var_choice]]){
+            stat_value <- stats_functions[[stat_name]](data$gender_concept_id)
+            result_table <- result_table %>% dplyr::bind_rows(
+                tibble::tibble(var = i18np$t(stat_name), value = stat_value)
+            )
+        }
+        
+        result_table <-
+            result_table %>%
+            dplyr::mutate(
+                value = dplyr::case_when(
+                    var == i18np$t("n_rows") ~ as.character(as.integer(value)),
+                    TRUE ~ as.character(value)
+                ),
+                var = dplyr::case_when(var == i18np$t("n_rows") ~ i18np$t("n_unique_patients"), TRUE ~ var)
+            )
     }
     
     output$title_%widget_id% <- renderUI(
