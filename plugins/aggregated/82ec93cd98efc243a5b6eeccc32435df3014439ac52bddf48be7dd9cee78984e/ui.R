@@ -3,6 +3,7 @@ var_choice_options <- list(
     list(key = "age", text = i18np$t("age")),
     list(key = "gender", text = i18np$t("gender")),
     list(key = "mortality", text = i18np$t("mortality")),
+    list(key = "hospital_units", text = i18np$t("hospital_units")),
     list(key = "stays", text = i18np$t("stays")),
     list(key = "length_of_stay", text = i18np$t("length_of_stay")),
     list(key = "readmissions", text = i18np$t("readmissions"))
