@@ -35,3 +35,6 @@ dead,Dead,Décédé
 percentage,Percentage,Pourcentage
 hospital_unit,Hospital unit,Service hospitalier
 hospital_units,Hospital units,Services hospitaliers
+admissions,Admissions,Admissions
+hospital_admissions,Hospital admissions,Admissions hospitalières
+hospital_units_admissions,Units admissions,Admissions dans les unités

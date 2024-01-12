@@ -19,7 +19,7 @@ var_stats_functions <- list(
     "gender" = c("n_rows", "missing_data"),
     "mortality" = c("n_rows"),
     "hospital_units" = c("n_rows", "missing_data"),
-    "stays" = character(),
+    "admissions" = character(),
     "length_of_stay" = character(),
     "readmissions" = character()
 )
@@ -157,6 +157,11 @@ observeEvent(input$side_by_side_%widget_id%, {
 observeEvent(input$var_choice_%widget_id%, {
     %req%
     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$var_choice_%widget_id%"))
+    
+    # Show / hide admissions type choiceGroup
+    if (input$var_choice_%widget_id% == "admissions") shinyjs::show("admissions_type_div_%widget_id%")
+    else shinyjs::hide("admissions_type_div_%widget_id%")
+    
     m$render_results_%widget_id% <- Sys.time()  
 })
 
@@ -398,6 +403,11 @@ observeEvent(m$render_results_%widget_id%, {
                     i18np$t("max_end_datetime"), data$stays$visit_detail_end_datetime %>% as.Date() %>% format_datetime(language = language, type = "date") %>% max(na.rm = TRUE) %>% as.character()
                 )
             )
+    }
+    
+    # Admissions
+    else if (var_choice == "admissions"){
+        
     }
     
     output$title_%widget_id% <- renderUI(
