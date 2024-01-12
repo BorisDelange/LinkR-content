@@ -201,7 +201,7 @@ observeEvent(m$render_results_%widget_id%, {
     else if (m$omop_version == "6.0"){
         data$stays <-
             d$visit_detail %>%
-            dplyr::select(person_id, visit_detail_id, visit_detail_start_datetime, visit_detail_end_datetime) %>%
+            dplyr::select(person_id, visit_detail_id, visit_detail_concept_id, visit_detail_start_datetime, visit_detail_end_datetime) %>%
             dplyr::left_join(
                 d$person %>% dplyr::select(person_id, birth_datetime, death_datetime, gender_concept_id),
                 by = "person_id"
@@ -211,12 +211,12 @@ observeEvent(m$render_results_%widget_id%, {
     
     data$stays <-
         data$stays %>%
+        dplyr::collect() %>%
         # Add hospital unit names
         dplyr::left_join(
             d$dataset_all_concepts %>% dplyr::select(visit_detail_concept_id = concept_id_1, unit_name = concept_name_1),
             by = "visit_detail_concept_id"
         ) %>%
-        dplyr::collect() %>%
         dplyr::mutate(age = lubridate::interval(birth_datetime, visit_detail_start_datetime) / lubridate::years(1)) %>%
         dplyr::left_join(
             d$dataset_all_concepts %>% dplyr::filter(domain_id == "Gender") %>% dplyr::select(gender_concept_name = concept_name_1, gender_concept_id = concept_id_1),
