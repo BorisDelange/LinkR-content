@@ -4,7 +4,7 @@
     <app_version>0.2.0</app_version>
     <type>2</type>
     <unique_id>82ec93cd98efc243a5b6eeccc32435df3014439ac52bddf48be7dd9cee78984e</unique_id>
-    <version>0.0.1.9010</version>
+    <version>0.0.1.9012</version>
     <author>Boris Delange</author>
     <image>demographics_plugin_image.png</image>
     <name_en>Demographics</name_en>
@@ -14,7 +14,7 @@
     <description_en></description_en>
     <description_fr></description_fr>
     <creation_datetime>2024-01-08 13:21:15</creation_datetime>
-    <update_datetime>2024-01-12 13:58:13</update_datetime>
+    <update_datetime>2024-01-12 16:58:58</update_datetime>
     <images>demographics_plugin_image.png</images>
   </plugin>
 </plugins>

@@ -19,7 +19,7 @@ var_stats_functions <- list(
     "gender" = c("n_rows", "missing_data"),
     "mortality" = c("n_rows"),
     "hospital_units" = c("n_rows", "missing_data"),
-    "admissions" = character(),
+    "admissions" = c("n_rows"),
     "length_of_stay" = character(),
     "readmissions" = character()
 )
@@ -154,6 +154,17 @@ observeEvent(input$side_by_side_%widget_id%, {
 # --- Render plot & table ----
 # ----------------------------
 
+observeEvent(input$check_all_hospital_units_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$check_all_hospital_units_%widget_id%"))
+    shiny.fluent::updateDropdown.shinyInput(session, "hospital_units_%widget_id%", value = d$visit_detail %>% dplyr::distinct(visit_detail_concept_id) %>% dplyr::pull())
+})
+observeEvent(input$uncheck_all_hospital_units_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$uncheck_all_hospital_units_%widget_id%"))
+    shiny.fluent::updateDropdown.shinyInput(session, "hospital_units_%widget_id%", value = integer(0))
+})
+
 observeEvent(input$var_choice_%widget_id%, {
     %req%
     if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$var_choice_%widget_id%"))
@@ -162,7 +173,14 @@ observeEvent(input$var_choice_%widget_id%, {
     if (input$var_choice_%widget_id% == "admissions") shinyjs::show("admissions_type_div_%widget_id%")
     else shinyjs::hide("admissions_type_div_%widget_id%")
     
-    m$render_results_%widget_id% <- Sys.time()  
+    m$render_results_%widget_id% <- Sys.time()
+})
+
+observeEvent(input$show_plot_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer input$show_plot_%widget_id%"))
+    
+    m$render_results_%widget_id% <- Sys.time()
 })
 
 observeEvent(m$render_results_%widget_id%, {
@@ -174,7 +192,8 @@ observeEvent(m$render_results_%widget_id%, {
     # Requires that data is loaded
     req(d$person %>% dplyr::count() %>% dplyr::pull() > 0)
     req(d$visit_detail %>% dplyr::count() %>% dplyr::pull() > 0)
-    req(m$omop_version)
+    req(length(m$omop_version) > 0)
+    req(length(input$hospital_units_%widget_id%) > 0)
         
     result_ui <- tagList()
     plot_result <- ggplot2::ggplot()
@@ -187,7 +206,7 @@ observeEvent(m$render_results_%widget_id%, {
         
         data$stays <-
             d$visit_detail %>%
-            dplyr::select(person_id, visit_detail_id, visit_detail_concept_id, visit_detail_start_datetime, visit_detail_end_datetime) %>%
+            dplyr::select(person_id, visit_detail_id, visit_occurrence_id, visit_detail_concept_id, visit_detail_start_datetime, visit_detail_end_datetime) %>%
             dplyr::left_join(
                 d$person %>%
                     dplyr::mutate(birth_datetime = dplyr::case_when(
@@ -206,7 +225,7 @@ observeEvent(m$render_results_%widget_id%, {
     else if (m$omop_version == "6.0"){
         data$stays <-
             d$visit_detail %>%
-            dplyr::select(person_id, visit_detail_id, visit_detail_concept_id, visit_detail_start_datetime, visit_detail_end_datetime) %>%
+            dplyr::select(person_id, visit_detail_id, visit_occurrence_id, visit_detail_concept_id, visit_detail_start_datetime, visit_detail_end_datetime) %>%
             dplyr::left_join(
                 d$person %>% dplyr::select(person_id, birth_datetime, death_datetime, gender_concept_id),
                 by = "person_id"
@@ -214,9 +233,13 @@ observeEvent(m$render_results_%widget_id%, {
             dplyr::relocate(gender_concept_id, .after = "person_id")
     }
     
+    m$temp <- input$hospital_units_%widget_id%
+    
     data$stays <-
         data$stays %>%
         dplyr::collect() %>%
+        # Filter on selected hospital units
+        dplyr::filter(visit_detail_concept_id %in% input$hospital_units_%widget_id%) %>%
         # Add hospital unit names
         dplyr::left_join(
             d$dataset_all_concepts %>% dplyr::select(visit_detail_concept_id = concept_id_1, unit_name = concept_name_1),
@@ -226,6 +249,21 @@ observeEvent(m$render_results_%widget_id%, {
         dplyr::left_join(
             d$dataset_all_concepts %>% dplyr::filter(domain_id == "Gender") %>% dplyr::select(gender_concept_name = concept_name_1, gender_concept_id = concept_id_1),
             by = "gender_concept_id"
+        )
+        
+    # Filter on selected start_datetime & end_datetime
+    # For admissions, filter on visit_detail_start_datetime only
+    if (var_choice == "admissions") data$stays <-
+        data$stays %>%
+        dplyr::filter(
+            visit_detail_start_datetime >= as.POSIXct(input$start_datetime_%widget_id%),
+            visit_detail_start_datetime <= as.POSIXct(input$end_datetime_%widget_id%),
+        )
+    else data$stays <-
+        data$stays %>%
+        dplyr::filter(
+            visit_detail_start_datetime >= as.POSIXct(input$start_datetime_%widget_id%),
+            visit_detail_end_datetime <= as.POSIXct(input$end_datetime_%widget_id%),
         )
         
     data$patients <-
@@ -245,7 +283,7 @@ observeEvent(m$render_results_%widget_id%, {
             ggplot2::ggplot(ggplot2::aes(x = age)) +
             ggplot2::geom_histogram(bins = 50, fill = "#377EB8", color = "#FFFFFF") +
             ggplot2::theme_minimal() +
-            ggplot2::labs(x = i18np$t("age"), y = i18np$t("stay_occurrences")) +
+            ggplot2::labs(x = i18np$t("age"), y = i18np$t("patients_occurrences")) +
             ggplot2::theme(
                 axis.title.x = ggplot2::element_text(color = "gray40"),
                 axis.title.y = ggplot2::element_text(color = "gray40"),
@@ -399,8 +437,8 @@ observeEvent(m$render_results_%widget_id%, {
             dplyr::bind_rows(
                 tibble::tribble(
                     ~var, ~value,
-                    i18np$t("min_start_datetime"), data$stays$visit_detail_start_datetime %>% as.Date() %>% format_datetime(language = language, type = "date") %>% min(na.rm = TRUE) %>% as.character(),
-                    i18np$t("max_end_datetime"), data$stays$visit_detail_end_datetime %>% as.Date() %>% format_datetime(language = language, type = "date") %>% max(na.rm = TRUE) %>% as.character()
+                    i18np$t("min_start_datetime"), data$stays$visit_detail_start_datetime %>% as.Date() %>% min(na.rm = TRUE) %>% format_datetime(language = language, type = "date") %>% as.character(),
+                    i18np$t("max_end_datetime"), data$stays$visit_detail_end_datetime %>% as.Date() %>% max(na.rm = TRUE) %>% format_datetime(language = language, type = "date") %>% as.character()
                 )
             )
     }
@@ -408,6 +446,59 @@ observeEvent(m$render_results_%widget_id%, {
     # Admissions
     else if (var_choice == "admissions"){
         
+        # If we want to see hospital admissions, group by visit_occurrence_id (corresponds to one hospital admission)
+        if (input$admissions_type_%widget_id% == "hospital"){
+            data$stays <-
+                data$stays %>%
+                dplyr::group_by(visit_occurrence_id) %>%
+                dplyr::summarize(visit_detail_start_datetime = min(visit_detail_start_datetime)) %>%
+                dplyr::ungroup()
+        }
+        
+        plot_result <-
+            data$stays %>%
+            ggplot2::ggplot(ggplot2::aes(x = visit_detail_start_datetime)) +
+            ggplot2::geom_histogram(bins = 30, fill = "#377EB8", color = "#FFFFFF") +
+            ggplot2::theme_minimal() +
+            ggplot2::labs(x = i18np$t("date"), y = i18np$t("admissions_occurrences"))
+            
+        # Apply stats functions
+        for (stat_name in var_stats_functions[[var_choice]]){
+            stat_value <- stats_functions[[stat_name]](data$stays$visit_detail_start_datetime)
+            table_result <- table_result %>% dplyr::bind_rows(
+                tibble::tibble(var = i18np$t(stat_name), value = stat_value)
+            )
+        }
+        
+        # Calculate number of admissions per day
+        admissions_per_day <-
+            data$stays %>%
+            dplyr::mutate(date = as.Date(visit_detail_start_datetime)) %>%
+            dplyr::group_by(date) %>%
+            dplyr::summarize(num_admissions = dplyr::n()) %>%
+            dplyr::ungroup() %>%
+            dplyr::pull(num_admissions) %>%
+            mean() %>%
+            round(1)
+        
+        table_result <-
+            table_result %>%
+            dplyr::mutate(
+                value = dplyr::case_when(
+                    var == i18np$t("n_rows") ~ as.character(as.integer(value)),
+                    TRUE ~ as.character(value)
+                ),
+                var = dplyr::case_when(var == i18np$t("n_rows") ~ i18np$t("n_admissions"), TRUE ~ var)
+            ) %>%
+            # Add visit_detail min & max datetimes
+            dplyr::bind_rows(
+                tibble::tribble(
+                    ~var, ~value,
+                    i18np$t("mean_admissions_per_day"), as.character(admissions_per_day),
+                    i18np$t("min_start_datetime"), data$stays$visit_detail_start_datetime %>% as.Date() %>% min(na.rm = TRUE) %>% format_datetime(language = language, type = "date") %>% as.character(),
+                    i18np$t("max_end_datetime"), data$stays$visit_detail_start_datetime %>% as.Date() %>% max(na.rm = TRUE) %>% format_datetime(language = language, type = "date") %>% as.character()
+                )
+            )
     }
     
     output$title_%widget_id% <- renderUI(
@@ -420,3 +511,43 @@ observeEvent(m$render_results_%widget_id%, {
     output$plot_%widget_id% <- renderPlot(plot_result)
     output$table_%widget_id% <- renderTable(table_result)
 })
+
+# Idea for a Sankey diagram ?
+# data <-
+#     d$visit_detail %>%
+#     dplyr::select(person_id, visit_detail_id, visit_detail_concept_id, visit_detail_start_datetime, visit_detail_end_datetime) %>%
+#     dplyr::collect() %>%
+#     dplyr::arrange(person_id, visit_detail_start_datetime) %>%
+#     dplyr::group_by(person_id) %>%
+#     dplyr::mutate(
+#         preceding_visit_detail_concept_id = dplyr::lag(visit_detail_concept_id),
+#         preceding_visit_detail_end_datetime = dplyr::lag(visit_detail_end_datetime)
+#     ) %>%
+#     dplyr::ungroup() %>%
+#     dplyr::filter(
+#         visit_detail_start_datetime == preceding_visit_detail_end_datetime,
+#         visit_detail_concept_id != preceding_visit_detail_concept_id
+#     ) %>%
+#     dplyr::left_join(
+#         d$dataset_all_concepts %>% dplyr::select(visit_detail_concept_id = concept_id_1, unit_name = concept_name_1),
+#         by = "visit_detail_concept_id"
+#     ) %>%
+#     dplyr::left_join(
+#         d$dataset_all_concepts %>% dplyr::select(preceding_visit_detail_concept_id = concept_id_1, preceding_unit_name = concept_name_1),
+#         by = "preceding_visit_detail_concept_id"
+#     ) %>%
+#     dplyr::select(preceding_visit_detail_end_datetime, preceding_unit_name, visit_detail_start_datetime, unit_name) %>%
+#     dplyr::count(source = preceding_unit_name, target = unit_name) %>%
+#     dplyr::arrange(dplyr::desc(n)) %>%
+#     dplyr::slice(1:10)
+# 
+# nodes <- tibble::tibble(name = unique(c(as.character(data$source), as.character(data$target))))
+# links <-
+#     data %>%
+#     dplyr::mutate(
+#         source = match(source, nodes$name) - 1,
+#         target = match(target, nodes$name) - 1
+#     )
+#     
+# networkD3::sankeyNetwork(Links = links, Nodes = nodes, Source = "source", Target = "target", Value = "n", NodeID = "name")
+

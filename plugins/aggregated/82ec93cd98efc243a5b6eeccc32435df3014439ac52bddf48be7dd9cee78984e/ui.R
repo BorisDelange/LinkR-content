@@ -12,6 +12,16 @@ var_choice_options <- list(
 if (d$visit_detail %>% dplyr::count() %>% dplyr::pull() > 0){
     min_visit_detail_start_datetime <- d$visit_detail %>% dplyr::summarize(minimum = min(visit_detail_start_datetime, na.rm = TRUE)) %>% dplyr::pull(minimum)
     max_visit_detail_end_datetime <- d$visit_detail %>% dplyr::summarize(maximum = max(visit_detail_end_datetime, na.rm = TRUE)) %>% dplyr::pull(maximum)
+    
+    # Get various hospital units
+    hospital_units_options <-
+        d$visit_detail %>%
+        dplyr::count(visit_detail_concept_id, sort = TRUE) %>%
+        dplyr::collect() %>%
+        dplyr::left_join(
+            d$dataset_all_concepts %>% dplyr::select(visit_detail_concept_id = concept_id_1, unit_name = concept_name_1),
+            by = "visit_detail_concept_id"
+        )
 } else {
     min_visit_detail_start_datetime <- ""
     max_visit_detail_end_datetime <- ""
@@ -63,6 +73,25 @@ tagList(
                 shiny.fluent::Stack(
                     horizontal = TRUE, tokens = list(childrenGap = 10),
                     div(
+                        div(strong(i18np$t("hospital_units")), style = "margin-bottom:10px;"),
+                        shiny.fluent::Dropdown.shinyInput(ns("hospital_units_%widget_id%"), 
+                            options = hospital_units_options %>% convert_tibble_to_list(key_col = "visit_detail_concept_id", text_col = "unit_name"),
+                            value = hospital_units_options %>% dplyr::pull(visit_detail_concept_id),
+                            multiSelect = TRUE), 
+                        style = "width:50%;"
+                    ),
+                    div(
+                        shiny.fluent::DefaultButton.shinyInput(ns("check_all_hospital_units_%widget_id%"), i18np$t("check_all")),
+                        style = "margin-top:28px;"
+                    ),
+                    div(
+                        shiny.fluent::DefaultButton.shinyInput(ns("uncheck_all_hospital_units_%widget_id%"), i18np$t("uncheck_all")),
+                        style = "margin-top:28px;"
+                    )
+                ), br(),
+                shiny.fluent::Stack(
+                    horizontal = TRUE, tokens = list(childrenGap = 10),
+                    div(
                         div(strong(i18np$t("start_datetime")), style = "margin-bottom:10px;"),
                         shiny.fluent::DatePicker.shinyInput(ns("start_datetime_%widget_id%"), value = min_visit_detail_start_datetime),
                         style = "width:50%;"
@@ -71,8 +100,7 @@ tagList(
                         div(strong(i18np$t("end_datetime")), style = "margin-bottom:10px;"),
                         shiny.fluent::DatePicker.shinyInput(ns("end_datetime_%widget_id%"), value = max_visit_detail_end_datetime),
                         style = "width:50%;"
-                    ),
-                    div(shiny.fluent::PrimaryButton.shinyInput(ns("show_plot_%widget_id%"), i18np$t("show_plot")), style = "margin-top:28px;")
+                    )
                 ),
                 shinyjs::hidden(
                     div(
@@ -85,6 +113,7 @@ tagList(
                             ), className = "inline_choicegroup")
                     )
                 ),
+                div(shiny.fluent::PrimaryButton.shinyInput(ns("show_plot_%widget_id%"), i18np$t("show_plot")), style = "margin-top:28px;"),
                 br(), hr(), br(),
                 shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
                     shiny.fluent::Toggle.shinyInput(ns("show_stats_%widget_id%"), value = TRUE, style = "margin-top:5px;"),
@@ -101,3 +130,4 @@ tagList(
         id = ns("patients_tab_%widget_id%"),
     )
 )
+

@@ -6,6 +6,7 @@ gender,Gender,Sexe
 mortality,Mortality,Mortalité
 length_of_stay,Length of stay,Durées de séjour
 readmissions,Readmissions,Réadmissions
+patients_occurrences,Number of patients,Nombre de patients
 stay_occurrences,Number of stays,Nombre de séjours
 variable,Variable,Variable
 value,Value,Valeur
@@ -21,6 +22,7 @@ missing_data,Missing data,Données manquantes
 n_rows,Number of rows,Nombre de lignes
 n_unique_patients,Number of unique patients,Nombre de patients uniques
 n_stays,Number of stays,Nombre de séjours
+n_admissions,Number of admissions,Nombre d'admissions
 show_params,Show parameters,Afficher les paramètres
 plot_width,Plot width (%),Largeur de la figure (%)
 plot_height,Plot height (%),Hauteur de la figure (%)
@@ -38,3 +40,8 @@ hospital_units,Hospital units,Services hospitaliers
 admissions,Admissions,Admissions
 hospital_admissions,Hospital admissions,Admissions hospitalières
 hospital_units_admissions,Units admissions,Admissions dans les unités
+admissions_occurrences,Number of admissions,Nombre d'admissions
+date,Date,Date
+mean_admissions_per_day,Mean admissions per day,Moyenne des admissions par jour
+check_all,Check all,Tout cocher
+uncheck_all,Uncheck all,Tout décocher
