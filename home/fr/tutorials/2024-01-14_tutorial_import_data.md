@@ -1,5 +1,5 @@
 <span style = "color:grey;">Auteur : Boris Delange</span><br />
-<span style = "color:grey;">Dernière modification : 10/01/2023</span>
+<span style = "color:grey;">Dernière modification : 14/01/2023</span>
 
 ### <i class="fa fa-info-circle" style="color:steelblue;"></i> Introduction
 
@@ -12,6 +12,8 @@ Nous **testerons** nos données en **créant une étude**.
 Nous importerons ensuite un plus grand set de données au format OMOP, en utilisant les données de la base **MIMIC-IV**.
 
 Nous finirons en **partageant** notre code via notre dépôt git.
+
+Pour faciliter la lecture de ce tutoriel, ouvrez deux onglets : l'un avec le tutoriel, l'autre où vous effectuerez les différentes étapes du tutoriel sur votre instance de LinkR.
 
 <img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_intro.png" alt="Settings icon" style="height:200px;" />
 
