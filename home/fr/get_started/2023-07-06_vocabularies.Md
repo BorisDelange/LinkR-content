@@ -18,4 +18,4 @@ Vous pouvez ici :
 - **Editer** les alignements créés
 - **Evaluer** les alignements ajoutés par les autres utilisateurs
 
-Pour plus d'informations, rendez-vous sur l'aide de la page `Terminologies`.
+Pour plus d'informations, rendez-vous sur l'aide de la page `Terminologies`. 

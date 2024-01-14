@@ -20,4 +20,4 @@ Cette partie comprend les liens suivants :
 
 - **Pages d'aide** : en cliquant sur ce lien, une page d'**aide spécifique à la page** où vous vous trouvez s'ouvre
 - **Paramètres** : accédez aux différents paramètres de l'application via ce lien
-- **Déconnexion** : déconnectez-vosu en cliquant sur ce bouton
+- **Déconnexion** : déconnectez-vosu en cliquant sur ce bouton 
