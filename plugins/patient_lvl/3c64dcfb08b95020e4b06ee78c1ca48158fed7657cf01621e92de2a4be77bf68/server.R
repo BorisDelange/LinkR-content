@@ -51,13 +51,18 @@ observeEvent(m$script_code_trigger_%widget_id%, {
     %req%
     if (debug) print(paste0(Sys.time(), " - mod_", id, " - widget_id = %widget_id% - observer m$script_code_trigger_%widget_id%"))
     
+    req(length(m$selected_person) > 0)
+    req(!is.na(m$selected_person))
+    
     divs <- c("r_script_result_div_%widget_id%", "rmarkdown_script_result_div_%widget_id%", "plot_script_result_div_%widget_id%")
     
     code <- m$script_final_code_%widget_id%
     
     # R code
     if (input$script_type_%widget_id% == "r"){
+        options("cli.num_colors" = 1)
         captured_output <- capture.output(tryCatch(eval(parse(text = code)), error = function(e) print(e), warning = function(w) print(w)))
+        options("cli.num_colors" = NULL)
         
         shinyjs::show("r_script_result_div_%widget_id%")
         sapply(c("rmarkdown_script_result_div_%widget_id%", "plot_script_result_div_%widget_id%"), shinyjs::hide)
