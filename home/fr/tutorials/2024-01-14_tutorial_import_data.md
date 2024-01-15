@@ -141,6 +141,7 @@ Vous pouvez choisir la version via le menu déroulant en haut de la page présen
 Voilà **nos données prêtes**, nous allons pouvoir les **importer** dans LinkR.
 
 <br />
+
 ### <i class="fa fa-upload" style="color:steelblue;"></i> Importer les données dans LinkR
 
 Pour importer des données dans LinkR, nous allons utiliser la fonction <a href = "https://interhop.frama.io/linkr/linkr/reference/import_dataset.html" target = "_blank">***import_dataset***</a>.
@@ -261,6 +262,7 @@ En pratique :
 - si vous avez besoin de **réaliser du calcul distribué** sur **plusieurs serveurs**, utilisez la lecture par ***spark***, avec une connexion à une base de données (argument 'none' pour *save_as*)
 
 <br />
+
 ### <i class="fa fa-database" style="color:steelblue;"></i> Test avec les données de la base MIMIC-IV
 
 Nous allons maintenant charger des données depuis la **base de données <a href = "https://mimic.mit.edu/" target = "_blank">MIMIC-IV</a>**.
