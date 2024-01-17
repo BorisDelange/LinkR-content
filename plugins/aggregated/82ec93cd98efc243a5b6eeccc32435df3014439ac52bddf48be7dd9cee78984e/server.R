@@ -193,7 +193,7 @@ observeEvent(m$render_results_%widget_id%, {
     req(d$person %>% dplyr::count() %>% dplyr::pull() > 0)
     req(d$visit_detail %>% dplyr::count() %>% dplyr::pull() > 0)
     req(length(m$omop_version) > 0)
-    req(length(input$hospital_units_%widget_id%) > 0)
+    req(length(input$hospital_units_%widget_id%) > 0, length(input$start_datetime_%widget_id%) > 0, length(input$end_datetime_%widget_id%) > 0)
         
     result_ui <- tagList()
     plot_result <- ggplot2::ggplot()
