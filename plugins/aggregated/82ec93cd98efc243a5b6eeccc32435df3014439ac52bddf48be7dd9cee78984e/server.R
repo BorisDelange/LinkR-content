@@ -207,8 +207,10 @@ observeEvent(m$render_results_%widget_id%, {
         data$stays <-
             d$visit_detail %>%
             dplyr::select(person_id, visit_detail_id, visit_occurrence_id, visit_detail_concept_id, visit_detail_start_datetime, visit_detail_end_datetime) %>%
+            dplyr::collect() %>%
             dplyr::left_join(
                 d$person %>%
+                    dplyr::collect() %>%
                     dplyr::mutate(birth_datetime = dplyr::case_when(
                         is.na(birth_datetime) ~ lubridate::ymd_hms(paste0(year_of_birth, "-01-01 00:00:00")),
                         TRUE ~ birth_datetime
@@ -218,7 +220,7 @@ observeEvent(m$render_results_%widget_id%, {
             ) %>%
             dplyr::relocate(gender_concept_id, .after = "person_id") %>%
             dplyr::left_join(
-                d$death %>% dplyr::select(person_id, death_datetime),
+                d$death %>% dplyr::select(person_id, death_datetime) %>% dplyr::collect(),
                 by = "person_id"
             )
     }
@@ -226,8 +228,9 @@ observeEvent(m$render_results_%widget_id%, {
         data$stays <-
             d$visit_detail %>%
             dplyr::select(person_id, visit_detail_id, visit_occurrence_id, visit_detail_concept_id, visit_detail_start_datetime, visit_detail_end_datetime) %>%
+            dplyr::collect() %>%
             dplyr::left_join(
-                d$person %>% dplyr::select(person_id, birth_datetime, death_datetime, gender_concept_id),
+                d$person %>% dplyr::select(person_id, birth_datetime, death_datetime, gender_concept_id) %>% dplyr::collect(),
                 by = "person_id"
             ) %>%
             dplyr::relocate(gender_concept_id, .after = "person_id")
@@ -237,7 +240,6 @@ observeEvent(m$render_results_%widget_id%, {
     
     data$stays <-
         data$stays %>%
-        dplyr::collect() %>%
         # Filter on selected hospital units
         dplyr::filter(visit_detail_concept_id %in% input$hospital_units_%widget_id%) %>%
         # Add hospital unit names
