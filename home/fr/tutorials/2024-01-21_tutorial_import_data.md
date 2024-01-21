@@ -1,7 +1,7 @@
 <span style = "color:grey;">Auteur : Boris Delange</span><br />
 <span style = "color:grey;">Dernière modification : 14/01/2023</span>
 
-### <i class="fa fa-info-circle" style="color:steelblue;"></i> Introduction
+<h3><i class="fa fa-info-circle" style="color:steelblue;"></i> Introduction</h3>
 
 Dans ce tutoriel, nous allons voir comment **importer des données** dans LinkR.
 
@@ -15,7 +15,7 @@ Nous finirons en **partageant** notre code via notre dépôt git.
 
 Pour faciliter la lecture de ce tutoriel, ouvrez deux onglets : l'un avec le tutoriel, l'autre où vous effectuerez les différentes étapes du tutoriel sur votre instance de LinkR.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_intro.png" alt="Settings icon" style="height:200px;" />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_intro.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_intro.png" alt="Settings icon" style="height:200px;" /></a>
 
 **Plan** :
 
@@ -28,61 +28,62 @@ Pour faciliter la lecture de ce tutoriel, ouvrez deux onglets : l'un avec le tut
 - Partageons notre code
 
 <br /><hr />
-<div style = "text-align:center;">
-  <div style = "background-color:#0076ba; font-size:16px; font-weight:bold; color:white; font-family: 'Helvetica Neue';
+<h2 style = "text-align:center;">
+  <div style = "background-color:#0076ba; font-size:16px; font-weight:bold; color:white;
     padding:10px 20px; border-radius:5px; display:inline-block;">Créer un set de données</div>
-</div>
+</h2>
 
-### <i class="fa fa-database" style="color:steelblue;"></i> Entrepôts de données de santé et modèles de données
+<h3><i class="fa fa-database" style="color:steelblue;"></i> Entrepôts de données de santé et modèles de données</h3>
 
-Pour savoir ce qu'est un entrepôt de données de santé, lisez le tutoriel ***Entrepôts de données de santé et collecte des données médicales*** dans la rubrique *Données de santé* de la page *Ressources*.
+Pour savoir ce qu'est un entrepôt de données de santé, lisez le tutoriel <strong><em>Entrepôts de données de santé et collecte des données médicales</strong></em> dans la rubrique <em>Données de santé</em> de la page <em>Ressources</em>.
 
-Lisez également le tutoriel ***Modèles de données*** dans la même rubrique.
+Lisez également le tutoriel <strong><em>Modèles de données</strong></em> dans la même rubrique.
 
-Le modèle de données utilisé par LinkR est le modèle **<a href = "https://ohdsi.github.io/CommonDataModel/" target = "_blank">OMOP</a>**.
+Le modèle de données utilisé par LinkR est le modèle <strong><a href = "https://ohdsi.github.io/CommonDataModel/" target = "_blank">OMOP</a></strong>.
 
 <br />
-### <i class="fa fa-table" style="color:steelblue;"></i> Créer un set de données
 
-Pour commencer, rendez-vous sur la page ***Set de données***, depuis la page *Paramètres* en haut à droite de l'écran.
+<h3><i class="fa fa-table" style="color:steelblue;"></i> Créer un set de données</h3>
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_settings_icon.png" alt="Settings icon" style="height:50px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /><br />
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_settings_menu.png" alt="Settings menu" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px;" />
+Pour commencer, rendez-vous sur la page <strong><em>Set de données</strong></em> depuis la page <em>Paramètres</em> en haut à droite de l'écran.<br />
 
-Allez ensuite dans l'onglet ***Gestion des sets***, puis créez un nouveau set, que vous appellerez par exemple 'Set de données tutoriel'.
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_settings_icon.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_settings_icon.png" alt="Settings icon" style="height:50px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /></a><br />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_settings_menu.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_settings_menu.png" alt="Settings menu" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px;" /></a><br />
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_create_dataset.png" alt="Create a dataset" style="height:200px; border:dashed 1px; margin:5px 0px 5px 0px;" />
+Allez ensuite dans l'onglet <strong><em>Gestion des sets</strong></em>, puis créez un nouveau set, que vous appellerez par exemple 'Set de données tutoriel'.<br /><br />
+
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_create_dataset.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_create_dataset.png" alt="Create a dataset" style="height:200px; border:dashed 1px; margin:5px 0px 5px 0px;" /></a><br /><br />
 
 Une fois le set de données créé, vous devriez le voir apparaître dans le tableau au milieu de la page.
 
-Sur la ligne correspondant à votre nouveau set de données, cliquez sur l'icône de rouages afin d'**accéder aux options** de votre set.
+Sur la ligne correspondant à votre nouveau set de données, cliquez sur l'icône de rouages afin d'<strong>accéder aux options</strong> de votre set.
 
-Choisissez la **version OMOP 6.0** dans le menu déroulant correspondant.
+Choisissez la **version OMOP 6.0** dans le menu déroulant correspondant.<br /><br />
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_dataset_options.png" alt="Dataset options" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px;" />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_dataset_options.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_dataset_options.png" alt="Dataset options" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px;" /></a><br /><br />
 
-Pour **en savoir plus sur les options**, cliquez sur le point d'interrogation en haut à droite de la page, puis sur *Options du set*. Il existe **une page d'aide pour chaque onglet**.
+Pour <strong>en savoir plus sur les options</strong>, cliquez sur le point d'interrogation en haut à droite de la page, puis sur <em>Options du set</em>. Il existe <strong>une page d'aide pour chaque onglet</strong>.<br /><br />
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_help_icon.png" alt="Help icon" style="height:50px; border:dashed 1px; margin:5px 0px 5px 0px;" /><br />
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_dataset_help.png" alt="Dataset options" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px; padding-bottom:5px;" />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_help_icon.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_help_icon.png" alt="Help icon" style="height:50px; border:dashed 1px; margin:5px 0px 5px 0px;" /></a><br />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_dataset_help.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_dataset_help.png" alt="Dataset options" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px; padding-bottom:5px;" /></a><br /><br />
 
-Nous allons maintenant pouvoir **éditer le code** de notre set de données. Rendez-vous pour cela dans l'onglet *Editer le code*.
+Nous allons maintenant pouvoir <strong>éditer le code</strong> de notre set de données. Rendez-vous pour cela dans l'onglet *Editer le code*.<br />
 
-L'éditeur auquel vous avez accès fonctionne comme une **console R**, exécutez le code en cliquant sur *Exécuter* ou en utilisant les raccourcis :
-
-- CMD/CTRL + SHIFT + ENTER : exécute l'ensemble du code
-- CMD/CTRL + ENTER : exécute le code sélectionné
-- CMD/CTRL + SHIFT + C : commente le code sélectionné
-
+L'éditeur auquel vous avez accès fonctionne comme une <strong>console R</strong>, exécutez le code en cliquant sur <em>Exécuter</em> ou en utilisant les raccourcis :
+<ul>
+<li>CMD/CTRL + SHIFT + ENTER : exécute l'ensemble du code</li>
+<li>CMD/CTRL + ENTER : exécute le code sélectionné</li>
+<li>CMD/CTRL + SHIFT + C : commente le code sélectionné</li>
+</ul><br />
 Pensez à sauvegarder votre code. Vous pouvez également utiliser le raccourci CMD/CTRL + S.
 
 <br /><hr />
-<div style = "text-align:center;">
-  <div style = "background-color:#feae03; font-size:16px; font-weight:bold; color:white; font-family: 'Helvetica Neue';
+<h2 style = "text-align:center;">
+  <div style = "background-color:#feae03; font-size:16px; font-weight:bold; color:white;
     padding:10px 20px; border-radius:5px; display:inline-block;">Importer des données</div>
-</div>
+</h2>
 
-### <i class="fa fa-table" style="color:steelblue;"></i> Créer des données au format OMOP
+<h3><i class="fa fa-table" style="color:steelblue;"></i> Créer des données au format OMOP</h3>
 
 Pour commencer, nous allons créer des **données factices** au **format OMOP**, nous verrons ensuite comment importer les données la base MIMIC-IV.
 
@@ -122,13 +123,13 @@ Rendez-vous sur la page **Editer le code du set**, puis **copiez-y le code** ci-
 
 En **exécutant** ce code, vous devriez voir apparaître votre set de données de 100 patients en bas de l'écran.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_execute_person_code.png" alt="Result of code execution" style="height:900px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_execute_person_code.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_execute_person_code.png" alt="Result of code execution" style="width:800px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /></a>
 
 Pour plus d'informations sur la **structure** de la **base de données OMOP**, rendez-vous dans la **page d'aide** ***Modèles de données*** via le point d'interrogation en haut de l'écran. Vous y trouverez un lien vers le <a href = "https://ohdsi.github.io/CommonDataModel/" target = "_blank">site d'OHDSI, détaillant le modèle OMOP</a>.
 
 Regardez la structure de la table *Person*, vous retrouvez bien les colonnes que nous avons créées pour notre variable *person*.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_omop_person_detail.png" alt="OMOP person table documentation" style="height:650px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_omop_person_detail.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_omop_person_detail.png" alt="OMOP person table documentation" style="width:800px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /></a>
 
 Attention, les **colonnes** et les **tables** peuvent **changer** en fonction des **versions** d'OMOP.
 
@@ -136,13 +137,13 @@ Par exemple, le version 5.3 ne comprend par la colonne *death_datetime* dans la 
 
 Vous pouvez choisir la version via le menu déroulant en haut de la page présentée ci-dessus.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_omop_version.png" alt="Result of code execution" style="height:180px; border:dashed 1px; margin:5px 0px 5px 0px; padding:0px 0px 5px 0px;" />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_omop_version.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_omop_version.png" alt="Result of code execution" style="height:180px; border:dashed 1px; margin:5px 0px 5px 0px; padding:0px 0px 5px 0px;" /></a>
 
 Voilà **nos données prêtes**, nous allons pouvoir les **importer** dans LinkR.
 
 <br />
 
-### <i class="fa fa-upload" style="color:steelblue;"></i> Importer les données dans LinkR
+<h3><i class="fa fa-upload" style="color:steelblue;"></i> Importer les données dans LinkR</h3>
 
 Pour importer des données dans LinkR, nous allons utiliser la fonction <a href = "https://interhop.frama.io/linkr/linkr/reference/import_dataset.html" target = "_blank">***import_dataset***</a>.
 
@@ -178,7 +179,7 @@ Si vous cochez 'Afficher les données importées' en dessous de l'éditeur de co
 
 Nous voyons que nous avons bien **importé 100 lignes** dans la table person.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_table_imported_data.png" alt="Table showing imported data" style="height:250px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_table_imported_data.png"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_table_imported_data.png" alt="Table showing imported data" style="height:250px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /></a>
 
 A chaque fois que vous chargerez un set de données depuis la page *Données*, c'est ce **code** qui sera **exécuté**.
 
@@ -263,7 +264,7 @@ En pratique :
 
 <br />
 
-### <i class="fa fa-database" style="color:steelblue;"></i> Test avec les données de la base MIMIC-IV
+<h3><i class="fa fa-database" style="color:steelblue;"></i> Test avec les données de la base MIMIC-IV</h3>
 
 Nous allons maintenant charger des données depuis la **base de données <a href = "https://mimic.mit.edu/" target = "_blank">MIMIC-IV</a>**.
 
@@ -293,7 +294,7 @@ import_dataset(
 
 Si vous exécutez ce code depuis le même set de données que nous avons créé au début du tutoriel, vous devriez avoir ce message d'erreur :
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_error_message_1.png" alt="Settings icon" style="height:70px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_error_message_1.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_error_message_1.png" alt="Settings icon" style="width:800px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /></a>
 
 Ceci est dû au fait que les colonnes de notre table *person* ne correspondent pas avec la version OMOP sélectionée.
 
@@ -397,12 +398,12 @@ Nous pourrions également charger les autres tables. Consultez pour cela le code
 Nous allons maintenant **créer une étude** pour afficher nos données.
 
 <br /><hr />
-<div style = "text-align:center;">
-  <div style = "background-color:#1bb100; font-size:16px; font-weight:bold; color:white; font-family: 'Helvetica Neue';
+<h2 style = "text-align:center;">
+  <div style = "background-color:#1bb100; font-size:16px; font-weight:bold; color:white;
     padding:10px 20px; border-radius:5px; display:inline-block;">Tester notre set</div>
-</div>
+</h2>
 
-### <i class="fa fa-eye" style="color:steelblue;"></i> Afficher nos données
+<h3><i class="fa fa-eye" style="color:steelblue;"></i> Afficher nos données</h3>
 
 Commençons par **créer une étude**.
 
@@ -423,11 +424,11 @@ Vous aurez une **étude vide**, qui est séparée en deux parties :
 
 A gauche de l'écran, sélectionnez les **données agrégées**.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_selected_aggregated_data.png" alt="Selected aggregated data button" style="height:300px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_selected_aggregated_data.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_selected_aggregated_data.png" alt="Selected aggregated data button" style="height:300px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /></a>
 
 Créez un onglet en cliquant sur ***Ajouter un onglet***, nommez-le 'Démographie' par exemple.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_create_tab.png" alt="Create a new tab" style="height:300px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_create_tab.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_create_tab.png" alt="Create a new tab" style="height:300px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /></a>
 
 Une fois l'onglet créé, ajoutez un **widget** en cliquant sur *Ajouter un widget*.
 
@@ -449,7 +450,7 @@ Depuis l'onglet *Tous les plugins*, choisissez les plugins sur dépôt git dista
 
 Vous allez voir tous les plugins de données agrégées présents sur le dépôt git d'InterHop.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_plugins_catalog.png" alt="Remote git plugins catalog" style="height:600px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_plugins_catalog.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_plugins_catalog.png" alt="Remote git plugins catalog" style="width:800px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /></a>
 
 Cliquez sur le plugin 'Données démographiques', puis cliquez sur *Installer le plugin*.
 
@@ -463,7 +464,7 @@ Cliquez sur *Ajouter le widget*.
 
 Vous devriez voir apparaître la **distribution de l'âge et du sexe** des patients de votre set de données.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_demographics_widget.png" alt="Demographics widget" style="height:700px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_demographics_widget.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_demographics_widget.png" alt="Demographics widget" style="width:800px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /></a>
 
 Essayez maintenant de télécharger le **plugin 'Console R'** et d'ajouter un widget avec.
 
@@ -479,12 +480,12 @@ Vous devriez maintenant être en mesure d'**importer des données** depuis **n'i
 Comme tout travail réalisé sur LinkR, nous pouvons le **partager**, ce que nous allons faire dans le prochain paragraphe.
 
 <br /><hr />
-<div style = "text-align:center;">
-  <div style = "background-color:#00a1ff; font-size:16px; font-weight:bold; color:white; font-family: 'Helvetica Neue';
+<h2 style = "text-align:center;">
+  <div style = "background-color:#00a1ff; font-size:16px; font-weight:bold; color:white;
     padding:10px 20px; border-radius:5px; display:inline-block;">Partager notre code</div>
-</div>
+</h2>
 
-### <i class="fa fa-share-alt" style="color:steelblue;"></i> Partageons notre code
+<h3><i class="fa fa-share-alt" style="color:steelblue;"></i> Partageons notre code</h3>
 
 Il n'est pas toujours utile de partager le code source d'un script d'import de données.
 
@@ -502,7 +503,7 @@ Il peut être public, dans ce cas il n'y a pas besoin d'ajouter une clef API ici
 
 Il peut aussi être privé, vous devrez dans ce cas ajouter une **clef API de lecture** (il ne faut pas une clef d'écriture ici).
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_add_git_repo.png" alt="Add a git repo" style="height:500px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_add_git_repo.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_add_git_repo.png" alt="Add a git repo" style="height:500px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /></a>
 
 Une fois le dépôt git ajouté, allez sur l'onglet *Modifier un dépôt git*.
 
@@ -518,15 +519,15 @@ Pour s'assurer que cela a fonctionné, rechargez l'application puis allez sur la
 
 En sélectionnant votre dépôt git, vous devriez **voir apparaître votre set de données**, ce qui signifie qu'il sera accessible à toute personne ayant l'adresse de votre git et, s'il s'agit d'un dépôt privé, d'une clef API.
 
-<img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_remote_git_datasets.png" alt="Remote git datasets" style="height:400px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_remote_git_datasets.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_remote_git_datasets.png" alt="Remote git datasets" style="width:800px; border:dashed 1px; margin:5px 0px 5px 0px; padding:5px 0px 5px 0px;" /></a>
 
 Pour plus d'informations sur la gestion des dépôts git depuis LinkR, consultez le **tutoriel dédié**.
 
 <br /><hr />
-<div style = "text-align:center;">
-  <div style = "background-color:#0076ba; font-size:16px; font-weight:bold; color:white; font-family: 'Helvetica Neue';
+<h2 style = "text-align:center;">
+  <div style = "background-color:#0076ba; font-size:16px; font-weight:bold; color:white;
     padding:10px 20px; border-radius:5px; display:inline-block;">Conclusion</div>
-</div>
+</h2>
 
 Vous disposez maintenant de tous les éléments pour importer vos données sur LinkR.
 
