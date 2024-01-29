@@ -13,9 +13,7 @@ Nous importerons ensuite un plus grand set de données au format OMOP, en utilis
 
 Nous finirons en **partageant** notre code via notre dépôt git.
 
-Pour faciliter la lecture de ce tutoriel, ouvrez deux onglets : l'un avec le tutoriel, l'autre où vous effectuerez les différentes étapes du tutoriel sur votre instance de LinkR.
-
-<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_intro.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_intro.png" alt="Settings icon" style="width:700px;" /></a>
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_intro.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_intro.png" alt="Tutorial plan" style="width:700px;" /></a>
 
 **Plan** :
 

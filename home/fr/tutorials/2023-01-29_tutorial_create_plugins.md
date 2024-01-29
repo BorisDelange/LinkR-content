@@ -15,26 +15,34 @@ Nous remplirons le fichier de **traductions**, ce qui facilitera le **partage** 
 
 Après avoir **testé** notre plugin, nous le mettrons à disposition sur notre **dépôt git**.
 
-*Image plan*
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_intro.png" target = "_blank"><img src="tutorial_create_plugins_intro.png" alt="Tutorial plan" style="width:700px;" /></a>
 
 **Plan** :
 
 - Qu'est-ce qu'un plugin ?
-- Spécifications de notre plugin
-- Créons notre plugin
+- Spécifications du plugin
+- Creation du plugin
 - UI - Interface utilisateur / frontend
 - Serveur - backend
 - Traductions
-- Testons notre plugin
-- Partageons notre plugin
+- Tester le plugin
+- Partager le plugin
 
-### Qu'est ce qu'un plugin ?
+<br /><hr />
+<h2 style = "text-align:center;">
+  <div style = "background-color:#0076ba; font-size:16px; font-weight:bold; color:white;
+    padding:10px 20px; border-radius:5px; display:inline-block;">Qu'est-ce qu'un plugin ?</div>
+</h2>
+
+<h3>Qu'est ce qu'un plugin ?</h3>
 
 Un plugin est un **script** composé de code écrit avec la librairie **Shiny** en R, permettant d'**ajouter des fonctionnalités** à l'application.
 
 Par exemple, le plugin 'Séries temporelles {dygraphs}' présenté ci-dessous permettra aux utilisateurs d'afficher les données de leurs patients sous forme de **séries temporelles**, à l'aide de la librairie R <a href="https://rstudio.github.io/dygraphs/" target="_blank">{dygraphs}</a>.
 
-*Screenshots dygraphs (DocumentCard et utilisation)*
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_import_data_dygraphs_card.png" target = "_blank"><img src="tutorial_import_data_dygraphs_card.png" alt="Dygraphs plugin" style="width:300px;" /></a>
+
+<a href="https://framagit.org/interhop/linkr/LinkR/-/raw/master/man/figures/dygraphs_plugin.gif" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR/-/raw/master/man/figures/dygraphs_plugin.gif" alt="Dygraphs plugin" style="width:1000px;" /></a>
 
 Un plugin est composé de **trois parties** :
 
@@ -44,7 +52,13 @@ Un plugin est composé de **trois parties** :
 
 Réfléchissons maintenant à ce que notre plugin sera capable de faire.
 
-### Spécifications de notre plugin
+<br /><hr />
+<h2 style = "text-align:center;">
+  <div style = "background-color:#feae03; font-size:16px; font-weight:bold; color:white;
+    padding:10px 20px; border-radius:5px; display:inline-block;">Création du plugin</div>
+</h2>
+
+<h3>Spécifications du plugin</h3>
 
 Je pars d'une **idée simple** : je me dis que ce serait bien que, quand je veux visualiser une variable, je ne sois pas obligé de réécrire le code à chaque fois.
 
@@ -87,7 +101,7 @@ Résumons donc les **spécifications** de notre plugin :
 
 Nous voilà prêts pour **aller coder tout ça** !
 
-### Créons notre plugin
+<h3>Création notre plugin</h3>
 
 Rendez-vous sur la page *Plugins > Données individuelles* puis sur l'onglet *Gestion de plugins*.
 
@@ -95,10 +109,24 @@ Rendez-vous sur la page *Plugins > Données individuelles* puis sur l'onglet *Ge
 
 
 
-### UI - Interface utilisateur
+<h3>UI - Interface utilisateur</h3>
 
-### Serveur - backend
+<h3>Serveur - backend</h3>
 
-### Traductions
+<h3>Traductions</h3>
 
-### Partageons notre plugin
+<br /><hr />
+<h2 style = "text-align:center;">
+  <div style = "background-color:#1bb100; font-size:16px; font-weight:bold; color:white;
+    padding:10px 20px; border-radius:5px; display:inline-block;">Test du plugin</div>
+</h2>
+
+<h3>Tester le plugin</h3>
+
+<br /><hr />
+<h2 style = "text-align:center;">
+  <div style = "background-color:#00a1ff; font-size:16px; font-weight:bold; color:white;
+    padding:10px 20px; border-radius:5px; display:inline-block;">Partage du plugin</div>
+</h2>
+
+<h3>Partager le plugin</h3>
