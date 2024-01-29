@@ -1,7 +1,7 @@
 <span style = "color:grey;">Auteur : Boris Delange</span><br />
 <span style = "color:grey;">Dernière modification : 29/01/2023</span>
 
-### <i class="fa fa-cogs" style="color: brackets-curly;"></i> Introduction
+<h3><i class="fa fa-info-circle" style="color:steelblue;"></i> Introduction</h3>
 
 Ce tutoriel a pour but de vous apprendre à **créer un plugin** dans LinkR.
 
