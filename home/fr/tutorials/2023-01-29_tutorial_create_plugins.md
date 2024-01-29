@@ -34,7 +34,7 @@ Après avoir **testé** notre plugin, nous le mettrons à disposition sur notre 
     padding:10px 20px; border-radius:5px; display:inline-block;">Qu'est-ce qu'un plugin ?</div>
 </h2>
 
-<h3>Qu'est ce qu'un plugin ?</h3>
+<h3><i class="fa fa-question-circle" style="color:steelblue;"></i> Qu'est-ce qu'un plugin ?</h3>
 
 Un plugin est un **script** composé de code écrit avec la librairie **Shiny** en R, permettant d'**ajouter des fonctionnalités** à l'application.
 
@@ -58,13 +58,11 @@ Réfléchissons maintenant à ce que notre plugin sera capable de faire.
     padding:10px 20px; border-radius:5px; display:inline-block;">Création du plugin</div>
 </h2>
 
-<h3>Spécifications du plugin</h3>
+<h3><i class="fa fa-list-ul" style="color:steelblue;"></i> Spécifications du plugin</h3>
 
-Je pars d'une **idée simple** : je me dis que ce serait bien que, quand je veux visualiser une variable, je ne sois pas obligé de réécrire le code à chaque fois.
+J'aimerais créer une **interface graphique** qui me permette de **visualiser** la **distribution d'une variable**, sous forme d'un **histogramme**.
 
-Pourquoi ne pas **créer** une **interface graphique** où je n'aurai qu'à **choisir ma variable** dans un menu déroulant pour l'**afficher** ?
-
-Et voilà, j'ai l'idée, il n'y a plus qu'à **rendre cela possible** en créant un plugin !
+Il n'y a plus qu'à **rendre cela possible** en créant un plugin !
 
 Je dois faire un premier **choix** : s'agit-il d'un plugin de données individuelles (patient par patient) ou agrégées (sur un groupe de patients) ?
 
@@ -74,7 +72,7 @@ Ensuite, à quoi devra ressembler mon **interface graphique** ?
 
 J'aimerais bien séparer l'écran en deux, à gauche on visualiserait mon **histogramme**, et à droite on pourrait régler les paramètres de ma figure, avec un menu déroulant pour **choisir la variable** et un champ pour choisir le **nombre de barres** sur mon histogramme.
 
-*Screenshot dessin avec les cadres du plugin*
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_plugin_schema.png" target = "_blank"><img src="tutorial_create_plugins_plugin_schema.png" alt="Schema of the plugin" style="width:700px;" /></a>
 
 **Côté serveur** maintenant.
 
@@ -101,19 +99,17 @@ Résumons donc les **spécifications** de notre plugin :
 
 Nous voilà prêts pour **aller coder tout ça** !
 
-<h3>Création notre plugin</h3>
+<h3><i class="fa fa-cogs" style="color:steelblue;"></i> Création du plugin</h3>
 
 Rendez-vous sur la page *Plugins > Données individuelles* puis sur l'onglet *Gestion de plugins*.
 
 *Screenshot*
 
+<h3><i class="fa fa-desktop" style="color:steelblue;"></i> UI - Interface utilisateur / frontend</h3>
 
+<h3><i class="fa fa-server" style="color:steelblue;"></i> Serveur - backend</h3>
 
-<h3>UI - Interface utilisateur</h3>
-
-<h3>Serveur - backend</h3>
-
-<h3>Traductions</h3>
+<h3><i class="fa fa-language" style="color:steelblue;"></i> Traductions</h3>
 
 <br /><hr />
 <h2 style = "text-align:center;">
@@ -121,7 +117,7 @@ Rendez-vous sur la page *Plugins > Données individuelles* puis sur l'onglet *Ge
     padding:10px 20px; border-radius:5px; display:inline-block;">Test du plugin</div>
 </h2>
 
-<h3>Tester le plugin</h3>
+<h3><i class="fa fa-check-square" style="color:steelblue;"></i> Tester le plugin</h3>
 
 <br /><hr />
 <h2 style = "text-align:center;">
@@ -129,4 +125,4 @@ Rendez-vous sur la page *Plugins > Données individuelles* puis sur l'onglet *Ge
     padding:10px 20px; border-radius:5px; display:inline-block;">Partage du plugin</div>
 </h2>
 
-<h3>Partager le plugin</h3>
+<h3><i class="fa fa-share-alt" style="color:steelblue;"></i> Partager le plugin</h3>
