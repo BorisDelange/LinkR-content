@@ -1,19 +1,19 @@
 <span style = "color:grey;">Auteur : Boris Delange</span><br />
-<span style = "color:grey;">Dernière modification : 15/01/2023</span>
+<span style = "color:grey;">Dernière modification : 29/01/2023</span>
 
 ### <i class="fa fa-cogs" style="color: brackets-curly;"></i> Introduction
 
-Dans ce tutoriel, nous allons apprendre à **créer un plugin** dans LinkR.
+Ce tutoriel a pour but de vous apprendre à **créer un plugin** dans LinkR.
 
-Nous commencerons par **détailler ce qu'est un plugin**.
+Nous commencerons par définir **ce qu'est un plugin**.
 
-Nous **détaillerons** le plugin que nous voulons créer.
+Nous **détaillerons** le plugin que nous voulons **développer**.
 
-Pour le créer, nous commencerons par voir comment créer l'**interface utilisateur**. Nous rendrons cette interface dynamique en codant la **logique côté serveur**.
+Nous commencerons par créer l'**interface utilisateur**. Cette interface sera ensuite rendue fonctionnelle grâce au développement de la **logique serveur**.
 
 Nous remplirons le fichier de **traductions**, ce qui facilitera le **partage** de notre plugin.
 
-Nous **testerons** notre plugin, avant de le rendre disponible sur notre **dépôt git**.
+Après avoir **testé** notre plugin, nous le mettrons à disposition sur notre **dépôt git**.
 
 *Image plan*
 

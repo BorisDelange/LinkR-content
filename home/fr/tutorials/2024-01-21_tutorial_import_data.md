@@ -24,13 +24,13 @@ Pour faciliter la lecture de ce tutoriel, ouvrez deux onglets : l'un avec le tut
 - Créer des données au format OMOP
 - Importer les données dans LinkR
 - Test avec les données de la base MIMIC-IV
-- Afficher nos données
-- Partageons notre code
+- Afficher les données
+- Partager le code
 
 <br /><hr />
 <h2 style = "text-align:center;">
   <div style = "background-color:#0076ba; font-size:16px; font-weight:bold; color:white;
-    padding:10px 20px; border-radius:5px; display:inline-block;">Créer un set de données</div>
+    padding:10px 20px; border-radius:5px; display:inline-block;">Création du set de données</div>
 </h2>
 
 <h3><i class="fa fa-database" style="color:steelblue;"></i> Entrepôts de données de santé et modèles de données</h3>
@@ -80,7 +80,7 @@ Pensez à sauvegarder votre code. Vous pouvez également utiliser le raccourci C
 <br /><hr />
 <h2 style = "text-align:center;">
   <div style = "background-color:#feae03; font-size:16px; font-weight:bold; color:white;
-    padding:10px 20px; border-radius:5px; display:inline-block;">Importer des données</div>
+    padding:10px 20px; border-radius:5px; display:inline-block;">Import des données</div>
 </h2>
 
 <h3><i class="fa fa-table" style="color:steelblue;"></i> Créer des données au format OMOP</h3>
@@ -400,10 +400,10 @@ Nous allons maintenant **créer une étude** pour afficher nos données.
 <br /><hr />
 <h2 style = "text-align:center;">
   <div style = "background-color:#1bb100; font-size:16px; font-weight:bold; color:white;
-    padding:10px 20px; border-radius:5px; display:inline-block;">Tester notre set</div>
+    padding:10px 20px; border-radius:5px; display:inline-block;">Test du set de données</div>
 </h2>
 
-<h3><i class="fa fa-eye" style="color:steelblue;"></i> Afficher nos données</h3>
+<h3><i class="fa fa-eye" style="color:steelblue;"></i> Afficher les données</h3>
 
 Commençons par **créer une étude**.
 
@@ -482,10 +482,10 @@ Comme tout travail réalisé sur LinkR, nous pouvons le **partager**, ce que nou
 <br /><hr />
 <h2 style = "text-align:center;">
   <div style = "background-color:#00a1ff; font-size:16px; font-weight:bold; color:white;
-    padding:10px 20px; border-radius:5px; display:inline-block;">Partager notre code</div>
+    padding:10px 20px; border-radius:5px; display:inline-block;">Partage du code</div>
 </h2>
 
-<h3><i class="fa fa-share-alt" style="color:steelblue;"></i> Partageons notre code</h3>
+<h3><i class="fa fa-share-alt" style="color:steelblue;"></i> Partager le code</h3>
 
 Il n'est pas toujours utile de partager le code source d'un script d'import de données.
 
