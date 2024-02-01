@@ -1,2 +1,3 @@
 unique_id, lat, lng, name_fr, name_en, repo_url_address, raw_files_url_address, api_key_required
-f56d2dcd2cd6c64f16bb421707954375b74149bf2cbdfb05a8eafee88bd23c12, 48.637862, -2.008034, "InterHop", "InterHop", https://framagit.org/interhop/linkr/LinkR-content, https://framagit.org/interhop/linkr/LinkR-content/-/raw/main, FALSE
+f56d2dcd2cd6c64f16bb421707954375b74149bf2cbdfb05a8eafee88bd23c12, 48.637862, -2.008034, "InterHop", "InterHop", "https://framagit.org/interhop/linkr/LinkR-content", "https://framagit.org/interhop/linkr/LinkR-content/-/raw/main", FALSE
+3e6f5d1ed966d56d0c56bfa6143329ad45bc99c5e0e4666d42ba7c1e50bb57cb, 48.120742, -1.694857, "CHU de Rennes", "Rennes University Hospital", "https://gitlab.com/ricdc/rennes-linkr-public-content", "https://gitlab.com/ricdc/rennes-linkr-public-content/-/raw/main", FALSE
