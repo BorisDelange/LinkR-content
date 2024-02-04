@@ -1,5 +1,5 @@
 <span style = "color:grey;">Auteur : Boris Delange</span><br />
-<span style = "color:grey;">Dernière modification : 14/01/2023</span>
+<span style = "color:grey;">Dernière modification : 04/02/2023</span>
 
 <h3><i class="fa fa-info-circle" style="color:steelblue;"></i> Introduction</h3>
 
@@ -87,7 +87,8 @@ Pour commencer, nous allons créer des **données factices** au **format OMOP**,
 
 Créons une fonction *person*, qui contiendra les **données de 100 patients**.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">person <- function(){
+```
+person <- function(){
   tibble::tibble(
     person_id = 1:100,
     gender_concept_id = sample(c(8507L, 8532L), 100, replace = TRUE),
@@ -115,7 +116,7 @@ Créons une fonction *person*, qui contiendra les **données de 100 patients**.
 }
 
 person()
-</code></pre>
+```
 
 Rendez-vous sur la page **Editer le code du set**, puis **copiez-y le code** ci-dessus.
 
@@ -162,14 +163,15 @@ La fonction *import_dataset* comprend les arguments suivants :
 
 Voici le code qui nous permettra d'importer nos données.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">import_dataset(
+```
+import_dataset(
     dataset_id = %dataset_id%, # Cette balise sera remplacée par la valeur du set de données actuellement sélectionné
     data = person(), # En appelant notre fonction person(), nous obtiendrons les données que nous avons créées
     omop_table = "person", # Le nom de la table OMOP que nous souhaitons importer
     omop_version = %omop_version%, # Cette balise sera remplacée par la valeur de la version OMOP du set de données actuellement sélectionné
     output = output, ns = ns, i18n = i18n, r = r, d = d
 )
-</code></pre>
+```
 
 Vous devriez voir apparaître un message vous indiquant que vos données ont bien été importées.
 
@@ -191,7 +193,8 @@ Si les données que j'importe ont changé entre-temps, je peux toujours **rempla
 
 Voici un exemple.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">import_dataset(
+```
+import_dataset(
     dataset_id = %dataset_id%,
     data = person(),
     omop_table = "person",
@@ -201,13 +204,14 @@ Voici un exemple.
     rewrite = FALSE, # Si le fichier person.csv existe dans le dossier de notre set de données, le fichier existant sera conservé
     output = output, ns = ns, i18n = i18n, r = r, d = d
 )
-</code></pre>
+```
 
 Si maintenant les données contenues dans la fonction *person()* changent, par exemple parce qu'il s'agit d'une connexion à une base de données avec des données mises à jour régulièrement, je peux vouloir remplacer la fichier *person.csv* existant.
 
 Je mettrai l'argument *rewrite* à TRUE pour remplacer le fichier, puis modifierai de nouveau l'argument *rewrite* pour FALSE, afin que la fonction chargeant les données ne soit pas exécutée à chaque fois.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">import_dataset(
+```
+import_dataset(
     dataset_id = %dataset_id%,
     data = person(),
     omop_table = "person",
@@ -217,7 +221,7 @@ Je mettrai l'argument *rewrite* à TRUE pour remplacer le fichier, puis modifier
     rewrite = TRUE, # Je modifie cet argument juste une fois, le temps que le fichier CSV soit remplacé avec mes nouvelles données
     output = output, ns = ns, i18n = i18n, r = r, d = d
 )
-</code></pre>
+```
 
 Voyons maintenant les **différentes façons** d'**importer des données** dans LinkR.
 
@@ -274,7 +278,7 @@ Nous allons **importer** quelques-unes de ces tables puis **tester nos données*
 
 Commençons avec la table ***person***.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">
+```
 person <- function(){
   # Chargement de la table person.csv depuis le site physionet.org
   vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/person.csv", progress = FALSE) %>%
@@ -288,7 +292,7 @@ import_dataset(
     omop_version = %omop_version%,
     output = output, ns = ns, i18n = i18n, r = r, d = d
 )
-</pre></code>
+```
 
 Si vous exécutez ce code depuis le même set de données que nous avons créé au début du tutoriel, vous devriez avoir ce message d'erreur :
 
@@ -313,7 +317,8 @@ Parfois, en chargeant des données depuis une base de données, il est impossibl
 
 Pour notre exemple, il est plus simple de préciser le **type de colonne attendu** pour chaque colonne.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">person <- function(){
+```
+person <- function(){
     # Utilisation de l'argument col_types en précisant le type attendu pour chaque colonne
     vroom::vroom("https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/person.csv", col_types = "niiiiTiiiiiccicici", progress = FALSE) %>%
         dplyr::mutate(person_id = 1:dplyr::n())
@@ -326,13 +331,14 @@ import_dataset(
     omop_version = %omop_version%,
     output = output, ns = ns, i18n = i18n, r = r, d = d
 )
-</pre></code>
+```
 
 Le chargement devrait se faire correctement.
 
 Chargeons maintenant les **autres tables**.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">data <- list()
+```
+data <- list()
 
 data$person <- function(){
     # Utilisation de l'argument col_types en précisant le type attendu pour chaque colonne
@@ -387,7 +393,7 @@ for (omop_table in c("person", "visit_detail", "death")){ # Nous créons une bou
         output = output, ns = ns, i18n = i18n, r = r, d = d
     )
 }
-</pre></code>
+```
 
 Nous avons donc **chargé** les tables ***person*** et ***visit_detail***, qui sont les tables contenant les patients et les séjours dans les services hospitaliers.
 
@@ -468,8 +474,9 @@ Essayez maintenant de télécharger le **plugin 'Console R'** et d'ajouter un wi
 
 Vous pouvez afficher les données dans la console via ce code.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">d$person
-</pre></code>
+```
+d$person
+```
 
 Pour plus d'informations sur l'accès aux données de notre set depuis la console, rendez vous sur la page d'aide 'Modèle de données'.
 

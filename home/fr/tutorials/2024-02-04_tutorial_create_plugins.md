@@ -147,12 +147,13 @@ Vous pouvez ensuite rajouter **une colonne par langage**, *en* pour l'anglais, *
 
 Voici un exemple.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">base,en,fr
+```
+base,en,fr
 plot,Plot,Figure
 parameters,Parameters,Paramètres
 execute,Execute code, Exécuter le code
 long_sentence,"This a long sentence, with a comma","Ceci est une longue phrase, avec une virgule"
-</code></pre>
+```
 
 Ainsi, si j'utilise `i18np$t("execute")` dans mon UI, ce code sera remplacé par 'Execute code' si LinkR est paramétré en anglais, 'Exécuter le code' si paramétré en français.
 
@@ -170,7 +171,8 @@ Tout notre code de l'interface utilisateur devra se trouver dans une fonction [`
 
 Pour que deux `div` soient côte à côte, il faut qu'ils soient eux-mêmes dans un `div` avec l'attribut `style = "display:flex;"`.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">tagList(
+```
+tagList(
     div(
         style = "display:flex;", # Permet d'afficher côte à côte les deux div ci-dessous
         div(
@@ -184,7 +186,7 @@ Pour que deux `div` soient côte à côte, il faut qu'ils soient eux-mêmes dans
         )
     )
 )
-</code></pre>
+```
 
 Nous avons ici ajouté des bordures à nos div avec `border:dashed 1px;` et défini une hauteur à 500 px avec `height:500px;` afin de visualiser nos div, qui sont pour le moment vides. Nous retirerons ces attributs plus tard.
 
@@ -213,12 +215,13 @@ Ajoutons maintenant notre histogramme.
 
 Nous utilisons pour cela la fonction [`plotOutput`](https://shiny.posit.co/r/reference/shiny/1.7.4/plotoutput), que nous **modifierons côté serveur** pour afficher notre plot.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">div(
+```
+div(
     id = ns("split_layout_left_%widget_id%"),
     plotOutput(ns("plot_%widget_id%")), # Toujours mettre les id dans des ns avec un attribut %widget_id%
     style = "margin-right:5px; width:50%; border:solid 2px #EFEEEE;" # Nous avons retiré l'attribut height et modifié la bordure
 )
-</code></pre>
+```
 
 Créons maintenant la **configuration** de notre plot, dans le `div` de droite.
 
@@ -240,7 +243,8 @@ Dans les plugins, il faut **préfixer** tous les éléments qui n'appartiennent 
 
 Par exemple : `shiny.fluent::Dropdown.shinyInput()`.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">div(
+```
+div(
     # id avec ns et %widget_id%
     id = ns("split_layout_right_%widget_id%"),
     # div contenant le titre, en gras (strong), avec un espace de 10 px entre le titre et le dropdown
@@ -251,15 +255,16 @@ Par exemple : `shiny.fluent::Dropdown.shinyInput()`.
     shiny.fluent::PrimaryButton.shinyInput(ns("show_plot_%widget_id%"), i18np$t("show_plot")),
     style = "margin-left:5px; width:50%;"
 )
-</code></pre>
+```
 
 Mettez à jour votre fichier de traductions.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">base,en,fr
+```
+base,en,fr
 concept,Concept to show,Concept à afficher
 num_bins,Number of bins,Nombre de barres
 show_plot,Show plot,Afficher la figure
-</code></pre>
+```
 
 Voici le **résultat** que vous devriez obtenir.
 
@@ -308,8 +313,9 @@ Retournons sur notre éditeur de code, page 'Serveur'.
 
 Mettez-y ce code, pour afficher notre variable `selected_concepts`.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">print(selected_concepts)
-</code></pre>
+```
+print(selected_concepts)
+```
 
 Exécutez, vous devriez voir apparaître, en dessous du résultat de l'UI, le **tibble correspondant aux concepts** que vous ajoutés.
 
@@ -320,7 +326,8 @@ Les **messages d'erreur côté serveur** s'afficheront dans cet encadré.
 Nous pouvons maintenant écrire le code pour **mettre à jour** notre menu déroulant de concepts, une fois le plugin chargé.
 
 **server.R**
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;"># Ajout d'une ligne avec les valeurs 0 / "none"
+```
+# Ajout d'une ligne avec les valeurs 0 / "none"
 concepts <-
     tibble::tibble(concept_id = 0L, concept_name = i18np$t("none")) %>%
     dplyr::bind_rows(selected_concepts %>% dplyr::select(concept_id, concept_name))
@@ -330,15 +337,16 @@ concepts <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = 
 
 # On instaure un délai, afin que le dropdown se mette à jour après avoir été créé
 shinyjs::delay(100, shiny.fluent::updateDropdown.shinyInput(session, "concept_%widget_id%", options = concepts, value = 0L))
-</code></pre>
+```
 
 **translations.csv**
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">base,en,fr
+```
+base,en,fr
 concept,Concept to show,Concept à afficher
 num_bins,Number of bins,Nombre de barres
 show_plot,Show plot,Afficher la figure
 none,None,Aucun
-</code></pre>
+```
 
 Plusieurs choses à noter.
 
@@ -354,10 +362,11 @@ Il ne nous reste plus qu'à **afficher notre figure**.
 
 Nous allons utiliser la fonction [observeEvent](https://shiny.posit.co/r/reference/shiny/0.11/observeevent), qui **déclenchera le code** après avoir **détecté un événement**.
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">observeEvent(input$show_plot_%widget_id%, {
+```
+observeEvent(input$show_plot_%widget_id%, {
     # Mon code, qui sera exécuté chaque fois que je cliquerai sur le bouton avec l'id 'show_plot_%widget_id%'
 })
-</code></pre>
+```
 
 **Important** : ajoutez toujours la balise `%req%` au début d'un `observeEvent`. Cette balise sera remplacée par un code qui **invalidera** les **anciens observers** quand le widget sera mis à jour.
 
@@ -371,7 +380,8 @@ Voici les étapes de notre code :
 - 4) Créer le **code** de notre **histogramme** avec `ggplot`
 - 5) Mettre à jour notre **output**
 
-<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">observeEvent(input$show_plot_%widget_id%, {
+```
+observeEvent(input$show_plot_%widget_id%, {
 
     # Toujours mettre cette balise au début d'un observer
     %req%
@@ -410,7 +420,7 @@ Voici les étapes de notre code :
     # Le message d'erreur s'affichera dans la console R
     }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
 })
-</code></pre>
+```
 
 Assurez-vous d'avoir un set de données et une étude **chargés**, sans quoi la balise `%req%` bloquera le code de votre `observeEvent`.
 
@@ -428,7 +438,9 @@ Voici le **résultat** !
 <summary>Voir les trois fichiers complets</summary>
 
 **ui.R**
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">tagList(
+
+```
+tagList(
     div(
         style = "display:flex;",
         div(
@@ -447,10 +459,12 @@ Voici le **résultat** !
         )
     )
 )
-</code></pre>
+```
 
 **server.R**
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">concepts <-
+
+```
+concepts <-
     tibble::tibble(concept_id = 0L, concept_name = i18np$t("none")) %>%
     dplyr::bind_rows(selected_concepts %>%  dplyr::select(concept_id, concept_name))
 
@@ -497,16 +511,18 @@ observeEvent(input$show_plot_%widget_id%, {
     # Le message d'erreur s'affichera dans la console R
     }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
 })
-</code></pre>
+```
 
 **translations.csv**
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">base,en,fr
+
+```
+base,en,fr
 concept,Concept to show,Concept à afficher
 num_bins,Number of bins,Nombre de barres
 show_plot,Show plot,Afficher la figure
 none,None,Aucun
 occurrences,Occurrences,Occurrences
-</code></pre>
+```
 </details>
 
 Nous allons pouvoir **tester notre plugin** dans une étude.
