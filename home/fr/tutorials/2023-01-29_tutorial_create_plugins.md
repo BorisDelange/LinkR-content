@@ -129,7 +129,7 @@ L'éditeur auquel vous avez accès fonctionne comme une <strong>console R</stron
 </ul>
 Pensez à sauvegarder votre code. Vous pouvez également utiliser le raccourci CMD/CTRL + S.
 <br /><br />
-<a href="tutorial_create_plugins_edit_code_page.png" target = "_blank"><img src="tutorial_create_plugins_edit_code_page.png" alt="Create a dataset" style="width:1000px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a><br /><br />
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_edit_code_page.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_edit_code_page.png" alt="Create a dataset" style="width:1000px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a><br /><br />
 
 Dans la rubrique **affichage** du menu de gauche, vous pouvez choisir d'**afficher** ou de **masquer** les éléments de la page, tels que le menu déroulant des concepts avec le toggle 'Concepts'.
 
@@ -147,7 +147,7 @@ Vous pouvez ensuite rajouter **une colonne par langage**, *en* pour l'anglais, *
 
 Voici un exemple.
 
-<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">base,en,fr
+<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">base,en,fr
 plot,Plot,Figure
 parameters,Parameters,Paramètres
 execute,Execute code, Exécuter le code
@@ -170,7 +170,7 @@ Tout notre code de l'interface utilisateur devra se trouver dans une fonction [`
 
 Pour que deux `div` soient côte à côte, il faut qu'ils soient eux-mêmes dans un `div` avec l'attribut `style = "display:flex;"`.
 
-<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">tagList(
+<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">tagList(
     div(
         style = "display:flex;", # Permet d'afficher côte à côte les deux div ci-dessous
         div(
@@ -190,7 +190,7 @@ Nous avons ici ajouté des bordures à nos div avec `border:dashed 1px;` et déf
 
 Après avoir cliqué sur '**Exécuter**' dans le menu à gauche de l'écran, vous devriez avoir ce résultat.
 
-<a href="tutorial_create_plugins_ui_1.png" target = "_blank"><img src="tutorial_create_plugins_ui_1.png" alt="Create a dataset" style="width:1000px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_ui_1.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_ui_1.png" alt="Create a dataset" style="width:1000px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
 
 Prenez l'habitude d'attribuer un **id** à chaque div dont vous serez susceptible de changer la balise `style`. En effet, nous utiliseront la librairie `shinyjs` pour modifier les balises `style` en indiquant l'id de l'élément à modifier.
 
@@ -212,7 +212,7 @@ Ajoutons maintenant notre histogramme.
 
 Nous utilisons pour cela la fonction [`plotOutput`](https://shiny.posit.co/r/reference/shiny/1.7.4/plotoutput), que nous **modifierons côté serveur** pour afficher notre plot.
 
-<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">div(
+<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">div(
     id = ns("split_layout_left_%widget_id%"),
     plotOutput(ns("plot_%widget_id%")), # Toujours mettre les id dans des ns avec un attribut %widget_id%
     style = "margin-right:5px; width:50%; border:solid 2px #EFEEEE;" # Nous avons retiré l'attribut height et modifié la bordure
@@ -237,7 +237,7 @@ Dans les plugins, il faut **préfixer** tous les éléments qui n'appartiennent 
 
 Par exemple : `shiny.fluent::Dropdown.shinyInput()`.
 
-<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">div(
+<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">div(
     # id avec ns et %widget_id%
     id = ns("split_layout_right_%widget_id%"),
     # div contenant le titre, en gras (strong), avec un espace de 10 px entre le titre et le dropdown
@@ -252,7 +252,7 @@ Par exemple : `shiny.fluent::Dropdown.shinyInput()`.
 
 Mettez à jour votre fichier de traductions.
 
-<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">base,en,fr
+<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">base,en,fr
 concept,Concept to show,Concept à afficher
 num_bins,Number of bins,Nombre de barres
 show_plot,Show plot,Afficher la figure
@@ -260,7 +260,7 @@ show_plot,Show plot,Afficher la figure
 
 Voici le **résultat** que vous devriez obtenir.
 
-<a href="tutorial_create_plugins_ui_2.png" target = "_blank"><img src="tutorial_create_plugins_ui_2.png" alt="Create a dataset" style="width:1000px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_ui_2.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_ui_2.png" alt="Create a dataset" style="width:1000px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
 
 Nous allons maintenant rendre **tout ceci dynamique** en codant le **backend** !
 
@@ -297,25 +297,25 @@ Par exemple, j'ai choisi 'RR' pour le concept 'Respiratory rate'. Cela permettra
 
 **Ajoutez-les** en cliquant sur le bouton '+' dans la dernière colonne du tableau.
 
-<a href="tutorial_create_plugins_server_1.png" target = "_blank"><img src="tutorial_create_plugins_server_1.png" alt="Create a dataset" style="width:1000px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_server_1.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_server_1.png" alt="Create a dataset" style="width:1000px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
 
 Retournons sur notre éditeur de code, page 'Serveur'.
 
 Mettez-y ce code, pour afficher notre variable `selected_concepts`.
 
-<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">print(selected_concepts)
+<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">print(selected_concepts)
 </code></pre>
 
 Exécutez, vous devriez voir apparaître, en dessous du résultat de l'UI, le **tibble correspondant aux concepts** que vous ajoutés.
 
-<a href="tutorial_create_plugins_server_2.png" target = "_blank"><img src="tutorial_create_plugins_server_2.png" alt="Create a dataset" style="width:800px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_server_2.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_server_2.png" alt="Create a dataset" style="width:800px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
 
 Les **messages d'erreur côté serveur** s'afficheront dans cet encadré.
 
 Nous pouvons maintenant écrire le code pour **mettre à jour** notre menu déroulant de concepts, une fois le plugin chargé.
 
 **server.R**
-<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;"># Ajout d'une ligne avec les valeurs 0 / "none"
+<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;"># Ajout d'une ligne avec les valeurs 0 / "none"
 concepts <-
     tibble::tibble(concept_id = 0L, concept_name = i18np$t("none")) %>%
     dplyr::bind_rows(selected_concepts %>% dplyr::select(concept_id, concept_name))
@@ -328,7 +328,7 @@ shinyjs::delay(100, shiny.fluent::updateDropdown.shinyInput(session, "concept_%w
 </code></pre>
 
 **translations.csv**
-<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">base,en,fr
+<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">base,en,fr
 concept,Concept to show,Concept à afficher
 num_bins,Number of bins,Nombre de barres
 show_plot,Show plot,Afficher la figure
@@ -349,7 +349,7 @@ Il ne nous reste plus qu'à **afficher notre figure**.
 
 Nous allons utiliser la fonction [observeEvent](https://shiny.posit.co/r/reference/shiny/0.11/observeevent), qui **déclenchera le code** après avoir **détecté un événement**.
 
-<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">observeEvent(input$show_plot_%widget_id%, {
+<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">observeEvent(input$show_plot_%widget_id%, {
     # Mon code, qui sera exécuté chaque fois que je cliquerai sur le bouton avec l'id 'show_plot_%widget_id%'
 })
 </code></pre>
@@ -365,7 +365,7 @@ Voici les étapes de notre code :
 - 4) Créer le **code** de notre **histogramme** avec `ggplot`
 - 5) Mettre à jour notre **output**
 
-<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">observeEvent(input$show_plot_%widget_id%, {
+<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">observeEvent(input$show_plot_%widget_id%, {
 
     # Toujours mettre cette balise au début d'un observer
     %req%
@@ -416,7 +416,92 @@ Par contre, pour les observer, le code est exécuté **indépendemment**, lorsqu
 
 Voici le **résultat** !
 
-<a href="tutorial_create_plugins_server_3.png" target = "_blank"><img src="tutorial_create_plugins_server_3.png" alt="Create a dataset" style="width:1000px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
+<a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_server_3.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_server_3.png" alt="Create a dataset" style="width:1000px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
+
+<details>
+<summary>Voir les trois fichiers complets</summary>
+
+**ui.R**
+<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">tagList(
+    div(
+        style = "display:flex;",
+        div(
+            id = ns("split_layout_left_%widget_id%"),
+            plotOutput(ns("plot_%widget_id%")),
+            style = "margin-right:5px; width:50%; border:solid 2px #EFEEEE;"
+        ),
+        div(
+            id = ns("split_layout_right_%widget_id%"),
+            div(strong(i18np$t("concept")), style = "margin-bottom:10px;"),
+            div(shiny.fluent::Dropdown.shinyInput(ns("concept_%widget_id%")), style = "width:300px;"), br(),
+            div(strong(i18np$t("num_bins")), style = "margin-bottom:10px;"),
+            div(shiny.fluent::SpinButton.shinyInput(ns("num_bins_%widget_id%"), value = 50, min = 10, max = 100), style = "width:300px;"), br(),
+            shiny.fluent::PrimaryButton.shinyInput(ns("show_plot_%widget_id%"), i18np$t("show_plot")),
+            style = "margin-left:5px; width:50%;"
+        )
+    )
+)
+</code></pre>
+
+**server.R**
+<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">concepts <-
+    tibble::tibble(concept_id = 0L, concept_name = i18np$t("none")) %>%
+    dplyr::bind_rows(selected_concepts %>%  dplyr::select(concept_id, concept_name))
+
+concepts <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
+
+shinyjs::delay(100, shiny.fluent::updateDropdown.shinyInput(session, "concept_%widget_id%", options = concepts, value = 0L))
+
+observeEvent(input$show_plot_%widget_id%, {
+
+    # Toujours mettre cette balise au début d'un observer
+    %req%
+
+    # Protéger le code en cas d'erreur avec un tryCatch
+    tryCatch({
+
+        # 1) Récupérer le concept sélectionné dans le menu déroulant
+        selected_concept <-
+            selected_concepts %>%
+            dplyr::filter(concept_id == input$concept_%widget_id%)
+
+        # 2) Le domain_id est-il égal à 'Measurement' ?
+        req(selected_concept$domain_id == "Measurement")
+
+        # 3) S'assurer que le tibble des données filtré sur ce concept n'est pas vide
+        data <-
+            d$measurement %>%
+            dplyr::filter(measurement_concept_id == selected_concept$concept_id)
+
+        req(data %>% dplyr::count() %>% dplyr::pull() > 0)
+
+        # 4) Créer le code de notre histogramme
+        plot <-
+            data %>%
+            ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+            # On prend en compte le nombre de barres depuis notre variable input$num_bins_%widget_id%
+            ggplot2::geom_histogram(colour = "white", fill = "#377EB8", bins = input$num_bins_%widget_id%) +
+            ggplot2::theme_minimal() +
+            # On modifie les titres des axes X et Y
+            ggplot2::labs(x = selected_concept$concept_name, y = i18np$t("occurrences"))
+
+        # 5) Mettre à jour notre output
+        output$plot_%widget_id% <- renderPlot(plot)
+
+    # Le message d'erreur s'affichera dans la console R
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+</code></pre>
+
+**translations.csv**
+<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">base,en,fr
+concept,Concept to show,Concept à afficher
+num_bins,Number of bins,Nombre de barres
+show_plot,Show plot,Afficher la figure
+none,None,Aucun
+occurrences,Occurrences,Occurrences
+</code></pre>
+</details>
 
 Nous allons pouvoir **tester notre plugin** dans une étude.
 
