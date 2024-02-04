@@ -113,6 +113,10 @@ Sur la ligne correspondant à votre nouveau plugin, cliquez sur l’icône de ro
 
 <a href="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_plugin_options.png" target = "_blank"><img src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/home/fr/tutorials/tutorial_create_plugins_plugin_options.png" alt="Create a dataset" style="width:800px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
 
+Lorsque vous **travaillez** sur votre plugin, vous pouvez faire en sorte qu'il ne soit **visible que par vous**, en cliquant sur 'Choisir les utilisateurs' et en sélectionnant votre compte.
+
+Si vous **publiez** votre plugin sur votre git, indiquez qu'il est en phase de développement, avec la préfixe [dev] par exemple.
+
 Pour **en savoir plus sur les options**, cliquez sur le point d’interrogation en haut à droite de la page, puis sur *Options du plugin*.
 
 Nous allons maintenant pouvoir <strong>éditer le code</strong> de notre plugin. Rendez-vous pour cela dans l'onglet *Editer le code*.<br />
@@ -122,7 +126,7 @@ L'éditeur auquel vous avez accès fonctionne comme une <strong>console R</stron
 <li>CMD/CTRL + SHIFT + ENTER : exécute l'ensemble du code</li>
 <li>CMD/CTRL + ENTER : exécute le code sélectionné</li>
 <li>CMD/CTRL + SHIFT + C : commente le code sélectionné</li>
-</ul><br />
+</ul>
 Pensez à sauvegarder votre code. Vous pouvez également utiliser le raccourci CMD/CTRL + S.
 <br /><br />
 <a href="tutorial_create_plugins_edit_code_page.png" target = "_blank"><img src="tutorial_create_plugins_edit_code_page.png" alt="Create a dataset" style="width:1000px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a><br /><br />
@@ -264,7 +268,157 @@ Nous allons maintenant rendre **tout ceci dynamique** en codant le **backend** !
 
 Sélectionnez la page '**Serveur**' dans le menu à gauche.
 
+Lorsque vous ajouterez un *widget* dans une étude, vous aurez deux choses à faire :
+- sélectionner les **concepts** à utiliser
+- sélectionner le **plugin** à utiliser
 
+Les concepts sélectionnés se retrouveront dans la variable **`selected_concepts`**, qui comporte les colonnes suivantes :
+- **concept_id** : l'ID du concept, soit standard (à retrouver sur [Athena](https://athena.ohdsi.org/search-terms/start)), soit non standard (dans ce cas, supérieur à 2000000000 / 2B)
+- **concept_name** : le nom du concept
+- **concept_display_name** : ce sera le nom d'affichage de votre concept, si vous modifiez la colonne correspondante avant d'ajouter un concept
+- **domain_id** : le nom du `Domaine` OMOP, qui correspond souvent à la table OMOP (domaine 'Measurement' pour la variable `d$measurement`)
+- **mapped_to_concept_id** & **merge_mapped_concepts** que nous utiliserons dans le cas de concepts alignés
+
+Faisons le test.
+
+Retournez dans 'Données' > 'Accéder aux données', sélectionnez le set de données 'MIMIC-IV demo'.
+
+**Chargez** également **une étude**, n'importe laquelle.
+
+Cela nous permettra d'avoir des **données chargées** pour sélectionner des concepts.
+
+De retour sur notre page pour éditer le code de notre plugin, affichez le **menu déroulant des concepts**, avec le toggle 'Concepts', dans la rubrique 'Affichage' du menu de gauche.
+
+Sélectionnez par exemple la terminologie 'LOINC' dans le menu déroulant des terminologies, puis **ajoutez les concepts** 'Heart rate' et 'Respiratory rate', après les avoir cherchés dans le tableau, dans la colonne 'Nom du concept'.
+
+En double-cliquant sur le colonne 'Nom d'affichage du concept', vous pouvez **choisir** un **nom d'affichage** à votre concept, avant de l'ajouter.
+
+Par exemple, j'ai choisi 'RR' pour le concept 'Respiratory rate'. Cela permettra d'avoir un affichage plus clair sur ma figure.
+
+**Ajoutez-les** en cliquant sur le bouton '+' dans la dernière colonne du tableau.
+
+<a href="tutorial_create_plugins_server_1.png" target = "_blank"><img src="tutorial_create_plugins_server_1.png" alt="Create a dataset" style="width:1000px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
+
+Retournons sur notre éditeur de code, page 'Serveur'.
+
+Mettez-y ce code, pour afficher notre variable `selected_concepts`.
+
+<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">print(selected_concepts)
+</code></pre>
+
+Exécutez, vous devriez voir apparaître, en dessous du résultat de l'UI, le **tibble correspondant aux concepts** que vous ajoutés.
+
+<a href="tutorial_create_plugins_server_2.png" target = "_blank"><img src="tutorial_create_plugins_server_2.png" alt="Create a dataset" style="width:800px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
+
+Les **messages d'erreur côté serveur** s'afficheront dans cet encadré.
+
+Nous pouvons maintenant écrire le code pour **mettre à jour** notre menu déroulant de concepts, une fois le plugin chargé.
+
+**server.R**
+<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;"># Ajout d'une ligne avec les valeurs 0 / "none"
+concepts <-
+    tibble::tibble(concept_id = 0L, concept_name = i18np$t("none")) %>%
+    dplyr::bind_rows(selected_concepts %>% dplyr::select(concept_id, concept_name))
+
+# On convertir les concepts sous forme de liste
+concepts <- convert_tibble_to_list(concepts, key_col = "concept_id", text_col = "concept_name")
+
+# On instaure un délai, afin que le dropdown se mette à jour après avoir été créé
+shinyjs::delay(100, shiny.fluent::updateDropdown.shinyInput(session, "concept_%widget_id%", options = concepts, value = 0L))
+</code></pre>
+
+**translations.csv**
+<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">base,en,fr
+concept,Concept to show,Concept à afficher
+num_bins,Number of bins,Nombre de barres
+show_plot,Show plot,Afficher la figure
+none,None,Aucun
+</code></pre>
+
+Plusieurs choses à noter.
+
+On ajoute une ligne avec un **concept vide**, 'none', ce qui permettra d'éviter les erreurs si le menu déroulant est vide. Pensez à ajouter la traduction.
+
+On utilise la fonction [convert_tibble_to_list](https://interhop.frama.io/linkr/linkr/reference/convert_tibble_to_list.html), qui permet de convertir un tibble en liste, nécessaire pour être intégré dans un input de `shiny.fluent`. Les arguments seront `key_col` pour la colonne qui contient le code du concept ('concept_id'), et `text_col` pour la colonne qui contient le texte ('concept_name').
+
+On ajoute un délai d'exécution de l'update, avec `shinyjs::delay()`, qui est de 100 ms. Ceci permet de s'assurer que le dropdown a été créé dans l'UI avant de le mettre à jour.
+
+**Exécutez ce code**, vous devriez maintenant avoir un menu déroulant **avec les concepts** que nous avons sélectionnés.
+
+Il ne nous reste plus qu'à **afficher notre figure**.
+
+Nous allons utiliser la fonction [observeEvent](https://shiny.posit.co/r/reference/shiny/0.11/observeevent), qui **déclenchera le code** après avoir **détecté un événement**.
+
+<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">observeEvent(input$show_plot_%widget_id%, {
+    # Mon code, qui sera exécuté chaque fois que je cliquerai sur le bouton avec l'id 'show_plot_%widget_id%'
+})
+</code></pre>
+
+**Important** : ajoutez toujours la balise `%req%` au début d'un `observeEvent`. Cette balise sera remplacée par un code qui **invalidera** les **anciens observers** quand le widget sera mis à jour.
+
+Dans le cas de l'édition de plugins, à chaque fois que vous cliquez sur 'Exécuter', les observers créés précédemment seront invalidés, ce qui évite d'avoir des conflits.
+
+Voici les étapes de notre code :
+- 1) Récupérer le **concept sélectionné** dans le menu déroulant
+- 2) S'assurer que le concept appartient à un **domaine** qui peut s'**afficher** sous forme d'**histogramme**. Par simplicité, nous sélectionnerons uniquement le domaine 'Measurement'.
+- 3) S'assurer que le **tibble** des données, filtré avec le concept sélectionné, n'est **pas vide**
+- 4) Créer le **code** de notre **histogramme** avec `ggplot`
+- 5) Mettre à jour notre **output**
+
+<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">observeEvent(input$show_plot_%widget_id%, {
+
+    # Toujours mettre cette balise au début d'un observer
+    %req%
+
+    # Protéger le code en cas d'erreur avec un tryCatch
+    tryCatch({
+
+        # 1) Récupérer le concept sélectionné dans le menu déroulant
+        selected_concept <-
+            selected_concepts %>%
+            dplyr::filter(concept_id == input$concept_%widget_id%)
+
+        # 2) Le domain_id est-il égal à 'Measurement' ?
+        req(selected_concept$domain_id == "Measurement")
+
+        # 3) S'assurer que le tibble des données filtré sur ce concept n'est pas vide
+        data <-
+            d$measurement %>%
+            dplyr::filter(measurement_concept_id == selected_concept$concept_id)
+
+        req(data %>% dplyr::count() %>% dplyr::pull() > 0)
+
+        # 4) Créer le code de notre histogramme
+        plot <-
+            data %>%
+            ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+            # On prend en compte le nombre de barres depuis notre variable input$num_bins_%widget_id%
+            ggplot2::geom_histogram(colour = "white", fill = "#377EB8", bins = input$num_bins_%widget_id%) +
+            ggplot2::theme_minimal() +
+            # On modifie les titres des axes X et Y
+            ggplot2::labs(x = selected_concept$concept_name, y = i18np$t("occurrences"))
+
+        # 5) Mettre à jour notre output
+        output$plot_%widget_id% <- renderPlot(plot)
+
+    # Le message d'erreur s'affichera dans la console R
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+</code></pre>
+
+Assurez-vous d'avoir un set de données et une étude **chargés**, sans quoi la balise `%req%` bloquera le code de votre `observeEvent`.
+
+Pensez à **encapsuler votre code** dans une fonction `tryCatch`, cela évitera que l'application plante si vous faites des erreurs de code dans un observer.
+
+En effet, s'il existe des erreurs dans votre code en dehors des observers, vous verrez l'erreur s'afficher dans l'encadré en dessous de l'affichage de l'UI.
+
+Par contre, pour les observer, le code est exécuté **indépendemment**, lorsque l'événement que l'observer regarder survient. Il est donc nécessaire de protéger ce code dans un `tryCatch`. Cela n'est pas nécessaire en dehors des observers.
+
+Voici le **résultat** !
+
+<a href="tutorial_create_plugins_server_3.png" target = "_blank"><img src="tutorial_create_plugins_server_3.png" alt="Create a dataset" style="width:1000px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
+
+Nous allons pouvoir **tester notre plugin** dans une étude.
 
 <br /><hr />
 <h2 style = "text-align:center;">
