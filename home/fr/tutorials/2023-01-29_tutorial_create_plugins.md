@@ -381,7 +381,7 @@ Voici les étapes de notre code :
 
         # 1) Récupérer le concept sélectionné dans le menu déroulant
         selected_concept <-
-            selected_concepts %>%
+            selected_concepts %&gt;%
             dplyr::filter(concept_id == input$concept_%widget_id%)
 
         # 2) Le domain_id est-il égal à 'Measurement' ?
@@ -389,14 +389,14 @@ Voici les étapes de notre code :
 
         # 3) S'assurer que le tibble des données filtré sur ce concept n'est pas vide
         data <-
-            d$measurement %>%
+            d$measurement %&gt;%
             dplyr::filter(measurement_concept_id == selected_concept$concept_id)
 
-        req(data %>% dplyr::count() %>% dplyr::pull() > 0)
+        req(data %&gt;% dplyr::count() %&gt;% dplyr::pull() > 0)
 
         # 4) Créer le code de notre histogramme
         plot <-
-            data %>%
+            data %&gt;%
             ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
             # On prend en compte le nombre de barres depuis notre variable input$num_bins_%widget_id%
             ggplot2::geom_histogram(colour = "white", fill = "#377EB8", bins = input$num_bins_%widget_id%) +
