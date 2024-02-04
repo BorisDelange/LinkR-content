@@ -371,7 +371,7 @@ Voici les étapes de notre code :
 - 4) Créer le **code** de notre **histogramme** avec `ggplot`
 - 5) Mettre à jour notre **output**
 
-<pre class = "pre_tutorials"><code class = "r code_highlight" style = "font-size:12px;">observeEvent(input$show_plot_%widget_id%, {
+<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">observeEvent(input$show_plot_%widget_id%, {
 
     # Toujours mettre cette balise au début d'un observer
     %req%
@@ -381,7 +381,7 @@ Voici les étapes de notre code :
 
         # 1) Récupérer le concept sélectionné dans le menu déroulant
         selected_concept <-
-            selected_concepts %&gt;%
+            selected_concepts %>%
             dplyr::filter(concept_id == input$concept_%widget_id%)
 
         # 2) Le domain_id est-il égal à 'Measurement' ?
@@ -389,14 +389,14 @@ Voici les étapes de notre code :
 
         # 3) S'assurer que le tibble des données filtré sur ce concept n'est pas vide
         data <-
-            d$measurement %&gt;%
+            d$measurement %>%
             dplyr::filter(measurement_concept_id == selected_concept$concept_id)
 
-        req(data %&gt;% dplyr::count() %&gt;% dplyr::pull() > 0)
+        req(data %>% dplyr::count() %>% dplyr::pull() > 0)
 
         # 4) Créer le code de notre histogramme
         plot <-
-            data %&gt;%
+            data %>%
             ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
             # On prend en compte le nombre de barres depuis notre variable input$num_bins_%widget_id%
             ggplot2::geom_histogram(colour = "white", fill = "#377EB8", bins = input$num_bins_%widget_id%) +
