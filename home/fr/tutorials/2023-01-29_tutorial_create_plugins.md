@@ -205,6 +205,7 @@ Nous avons ajouté une **balise** `%widget_id%`, qui permet de rendre unique cha
 Ainsi, si le plugin est lancé dans deux onglets différents dans votre étude, vous éviterez un bug du fait de la duplicité d'id d'un de vos `div`.
 
 Nous le rappellerons mais c'est **très important**, **chaque id** :
+
 - doit être dans un `ns`
 - doit contenir une balise `%widget_id%`
 
@@ -222,6 +223,7 @@ Nous utilisons pour cela la fonction [`plotOutput`](https://shiny.posit.co/r/ref
 Créons maintenant la **configuration** de notre plot, dans le `div` de droite.
 
 Nous avons dit plus haut que nous voulions trois éléments :
+
 - un menu déroulant pour choisir la variable à afficher
 - un input numérique pour choisir le nombre de barres de l'histogramme à afficher
 - un bouton pour afficher le plot avec ces paramètres
@@ -229,6 +231,7 @@ Nous avons dit plus haut que nous voulions trois éléments :
 Nous allons utiliser la librairie [`shiny.fluent`](https://appsilon.github.io/shiny.fluent/index.html), qui est celle utilisée pour toute l'interface utilisateur de LinkR, qui utilise Fluent UI.
 
 Voici les fonctions à utiliser pour nos trois éléments :
+
 - [Dropdown.shinyInput](https://appsilon.github.io/shiny.fluent/reference/Dropdown.html)
 - [SpinButton.shinyInput](https://appsilon.github.io/shiny.fluent/reference/SpinButton.html)
 - [PrimaryButton.shinyInput](https://appsilon.github.io/shiny.fluent/reference/Button.html)
@@ -269,10 +272,12 @@ Nous allons maintenant rendre **tout ceci dynamique** en codant le **backend** !
 Sélectionnez la page '**Serveur**' dans le menu à gauche.
 
 Lorsque vous ajouterez un *widget* dans une étude, vous aurez deux choses à faire :
+
 - sélectionner les **concepts** à utiliser
 - sélectionner le **plugin** à utiliser
 
 Les concepts sélectionnés se retrouveront dans la variable **`selected_concepts`**, qui comporte les colonnes suivantes :
+
 - **concept_id** : l'ID du concept, soit standard (à retrouver sur [Athena](https://athena.ohdsi.org/search-terms/start)), soit non standard (dans ce cas, supérieur à 2000000000 / 2B)
 - **concept_name** : le nom du concept
 - **concept_display_name** : ce sera le nom d'affichage de votre concept, si vous modifiez la colonne correspondante avant d'ajouter un concept
@@ -359,6 +364,7 @@ Nous allons utiliser la fonction [observeEvent](https://shiny.posit.co/r/referen
 Dans le cas de l'édition de plugins, à chaque fois que vous cliquez sur 'Exécuter', les observers créés précédemment seront invalidés, ce qui évite d'avoir des conflits.
 
 Voici les étapes de notre code :
+
 - 1) Récupérer le **concept sélectionné** dans le menu déroulant
 - 2) S'assurer que le concept appartient à un **domaine** qui peut s'**afficher** sous forme d'**histogramme**. Par simplicité, nous sélectionnerons uniquement le domaine 'Measurement'.
 - 3) S'assurer que le **tibble** des données, filtré avec le concept sélectionné, n'est **pas vide**
