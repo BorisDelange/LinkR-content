@@ -233,7 +233,38 @@ Dans les plugins, il faut **préfixer** tous les éléments qui n'appartiennent 
 
 Par exemple : `shiny.fluent::Dropdown.shinyInput()`.
 
+<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">div(
+    # id avec ns et %widget_id%
+    id = ns("split_layout_right_%widget_id%"),
+    # div contenant le titre, en gras (strong), avec un espace de 10 px entre le titre et le dropdown
+    div(strong(i18np$t("concept")), style = "margin-bottom:10px;"),
+    div(shiny.fluent::Dropdown.shinyInput(ns("concept_%widget_id%")), style = "width:300px;"), br(), # Saut de ligne pour espacer les éléments
+    div(strong(i18np$t("num_bins")), style = "margin-bottom:10px;"),
+    div(shiny.fluent::SpinButton.shinyInput(ns("num_bins_%widget_id%"), value = 50, min = 10, max = 100), style = "width:300px;"), br(),
+    shiny.fluent::PrimaryButton.shinyInput(ns("show_plot_%widget_id%"), i18np$t("show_plot")),
+    style = "margin-left:5px; width:50%;"
+)
+</code></pre>
+
+Mettez à jour votre fichier de traductions.
+
+<pre class = "pre_tutorials"><code class = "r" style = "font-size:12px;">base,en,fr
+concept,Concept to show,Concept à afficher
+num_bins,Number of bins,Nombre de barres
+show_plot,Show plot,Afficher la figure
+</code></pre>
+
+Voici le **résultat** que vous devriez obtenir.
+
+<a href="tutorial_create_plugins_ui_2.png" target = "_blank"><img src="tutorial_create_plugins_ui_2.png" alt="Create a dataset" style="width:1000px; border:dashed 1px black; margin:5px 0px 5px 0px;" /></a>
+
+Nous allons maintenant rendre **tout ceci dynamique** en codant le **backend** !
+
 <h3><i class="fa fa-server" style="color:steelblue;"></i> Serveur - backend</h3>
+
+Sélectionnez la page '**Serveur**' dans le menu à gauche.
+
+
 
 <br /><hr />
 <h2 style = "text-align:center;">
