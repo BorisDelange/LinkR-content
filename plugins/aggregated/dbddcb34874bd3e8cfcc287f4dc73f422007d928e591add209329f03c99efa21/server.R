@@ -1,5 +1,5 @@
 # Get saved params for this widget
-sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id%", .con = r$db)
+sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id%", .con = m$db)
 widget_options <- DBI::dbGetQuery(m$db, sql)
 
 m$widget_options_%widget_id% <- widget_options
@@ -384,7 +384,7 @@ observeEvent(input$colour_pal_%widget_id%, {
         # Get saved colour
         value <- pal[1]
         if (length(input$script_choice_%widget_id%) > 0){
-            sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id% AND link_id = {input$script_choice_%widget_id%} AND name = 'colour'", .con = r$db)
+            sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id% AND link_id = {input$script_choice_%widget_id%} AND name = 'colour'", .con = m$db)
             colour <- DBI::dbGetQuery(m$db, sql)
             if (nrow(colour) > 0) if (colour %>% dplyr::pull(value) %in% pal) value <- colour %>% dplyr::pull(value)   
         }
