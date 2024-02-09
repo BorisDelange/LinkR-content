@@ -13,7 +13,7 @@ m$reload_dt_%widget_id% <- now()
 
 observeEvent(input$current_tab_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$current_tab_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$current_tab_%widget_id%"))
     
     tryCatch({
         sapply(c("notes_div_%widget_id%", "code_div_%widget_id%", "word_sets_div_%widget_id%", "scripts_management_div_%widget_id%"), shinyjs::hide)
@@ -23,7 +23,7 @@ observeEvent(input$current_tab_%widget_id%, {
 
 observeEvent(input$hide_params_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$hide_params_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$hide_params_%widget_id%"))
     
     tryCatch({
         if (input$hide_params_%widget_id%) shinyjs::hide("params_div_%widget_id%")
@@ -33,7 +33,7 @@ observeEvent(input$hide_params_%widget_id%, {
 
 observeEvent(input$show_all_notes_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$show_all_notes_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$show_all_notes_%widget_id%"))
     
     tryCatch({
         if (input$show_all_notes_%widget_id%) shinyjs::hide("notes_datatable_%widget_id%")
@@ -48,7 +48,7 @@ observeEvent(input$show_all_notes_%widget_id%, {
 # Render notes
 observeEvent(m$selected_person, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
     
     tryCatch({
         req(d$data_person$note %>% dplyr::count() %>% dplyr::pull() > 0)
@@ -65,7 +65,7 @@ observeEvent(m$selected_person, {
 
 observeEvent(input$chronological_order_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$chronological_order_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$chronological_order_%widget_id%"))
     
     tryCatch({
         m$reload_notes_%widget_id% <- now()
@@ -75,7 +75,7 @@ observeEvent(input$chronological_order_%widget_id%, {
 
 observeEvent(input$show_all_notes_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$show_all_notes_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$show_all_notes_%widget_id%"))
     
     tryCatch({
         m$reload_notes_%widget_id% <- now()
@@ -85,7 +85,7 @@ observeEvent(input$show_all_notes_%widget_id%, {
 
 observeEvent(input$notes_datatable_%widget_id%_rows_selected, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$notes_datatable_%widget_id%_rows_selected"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$notes_datatable_%widget_id%_rows_selected"))
     
     tryCatch({
         m$reload_notes_%widget_id% <- now()
@@ -95,7 +95,7 @@ observeEvent(input$notes_datatable_%widget_id%_rows_selected, {
 
 observeEvent(m$reload_notes_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer m$reload_notes_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$reload_notes_%widget_id%"))
     
     tryCatch({
         req(nrow(m$notes_%widget_id%) > 0)
@@ -118,7 +118,7 @@ observeEvent(m$reload_notes_%widget_id%, {
         
         output$notes_%widget_id% <- renderUI({
             %req%
-            if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - output$notes_%widget_id%"))
+            if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - output$notes_%widget_id%"))
             
             note_panels <- lapply(1:nrow(notes), function(i) {
                 note <- notes[i,]
@@ -135,7 +135,7 @@ observeEvent(m$reload_notes_%widget_id%, {
 # Datatable of all notes
 observeEvent(m$reload_notes_datatable_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer m$reload_notes_datatable_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$reload_notes_datatable_%widget_id%"))
     
     tryCatch({
         req(nrow(m$notes_%widget_id%) > 0)
@@ -205,7 +205,7 @@ observeEvent(m$reload_notes_datatable_%widget_id%, {
 # Add a new script
 observeEvent(input$add_script_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$add_script_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$add_script_%widget_id%"))
     
     tryCatch({
         # Check if name is not empty
@@ -254,7 +254,7 @@ observeEvent(input$add_script_%widget_id%, {
 # Load a script
 observeEvent(input$script_choice_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$script_choice_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$script_choice_%widget_id%"))
     
     tryCatch({
         widget_options <- m$widget_options_%widget_id% %>% dplyr::filter(link_id == input$script_choice_%widget_id%)
@@ -321,7 +321,7 @@ m$delete_open_dialog_%widget_id% <- FALSE
 # Update scripts DT & dropdown
 observeEvent(m$reload_dt_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer m$reload_dt_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$reload_dt_%widget_id%"))
     
     tryCatch({
         # Reload DT
@@ -364,7 +364,7 @@ observeEvent(m$reload_dt_%widget_id%, {
 # Updates on scripts DT
 observeEvent(input$scripts_management_datatable_%widget_id%_cell_edit, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_management_datatable_%widget_id%_cell_edit"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_management_datatable_%widget_id%_cell_edit"))
     
     tryCatch({
         edit_info <- input$scripts_management_datatable_%widget_id%_cell_edit
@@ -378,7 +378,7 @@ observeEvent(input$scripts_management_datatable_%widget_id%_cell_edit, {
 # Save updates on scripts
 observeEvent(input$save_scripts_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$save_scripts_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$save_scripts_%widget_id%"))
     
     tryCatch({
         # Check if there are no duplicates in names
@@ -422,7 +422,7 @@ observeEvent(input$save_scripts_%widget_id%, {
 ### Delete with trash icon
 observeEvent(input$deleted_pressed_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$deleted_pressed_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$deleted_pressed_%widget_id%"))
     
     tryCatch({
         # Reload datatable (to unselect rows)
@@ -436,7 +436,7 @@ observeEvent(input$deleted_pressed_%widget_id%, {
 ### Delete with "delete selection" button
 observeEvent(input$delete_scripts_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$delete_scripts_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$delete_scripts_%widget_id%"))
     
     tryCatch({
         req(length(input$scripts_management_datatable_%widget_id%_rows_selected) > 0)
@@ -448,7 +448,7 @@ observeEvent(input$delete_scripts_%widget_id%, {
 ### reactOutput for deletion confirmation
 output$delete_confirm_%widget_id% <- shiny.fluent::renderReact({
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - output$delete_confirm_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - output$delete_confirm_%widget_id%"))
     
     tryCatch({
         shiny.fluent::Dialog(
@@ -473,7 +473,7 @@ output$delete_confirm_%widget_id% <- shiny.fluent::renderReact({
 ### Close reactOutput
 observeEvent(input$scripts_hide_dialog_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_hide_dialog_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_hide_dialog_%widget_id%"))
     
     tryCatch({
         m$delete_open_dialog_%widget_id% <- FALSE
@@ -481,7 +481,7 @@ observeEvent(input$scripts_hide_dialog_%widget_id%, {
 })
 observeEvent(input$scripts_delete_canceled_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_delete_canceled_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_delete_canceled_%widget_id%"))
     
     tryCatch({
         m$delete_open_dialog_%widget_id% <- FALSE
@@ -491,7 +491,7 @@ observeEvent(input$scripts_delete_canceled_%widget_id%, {
 ### Deletion confirmed
 observeEvent(input$scripts_delete_confirmed_%widget_id%, {
     %req%
-    if (debug) cat(paste0(now(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_delete_confirmed_%widget_id%"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$scripts_delete_confirmed_%widget_id%"))
     
     tryCatch({
         m$delete_open_dialog_%widget_id% <- FALSE
