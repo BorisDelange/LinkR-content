@@ -2,7 +2,7 @@
 sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id%", .con = m$db)
 widget_options <- DBI::dbGetQuery(m$db, sql)
 plots <- widget_options %>% dplyr::filter(name == "script") %>% dplyr::select(id = value_num, name = value)
-selected_script <- NULL
+selected_script <- NA_integer_
 selected_script_result <- widget_options %>% dplyr::filter(name == "selected_script")
 if (nrow(selected_script_result) > 0) if ((selected_script_result %>% dplyr::pull(value_num)) %in% plots$id) selected_script <- selected_script_result %>% dplyr::pull(value_num)
 
