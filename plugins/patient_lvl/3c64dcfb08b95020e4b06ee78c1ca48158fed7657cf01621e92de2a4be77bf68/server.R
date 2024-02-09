@@ -324,7 +324,7 @@ observeEvent(input$add_script_%widget_id%, {
         
         # Update DT & dropdown
         m$reload_dt_%widget_id% <- now()
-    })
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
 })
 
 # Updates on scripts DT

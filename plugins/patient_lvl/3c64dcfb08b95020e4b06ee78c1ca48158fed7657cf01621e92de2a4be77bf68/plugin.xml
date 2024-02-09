@@ -4,7 +4,7 @@
     <app_version>0.2.0.9081</app_version>
     <type>1</type>
     <unique_id>3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68</unique_id>
-    <version>0.0.1.9020</version>
+    <version>0.0.1.9021</version>
     <author>Boris Delange</author>
     <image>r_console.png</image>
     <name_en>R console</name_en>
@@ -185,7 +185,7 @@ data$x %&gt;%
 &lt;img src="%plugin_folder%/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;
 &lt;/details&gt;</description_fr>
     <creation_datetime>2023-10-17 16:15:04</creation_datetime>
-    <update_datetime>2024-02-09 12:53:16</update_datetime>
+    <update_datetime>2024-02-09 13:03:07</update_datetime>
     <images>r_code_1.png;;;r_code_2.png;;;r_console.png;;;r_plot_1.png;;;r_plot_2.png;;;rmarkdown_1.png;;;rmarkdown_2.png</images>
   </plugin>
 </plugins>
