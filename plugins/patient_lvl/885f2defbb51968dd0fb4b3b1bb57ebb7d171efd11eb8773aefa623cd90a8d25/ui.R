@@ -13,13 +13,11 @@ tagList(
     shiny.fluent::Pivot(
         id = ns("pivot_%widget_id%"),
         onLinkClick = htmlwidgets::JS(paste0("item => Shiny.setInputValue('", id, "-current_tab_%widget_id%', item.props.id)")),
-        shiny.fluent::PivotItem(id = "notes_div_%widget_id%", itemKey = "notes", headerText = i18np$t("notes")),
-        shiny.fluent::PivotItem(id = "code_div_%widget_id%", itemKey = "code", headerText = i18np$t("code")),
-        shiny.fluent::PivotItem(id = "word_sets_div_%widget_id%", itemKey = "word_sets", headerText = i18np$t("word_sets")),
+        shiny.fluent::PivotItem(id = "no_code_div_%widget_id%", itemKey = "notes", headerText = i18np$t("notes")),
         shiny.fluent::PivotItem(id = "scripts_management_div_%widget_id%", itemKey = "scripts_management", headerText = i18np$t("scripts_management"))
     ),
     div(
-        id = ns("notes_div_%widget_id%"),  br(),
+        id = ns("no_code_div_%widget_id%"),  br(),
         shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
             div(shiny.fluent::Dropdown.shinyInput(ns("script_choice_%widget_id%"),
                 options = convert_tibble_to_list(notes, key_col = "id", text_col = "name"), value = selected_script), 
@@ -31,38 +29,58 @@ tagList(
             )
         ),  br(),
         div(
-            id = ns("params_div_%widget_id%"),
-            shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 20),
+            style = "display:flex;",
+            div(
+                id = ns("notes_div_%widget_id%"),
+                style = "padding-right:10px; width:50%;",
+                uiOutput(ns("notes_%widget_id%"))
+            ),
+            div(
+                id = ns("params_div_%widget_id%"),
+                style = "padding-left:10px; width:50%;",
+                shiny.fluent::Pivot(
+                    id = ns("params_pivot_%widget_id%"),
+                    onLinkClick = htmlwidgets::JS(paste0("item => Shiny.setInputValue('", id, "-params_current_tab_%widget_id%', item.props.id)")),
+                    shiny.fluent::PivotItem(id = "notes_selection_div_%widget_id%", itemKey = "notes_selection", headerText = i18np$t("notes_selection")),
+                    shiny.fluent::PivotItem(id = "word_div_%widget_id%", itemKey = "word_sets", headerText = i18np$t("word_sets")),
+                    shiny.fluent::PivotItem(id = "sub_params_div_%widget_id%", itemKey = "sub_params", headerText = i18np$t("parameters"))
+                ), br(),
                 div(
-                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                      div(shiny.fluent::Toggle.shinyInput(ns("show_all_notes_%widget_id%"), value = FALSE)),
-                      div(i18np$t("show_all_notes"), style = "font-weight:bold; margin-bottom:5px;")
+                    id = ns("notes_selection_div_%widget_id%"),
+                    div(
+                        shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                          div(shiny.fluent::Toggle.shinyInput(ns("show_all_notes_%widget_id%"), value = FALSE)),
+                          div(i18np$t("show_all_notes"), style = "font-weight:bold; margin-bottom:5px;")
+                        )
+                    ),
+                    DT::DTOutput(ns("notes_datatable_%widget_id%"))
+                ),
+                shinyjs::hidden(
+                    div(
+                        id = ns("word_sets_div_%widget_id%")
                     )
                 ),
-                div(
-                    shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
-                      div(shiny.fluent::Toggle.shinyInput(ns("chronological_order_%widget_id%"), value = TRUE)),
-                      div(i18np$t("chronological_order"), style = "font-weight:bold; margin-bottom:5px;")
+                shinyjs::hidden(
+                    div(
+                        id = ns("sub_params_div_%widget_id%"),
+                        div(
+                            shiny.fluent::Stack(horizontal = TRUE, tokens = list(childrenGap = 10),
+                              div(shiny.fluent::Toggle.shinyInput(ns("chronological_order_%widget_id%"), value = TRUE)),
+                              div(i18np$t("chronological_order"), style = "font-weight:bold; margin-bottom:5px;")
+                            )
+                        ),
+                        div(
+                            shiny.fluent::Dropdown.shinyInput(ns("display_format_%widget_id%"), label = i18np$t("display_format"),
+                                options = list(
+                                    list(key = "html", text = i18np$t("html")),
+                                    list(key = "raw", text = i18np$t("raw"))
+                                ),
+                                value = "html"
+                            ),
+                            style = "width:300px;"
+                        )
                     )
                 )
-            ),
-            DT::DTOutput(ns("notes_datatable_%widget_id%"))
-        ),
-        uiOutput(ns("notes_%widget_id%"))
-    ),
-    shinyjs::hidden(
-        div(
-            id = ns("code_div_%widget_id%"), br(),
-            div(
-                
-            )
-        )
-    ),
-    shinyjs::hidden(
-        div(
-            id = ns("word_sets_div_%widget_id%"), br(),
-            div(
-                
             )
         )
     ),

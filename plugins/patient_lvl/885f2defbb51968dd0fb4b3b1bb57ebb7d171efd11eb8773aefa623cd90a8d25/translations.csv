@@ -14,3 +14,10 @@ script_deleted,Script(s) deleted,Script(s) supprimé(s)
 id,ID,ID
 title,Title,Titre
 datetime,Datetime,Date & heure
+category,Category,Catégorie
+notes_selection,Notes selection,Sélection des notes
+occurrences,Occurrences,Occurrences
+parameters,Parameters,Paramètres
+display_format,Display format,Format d'affichage
+raw,Raw,Brut
+html,HTML,HTML

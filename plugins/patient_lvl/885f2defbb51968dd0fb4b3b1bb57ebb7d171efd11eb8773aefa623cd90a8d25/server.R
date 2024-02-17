@@ -16,8 +16,18 @@ observeEvent(input$current_tab_%widget_id%, {
     if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$current_tab_%widget_id%"))
     
     tryCatch({
-        sapply(c("notes_div_%widget_id%", "code_div_%widget_id%", "word_sets_div_%widget_id%", "scripts_management_div_%widget_id%"), shinyjs::hide)
+        sapply(c("no_code_div_%widget_id%", "scripts_management_div_%widget_id%"), shinyjs::hide)
         shinyjs::show(input$current_tab_%widget_id%)
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+
+observeEvent(input$params_current_tab_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$params_current_tab_%widget_id%"))
+    
+    tryCatch({
+        sapply(c("notes_selection_div_%widget_id%", "word_sets_div_%widget_id%", "sub_params_div_%widget_id%"), shinyjs::hide)
+        shinyjs::show(input$params_current_tab_%widget_id%)
     }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
 })
 
@@ -26,18 +36,14 @@ observeEvent(input$hide_params_%widget_id%, {
     if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$hide_params_%widget_id%"))
     
     tryCatch({
-        if (input$hide_params_%widget_id%) shinyjs::hide("params_div_%widget_id%")
-        else shinyjs::show("params_div_%widget_id%")
-    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
-})
-
-observeEvent(input$show_all_notes_%widget_id%, {
-    %req%
-    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$show_all_notes_%widget_id%"))
-    
-    tryCatch({
-        if (input$show_all_notes_%widget_id%) shinyjs::hide("notes_datatable_%widget_id%")
-        else shinyjs::show("notes_datatable_%widget_id%")
+        if (input$hide_params_%widget_id%){
+            shinyjs::hide("params_div_%widget_id%")   
+            shinyjs::runjs(glue::glue("$('#{id}-notes_div_%widget_id%').css('width', '100%');"))
+        }
+        else {
+            shinyjs::show("params_div_%widget_id%")
+            shinyjs::runjs(glue::glue("$('#{id}-notes_div_%widget_id%').css('width', '50%');"))
+        }
     }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
 })
 
@@ -55,7 +61,8 @@ observeEvent(m$selected_person, {
         
         # Get data
         selected_person <- m$selected_person
-        m$notes_%widget_id% <- d$data_person$note %>% dplyr::filter(person_id == selected_person) %>% dplyr::collect()
+        m$notes_%widget_id% <- d$data_person$note %>% dplyr::filter(person_id == selected_person) %>% dplyr::collect() %>%
+            dplyr::left_join(d$dataset_all_concepts %>% dplyr::select(note_type_concept_id = concept_id_1, note_type_concept_name = concept_name_1), by = "note_type_concept_id")
         
         m$reload_notes_%widget_id% <- now()
         m$reload_notes_type_%widget_id% <- "person_changed"
@@ -68,8 +75,12 @@ observeEvent(input$chronological_order_%widget_id%, {
     if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$chronological_order_%widget_id%"))
     
     tryCatch({
-        m$reload_notes_%widget_id% <- now()
-        m$reload_notes_type_%widget_id% <- "reload_order"
+        # Reload only we display all notes
+        if (length(input$show_all_notes_%widget_id%) > 0){
+        if (input$show_all_notes_%widget_id%){
+            m$reload_notes_%widget_id% <- now()
+            m$reload_notes_type_%widget_id% <- "reload_order"
+        }
     }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
 })
 
@@ -78,6 +89,7 @@ observeEvent(input$show_all_notes_%widget_id%, {
     if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$show_all_notes_%widget_id%"))
     
     tryCatch({
+        m$reload_notes_datatable_%widget_id% <- now()
         m$reload_notes_%widget_id% <- now()
         m$reload_notes_type_%widget_id% <- "show_all_notes"
     }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
@@ -90,6 +102,15 @@ observeEvent(input$notes_datatable_%widget_id%_rows_selected, {
     tryCatch({
         m$reload_notes_%widget_id% <- now()
         m$reload_notes_type_%widget_id% <- "selected_row"
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+
+observeEvent(input$display_format_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$display_format_%widget_id%"))
+    
+    tryCatch({
+        m$reload_notes_%widget_id% <- now()
     }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
 })
 
@@ -110,20 +131,32 @@ observeEvent(m$reload_notes_%widget_id%, {
         if (m$reload_notes_type_%widget_id% == "selected_row" | m$reload_notes_type_%widget_id% == "show_all_notes"){
             show_all_notes <- FALSE
             if (length(input$show_all_notes_%widget_id%) > 0) if (input$show_all_notes_%widget_id%) show_all_notes <- TRUE
-            if (!show_all_notes){
+            if (show_all_notes){
+                selected_notes_type <- m$notes_types_%widget_id%[input$notes_datatable_%widget_id%_rows_selected, ]
+                print(selected_notes_type)
+                notes <- notes %>% dplyr::filter(note_type_concept_name == selected_notes_type$note_type_concept_name)
+            }
+            else {
                 selected_notes <- m$notes_%widget_id%[input$notes_datatable_%widget_id%_rows_selected, ]
                 notes <- notes %>% dplyr::filter(note_id %in% selected_notes$note_id)
             }
         }
         
+        display_format <- "html"
+        if (length(input$display_format_%widget_id%) > 0) display_format <- input$display_format_%widget_id%
+        
         output$notes_%widget_id% <- renderUI({
             %req%
-            if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - output$notes_%widget_id%"))
+            if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - output$html_notes_%widget_id%"))
             
             note_panels <- lapply(1:nrow(notes), function(i) {
                 note <- notes[i,]
+                
+                if (display_format == "html") note_text <- HTML(stringr::str_replace_all(note$note_text, "\n", "<br />"))
+                else note_text <- stringr::str_replace_all(note$note_text, c("<" = "&lt;", ">" = "&gt;", "\n" = "\\\\n"))
+                
                 div(strong(note$note_title), " - ", format_datetime(note$note_datetime, m$language), br(), br(), 
-                    HTML(stringr::str_replace_all(note$note_text, "\n", "<br />")),
+                    note_text,
                     style = "border:dashed 1px; padding:10px; margin-top:10px;")
             })
             
@@ -139,33 +172,52 @@ observeEvent(m$reload_notes_datatable_%widget_id%, {
     
     tryCatch({
         req(nrow(m$notes_%widget_id%) > 0)
-            
-        chronological_order <- FALSE
-        if (length(input$chronological_order_%widget_id%) > 0) if (input$chronological_order_%widget_id%) chronological_order <- TRUE
-        if (chronological_order) m$notes_%widget_id% <- m$notes_%widget_id% %>% dplyr::arrange(note_datetime)
-        else m$notes_%widget_id% <- m$notes_%widget_id% %>% dplyr::arrange(dplyr::desc(note_datetime))
         
-        notes <- m$notes_%widget_id% %>% dplyr::select(note_id, note_title, note_datetime) %>% 
-            dplyr::mutate_at("note_datetime", as.character) %>% 
-            dplyr::mutate_at("note_title", as.factor) %>%
-            dplyr::mutate_at("note_id", as.character)
+        show_all_notes <- FALSE
+        if (length(input$show_all_notes_%widget_id%) > 0) if (input$show_all_notes_%widget_id%) show_all_notes <- TRUE
         
         column_defs <- list()
         
-        column_widths <- c("note_id" = "100px", "note_datetime" = "200px")
-        for(name in names(column_widths)) column_defs <- rlist::list.append(column_defs, list(width = column_widths[[name]], targets = which(grepl(paste0("^", name, "$"), names(notes))) - 1))
+        if (show_all_notes){
+            notes <- m$notes_%widget_id% %>% 
+                dplyr::group_by(note_type_concept_name) %>%
+                dplyr::summarize(count = dplyr::n()) %>%
+                dplyr::ungroup() %>%
+                dplyr::arrange(dplyr::desc(count)) %>%
+                dplyr::mutate_at("note_type_concept_name", as.factor)
+                
+            m$notes_types_%widget_id% <- notes
+                
+            column_widths <- c("count" = "200px")
             
-        centered_cols_vec <- integer()
-        for(col in c("note_id", "note_datetime")) centered_cols_vec <- c(centered_cols_vec, c(which(grepl(paste0("^", col, "$"), names(notes))) - 1))
-        column_defs <- rlist::list.append(column_defs, list(className = "dt-body-center", targets = centered_cols_vec))
-      
-        sortable_cols_vec <- integer()
-        cols <- c(1:length(names(notes))) - 1
-        for(col in c("note_title", "note_datetime")) sortable_cols_vec <- c(sortable_cols_vec, c(which(grepl(paste0("^", col, "$"), names(notes))) - 1))
-        non_sortable_cols_vec <- cols[!cols %in% sortable_cols_vec]
-        column_defs <- rlist::list.append(column_defs, list(sortable = FALSE, targets = non_sortable_cols_vec))
-      
-        names(notes) <- c(i18np$t("id"), i18np$t("title"), i18np$t("datetime"))
+            names(notes) <- c(i18np$t("category"), i18np$t("occurrences"))
+        }
+        else {
+        
+            chronological_order <- FALSE
+            if (length(input$chronological_order_%widget_id%) > 0) if (input$chronological_order_%widget_id%) chronological_order <- TRUE
+            if (chronological_order) m$notes_%widget_id% <- m$notes_%widget_id% %>% dplyr::arrange(note_datetime)
+            else m$notes_%widget_id% <- m$notes_%widget_id% %>% dplyr::arrange(dplyr::desc(note_datetime))
+            
+            notes <- m$notes_%widget_id% %>% dplyr::select(note_type_concept_name, note_title, note_datetime) %>% 
+                dplyr::mutate_at("note_datetime", as.character) %>%
+                dplyr::mutate_at(c("note_type_concept_name", "note_title"), as.factor)
+            
+            column_widths <- c("note_datetime" = "200px")
+            for(name in names(column_widths)) column_defs <- rlist::list.append(column_defs, list(width = column_widths[[name]], targets = which(grepl(paste0("^", name, "$"), names(notes))) - 1))
+                
+            centered_cols_vec <- integer()
+            centered_cols_vec <- c(centered_cols_vec, c(which(grepl("^note_datetime$", names(notes))) - 1))
+            column_defs <- rlist::list.append(column_defs, list(className = "dt-body-center", targets = centered_cols_vec))
+          
+            sortable_cols_vec <- integer()
+            cols <- c(1:length(names(notes))) - 1
+            sortable_cols_vec <- c(sortable_cols_vec, c(which(grepl("^note_datetime$", names(notes))) - 1))
+            non_sortable_cols_vec <- cols[!cols %in% sortable_cols_vec]
+            column_defs <- rlist::list.append(column_defs, list(sortable = FALSE, targets = non_sortable_cols_vec))
+          
+            names(notes) <- c(i18np$t("category"), i18np$t("title"), i18np$t("datetime"))
+        }
         
         output$notes_datatable_%widget_id% <- DT::renderDT(
             DT::datatable(
