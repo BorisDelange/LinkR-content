@@ -62,7 +62,12 @@ observeEvent(m$selected_person, {
         # Get data
         selected_person <- m$selected_person
         m$notes_%widget_id% <- d$data_person$note %>% dplyr::filter(person_id == selected_person) %>% dplyr::collect() %>%
-            dplyr::left_join(d$dataset_all_concepts %>% dplyr::select(note_type_concept_id = concept_id_1, note_type_concept_name = concept_name_1), by = "note_type_concept_id")
+            dplyr::left_join(
+                d$dataset_all_concepts %>%
+                    dplyr::filter(is.na(relationship_id)) %>%
+                    dplyr::select(note_type_concept_id = concept_id_1, note_type_concept_name = concept_name_1), 
+                by = "note_type_concept_id"
+            )
         
         m$reload_notes_%widget_id% <- now()
         m$reload_notes_type_%widget_id% <- "person_changed"
