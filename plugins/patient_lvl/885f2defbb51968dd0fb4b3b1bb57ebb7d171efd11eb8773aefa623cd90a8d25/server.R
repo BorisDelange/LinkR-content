@@ -77,9 +77,10 @@ observeEvent(input$chronological_order_%widget_id%, {
     tryCatch({
         # Reload only we display all notes
         if (length(input$show_all_notes_%widget_id%) > 0){
-        if (input$show_all_notes_%widget_id%){
-            m$reload_notes_%widget_id% <- now()
-            m$reload_notes_type_%widget_id% <- "reload_order"
+            if (input$show_all_notes_%widget_id%){
+                m$reload_notes_%widget_id% <- now()
+                m$reload_notes_type_%widget_id% <- "reload_order"
+            }
         }
     }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
 })
