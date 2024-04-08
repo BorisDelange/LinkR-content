@@ -7,19 +7,23 @@ m$scripts_%widget_id% <- widget_options %>% dplyr::filter(name == "script") %>% 
 m$scripts_temp_%widget_id% <- m$scripts_%widget_id% %>% dplyr::mutate(modified = FALSE)
 m$reload_dt_%widget_id% <- now()
 
+# Load word sets & words
+m$word_sets_%widget_id% <- widget_options %>% dplyr::filter(name == "word_set") %>% dplyr::select(id = value_num, name = value)
+m$words_%widget_id% <- widget_options %>% dplyr::filter(name == "word") %>% dplyr::select(id = value_num, word_set_id = link_id, name = value)
+
 # ------------------------
 # --- Show / hide divs ---
 # ------------------------
 
-observeEvent(input$current_tab_%widget_id%, {
-    %req%
-    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$current_tab_%widget_id%"))
-    
-    tryCatch({
-        sapply(c("no_code_div_%widget_id%", "scripts_management_div_%widget_id%"), shinyjs::hide)
-        shinyjs::show(input$current_tab_%widget_id%)
-    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
-})
+# observeEvent(input$current_tab_%widget_id%, {
+#     %req%
+#     if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$current_tab_%widget_id%"))
+#     
+#     tryCatch({
+#         sapply(c("no_code_div_%widget_id%", "scripts_management_div_%widget_id%"), shinyjs::hide)
+#         shinyjs::show(input$current_tab_%widget_id%)
+#     }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+# })
 
 observeEvent(input$params_current_tab_%widget_id%, {
     %req%
@@ -62,12 +66,10 @@ observeEvent(m$selected_person, {
         # Get data
         selected_person <- m$selected_person
         m$notes_%widget_id% <- d$data_person$note %>% dplyr::filter(person_id == selected_person) %>% dplyr::collect() %>%
-            dplyr::left_join(
-                d$dataset_all_concepts %>%
-                    dplyr::filter(is.na(relationship_id)) %>%
-                    dplyr::select(note_type_concept_id = concept_id_1, note_type_concept_name = concept_name_1), 
-                by = "note_type_concept_id"
-            )
+            dplyr::left_join(d$dataset_all_concepts %>% dplyr::filter(is.na(relationship_id)) %>% dplyr::select(note_type_concept_id = concept_id_1, note_type_concept_name = concept_name_1), by = "note_type_concept_id")
+        
+        # If a word set is selected
+        if (input$word_set_filter_%widget_id% != 0) m$run_filter_%widget_id% <- now()
         
         m$reload_notes_%widget_id% <- now()
         m$reload_notes_type_%widget_id% <- "person_changed"
@@ -111,6 +113,41 @@ observeEvent(input$notes_datatable_%widget_id%_rows_selected, {
     }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
 })
 
+observeEvent(input$run_filter_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_filter_%widget_id%"))
+    
+    m$run_filter_%widget_id% <- now()
+})
+
+observeEvent(m$run_filter_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$run_filter_%widget_id%"))
+    
+    tryCatch({
+        # Apply filters
+        if (input$word_set_filter_%widget_id% != 0L){
+            # Get words
+            words <- m$words_%widget_id% %>% dplyr::filter(word_set_id == input$word_set_filter_%widget_id%) %>% dplyr::pull(name)
+            if (length(words) > 0){
+                pattern <- paste(words, collapse = "|")
+                m$notes_%widget_id% <- 
+                    m$notes_%widget_id% %>%
+                    dplyr::filter(grepl(pattern, note_text, ignore.case = TRUE)) %>%
+                    dplyr::mutate(note_text = stringr::str_replace_all(note_text, stringr::regex(pattern, ignore_case = TRUE), "<mark>\\0</mark>"))
+            }
+        }
+        else {
+            selected_person <- m$selected_person
+            m$notes_%widget_id% <- d$data_person$note %>% dplyr::filter(person_id == selected_person) %>% dplyr::collect() %>%
+                dplyr::left_join(d$dataset_all_concepts %>% dplyr::filter(is.na(relationship_id)) %>% dplyr::select(note_type_concept_id = concept_id_1, note_type_concept_name = concept_name_1), by = "note_type_concept_id")
+        }
+    
+        m$reload_notes_%widget_id% <- now()
+        m$reload_notes_datatable_%widget_id% <- now()
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+
 observeEvent(input$display_format_%widget_id%, {
     %req%
     if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$display_format_%widget_id%"))
@@ -125,6 +162,8 @@ observeEvent(m$reload_notes_%widget_id%, {
     if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$reload_notes_%widget_id%"))
     
     tryCatch({
+        if (nrow(m$notes_%widget_id%) == 0) output$notes_%widget_id% <- renderUI(i18np$t("no_notes_to_display"))
+    
         req(nrow(m$notes_%widget_id%) > 0)
         
         chronological_order <- FALSE
@@ -139,7 +178,6 @@ observeEvent(m$reload_notes_%widget_id%, {
             if (length(input$show_all_notes_%widget_id%) > 0) if (input$show_all_notes_%widget_id%) show_all_notes <- TRUE
             if (show_all_notes){
                 selected_notes_type <- m$notes_types_%widget_id%[input$notes_datatable_%widget_id%_rows_selected, ]
-                print(selected_notes_type)
                 notes <- notes %>% dplyr::filter(note_type_concept_name == selected_notes_type$note_type_concept_name)
             }
             else {
@@ -147,6 +185,9 @@ observeEvent(m$reload_notes_%widget_id%, {
                 notes <- notes %>% dplyr::filter(note_id %in% selected_notes$note_id)
             }
         }
+        
+        # Transform multiple \n in one \n
+        # notes <- notes %>% dplyr::mutate(note_text = gsub("\\n(\\s*\\n)+", "\n", note_text))
         
         display_format <- "html"
         if (length(input$display_format_%widget_id%) > 0) display_format <- input$display_format_%widget_id%
@@ -177,6 +218,32 @@ observeEvent(m$reload_notes_datatable_%widget_id%, {
     if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$reload_notes_datatable_%widget_id%"))
     
     tryCatch({
+        if (nrow(m$notes_%widget_id%) == 0){
+        
+            notes <- tibble::tibble(note_type_concept_name = character(), note_title = character(), note_datetime = character())
+            names(notes) <- c(i18np$t("category"), i18np$t("title"), i18np$t("datetime"))
+            
+            output$notes_datatable_%widget_id% <- DT::renderDT(
+                DT::datatable(
+                    notes,
+                    options = list(
+                        dom = "<'datatable_length'l><'top't><'bottom'p>",
+                        pageLength = 10, displayStart = 0,
+                        language = list(
+                            paginate = list(previous = i18n$t("dt_previous"), `next` = i18n$t("dt_next")),
+                            search = i18n$t("dt_search"),
+                            lengthMenu = i18n$t("dt_entries"),
+                            emptyTable = i18n$t("dt_empty")),
+                        compact = TRUE, hover = TRUE
+                    ),
+                    filter = list(position = "top"),
+                    selection = "single",
+                    rownames = FALSE, escape = FALSE
+                ),
+                server = TRUE
+            )
+        }
+        
         req(nrow(m$notes_%widget_id%) > 0)
         
         show_all_notes <- FALSE
@@ -184,8 +251,10 @@ observeEvent(m$reload_notes_datatable_%widget_id%, {
         
         column_defs <- list()
         
+        notes <- m$notes_%widget_id%
+        
         if (show_all_notes){
-            notes <- m$notes_%widget_id% %>% 
+            notes <- notes %>% 
                 dplyr::group_by(note_type_concept_name) %>%
                 dplyr::summarize(count = dplyr::n()) %>%
                 dplyr::ungroup() %>%
@@ -200,12 +269,14 @@ observeEvent(m$reload_notes_datatable_%widget_id%, {
         }
         else {
         
+            # Filter on chronological order?
+            
             chronological_order <- FALSE
             if (length(input$chronological_order_%widget_id%) > 0) if (input$chronological_order_%widget_id%) chronological_order <- TRUE
             if (chronological_order) m$notes_%widget_id% <- m$notes_%widget_id% %>% dplyr::arrange(note_datetime)
             else m$notes_%widget_id% <- m$notes_%widget_id% %>% dplyr::arrange(dplyr::desc(note_datetime))
             
-            notes <- m$notes_%widget_id% %>% dplyr::select(note_type_concept_name, note_title, note_datetime) %>% 
+            notes <- notes %>% dplyr::select(note_type_concept_name, note_title, note_datetime) %>% 
                 dplyr::mutate_at("note_datetime", as.character) %>%
                 dplyr::mutate_at(c("note_type_concept_name", "note_title"), as.factor)
             
@@ -255,6 +326,212 @@ observeEvent(m$reload_notes_datatable_%widget_id%, {
 # -----------------
 # --- Word sets ---
 # -----------------
+
+# Add a word set
+
+observeEvent(input$new_word_set_add_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$new_word_set_add_%widget_id%"))
+    
+    tryCatch({
+        new_name <- input$new_word_set_name_%widget_id%
+        req(new_name != "")
+        
+        # Check if name already used
+        sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id% AND name = 'word_set' AND value = {new_name}", .con = m$db)
+        result <- DBI::dbGetQuery(m$db, sql)
+        check_used_name <- !nrow(result) > 0
+        
+        if (!check_used_name) show_message_bar(output, "name_already_used", "warning", i18n = i18np, ns = ns)
+        req(check_used_name)
+        
+        # Add name in database
+        last_row <- get_last_row(m$db, "widgets_options")
+        sql <- glue::glue_sql("SELECT COALESCE(MAX(value_num), 0) FROM widgets_options WHERE widget_id = %widget_id% AND name = 'word_set'", .con = m$db)
+        last_id <- DBI::dbGetQuery(m$db, sql) %>% dplyr::pull()
+        
+        new_options <- tibble::tibble(
+            id = last_row + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
+            category = NA_character_, name = "word_set", value = new_name, value_num = last_id + 1,
+            creator_id = NA_integer_, datetime = as.character(now()), deleted = FALSE)
+            
+        DBI::dbAppendTable(m$db, "widgets_options", new_options)
+        
+        # Reset textfield
+        shiny.fluent::updateTextField.shinyInput(session, "new_word_set_name_%widget_id%", value = "")
+        
+        # Add new word set to word sets vector
+        m$word_sets_%widget_id% <- m$word_sets_%widget_id% %>% dplyr::bind_rows(tibble::tibble(id = last_id + 1, name = new_name))
+        
+        # Reset word dropdown
+        shiny.fluent::updateDropdown.shinyInput(session, "word_%widget_id%", options = list(), value = NULL)
+        
+        show_message_bar(output, "word_set_added", "success", i18n = i18np, ns = ns)
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+
+# Update word sets
+observeEvent(m$word_sets_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$word_sets_%widget_id%"))
+    
+    tryCatch({
+        shiny.fluent::updateDropdown.shinyInput(session, "word_set_%widget_id%", options = convert_tibble_to_list(m$word_sets_%widget_id%, key_col = "id", text_col = "name"), value = NULL)
+        
+        word_sets_filter <- tibble::tibble(id = 0L, name = i18np$t("none")) %>% dplyr::bind_rows(m$word_sets_%widget_id%)
+        shiny.fluent::updateDropdown.shinyInput(session, "word_set_filter_%widget_id%", options = convert_tibble_to_list(word_sets_filter, key_col = "id", text_col = "name"), value = 0L)
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+
+# Delete a word set
+observeEvent(input$delete_word_set_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$delete_word_set_%widget_id%"))
+    
+    tryCatch({
+        req(length(input$word_set_%widget_id%) > 0)
+        shinyjs::show("delete_word_set_modal_%widget_id%")
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+
+observeEvent(input$close_delete_word_set_modal_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$close_delete_word_set_modal_%widget_id%"))
+    
+    tryCatch({
+        shinyjs::hide("delete_word_set_modal_%widget_id%")
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+
+observeEvent(input$confirm_word_set_deletion_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$confirm_word_set_deletion_%widget_id%"))
+    
+    tryCatch({
+        req(length(input$word_set_%widget_id%) > 0)
+        
+        sql <- glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND name = 'word_set' AND value_num = {input$word_set_%widget_id%}", .con = m$db)
+        query <- DBI::dbSendStatement(m$db, sql)
+        DBI::dbClearResult(query)
+        
+        shinyjs::hide("delete_word_set_modal_%widget_id%")
+        
+        show_message_bar(output, "word_set_deleted", "warning", i18n = i18np, ns = ns)
+        
+        m$word_sets_%widget_id% <- m$word_sets_%widget_id% %>% dplyr::filter(id != input$word_set_%widget_id%)
+        
+        # Reset word dropdown
+        shiny.fluent::updateDropdown.shinyInput(session, "word_%widget_id%", options = list(), value = NULL)
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+
+# Load words of a word set
+observeEvent(input$word_set_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$add_word_%widget_id%"))
+    
+    tryCatch({
+        if (length(input$word_set_%widget_id%) == 0) shiny.fluent::updateDropdown.shinyInput(session, "word_%widget_id%", options = list(), value = NULL)
+        else {
+            words <- m$words_%widget_id% %>% dplyr::filter(word_set_id == input$word_set_%widget_id%)
+            shiny.fluent::updateDropdown.shinyInput(session, "word_%widget_id%", options = convert_tibble_to_list(words, key_col = "id", text_col = "name"), value = NULL)
+        }
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+
+# Add a word
+
+observeEvent(input$add_word_%widget_id%, {
+     %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$add_word_%widget_id%"))
+    
+    tryCatch({
+        req(length(input$word_set_%widget_id%) > 0, input$new_word_name_%widget_id% != "")
+        
+        word_set_id <- input$word_set_%widget_id%
+        new_name <- input$new_word_name_%widget_id%
+        
+        # Check if name already used
+        sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id% AND name = 'word' AND link_id = {word_set_id} AND value = {new_name}", .con = m$db)
+        result <- DBI::dbGetQuery(m$db, sql)
+        check_used_name <- !nrow(result) > 0
+        
+        if (!check_used_name) show_message_bar(output, "name_already_used", "warning", i18n = i18np, ns = ns)
+        req(check_used_name)
+        
+         # Add name in database
+        last_row <- get_last_row(m$db, "widgets_options")
+        sql <- glue::glue_sql("SELECT COALESCE(MAX(value_num), 0) FROM widgets_options WHERE widget_id = %widget_id% AND name = 'word'", .con = m$db)
+        last_id <- DBI::dbGetQuery(m$db, sql) %>% dplyr::pull()
+        
+        new_options <- tibble::tibble(
+            id = last_row + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = word_set_id,
+            category = NA_character_, name = "word", value = new_name, value_num = last_id + 1,
+            creator_id = NA_integer_, datetime = as.character(now()), deleted = FALSE)
+            
+        DBI::dbAppendTable(m$db, "widgets_options", new_options)
+        
+        # Reset textfield
+        shiny.fluent::updateTextField.shinyInput(session, "new_word_name_%widget_id%", value = "")
+        
+        # Add new word to words vector
+        m$words_%widget_id% <- m$words_%widget_id% %>% dplyr::bind_rows(tibble::tibble(id = last_id + 1, word_set_id = word_set_id, name = new_name))
+        
+        show_message_bar(output, "word_added", "success", i18n = i18np, ns = ns)
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+
+# Update words
+observeEvent(m$words_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$words_%widget_id%"))
+    
+    tryCatch({
+        req(length(input$word_set_%widget_id%) > 0)
+        
+        words <- m$words_%widget_id% %>% dplyr::filter(word_set_id == input$word_set_%widget_id%)
+        shiny.fluent::updateDropdown.shinyInput(session, "word_%widget_id%", options = convert_tibble_to_list(words, key_col = "id", text_col = "name"), value = NULL)
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+
+# Delete a word
+observeEvent(input$delete_word_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$delete_word_%widget_id%"))
+    
+    tryCatch({
+        req(length(input$word_%widget_id%) > 0)
+        shinyjs::show("delete_word_modal_%widget_id%")
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+
+observeEvent(input$close_delete_word_modal_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$close_delete_word_modal_%widget_id%"))
+    
+    tryCatch({
+        shinyjs::hide("delete_word_modal_%widget_id%")
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
+
+observeEvent(input$confirm_word_deletion_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$confirm_word_deletion_%widget_id%"))
+    
+    tryCatch({
+        req(length(input$word_%widget_id%) > 0, length(input$word_set_%widget_id%) > 0)
+        
+        sql <- glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND name = 'word' AND link_id = {input$word_set_%widget_id%} AND value_num = {input$word_%widget_id%}", .con = m$db)
+        query <- DBI::dbSendStatement(m$db, sql)
+        DBI::dbClearResult(query)
+        
+        shinyjs::hide("delete_word_modal_%widget_id%")
+        
+        show_message_bar(output, "word_deleted", "warning", i18n = i18np, ns = ns)
+        
+        m$words_%widget_id% <- m$words_%widget_id% %>% dplyr::filter(id != input$word_%widget_id%)
+    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+})
 
 # ---------------
 # --- Scripts ---
