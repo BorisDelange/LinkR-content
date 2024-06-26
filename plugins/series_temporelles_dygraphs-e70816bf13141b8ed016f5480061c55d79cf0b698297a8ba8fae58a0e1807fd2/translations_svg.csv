@@ -1,0 +1,36 @@
+base,en,fr
+plot,Plot,Figure
+code,Code,Code
+scripts_management,Scripts management,Gérer les scripts
+plot_parameters,Plot parameters,Paramètres de la figure
+unauthorized_access_to_console,You are not authorized to access the console,Vous n''avez pas l''autorisation pour accéder à la console
+time_series_singular,Time series,Série temporelle
+show,Show plot,Afficher la figure
+save,Save,Sauvegarder
+run_plot_at_patient_changeover,Reload plot at patient changeover,Recharger la figure au changement de patient
+run_code_at_patient_changeover,Reload code at patient changeover,Recharger le code au changement de patient
+hide_params,Hide parameters,Masquer les paramètres
+plot_width,Plot width (%),Largeur de la figure (%)
+plot_height,Plot height (%),Hauteur de la figure (%)
+variables,Variables,Variables
+generate_code,Generate code,Générer le code
+script_added,Script added,Script ajouté
+confirm_deletion_title,Delete scripts,Supprimer des scripts
+confirm_deletion_subtext,Do you want to delete these scripts ?,Confirmer la suppression de ces scripts ?
+script_deleted,Script(s) deleted,Script(s) supprimé(s)
+dygraphs_and_xts_not_installed,Dygraphs & xts libraries are not installed. Install these libraries and restart the app., Les librairies dygraphs et xts ne sont pas installées. Installez ces librairies puis relancez l''application.
+none,None,Aucune
+variable_num,Variable number,Variable n°
+variable,Variable,Variable
+palette,Palette,Palette
+display_name,Display name,Nom d''affichage
+show_range_selector,Show range selector,Afficher le sélecteur d''intervalle
+draw_points,Draw points,Tracer les points
+stay_data_only,Current stay data only,Données du séjour sélectionné uniquement
+y_min,Min value of Y axis,Valeur minimale de Y
+y_max,Max value of Y axis,Valeur maximale de Y
+synchronize_timelines,Synchronize timelines,Synchroniser les intervalles
+smooth_curves,Smooth curves,Lisser les courbes
+roll_period,Roll period,Période d''amortissement
+show_stays,Show stays,Afficher les séjours
+change_y_values,Change Y values,Changer les valeurs de Y
