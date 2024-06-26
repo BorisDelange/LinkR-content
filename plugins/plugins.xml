@@ -1,30 +1,37 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <plugins>
-  <plugin>
-    <app_version>0.2.0</app_version>
-    <type>1</type>
-    <unique_id>1e0f0100cd2ec947f3494754eec1010700e41b91feae3d361ef8c164fe748a9b</unique_id>
-    <version>0.0.1.9000</version>
-    <author>Boris Delange</author>
-    <image></image>
-    <description_en></description_en>
-    <name_en>S&#xE9;ries temporelles {vistime}</name_en>
-    <category_en></category_en>
-    <description_fr></description_fr>
-    <name_fr>S&#xE9;ries temporelles {vistime}</name_fr>
-    <category_fr></category_fr>
-    <creation_datetime>2023-11-20 22:44:14</creation_datetime>
-    <update_datetime>2023-11-20 22:44:14</update_datetime>
-    <images></images>
-  </plugin>
-  <plugin>
-    <app_version>0.2.0.9081</app_version>
-    <type>1</type>
-    <unique_id>3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68</unique_id>
-    <version>0.0.1.9021</version>
-    <author>Boris Delange</author>
-    <image>r_console.png</image>
-    <description_en>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; 1) Description
+  <plugins>
+    <plugin>
+      <app_version>0.2.0</app_version>
+      <type>2</type>
+      <unique_id>414d980969826734f8b0e295acf86716b354ad1ef113ad49b5c9cada84f23138</unique_id>
+      <version>0.0.1.9001</version>
+      <author>Boris Delange</author>
+      <image/>
+      <name_en>[dev] Template</name_en>
+      <name_fr>[dev] Template</name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en/>
+      <description_fr/>
+      <creation_datetime>2024-02-15 14:06:49</creation_datetime>
+      <update_datetime>2024-02-15 14:48:51</update_datetime>
+      <images/>
+    </plugin>
+  </plugins>
+  <plugins>
+    <plugin>
+      <app_version>0.2.0.9081</app_version>
+      <type>2</type>
+      <unique_id>6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8</unique_id>
+      <version>0.0.1.9020</version>
+      <author>Boris Delange</author>
+      <image>r_console.png</image>
+      <name_en>R console</name_en>
+      <name_fr>Console R</name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; 1) Description
 
 This plugin allows you to **execute code** in the R console and **save your code as scripts**.
 
@@ -111,11 +118,9 @@ data$x %&gt;%
 
 &lt;img src="%plugin_folder%/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;
 &lt;/details&gt;</description_en>
-    <name_en>R console</name_en>
-    <category_en></category_en>
-    <description_fr>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; 1) Description
+      <description_fr>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; 1) Description
 
-Ce plugin vous permet d'**ex&#xE9;cuter du code** dans la console R et de **sauvegarder votre code sous forme de scripts**.
+Ce plugin vous permet d'**exécuter du code** dans la console R et de **sauvegarder votre code sous forme de scripts**.
 
 ### &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; 2) Utilisation
 
@@ -129,15 +134,15 @@ Allez dans l'onglet "Gestion des scripts" pour **ajouter, supprimer ou renommer 
 
 Un script est un **fichier texte contenant du code**.
 
-Une fois un script cr&#xE9;&#xE9;, vous pouvez l'**&#xE9;diter** dans l'onglet "Script" et **ex&#xE9;cuter le code**.&lt;br /&gt;&lt;br /&gt;
+Une fois un script créé, vous pouvez l'**éditer** dans l'onglet "Script" et **exécuter le code**.&lt;br /&gt;&lt;br /&gt;
 
 ### &lt;span style = "margin-left:20px;"&gt; b) Code R&lt;/span&gt;
 
-Ecrivez du **code en R** et ex&#xE9;cutez-le : le **r&#xE9;sultat retourn&#xE9; par la console** appara&#xEE;tra en-dessous de l'&#xE9;diteur de texte.
+Ecrivez du **code en R** et exécutez-le : le **résultat retourné par la console** apparaîtra en-dessous de l'éditeur de texte.
 
-Pour conna&#xEE;tre le **mod&#xE8;le de donn&#xE9;es** utilis&#xE9; par l'application, cliquez sur le bouton d'aide (point d'interrogation en haut &#xE0; droite de la page) lorsque vous &#xEA;tes sur la page "Donn&#xE9;es / Acc&#xE9;der aux donn&#xE9;es".
+Pour connaître le **modèle de données** utilisé par l'application, cliquez sur le bouton d'aide (point d'interrogation en haut à droite de la page) lorsque vous êtes sur la page "Données / Accéder aux données".
 
-Exemple de code (obtenir le min, max et moyenne de la fr&#xE9;quence cardiaque chez nos patients) :
+Exemple de code (obtenir le min, max et moyenne de la fréquence cardiaque chez nos patients) :
 
 &lt;pre style = "font-size:12px;"&gt;&lt;code&gt;d$measurement %&gt;%
     dplyr::filter(measurement_concept_id == 3027018) %&gt;%
@@ -152,13 +157,13 @@ Exemple de code (obtenir le min, max et moyenne de la fr&#xE9;quence cardiaque c
 
 ### &lt;span style = "margin-left:20px;"&gt; c) RMarkdown&lt;/span&gt;
 
-Vous pouvez &#xE9;galement &#xE9;crire du code en **Rmarkdown**.
+Vous pouvez également écrire du code en **Rmarkdown**.
 
 Il s'agit d'un **Markdown** auquel vous pouvez ajouter du **code R**.
 
 Pour plus d'informations sur RMarkdown, &lt;a href="https://rmarkdown.rstudio.com/lesson-2.html" target="_blank"&gt;rendez-vous sur leur site&lt;/a&gt;.
 
-Exemple de code (le m&#xEA;me exemple que ci-dessus, en RMarkdown - un backslash a &#xE9;t&#xE9; ajout&#xE9; pour &#xE9;viter l'&#xE9;x&#xE9;cution du code) :
+Exemple de code (le même exemple que ci-dessus, en RMarkdown - un backslash a été ajouté pour éviter l'éxécution du code) :
 
 &lt;pre style = "font-size:12px;"&gt;&lt;code&gt;# Script on heart rate
 
@@ -177,7 +182,7 @@ d$measurement %&gt;%
 
 ### &lt;span style = "margin-left:20px;"&gt; d) Figure&lt;/span&gt;
 
-Vous pouvez **cr&#xE9;er des figures**, par exemple avec la librairie `ggplot2`.
+Vous pouvez **créer des figures**, par exemple avec la librairie `ggplot2`.
 
 Voici un exemple de code :
 
@@ -199,310 +204,43 @@ data$x %&gt;%
 
 &lt;img src="%plugin_folder%/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;
 &lt;/details&gt;</description_fr>
-    <name_fr>Console R</name_fr>
-    <category_fr></category_fr>
-    <creation_datetime>2023-10-17 16:15:04</creation_datetime>
-    <update_datetime>2024-02-09 13:03:07</update_datetime>
-    <images>r_code_1.png;;;r_code_2.png;;;r_console.png;;;r_plot_1.png;;;r_plot_2.png;;;rmarkdown_1.png;;;rmarkdown_2.png</images>
-  </plugin>
-  <plugin>
-    <app_version>0.2.0</app_version>
-    <type>1</type>
-    <unique_id>6f41a2b92bfbd3d4f0e67a958dd297076c6e30122d5e2b7d5ce50d538b077ad6</unique_id>
-    <version>0.0.1.9001</version>
-    <author>Boris Delange</author>
-    <image></image>
-    <description_en></description_en>
-    <name_en>[dev] Template</name_en>
-    <category_en></category_en>
-    <description_fr></description_fr>
-    <name_fr>[dev] Template</name_fr>
-    <category_fr></category_fr>
-    <creation_datetime>2024-02-06 07:55:19</creation_datetime>
-    <update_datetime>2024-02-06 21:17:51</update_datetime>
-    <images></images>
-  </plugin>
-  <plugin>
-    <app_version>0.2.0.9085</app_version>
-    <type>1</type>
-    <unique_id>885f2defbb51968dd0fb4b3b1bb57ebb7d171efd11eb8773aefa623cd90a8d25</unique_id>
-    <version>0.0.1.9009</version>
-    <author>Boris Delange</author>
-    <image></image>
-    <description_en></description_en>
-    <name_en>Notes</name_en>
-    <category_en></category_en>
-    <description_fr></description_fr>
-    <name_fr>Notes</name_fr>
-    <category_fr></category_fr>
-    <creation_datetime>2023-10-16 20:33:03</creation_datetime>
-    <update_datetime>2024-04-08 14:59:49</update_datetime>
-    <images></images>
-  </plugin>
-  <plugin>
-    <app_version>0.2.0.9085</app_version>
-    <type>1</type>
-    <unique_id>b32db9178f59aa423170c03a721bce9bb4846149269ae7a73fceec6f9922c04a</unique_id>
-    <version>0.0.1.9001</version>
-    <author>Boris Delange</author>
-    <image></image>
-    <description_en></description_en>
-    <name_en>Table de donn&#xE9;es {DataTables} </name_en>
-    <category_en></category_en>
-    <description_fr></description_fr>
-    <name_fr>Table de donn&#xE9;es {DataTables} </name_fr>
-    <category_fr></category_fr>
-    <creation_datetime>2024-03-21 19:20:29</creation_datetime>
-    <update_datetime>2024-03-21 21:46:35</update_datetime>
-    <images></images>
-  </plugin>
-  <plugin>
-    <app_version>0.2.0.9081</app_version>
-    <type>1</type>
-    <unique_id>e70816bf13141b8ed016f5480061c55d79cf0b698297a8ba8fae58a0e1807fd2</unique_id>
-    <version>0.0.1.9016</version>
-    <author>Boris Delange</author>
-    <image>dygraphs.png</image>
-    <description_en></description_en>
-    <name_en>S&#xE9;ries temporelles {dygraphs}</name_en>
-    <category_en></category_en>
-    <description_fr></description_fr>
-    <name_fr>S&#xE9;ries temporelles {dygraphs}</name_fr>
-    <category_fr></category_fr>
-    <creation_datetime>2023-11-20 22:43:59</creation_datetime>
-    <update_datetime>2024-02-05 18:44:45</update_datetime>
-    <images>dygraphs.png</images>
-  </plugin>
-  <plugin>
-    <app_version>0.2.0</app_version>
-    <type>2</type>
-    <unique_id>414d980969826734f8b0e295acf86716b354ad1ef113ad49b5c9cada84f23138</unique_id>
-    <version>0.0.1.9001</version>
-    <author>Boris Delange</author>
-    <image></image>
-    <description_en></description_en>
-    <name_en>[dev] Template</name_en>
-    <category_en></category_en>
-    <description_fr></description_fr>
-    <name_fr>[dev] Template</name_fr>
-    <category_fr></category_fr>
-    <creation_datetime>2024-02-15 14:06:49</creation_datetime>
-    <update_datetime>2024-02-15 14:48:51</update_datetime>
-    <images></images>
-  </plugin>
-  <plugin>
-    <app_version>0.2.0.9081</app_version>
-    <type>2</type>
-    <unique_id>6f3c30ede116bc25978075b6634268214c545173634f3cd81c0d1db6081a45b8</unique_id>
-    <version>0.0.1.9020</version>
-    <author>Boris Delange</author>
-    <image>r_console.png</image>
-    <description_en>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; 1) Description
-
-This plugin allows you to **execute code** in the R console and **save your code as scripts**.
-
-### &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; 2) Usage
-
-&lt;details&gt;
-&lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
-Click here to show / hide content&lt;/span&gt;&lt;/summary&gt;
-
-### &lt;span style = "margin-left:20px;"&gt; a) Scripts management&lt;/span&gt;
-
-Go to the "Scripts management" tab to **add, delete, or rename scripts**.
-
-A script is a **text file containing code**.
-
-Once a script is created, you can **edit** it in the "Script" tab and **execute the code**.&lt;br /&gt;&lt;br /&gt;
-
-### &lt;span style = "margin-left:20px;"&gt; b) R code&lt;/span&gt;
-
-Write **R code** and execute it: the **result returned by the console** will appear below the text editor.
-
-To know the **data model** used by the application, click on the help button (question mark at the top right of the page) when you are on the "Data / Access Data" page.
-
-Example code (get the min, max, and average heart rate of our patients):
-
-&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;d$measurement %&gt;%
-    dplyr::filter(measurement_concept_id == 3027018) %&gt;%
-    dplyr::group_by(person_id) %&gt;%
-    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
-    dplyr::ungroup()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;img src="%plugin_folder%/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/&gt;&lt;br /&gt;
-
-&lt;img src="%plugin_folder%/r_code_2.png" width="600" style="margin-left:-7px;"/&gt;&lt;br /&gt;
-
-### &lt;span style = "margin-left:20px;"&gt; c) RMarkdown&lt;/span&gt;
-
-You can also write code in **Rmarkdown**.
-
-This is **Markdown** to which you can add **R code**.
-
-For more information on RMarkdown, &lt;a href="https://rmarkdown.rstudio.com/lesson-2.html" target="_blank"&gt;visit their site&lt;/a&gt;.
-
-Example code (the same example as above, in RMarkdown - a backslash has been added to prevent code execution):
-
-&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;# Script on heart rate
-
-\```{r}
-d$measurement %&gt;%
-    dplyr::filter(measurement_concept_id == 3027018) %&gt;%
-    dplyr::group_by(person_id) %&gt;%
-    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
-    dplyr::ungroup()
-\```
-&lt;/code&gt;&lt;/pre&gt;
-
-
-&lt;img src="%plugin_folder%/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;
-
-&lt;img src="%plugin_folder%/rmarkdown_2.png" width="700" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;&lt;br /&gt;
-
-### &lt;span style = "margin-left:20px;"&gt; d) Figure&lt;/span&gt;
-
-You can **create figures**, for example with the `ggplot2` library.
-
-Here's an example of code:
-
-&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;# A list containing the data for the plot
-data &lt;- list()
-
-# Filter data
-data$x &lt;- d$measurement %&gt;% dplyr::filter(measurement_concept_id == 3027018)
-
-# Create ggplot2 plot
-data$x %&gt;%
-    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
-    ggplot2::geom_histogram(bins = 50, fill = "#377EB8", color = "#FFFFFF") +
-    ggplot2::theme_minimal() +
-    ggplot2::labs(x = "Heart rate (bpm)", y = "")
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;img src="%plugin_folder%/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;
-
-&lt;img src="%plugin_folder%/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;
-&lt;/details&gt;</description_en>
-    <name_en>R console</name_en>
-    <category_en></category_en>
-    <description_fr>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; 1) Description
-
-Ce plugin vous permet d'**ex&#xE9;cuter du code** dans la console R et de **sauvegarder votre code sous forme de scripts**.
-
-### &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; 2) Utilisation
-
-&lt;details&gt;
-&lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
-Cliquez ici pour afficher / masquer le contenu&lt;/span&gt;&lt;/summary&gt;
-
-### &lt;span style = "margin-left:20px;"&gt; a) Gestion des scripts&lt;/span&gt;
-
-Allez dans l'onglet "Gestion des scripts" pour **ajouter, supprimer ou renommer des scripts**.
-
-Un script est un **fichier texte contenant du code**.
-
-Une fois un script cr&#xE9;&#xE9;, vous pouvez l'**&#xE9;diter** dans l'onglet "Script" et **ex&#xE9;cuter le code**.&lt;br /&gt;&lt;br /&gt;
-
-### &lt;span style = "margin-left:20px;"&gt; b) Code R&lt;/span&gt;
-
-Ecrivez du **code en R** et ex&#xE9;cutez-le : le **r&#xE9;sultat retourn&#xE9; par la console** appara&#xEE;tra en-dessous de l'&#xE9;diteur de texte.
-
-Pour conna&#xEE;tre le **mod&#xE8;le de donn&#xE9;es** utilis&#xE9; par l'application, cliquez sur le bouton d'aide (point d'interrogation en haut &#xE0; droite de la page) lorsque vous &#xEA;tes sur la page "Donn&#xE9;es / Acc&#xE9;der aux donn&#xE9;es".
-
-Exemple de code (obtenir le min, max et moyenne de la fr&#xE9;quence cardiaque chez nos patients) :
-
-&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;d$measurement %&gt;%
-    dplyr::filter(measurement_concept_id == 3027018) %&gt;%
-    dplyr::group_by(person_id) %&gt;%
-    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
-    dplyr::ungroup()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;img src="%plugin_folder%/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/&gt;&lt;br /&gt;
-
-&lt;img src="%plugin_folder%/r_code_2.png" width="600" style="margin-left:-7px;"/&gt;&lt;br /&gt;
-
-### &lt;span style = "margin-left:20px;"&gt; c) RMarkdown&lt;/span&gt;
-
-Vous pouvez &#xE9;galement &#xE9;crire du code en **Rmarkdown**.
-
-Il s'agit d'un **Markdown** auquel vous pouvez ajouter du **code R**.
-
-Pour plus d'informations sur RMarkdown, &lt;a href="https://rmarkdown.rstudio.com/lesson-2.html" target="_blank"&gt;rendez-vous sur leur site&lt;/a&gt;.
-
-Exemple de code (le m&#xEA;me exemple que ci-dessus, en RMarkdown - un backslash a &#xE9;t&#xE9; ajout&#xE9; pour &#xE9;viter l'&#xE9;x&#xE9;cution du code) :
-
-&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;# Script on heart rate
-
-\```{r}
-d$measurement %&gt;%
-    dplyr::filter(measurement_concept_id == 3027018) %&gt;%
-    dplyr::group_by(person_id) %&gt;%
-    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
-    dplyr::ungroup()
-\```
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;img src="%plugin_folder%/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;
-
-&lt;img src="%plugin_folder%/rmarkdown_2.png" width="700" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;&lt;br /&gt;
-
-### &lt;span style = "margin-left:20px;"&gt; d) Figure&lt;/span&gt;
-
-Vous pouvez **cr&#xE9;er des figures**, par exemple avec la librairie `ggplot2`.
-
-Voici un exemple de code :
-
-&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;# A list containing the data for the plot
-data &lt;- list()
-
-# Filter data
-data$x &lt;- d$measurement %&gt;% dplyr::filter(measurement_concept_id == 3027018)
-
-# Create ggplot2 plot
-data$x %&gt;%
-    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
-    ggplot2::geom_histogram(bins = 50, fill = "#377EB8", color = "#FFFFFF") +
-    ggplot2::theme_minimal() +
-    ggplot2::labs(x = "Heart rate (bpm)", y = "")
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;img src="%plugin_folder%/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;
-
-&lt;img src="%plugin_folder%/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;
-&lt;/details&gt;</description_fr>
-    <name_fr>Console R</name_fr>
-    <category_fr></category_fr>
-    <creation_datetime>2023-08-07 20:11:14</creation_datetime>
-    <update_datetime>2024-02-09 12:52:03</update_datetime>
-    <images>r_code_1.png;;;r_code_2.png;;;r_console.png;;;r_plot_1.png;;;r_plot_2.png;;;rmarkdown_1.png;;;rmarkdown_2.png</images>
-  </plugin>
-  <plugin>
-    <app_version>0.2.0</app_version>
-    <type>2</type>
-    <unique_id>82ec93cd98efc243a5b6eeccc32435df3014439ac52bddf48be7dd9cee78984e</unique_id>
-    <version>0.0.1.9016</version>
-    <author>Boris Delange</author>
-    <image>demographics_plugin_image.png</image>
-    <description_en></description_en>
-    <name_en>Demographics</name_en>
-    <category_en></category_en>
-    <description_fr></description_fr>
-    <name_fr>Donn&#xE9;es d&#xE9;mographiques</name_fr>
-    <category_fr></category_fr>
-    <creation_datetime>2024-01-08 13:21:15</creation_datetime>
-    <update_datetime>2024-02-05 13:48:41</update_datetime>
-    <images>demographics_plugin_image.png</images>
-  </plugin>
-  <plugin>
-    <app_version>0.2.0</app_version>
-    <type>2</type>
-    <unique_id>dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21</unique_id>
-    <version>0.0.1.9028</version>
-    <author>Boris Delange</author>
-    <image>ggplot2.png</image>
-    <description_en>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; 1) Description
+      <creation_datetime>2023-08-07 20:11:14</creation_datetime>
+      <update_datetime>2024-02-09 12:52:03</update_datetime>
+      <images>r_code_1.png;;;r_code_2.png;;;r_console.png;;;r_plot_1.png;;;r_plot_2.png;;;rmarkdown_1.png;;;rmarkdown_2.png</images>
+    </plugin>
+  </plugins>
+  <plugins>
+    <plugin>
+      <app_version>0.2.0</app_version>
+      <type>2</type>
+      <unique_id>82ec93cd98efc243a5b6eeccc32435df3014439ac52bddf48be7dd9cee78984e</unique_id>
+      <version>0.0.1.9016</version>
+      <author>Boris Delange</author>
+      <image>demographics_plugin_image.png</image>
+      <name_en>Demographics</name_en>
+      <name_fr>Données démographiques</name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en/>
+      <description_fr/>
+      <creation_datetime>2024-01-08 13:21:15</creation_datetime>
+      <update_datetime>2024-02-05 13:48:41</update_datetime>
+      <images>demographics_plugin_image.png</images>
+    </plugin>
+  </plugins>
+  <plugins>
+    <plugin>
+      <app_version>0.2.0</app_version>
+      <type>2</type>
+      <unique_id>dbddcb34874bd3e8cfcc287f4dc73f422007d928e591add209329f03c99efa21</unique_id>
+      <version>0.0.1.9028</version>
+      <author>Boris Delange</author>
+      <image>ggplot2.png</image>
+      <name_en>Plot (ggplot2)</name_en>
+      <name_fr>Figure {ggplot2}</name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; 1) Description
 
 This plugin uses the R library &lt;a href="https://ggplot2.tidyverse.org/" target="_blank"&gt;`ggplot2`&lt;/a&gt;, allowing the creation of plots from data.
 
@@ -602,11 +340,9 @@ For instance, if I choose systolic blood pressure for x and mean arterial pressu
 To counter this, it is possible to **group data**, by patient or by time (see Usage section).
 
 &lt;/details&gt;</description_en>
-    <name_en>Plot (ggplot2)</name_en>
-    <category_en></category_en>
-    <description_fr>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; 1) Description
+      <description_fr>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; 1) Description
 
-Ce plugin utilise la librairie R &lt;a href="https://ggplot2.tidyverse.org/" target="_blank"&gt;`ggplot2`&lt;/a&gt;, permettant de cr&#xE9;er des graphiques &#xE0; partir des donn&#xE9;es.
+Ce plugin utilise la librairie R &lt;a href="https://ggplot2.tidyverse.org/" target="_blank"&gt;`ggplot2`&lt;/a&gt;, permettant de créer des graphiques à partir des données.
 
 ### &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; 2) Utilisation
 
@@ -614,20 +350,20 @@ Ce plugin utilise la librairie R &lt;a href="https://ggplot2.tidyverse.org/" tar
 &lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
 Cliquez ici pour afficher / masquer le contenu&lt;/span&gt;&lt;/summary&gt;
 
-### &lt;span style = "margin-left:20px;"&gt; a) G&#xE9;rer les scripts&lt;/span&gt;
+### &lt;span style = "margin-left:20px;"&gt; a) Gérer les scripts&lt;/span&gt;
 
-Afin de pouvoir **sauvegarder plusieurs figures** sur un m&#xEA;me widget, vous pouvez **cr&#xE9;er des scripts** depuis l'onglet "G&#xE9;rer les scripts".
+Afin de pouvoir **sauvegarder plusieurs figures** sur un même widget, vous pouvez **créer des scripts** depuis l'onglet "Gérer les scripts".
 
-Vous pouvez &#xE9;galement **renommer** et **supprimer** des scripts depuis cet onglet.
+Vous pouvez également **renommer** et **supprimer** des scripts depuis cet onglet.
 
 Un script comprend :
 
-- Les **param&#xE8;tres** enregistr&#xE9;s sur une figure, depuis l'onglet "Figure"
-- Le **code** correspond &#xE0; cette figure, depuis l'onglet "Code"
+- Les **paramètres** enregistrés sur une figure, depuis l'onglet "Figure"
+- Le **code** correspond à cette figure, depuis l'onglet "Code"
 
-Une fois un **script cr&#xE9;&#xE9;**, **s&#xE9;lectionnez-le** depuis l'onglet "Figure" ou "Code".
+Une fois un **script créé**, **sélectionnez-le** depuis l'onglet "Figure" ou "Code".
 
-**Sauvegardez** ce script une fois des modifications effectu&#xE9;es.
+**Sauvegardez** ce script une fois des modifications effectuées.
 
 &lt;br /&gt;&lt;img src="%plugin_folder%/scripts_management.png" width="850" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;&lt;br /&gt;
 
@@ -635,38 +371,38 @@ Une fois un **script cr&#xE9;&#xE9;**, **s&#xE9;lectionnez-le** depuis l'onglet 
 
 Rendez-vous dans l'onglet "Figure".
 
-**Choisissez la variable** &#xE0; afficher sur chacun des axes dans l'onglet "Variables".
+**Choisissez la variable** à afficher sur chacun des axes dans l'onglet "Variables".
 
-Certaines figures n'auront une **variable que sur un axe** (geom_histogram), d'autres ne s'afficheront que **si des variables sont renseign&#xE9;es sur les deux axes** (geom_point).
+Certaines figures n'auront une **variable que sur un axe** (geom_histogram), d'autres ne s'afficheront que **si des variables sont renseignées sur les deux axes** (geom_point).
 
 Pour chaque figure, choisissez :
 
-- le **th&#xE8;me** de la figure
+- le **thème** de la figure
 - le **texte** de l'axe des **x**
-- le **texte** de l'axe des **y** (qu'une variable y soit attribu&#xE9;e ou non)
+- le **texte** de l'axe des **y** (qu'une variable y soit attribuée ou non)
 
-Dans l'onglet "Variables", il est possible de **grouper les donn&#xE9;es**, par patient ou par moment. Choisissez ensuite la **fonction** &#xE0; appliquer pour grouper les donn&#xE9;es.
+Dans l'onglet "Variables", il est possible de **grouper les données**, par patient ou par moment. Choisissez ensuite la **fonction** à appliquer pour grouper les données.
 
 Par exemple :
 
-- grouper les donn&#xE9;es par **patient** en choisissant la fonction **"maximum"** : la valeur maximale du param&#xE8;tre, tous s&#xE9;jours confondus, sera retenue pour chaque patient
-- grouper les donn&#xE9;es par **4 heures** en choisissant la fonction **"moyenne"** : la valeur maximale sera retenue sur chaque intervalle de 4 heures, pour chaque patient (donc plusieurs donn&#xE9;es par patient)
+- grouper les données par **patient** en choisissant la fonction **"maximum"** : la valeur maximale du paramètre, tous séjours confondus, sera retenue pour chaque patient
+- grouper les données par **4 heures** en choisissant la fonction **"moyenne"** : la valeur maximale sera retenue sur chaque intervalle de 4 heures, pour chaque patient (donc plusieurs données par patient)
 
-En cochant "Afficher la figure au lancement du script", la **figure** sera **affich&#xE9;e au chargement au script**.
+En cochant "Afficher la figure au lancement du script", la **figure** sera **affichée au chargement au script**.
 
 &lt;br /&gt;&lt;img src="%plugin_folder%/plot_settings.png" width="950" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;&lt;br /&gt;
 
 ### &lt;span style = "margin-left:20px;"&gt; c) Afficher le code&lt;/span&gt;
 
-En cliquant sur "**G&#xE9;n&#xE9;rer le code**" depuis l'onglet "Figure", le **code correspondant &#xE0; la figure** sera **g&#xE9;n&#xE9;r&#xE9;** dans l'&#xE9;diteur de texte, dans l'onglet "Code".
+En cliquant sur "**Générer le code**" depuis l'onglet "Figure", le **code correspondant à la figure** sera **généré** dans l'éditeur de texte, dans l'onglet "Code".
 
 Vous pouvez **modifier ce code**, et **sauvegarder** vos modifications.
 
-Si vous cliquez de nouveau sur **G&#xE9;n&#xE9;rer le code**, votre code sera supprim&#xE9; et remplac&#xE9; par le code par d&#xE9;faut correspondant &#xE0; la figure configur&#xE9;e dans l'onglet "Figure".
+Si vous cliquez de nouveau sur **Générer le code**, votre code sera supprimé et remplacé par le code par défaut correspondant à la figure configurée dans l'onglet "Figure".
 
-Cliquez sur "**Ex&#xE9;cuter**" pour afficher la figure correspond au code.
+Cliquez sur "**Exécuter**" pour afficher la figure correspond au code.
 
-En cochant "Ex&#xE9;cuter le code au lancement du script", le **code** sera **ex&#xE9;cut&#xE9; au chargement au script**.
+En cochant "Exécuter le code au lancement du script", le **code** sera **exécuté au chargement au script**.
 
 &lt;br /&gt;&lt;img src="%plugin_folder%/plot_code.png" width="750" style="border:dashed 1px; padding:10px;" /&gt;
 
@@ -684,10 +420,10 @@ Permet de visualiser la distribution d'une variable continue unique en divisant 
 
 &lt;img src="%plugin_folder%/geom_histogram.png" width="700" /&gt;
 
-Vous pouvez chosir la **taille des barres** selon deux modalit&#xE9;s :
+Vous pouvez chosir la **taille des barres** selon deux modalités :
 
-- soit par la **taille** des barres, en fonction de l'axe des x (une taille &#xE0; 50 voudra dire qu'une barre prendra 50 de l'unit&#xE9; renseign&#xE9;e sur l'axe des x)
-- soit par le **nombre** de barres totales affich&#xE9;es
+- soit par la **taille** des barres, en fonction de l'axe des x (une taille à 50 voudra dire qu'une barre prendra 50 de l'unité renseignée sur l'axe des x)
+- soit par le **nombre** de barres totales affichées
 
 &lt;br /&gt;
 
@@ -697,18 +433,319 @@ Permet de visualiser la distribution de deux variables continues, l'une sur l'ax
 
 &lt;img src="%plugin_folder%/geom_point.png" width="700" /&gt;
 
-Par d&#xE9;faut, uniquement les points ayant une **valeur &#xE0; un moment donn&#xE9;** &#xE0; la fois pour la **variable en x** et pour la **variable en y** seront affich&#xE9;s.
+Par défaut, uniquement les points ayant une **valeur à un moment donné** à la fois pour la **variable en x** et pour la **variable en y** seront affichés.
 
-Par exemple, si je choisis la pression art&#xE9;rielle systolique en x et la pression art&#xE9;rielle moyenne en y (tel que dans l'example),
-que j'ai une valeur de x tel jour &#xE0; 18:37:10 et une valeur de y le m&#xEA;me jour &#xE0; 18:37:11, le moment n'&#xE9;tant pas exactement le m&#xEA;me, il n'y aura pas de point correspondant sur la graphique.
+Par exemple, si je choisis la pression artérielle systolique en x et la pression artérielle moyenne en y (tel que dans l'example),
+que j'ai une valeur de x tel jour à 18:37:10 et une valeur de y le même jour à 18:37:11, le moment n'étant pas exactement le même, il n'y aura pas de point correspondant sur la graphique.
 
-Pour contrer cela, il est possible de **grouper les donn&#xE9;es**, par patient ou par moment (cf paragraphe Utilisation).
+Pour contrer cela, il est possible de **grouper les données**, par patient ou par moment (cf paragraphe Utilisation).
 
 &lt;/details&gt;</description_fr>
-    <name_fr>Figure {ggplot2}</name_fr>
-    <category_fr></category_fr>
-    <creation_datetime>2023-06-28 22:01:19</creation_datetime>
-    <update_datetime>2024-02-08 10:49:20</update_datetime>
-    <images>geom_histogram.png;;;geom_point.png;;;ggplot2.png;;;plot_code.png;;;plot_settings.png;;;scripts_management.png</images>
-  </plugin>
+      <creation_datetime>2023-06-28 22:01:19</creation_datetime>
+      <update_datetime>2024-02-08 10:49:20</update_datetime>
+      <images>geom_histogram.png;;;geom_point.png;;;ggplot2.png;;;plot_code.png;;;plot_settings.png;;;scripts_management.png</images>
+    </plugin>
+  </plugins>
+  <plugins>
+    <plugin>
+      <app_version>0.2.0</app_version>
+      <type>1</type>
+      <unique_id>1e0f0100cd2ec947f3494754eec1010700e41b91feae3d361ef8c164fe748a9b</unique_id>
+      <version>0.0.1.9000</version>
+      <author>Boris Delange</author>
+      <image/>
+      <name_en>Séries temporelles {vistime}</name_en>
+      <name_fr>Séries temporelles {vistime}</name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en/>
+      <description_fr/>
+      <creation_datetime>2023-11-20 22:44:14</creation_datetime>
+      <update_datetime>2023-11-20 22:44:14</update_datetime>
+      <images/>
+    </plugin>
+  </plugins>
+  <plugins>
+    <plugin>
+      <app_version>0.2.0.9081</app_version>
+      <type>1</type>
+      <unique_id>3c64dcfb08b95020e4b06ee78c1ca48158fed7657cf01621e92de2a4be77bf68</unique_id>
+      <version>0.0.1.9021</version>
+      <author>Boris Delange</author>
+      <image>r_console.png</image>
+      <name_en>R console</name_en>
+      <name_fr>Console R</name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; 1) Description
+
+This plugin allows you to **execute code** in the R console and **save your code as scripts**.
+
+### &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; 2) Usage
+
+&lt;details&gt;
+&lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
+Click here to show / hide content&lt;/span&gt;&lt;/summary&gt;
+
+### &lt;span style = "margin-left:20px;"&gt; a) Scripts management&lt;/span&gt;
+
+Go to the "Scripts management" tab to **add, delete, or rename scripts**.
+
+A script is a **text file containing code**.
+
+Once a script is created, you can **edit** it in the "Script" tab and **execute the code**.&lt;br /&gt;&lt;br /&gt;
+
+### &lt;span style = "margin-left:20px;"&gt; b) R code&lt;/span&gt;
+
+Write **R code** and execute it: the **result returned by the console** will appear below the text editor.
+
+To know the **data model** used by the application, click on the help button (question mark at the top right of the page) when you are on the "Data / Access Data" page.
+
+Example code (get the min, max, and average heart rate of our patients):
+
+&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;d$measurement %&gt;%
+    dplyr::filter(measurement_concept_id == 3027018) %&gt;%
+    dplyr::group_by(person_id) %&gt;%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
+    dplyr::ungroup()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;img src="%plugin_folder%/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/&gt;&lt;br /&gt;
+
+&lt;img src="%plugin_folder%/r_code_2.png" width="600" style="margin-left:-7px;"/&gt;&lt;br /&gt;
+
+### &lt;span style = "margin-left:20px;"&gt; c) RMarkdown&lt;/span&gt;
+
+You can also write code in **Rmarkdown**.
+
+This is **Markdown** to which you can add **R code**.
+
+For more information on RMarkdown, &lt;a href="https://rmarkdown.rstudio.com/lesson-2.html" target="_blank"&gt;visit their site&lt;/a&gt;.
+
+Example code (the same example as above, in RMarkdown - a backslash has been added to prevent code execution):
+
+&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;# Script on heart rate
+
+\```{r}
+d$measurement %&gt;%
+    dplyr::filter(measurement_concept_id == 3027018) %&gt;%
+    dplyr::group_by(person_id) %&gt;%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
+    dplyr::ungroup()
+\```
+&lt;/code&gt;&lt;/pre&gt;
+
+
+&lt;img src="%plugin_folder%/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;
+
+&lt;img src="%plugin_folder%/rmarkdown_2.png" width="700" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;&lt;br /&gt;
+
+### &lt;span style = "margin-left:20px;"&gt; d) Figure&lt;/span&gt;
+
+You can **create figures**, for example with the `ggplot2` library.
+
+Here's an example of code:
+
+&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;# A list containing the data for the plot
+data &lt;- list()
+
+# Filter data
+data$x &lt;- d$measurement %&gt;% dplyr::filter(measurement_concept_id == 3027018)
+
+# Create ggplot2 plot
+data$x %&gt;%
+    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+    ggplot2::geom_histogram(bins = 50, fill = "#377EB8", color = "#FFFFFF") +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(x = "Heart rate (bpm)", y = "")
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;img src="%plugin_folder%/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;
+
+&lt;img src="%plugin_folder%/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;/details&gt;</description_en>
+      <description_fr>### &lt;i class="fa fa-info-circle" style="color: steelblue;"&gt;&lt;/i&gt; 1) Description
+
+Ce plugin vous permet d'**exécuter du code** dans la console R et de **sauvegarder votre code sous forme de scripts**.
+
+### &lt;i class="fa fa-cogs" style="color: steelblue;"&gt;&lt;/i&gt; 2) Utilisation
+
+&lt;details&gt;
+&lt;summary&gt;&lt;span style="--hover-color:#129AFD;cursor:pointer;text-decoration-line:underline;" onmouseover="this.style.color=this.style.getPropertyValue('--hover-color')" onmouseout="this.style.color=''"&gt;
+Cliquez ici pour afficher / masquer le contenu&lt;/span&gt;&lt;/summary&gt;
+
+### &lt;span style = "margin-left:20px;"&gt; a) Gestion des scripts&lt;/span&gt;
+
+Allez dans l'onglet "Gestion des scripts" pour **ajouter, supprimer ou renommer des scripts**.
+
+Un script est un **fichier texte contenant du code**.
+
+Une fois un script créé, vous pouvez l'**éditer** dans l'onglet "Script" et **exécuter le code**.&lt;br /&gt;&lt;br /&gt;
+
+### &lt;span style = "margin-left:20px;"&gt; b) Code R&lt;/span&gt;
+
+Ecrivez du **code en R** et exécutez-le : le **résultat retourné par la console** apparaîtra en-dessous de l'éditeur de texte.
+
+Pour connaître le **modèle de données** utilisé par l'application, cliquez sur le bouton d'aide (point d'interrogation en haut à droite de la page) lorsque vous êtes sur la page "Données / Accéder aux données".
+
+Exemple de code (obtenir le min, max et moyenne de la fréquence cardiaque chez nos patients) :
+
+&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;d$measurement %&gt;%
+    dplyr::filter(measurement_concept_id == 3027018) %&gt;%
+    dplyr::group_by(person_id) %&gt;%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
+    dplyr::ungroup()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;img src="%plugin_folder%/r_code_1.png" width="900" style="border:dashed 1px; padding:10px;"/&gt;&lt;br /&gt;
+
+&lt;img src="%plugin_folder%/r_code_2.png" width="600" style="margin-left:-7px;"/&gt;&lt;br /&gt;
+
+### &lt;span style = "margin-left:20px;"&gt; c) RMarkdown&lt;/span&gt;
+
+Vous pouvez également écrire du code en **Rmarkdown**.
+
+Il s'agit d'un **Markdown** auquel vous pouvez ajouter du **code R**.
+
+Pour plus d'informations sur RMarkdown, &lt;a href="https://rmarkdown.rstudio.com/lesson-2.html" target="_blank"&gt;rendez-vous sur leur site&lt;/a&gt;.
+
+Exemple de code (le même exemple que ci-dessus, en RMarkdown - un backslash a été ajouté pour éviter l'éxécution du code) :
+
+&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;# Script on heart rate
+
+\```{r}
+d$measurement %&gt;%
+    dplyr::filter(measurement_concept_id == 3027018) %&gt;%
+    dplyr::group_by(person_id) %&gt;%
+    dplyr::summarize(min_weight = min(value_as_number), max_weight = max(value_as_number), avg_weight = mean(value_as_number)) %&gt;%
+    dplyr::ungroup()
+\```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;img src="%plugin_folder%/rmarkdown_1.png" width="900" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;
+
+&lt;img src="%plugin_folder%/rmarkdown_2.png" width="700" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;&lt;br /&gt;
+
+### &lt;span style = "margin-left:20px;"&gt; d) Figure&lt;/span&gt;
+
+Vous pouvez **créer des figures**, par exemple avec la librairie `ggplot2`.
+
+Voici un exemple de code :
+
+&lt;pre style = "font-size:12px;"&gt;&lt;code&gt;# A list containing the data for the plot
+data &lt;- list()
+
+# Filter data
+data$x &lt;- d$measurement %&gt;% dplyr::filter(measurement_concept_id == 3027018)
+
+# Create ggplot2 plot
+data$x %&gt;%
+    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+    ggplot2::geom_histogram(bins = 50, fill = "#377EB8", color = "#FFFFFF") +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(x = "Heart rate (bpm)", y = "")
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;img src="%plugin_folder%/r_plot_1.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;&lt;br /&gt;
+
+&lt;img src="%plugin_folder%/r_plot_2.png" width="600" style="border:dashed 1px; padding:10px;" /&gt;
+&lt;/details&gt;</description_fr>
+      <creation_datetime>2023-10-17 16:15:04</creation_datetime>
+      <update_datetime>2024-02-09 13:03:07</update_datetime>
+      <images>r_code_1.png;;;r_code_2.png;;;r_console.png;;;r_plot_1.png;;;r_plot_2.png;;;rmarkdown_1.png;;;rmarkdown_2.png</images>
+    </plugin>
+  </plugins>
+  <plugins>
+    <plugin>
+      <app_version>0.2.0</app_version>
+      <type>1</type>
+      <unique_id>6f41a2b92bfbd3d4f0e67a958dd297076c6e30122d5e2b7d5ce50d538b077ad6</unique_id>
+      <version>0.0.1.9001</version>
+      <author>Boris Delange</author>
+      <image/>
+      <name_en>[dev] Template</name_en>
+      <name_fr>[dev] Template</name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en/>
+      <description_fr/>
+      <creation_datetime>2024-02-06 07:55:19</creation_datetime>
+      <update_datetime>2024-02-06 21:17:51</update_datetime>
+      <images/>
+    </plugin>
+  </plugins>
+  <plugins>
+    <plugin>
+      <app_version>0.2.0.9085</app_version>
+      <type>1</type>
+      <unique_id>885f2defbb51968dd0fb4b3b1bb57ebb7d171efd11eb8773aefa623cd90a8d25</unique_id>
+      <version>0.0.1.9009</version>
+      <author>Boris Delange</author>
+      <image/>
+      <name_en>Notes</name_en>
+      <name_fr>Notes</name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en/>
+      <description_fr/>
+      <creation_datetime>2023-10-16 20:33:03</creation_datetime>
+      <update_datetime>2024-04-08 14:59:49</update_datetime>
+      <images/>
+    </plugin>
+  </plugins>
+  <plugins>
+    <plugin>
+      <app_version>0.2.0.9085</app_version>
+      <type>1</type>
+      <unique_id>b32db9178f59aa423170c03a721bce9bb4846149269ae7a73fceec6f9922c04a</unique_id>
+      <version>0.0.1.9001</version>
+      <author>Boris Delange</author>
+      <image/>
+      <name_en>Table de données {DataTables} </name_en>
+      <name_fr>Table de données {DataTables} </name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en/>
+      <description_fr/>
+      <creation_datetime>2024-03-21 19:20:29</creation_datetime>
+      <update_datetime>2024-03-21 21:46:35</update_datetime>
+      <images/>
+    </plugin>
+  </plugins>
+  <plugins>
+    <plugin>
+      <app_version>0.2.0.9081</app_version>
+      <type>1</type>
+      <unique_id>e70816bf13141b8ed016f5480061c55d79cf0b698297a8ba8fae58a0e1807fd2</unique_id>
+      <version>0.0.1.9016</version>
+      <author>Boris Delange</author>
+      <image>dygraphs.png</image>
+      <name_en>Séries temporelles {dygraphs}</name_en>
+      <name_fr>Séries temporelles {dygraphs}</name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en/>
+      <description_fr/>
+      <creation_datetime>2023-11-20 22:43:59</creation_datetime>
+      <update_datetime>2024-02-05 18:44:45</update_datetime>
+      <images>dygraphs.png</images>
+    </plugin>
+  </plugins>
+  <plugins>
+    <plugin>
+      <app_version>0.3.0.9010</app_version>
+      <unique_id>e70816bf13141b8ed016f5480061c55d79cf0b698297a8ba8fae58a0e1807fd2</unique_id>
+      <version>0.0.1.9016</version>
+      <author>Boris Delange</author>
+      <name_en>Séries temporelles {dygraphs}</name_en>
+      <name_fr>Séries temporelles {dygraphs}</name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en/>
+      <description_fr/>
+      <creation_datetime>2023-11-20 22:43:59</creation_datetime>
+      <update_datetime>2024-06-26 18:24:26</update_datetime>
+      <type>1</type>
+    </plugin>
+  </plugins>
 </plugins>
