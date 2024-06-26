@@ -1,6 +1,0 @@
-id,category,name,description,tab_group_id,parent_tab_id,display_order,creator_id,datetime,deleted
-1,aggregated,Demographics,,2,NA,1,NA,2024-01-03 09:50:10,0
-2,aggregated,ICU stays,,2,NA,2,NA,2024-01-03 09:50:35,0
-3,aggregated,Procedures,,2,NA,3,NA,2024-01-03 09:50:54,0
-4,aggregated,Scores,,2,NA,4,NA,2024-01-03 09:51:00,0
-5,aggregated,Microbiology,,2,NA,5,NA,2024-01-03 09:51:16,0

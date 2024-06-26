@@ -1,5 +1,0 @@
-id,widget_id,concept_id,concept_name,concept_display_name,domain_id,mapped_to_concept_id,merge_mapped_concepts,creator_id,datetime,deleted
-1,1,3036277,Body height,NA,Measurement,NA,0,NA,2023-12-13 16:22:13,0
-2,1,3025315,Body weight,NA,Measurement,NA,0,NA,2023-12-13 16:22:13,0
-3,2,3025315,Body weight,NA,Measurement,NA,0,NA,2023-12-13 16:24:14,0
-4,2,3036277,Body height,NA,Measurement,NA,0,NA,2023-12-13 16:24:14,0
