@@ -2,6 +2,23 @@
 <plugins>
   <plugins>
     <plugin>
+      <app_version>0.3.0.9011</app_version>
+      <unique_id>fe67edd15f82f335b74905ec1ca6865e379fb271fd996fce4ceae7420338dbd8</unique_id>
+      <version>0.0.1.9000</version>
+      <author>Alan Turing</author>
+      <name_en>Notes</name_en>
+      <name_fr>Notes</name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en/>
+      <description_fr/>
+      <creation_datetime>2024-06-18 09:36:21</creation_datetime>
+      <update_datetime>2024-06-30 19:22:16</update_datetime>
+      <type>1</type>
+    </plugin>
+  </plugins>
+  <plugins>
+    <plugin>
       <app_version>0.3.0.9010</app_version>
       <unique_id>e70816bf13141b8ed016f5480061c55d79cf0b698297a8ba8fae58a0e1807fd2</unique_id>
       <version>0.0.1.9016</version>
