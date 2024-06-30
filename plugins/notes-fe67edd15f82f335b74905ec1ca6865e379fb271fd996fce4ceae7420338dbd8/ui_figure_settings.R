@@ -42,6 +42,20 @@ div(
                     )
                 )
             ),
+            shinyjs::hidden(
+                div(
+                    id = ns("words_set_details_div_%widget_id%"),
+                    div(
+                        div(
+                            shiny.fluent::TextField.shinyInput(ns("new_word_%widget_id%"), label = i18np$t("new_word")),
+                            style = "width: 200px;"
+                        ),
+                        div(shiny.fluent::PrimaryButton.shinyInput(ns("add_new_word_%widget_id%"), i18np$t("add")), style = "margin-top: 26px;"),
+                        style = "display: flex; gap: 5px;"
+                    ),
+                    uiOutput(ns("words_ui_%widget_id%"), style = "display: flex; flex-wrap: wrap; margin-top: 15px;")
+                )
+            ),
             style = "margin-top: 15px;"
         )
     ),

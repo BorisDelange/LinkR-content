@@ -14,14 +14,12 @@ tagList(
     ),
     div(
         id = ns("figure_settings_code_div_%widget_id%"),
-        shinyjs::hidden(
-            div(
-                id = ns("figure_settings_code_sidenav_%widget_id%"),
-                shiny.fluent::IconButton.shinyInput(ns("display_figure_%widget_id%"), iconProps = list(iconName = "Play"), title = i18np$t("display_figure"), style = "margin: 0"),
-                shiny.fluent::IconButton.shinyInput(ns("save_params_and_code_%widget_id%"), iconProps = list(iconName = "Save"), title = i18np$t("save_figure_settings_and_code"), style = "margin: 0"),
-                class = "widget_icon",
-                style = "border-right: solid grey 0.5px;"
-            )
+        div(
+            id = ns("figure_settings_code_sidenav_%widget_id%"),
+            shiny.fluent::IconButton.shinyInput(ns("display_figure_%widget_id%"), iconProps = list(iconName = "Play"), title = i18np$t("display_figure"), style = "margin: 0"),
+            shiny.fluent::IconButton.shinyInput(ns("save_params_and_code_%widget_id%"), iconProps = list(iconName = "Save"), title = i18np$t("save_figure_settings_and_code"), style = "margin: 0"),
+            class = "widget_icon",
+            style = "border-right: solid grey 0.5px;"
         ),
         div(
             id = ns("figure_div_%widget_id%"),

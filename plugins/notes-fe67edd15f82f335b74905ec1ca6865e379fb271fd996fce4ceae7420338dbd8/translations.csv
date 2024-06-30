@@ -19,3 +19,5 @@ add,Add,Ajouter
 provide_valid_name,Please provide a valid name,Nom valide requis
 new_words_set_added,New words set added,Nouveau set de mots ajouté
 remove_multiple_line_breaks,Remove multiple line breaks,Retirer les retours à la ligne multiples
+name_already_used,This name is already used,Ce nom est déjà utilisé
+new_word,New word,Nouveau mot
