@@ -12,3 +12,10 @@ datetime,Datetime, Date & heure
 select_a_note_to_display,Select a note to display,Sélectionnez une note à afficher
 notes,Notes,Notes
 words_sets,Words sets,Sets de mots
+words_set,Words set,Set de mots
+layout,Layout,Mise en page
+cancel,Cancel,Annuler
+add,Add,Ajouter
+provide_valid_name,Please provide a valid name,Nom valide requis
+new_words_set_added,New words set added,Nouveau set de mots ajouté
+remove_multiple_line_breaks,Remove multiple line breaks,Retirer les retours à la ligne multiples

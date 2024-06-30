@@ -50,20 +50,21 @@ observeEvent(input$show_notes_%widget_id%, {
         
         if (nrow(notes) > 0){
         
-            # Transform multiple \n in one \n
-            #notes <- notes %>% dplyr::mutate(note_text = gsub("\\n(\\s*\\n)+", "\n", note_text))
+            # Apply layout filters
+            
+            ## Transform multiple \n in one \n
+            if (length(input$remove_multiple_line_breaks_%widget_id%) > 0) if (input$remove_multiple_line_breaks_%widget_id%) notes <-
+                notes %>% dplyr::mutate(note_text = gsub("\n([[:space:]]*\n)+", "\n", note_text))
             
             output$notes_%widget_id% <- renderUI({
             
                 note_panels <- lapply(1:nrow(notes), function(i) {
                     note <- notes[i,]
                     
-                    note_text <- stringr::str_replace_all(note$note_text, c("<" = "&lt;", ">" = "&gt;", "\n" = "\\\\n"))
-                    
                     div(
                         strong(note$note_title), " - ", format_datetime(note$note_datetime, m$language), br(), br(), 
-                        note_text,
-                        style = "border:dashed 1px; padding:10px; margin-top:10px;"
+                        tags$pre(note$note_text, style = "white-space: pre-wrap;"),
+                        style = "border:dashed 1px; padding:10px; margin-top:10px; overflow: auto;"
                     )
                 })
                 

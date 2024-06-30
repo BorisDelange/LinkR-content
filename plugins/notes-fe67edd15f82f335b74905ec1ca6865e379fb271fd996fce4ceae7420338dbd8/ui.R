@@ -26,29 +26,9 @@ tagList(
         div(
             id = ns("figure_div_%widget_id%"),
             uiOutput(ns("notes_%widget_id%")),
-            style = "margin: 0 10px; overflow-y: auto;"
+            style = "width: 50%; margin: 0 10px; overflow-y: auto;"
         ),
-        shinyjs::hidden(
-            div(
-                id = ns("figure_settings_div_%widget_id%"),
-                div(
-                    id = ns("figure_settings_tabs_%widget_id%"),
-                    tags$button(id = ns("select_notes_%widget_id%"), i18np$t("notes"), class = "widget_pivot_item selected_widget_pivot_item", onclick = figure_settings_tab_item_js),
-                    tags$button(id = ns("words_sets_%widget_id%"), i18np$t("words_sets"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
-                    class = "pivot"
-                ),
-                div(
-                    id = ns("select_notes_div_%widget_id%"),
-                    DT::DTOutput(ns("notes_datatable_%widget_id%")), 
-                    style = "margin-top: 15px;"
-                ),
-                div(
-                    id = ns("words_sets_div_%widget_id%"),
-                    style = "margin-top: 15px;"
-                ),
-                style = "height: 100%; margin-left: 10px;"
-            )
-        ),
+        %import_script('ui_figure_settings.R')%,
         shinyjs::hidden(
             div(
                 id = ns("code_div_%widget_id%"),
@@ -56,7 +36,7 @@ tagList(
                     ns("code_editor_%widget_id%"), value = "", mode = "r",
                     autoScrollEditorIntoView = TRUE, height = "100%", debounce = 100, fontSize = 11, showPrintMargin = FALSE
                 ),
-                style = "height: calc(100% - 10px); width: 100%; margin-top: 10px;"
+                style = "width: 50%; height: calc(100% - 10px); margin-top: 10px;"
             )
         ),
         style = "display: flex; height: calc(100% - 40px);"
