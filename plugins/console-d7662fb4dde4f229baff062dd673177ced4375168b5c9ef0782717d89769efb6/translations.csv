@@ -9,5 +9,9 @@ save_figure_settings_and_code,Save,Sauvegarder
 language,Language,Langage
 r,R,R
 python,Python,Python
-figure_output,Figure,Figure
-text_output,Text,Texte
+figure,Figure,Figure
+console,Console,Console
+table,Table,Table
+datatable,DataTable,DataTable
+rmarkdown,RMarkdown,RMarkdown
+matplotlib,Matplotlib,Matplotlib

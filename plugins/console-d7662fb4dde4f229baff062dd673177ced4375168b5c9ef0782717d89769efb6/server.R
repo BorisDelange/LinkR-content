@@ -10,6 +10,7 @@ sapply(tabs, function(tab){
 
     observeEvent(input[[paste0(tab, "_%widget_id%")]], {
         %req%
+        if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$", tab))
         
         tryCatch({
             if (tab == "general_settings") shinyjs::hide("figure_settings_code_div_%widget_id%")
@@ -35,6 +36,8 @@ sapply(tabs, function(tab){
 # Figure settings --
 # ------------------
 
+%import_script('server_figure_settings.R')%
+
 # -------
 # Code --
 # -------
@@ -49,6 +52,7 @@ sapply(tabs, function(tab){
 
 observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
     %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$figure_and_settings_side_by_side"))
     
     tryCatch({
         if (input$figure_and_settings_side_by_side_%widget_id%){

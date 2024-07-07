@@ -21,23 +21,23 @@ tagList(
         div(
             id = ns("figure_div_%widget_id%"),
             %import_script('ui_figure.R')%,
-            style = "height: 100%;"
+            style = "height: 100%; margin: 5px 10px; overflow: auto;"
         ),
         shinyjs::hidden(
             div(
                 id = ns("figure_settings_div_%widget_id%"),
                 %import_script('ui_figure_settings.R')%,
-                style = "height: 100%; margin: 5px 10px;"
+                style = "height: 100%; margin: 5px 10px; overflow: auto;"
             )
         ),
         shinyjs::hidden(
             div(
                 id = ns("code_div_%widget_id%"),
                 shinyAce::aceEditor(
-                    ns("code_%widget_id%"), value = "", mode = "r",
+                    ns("code_editor_%widget_id%"), value = "", mode = "r",
                     autoScrollEditorIntoView = TRUE, height = "100%", debounce = 100, fontSize = 11, showPrintMargin = FALSE
                 ),
-                style = "height: 100%; width: 100%;"
+                style = "height: 100%; width: 100%; overflow: auto;"
             )
         ),
         style = "display: flex; height: calc(100% - 40px);"
