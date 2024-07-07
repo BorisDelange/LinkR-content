@@ -1,0 +1,13 @@
+base,en,fr
+show_figure,Figure,Figure
+show_figure_settings,Set up the figure,Paramétrer la figure
+show_code_editor,Edit figure code,Editer le code de la figure
+show_general_settings,General settings,Paramètres généraux
+figure_and_settings_side_by_side,Figure and settings/editor side by side,Figure et paramètres/éditeur côte à côte
+display_figure,Display figure,Afficher la figure
+save_figure_settings_and_code,Save,Sauvegarder
+language,Language,Langage
+r,R,R
+python,Python,Python
+figure_output,Figure,Figure
+text_output,Text,Texte
