@@ -4,6 +4,14 @@ tagList(
         shiny.fluent::IconButton.shinyInput(ns("figure_settings_%widget_id%"), iconProps = list(iconName = "AllApps"), title = i18np$t("show_figure_settings")),
         shiny.fluent::IconButton.shinyInput(ns("code_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor")),
         shiny.fluent::IconButton.shinyInput(ns("general_settings_%widget_id%"), iconProps = list(iconName = "Settings"), title = i18np$t("show_general_settings")),
+        uiOutput(
+            ns("saved_settings_%widget_id%"),
+            style = paste0(
+                "display: inline-block; color: white; background-color: #606060ab; max-width: 200px; border-radius: 8px; padding: 1px 5px; align-items: center;",
+                "height: 18px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; margin: 8px 0 0 10px;"
+            ),
+            onclick = paste0("Shiny.setInputValue('", id, "-show_saved_setting_tab_%widget_id%', Math.random())")
+        ),
         class = "widget_icon",
         style = "display: flex; color: #808080; border-bottom: solid grey 0.5px;"
     ),
@@ -46,11 +54,16 @@ tagList(
         div(
             id = ns("general_settings_div_%widget_id%"),
             div(
-                shiny.fluent::Toggle.shinyInput(ns("figure_and_settings_side_by_side_%widget_id%"), value = FALSE),
-                tags$label(i18np$t("figure_and_settings_side_by_side"), `for` = ns("figure_and_settings_side_by_side_%widget_id%"), style = "margin-left: 5px;"),
+                shiny.fluent::Toggle.shinyInput(ns("show_saved_file_%widget_id%"), value = TRUE),
+                tags$label(i18np$t("show_saved_file"), `for` = ns("show_saved_file_%widget_id%"), style = "margin-left: 5px;"),
                 style = "display: flex;" 
             ),
-            style = "margin-top: 5px; height: calc(100% - 45px);"
+            div(
+                shiny.fluent::Toggle.shinyInput(ns("figure_and_settings_side_by_side_%widget_id%"), value = FALSE),
+                tags$label(i18np$t("figure_and_settings_side_by_side"), `for` = ns("figure_and_settings_side_by_side_%widget_id%"), style = "margin-left: 5px;"),
+                style = "display: flex; margin-top: 5px;" 
+            ),
+            style = "margin: 10px 5px 0 5px; height: calc(100% - 45px);"
         )
     )
 )

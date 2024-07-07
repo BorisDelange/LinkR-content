@@ -28,10 +28,6 @@ sapply(tabs, function(tab){
     })
 })
 
-# ---------
-# Figure --
-# ---------
-
 # ------------------
 # Figure settings --
 # ------------------
@@ -72,4 +68,20 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
             shinyjs::show("figure_%widget_id%")
         }
     }, error = function(e) cat(paste0("\n", now(), " - widget %widget_id% - error = ", toString(e))))
+})
+
+# -----------------
+# Saved settings --
+# -----------------
+
+output$saved_settings_%widget_id% <- renderUI({
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer output$saved_settings"))
+    
+    i18np$t("parameters_not_saved")
+})
+
+observeEvent(input$show_saved_setting_tab_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer output$show_saved_setting_tab"))
 })

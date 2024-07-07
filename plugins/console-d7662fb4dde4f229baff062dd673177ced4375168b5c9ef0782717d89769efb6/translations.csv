@@ -15,3 +15,5 @@ table,Table,Table
 datatable,DataTable,DataTable
 rmarkdown,RMarkdown,RMarkdown
 matplotlib,Matplotlib,Matplotlib
+parameters_not_saved,Parameters not saved,Paramètres non sauvegardés
+show_saved_file,Show saved file,Afficher le fichier de sauvegarde
