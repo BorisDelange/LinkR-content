@@ -30,4 +30,6 @@ delete,Delete,Supprimer
 dont_delete,Cancel,Annuler
 no_settings_file_selected,No settings file selected,Pas de fichier de sauvegarde sélectionné
 new_settings_file_added,New settings file added,Nouveau fichier de sauvegarde des paramètres ajouté
-settings_file_deleted,Settings file deleted,Ficheir de sauvegarde des paramètres supprimé
+settings_file_deleted,Settings file deleted,Fichier de sauvegarde des paramètres supprimé
+run_code_at_patient_update,Run code at patient update,Exécuter le code au changement de patient
+save_general_settings,Save general settings,Sauvegarder les paramètres généraux

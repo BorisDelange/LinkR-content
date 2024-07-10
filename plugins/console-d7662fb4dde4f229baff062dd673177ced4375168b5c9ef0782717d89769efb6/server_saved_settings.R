@@ -167,12 +167,7 @@ observeEvent(input$saved_settings_%widget_id%, {
         output$saved_settings_ui_%widget_id% <- renderUI(div(filename, style = paste0(saved_settings_ui_style, "background-color: #1d94ce;")))
         
         # Save that is file is selected
-        sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'selected_file' AND name = 'file_id'", .con = m$db))
-        new_data <- tibble::tibble(
-            id = get_last_row(m$db, "widgets_options") + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
-            category = "selected_file", name = "file_id", value = NA_character_, value_num = file_id, creator_id = m$user_id, datetime = now(), deleted = FALSE
-        )
-        DBI::dbAppendTable(m$db, "widgets_options", new_data)
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_general_settings_%widget_id%', Math.random());"))
         
         # Load saved settings
         link_id <- input$saved_settings_%widget_id%

@@ -3,10 +3,30 @@ outputs <- list()
 outputs$r <- c("console", "figure", "table", "datatable", "rmarkdown")
 outputs$python <- c("console", "matplotlib")
 
-# Run code
+# Run code at patient update
+observeEvent(m$selected_person, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
+    
+    req(length(m$selected_person) > 0)
+    req(!is.na(m$selected_person))
+    
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+})
+
+# Run code when button is clicked
 observeEvent(input$display_figure_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$display_figure"))
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+})
+
+# Run code
+observeEvent(input$run_code_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_code"))
+    
+    req(length(input$prog_language_%widget_id%) > 0)
     
     tryCatch({
         
