@@ -106,35 +106,26 @@ observeEvent(input$save_general_settings_%widget_id%, {
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
 
-# Apply settings when the plugin is loaded
-shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-load_general_settings_%widget_id%', Math.random());"))
+# Load settings file
+shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-load_settings_file_%widget_id%', Math.random());"))
 
-observeEvent(input$load_general_settings_%widget_id%, {
+observeEvent(input$load_settings_file_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$load_general_settings"))
     
     tryCatch({
         
         # Get data from db
-        sql <- glue::glue_sql("SELECT name, value, value_num FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings'", .con = m$db)
-        general_settings <- DBI::dbGetQuery(m$db, sql)
+        sql <- glue::glue_sql("SELECT name, value, value_num FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings' AND name = 'selected_file_id'", .con = m$db)
+        loaded_file <- DBI::dbGetQuery(m$db, sql) %>% dplyr::pull(value_num)
+        if (length(loaded_file) == 0) loaded_file <- NULL
         
-        if (nrow(general_settings) > 0){
-            # Loaded file
-            loaded_file <- general_settings %>% dplyr::filter(name == "selected_file_id") %>% dplyr::pull(value_num)
-            if (is.na(loaded_file)) loaded_file <- "null"
-            
-            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_dropdown_%widget_id%', Math.random());"))
-            shinyjs::delay(100, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-saved_settings_%widget_id%', ", loaded_file, ");")))
-        }
+        # Reload dropdown
+        sql <- glue::glue_sql("SELECT id, value AS name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'saved_settings' AND name = 'file_name'", .con = m$db)
+        m$settings_filenames_%widget_id% <- DBI::dbGetQuery(m$db, sql)
         
-        for (name in c("show_saved_file", "figure_and_settings_side_by_side", "run_code_at_patient_update")){
-        
-            toggle_value <- general_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value_num)
-            if (is.na(toggle_value)) toggle_value <- FALSE
-            
-            shiny.fluent::updateToggle.shinyInput(session, paste0(name, "_%widget_id%"), value = toggle_value)
-        }
+        dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = "id", text_col = "name")
+        shiny.fluent::updateDropdown.shinyInput(session, "saved_settings_%widget_id%", options = dropdown_options, value = loaded_file)
     
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })

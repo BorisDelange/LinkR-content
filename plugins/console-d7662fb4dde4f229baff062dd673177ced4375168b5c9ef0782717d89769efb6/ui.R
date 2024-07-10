@@ -1,3 +1,28 @@
+# Load general settings
+
+sql <- glue::glue_sql("SELECT name, value, value_num FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings'", .con = m$db)
+general_settings <- DBI::dbGetQuery(m$db, sql)
+
+toggle_values <- list()
+
+if (nrow(general_settings) == 0){
+    toggle_values$show_saved_file <- TRUE
+    toggle_values$figure_and_settings_side_by_side <- TRUE
+    toggle_values$run_code_at_patient_update <- TRUE
+} else if (nrow(general_settings) > 0){
+    for (name in c("show_saved_file", "figure_and_settings_side_by_side", "run_code_at_patient_update")){
+    
+        toggle_value <- general_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value_num)
+        if (is.na(toggle_value)) toggle_value <- FALSE
+        else (toggle_value <- as.logical(toggle_value))
+        toggle_values[[name]] <- toggle_value
+    }
+}
+
+if (toggle_values$figure_and_settings_side_by_side) div_width <- "50%" else div_width <- "100%"
+
+# UI
+
 tagList(
     div(
         shinyjs::hidden(
@@ -28,13 +53,13 @@ tagList(
         div(
             id = ns("figure_div_%widget_id%"),
             %import_script('ui_figure.R')%,
-            style = "height: 100%; width: 50%; margin: 0px 10px; overflow: auto;"
+            style = paste0("height: 100%; width: ", div_width, "; margin: 0px 10px; overflow: auto;")
         ),
         shinyjs::hidden(
             div(
                 id = ns("figure_settings_div_%widget_id%"),
                 %import_script('ui_figure_settings.R')%,
-                style = "height: 100%; width: 50%; margin: 5px 10px; overflow: auto;"
+                style = paste0("height: 100%; width: ", div_width, "%; margin: 5px 10px; overflow: auto;")
             )
         ),
         div(
@@ -43,7 +68,7 @@ tagList(
                 ns("code_%widget_id%"), value = "", mode = "r",
                 autoScrollEditorIntoView = TRUE, height = "100%", debounce = 100, fontSize = 11, showPrintMargin = FALSE
             ),
-            style = "height: 100%; width: 50%; overflow: auto;"
+            style = paste0("height: 100%; width: ", div_width, "%; overflow: auto;")
         ),
         style = "display: flex; height: calc(100% - 40px);"
     ),
@@ -58,17 +83,17 @@ tagList(
             ),
             div(
                 div(
-                    shiny.fluent::Toggle.shinyInput(ns("show_saved_file_%widget_id%"), value = TRUE),
+                    shiny.fluent::Toggle.shinyInput(ns("show_saved_file_%widget_id%"), value = toggle_values$show_saved_file),
                     tags$label(i18np$t("show_saved_file"), `for` = ns("show_saved_file_%widget_id%"), style = "margin-left: 5px;"),
                     style = "display: flex;" 
                 ),
                 div(
-                    shiny.fluent::Toggle.shinyInput(ns("figure_and_settings_side_by_side_%widget_id%"), value = TRUE),
+                    shiny.fluent::Toggle.shinyInput(ns("figure_and_settings_side_by_side_%widget_id%"), value = toggle_values$figure_and_settings_side_by_side),
                     tags$label(i18np$t("figure_and_settings_side_by_side"), `for` = ns("figure_and_settings_side_by_side_%widget_id%"), style = "margin-left: 5px;"),
                     style = "display: flex; margin-top: 5px;" 
                 ),
                 div(
-                    shiny.fluent::Toggle.shinyInput(ns("run_code_at_patient_update_%widget_id%"), value = FALSE),
+                    shiny.fluent::Toggle.shinyInput(ns("run_code_at_patient_update_%widget_id%"), value = toggle_values$run_code_at_patient_update),
                     tags$label(i18np$t("run_code_at_patient_update"), `for` = ns("run_code_at_patient_update_%widget_id%"), style = "margin-left: 5px;"),
                     style = "display: flex; margin-top: 5px;" 
                 ),
