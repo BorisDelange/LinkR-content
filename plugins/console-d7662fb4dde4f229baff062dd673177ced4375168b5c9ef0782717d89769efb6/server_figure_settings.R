@@ -27,3 +27,17 @@ observeEvent(input$prog_language_%widget_id%, {
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - input$prog_language - error = ", toString(e))))
 })
+
+observeEvent(input$output_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$output"))
+    
+    tryCatch({
+    
+        # Update ace editor
+        if (input$output_%widget_id% == "rmarkdown") mode <- "markdown"
+        else mode <- input$prog_language_%widget_id%
+        shinyAce::updateAceEditor(session, "code_editor_%widget_id%", mode = mode)
+        
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - input$prog_language - error = ", toString(e))))
+})

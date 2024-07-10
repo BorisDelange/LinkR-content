@@ -85,14 +85,57 @@ observeEvent(input$run_code_%widget_id%, {
             }
             
             # Output = figure
-            else if (input$output_%widget_id% == "figure"){
-                output$figure_output_%widget_id% <- renderPlot(eval(parse(text = code)))
+            else if (input$output_%widget_id% == "figure") output$figure_output_%widget_id% <- renderPlot(eval(parse(text = code)))
+            
+            # Output = table
+            else if (input$output_%widget_id% == "table") output$table_output_%widget_id% <- renderTable(eval(parse(text = code)))
+            
+            # Output = DataTable
+            else if (input$output_%widget_id% == "datatable") output$datatable_output_%widget_id% <- DT::renderDT(
+                DT::datatable(
+                    eval(parse(text = code)),
+                    
+                    rownames = FALSE,
+                    options = list(
+                        dom = "<'datatable_length'l><'top't><'bottom'p>",
+                        compact = TRUE, hover = TRUE
+                    ),
+                    
+                    # CSS for datatable
+                    callback = htmlwidgets::JS(
+                      "table.on('draw.dt', function() {",
+                      "  $('.dataTable tbody tr td').css({",
+                      "    'height': '12px',",
+                      "    'padding': '2px 5px'",
+                      "  });",
+                      "  $('.dataTable thead tr td div .form-control').css('font-size', '12px');",
+                      "  $('.dataTable thead tr td').css('padding', '5px');",
+                      "});"
+                    )
+                )
+            )
+            
+            # Output = RMarkdown
+            else if (input$output_%widget_id% == "rmarkdown"){
+                
+                # Create temp dir
+                dir <- paste0(m$app_folder, "/temp_files/", m$user_id, "/markdowns")
+                output_file <- paste0(dir, "/", paste0(sample(c(0:9, letters[1:6]), 8, TRUE), collapse = ''), "_", now() %>% stringr::str_replace_all(":", "_") %>% stringr::str_replace_all(" ", "_"), ".Md")
+                if (!dir.exists(dir)) dir.create(dir)
+                  
+                # Create the markdown file
+                knitr::knit(text = code, output = output_file, quiet = TRUE)
+          
+                output$rmarkdown_output_%widget_id% <- renderUI(div(class = "markdown", withMathJax(includeMarkdown(output_file))))
             }
         }
         
         # Language = Python
         else if (language == "python"){
             
+            if (input$output_%widget_id% == "console") output$console_output_%widget_id% <- renderText(capture_python_output(code))
+            
+            # else if (input$output_%widget_id% == "matplotlib")
         }
         
         # Go to figure tab

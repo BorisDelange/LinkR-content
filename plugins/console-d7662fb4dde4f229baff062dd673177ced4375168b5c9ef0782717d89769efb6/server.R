@@ -16,18 +16,24 @@ sapply(tabs, function(tab){
             if (tab == "general_settings") shinyjs::hide("figure_settings_code_div_%widget_id%")
             else shinyjs::show("figure_settings_code_div_%widget_id%")
             
-            sapply(paste0(setdiff(tabs, tab), "_div_%widget_id%"), shinyjs::hide)
+            sapply(paste0(setdiff(c("figure_settings", "code", "general_settings"), tab), "_div_%widget_id%"), shinyjs::hide)
             shinyjs::hide("saved_settings_div_%widget_id%")
             shinyjs::show(paste0(tab, "_div_%widget_id%"))
             
             if (tab %in% c("figure_settings", "code")){
                 if (length(input$figure_and_settings_side_by_side_%widget_id%) > 0) if (input$figure_and_settings_side_by_side_%widget_id%) shinyjs::show("figure_div_%widget_id%")
+                else shinyjs::hide("figure_div_%widget_id%")
+                
                 shinyjs::show("figure_settings_code_sidenav_%widget_id%")
             }
-            else shinyjs::hide("figure_settings_code_sidenav_%widget_id%")
+            else {
+                shinyjs::hide("figure_settings_code_sidenav_%widget_id%")
+                if (tab != "figure") shinyjs::hide("figure_div_%widget_id%")
+            }
             
             # Prevent a bug with scroll into ace editor
             shinyjs::runjs("var event = new Event('resize'); window.dispatchEvent(event);")
+            
         }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
     })
 })
