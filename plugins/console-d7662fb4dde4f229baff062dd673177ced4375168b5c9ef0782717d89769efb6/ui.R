@@ -1,27 +1,4 @@
-# Load general settings
-
-sql <- glue::glue_sql("SELECT name, value, value_num FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings'", .con = m$db)
-general_settings <- DBI::dbGetQuery(m$db, sql)
-
-toggle_values <- list()
-
-if (nrow(general_settings) == 0){
-    toggle_values$show_saved_file <- TRUE
-    toggle_values$figure_and_settings_side_by_side <- TRUE
-    toggle_values$run_code_at_patient_update <- TRUE
-} else if (nrow(general_settings) > 0){
-    for (name in c("show_saved_file", "figure_and_settings_side_by_side", "run_code_at_patient_update")){
-    
-        toggle_value <- general_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value_num)
-        if (is.na(toggle_value)) toggle_value <- FALSE
-        else (toggle_value <- as.logical(toggle_value))
-        toggle_values[[name]] <- toggle_value
-    }
-}
-
-if (toggle_values$figure_and_settings_side_by_side) div_width <- "50%" else div_width <- "100%"
-
-# UI
+%import_script('ui_load_general_settings.R')%
 
 tagList(
     div(
@@ -66,6 +43,11 @@ tagList(
             id = ns("code_div_%widget_id%"),
             shinyAce::aceEditor(
                 ns("code_%widget_id%"), value = "", mode = "r",
+                hotkeys = list(
+                    save = list(win = "CTRL-S", mac = "CTRL-S|CMD-S"),
+                    run_all = list(win = "CTRL-SHIFT-ENTER", mac = "CTRL-SHIFT-ENTER|CMD-SHIFT-ENTER"),
+                    comment = list(win = "CTRL-SHIFT-C", mac = "CTRL-SHIFT-C|CMD-SHIFT-C")
+                ),
                 autoScrollEditorIntoView = TRUE, height = "100%", debounce = 100, fontSize = 11, showPrintMargin = FALSE
             ),
             style = paste0("height: 100%; width: ", div_width, "%; overflow: auto;")
@@ -77,7 +59,7 @@ tagList(
             id = ns("general_settings_div_%widget_id%"),
             div(
                 id = ns("general_settings_sidenav_%widget_id%"),
-                shiny.fluent::IconButton.shinyInput(ns("save_general_settings_%widget_id%"), iconProps = list(iconName = "Save"), title = i18np$t("save_general_settings"), style = "margin: 0"),
+                shiny.fluent::IconButton.shinyInput(ns("save_general_settings_button_%widget_id%"), iconProps = list(iconName = "Save"), title = i18np$t("save_general_settings"), style = "margin: 0"),
                 class = "widget_icon",
                 style = "border-right: solid grey 0.5px;"
             ),

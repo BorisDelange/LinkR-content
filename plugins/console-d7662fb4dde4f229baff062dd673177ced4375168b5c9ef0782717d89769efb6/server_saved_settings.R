@@ -166,7 +166,7 @@ observeEvent(input$saved_settings_%widget_id%, {
         
         output$saved_settings_ui_%widget_id% <- renderUI(div(filename, style = paste0(saved_settings_ui_style, "background-color: #1d94ce;")))
         
-        # Save that is file is selected
+        # Save that this file is selected
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_general_settings_%widget_id%', Math.random());"))
         
         # Load saved settings

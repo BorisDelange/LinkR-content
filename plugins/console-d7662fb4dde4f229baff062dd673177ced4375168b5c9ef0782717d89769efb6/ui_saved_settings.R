@@ -50,7 +50,7 @@ tagList(
     
     # Dropdown and delete button
     div(
-        div(shiny.fluent::Dropdown.shinyInput(ns("saved_settings_%widget_id%"), label = i18np$t("file")), style = "width: 200px"),
+        div(shiny.fluent::Dropdown.shinyInput(ns("saved_settings_%widget_id%"), label = i18np$t("file"), options = dropdown_options, value = selected_file), style = "width: 200px"),
         shinyjs::hidden(
             div(
                 id = ns("delete_saved_settings_file_div_%widget_id%"),
