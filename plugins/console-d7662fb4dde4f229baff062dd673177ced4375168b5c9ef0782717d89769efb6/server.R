@@ -3,7 +3,7 @@
 # -------
 
 ## All tabs
-tabs <- c("figure", "figure_settings", "code", "general_settings", "saved_settings")
+tabs <- c("figure", "figure_settings", "code", "general_settings")
 
 ## Create an observer by tab, show selected tab, hide all others
 sapply(tabs, function(tab){
@@ -17,6 +17,7 @@ sapply(tabs, function(tab){
             else shinyjs::show("figure_settings_code_div_%widget_id%")
             
             sapply(paste0(setdiff(tabs, tab), "_div_%widget_id%"), shinyjs::hide)
+            shinyjs::hide("saved_settings_div_%widget_id%")
             shinyjs::show(paste0(tab, "_div_%widget_id%"))
             
             if (tab %in% c("figure_settings", "code")){

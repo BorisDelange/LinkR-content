@@ -18,7 +18,13 @@ matplotlib,Matplotlib,Matplotlib
 parameters_not_saved,Parameters not saved,Paramètres non sauvegardés
 show_saved_file,Show saved file,Afficher le fichier de sauvegarde
 create_settings_file,Create a settings file,Créer un fichier de sauvegarde
+delete_settings_file_title,Delete a settings file,Supprimer un fichier de sauvegarde
+delete_settings_file_text,Confirm deletion of the settings file?,Confirmer la suppression du fichier de sauvegarde ?
 add,Add,Ajouter
 name,File name,Nom du fichier
 file,File,Fichier
 provide_valid_name,Provide valid name,Nom valide requis
+name_already_used,This name is already used,Ce nom est déjà utilisé
+delete,Delete,Supprimer
+dont_delete,Cancel,Annuler
+no_settings_file_selected,No settings file selected,Pas de fichier de sauvegarde sélectionné

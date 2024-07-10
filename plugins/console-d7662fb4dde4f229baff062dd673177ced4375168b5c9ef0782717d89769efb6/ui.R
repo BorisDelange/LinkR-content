@@ -5,11 +5,7 @@ tagList(
         shiny.fluent::IconButton.shinyInput(ns("code_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor")),
         shiny.fluent::IconButton.shinyInput(ns("general_settings_%widget_id%"), iconProps = list(iconName = "Settings"), title = i18np$t("show_general_settings")),
         uiOutput(
-            ns("saved_settings_%widget_id%"),
-            style = paste0(
-                "display: inline-block; color: white; background-color: #606060ab; max-width: 200px; border-radius: 8px; padding: 1px 5px; align-items: center;",
-                "height: 18px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; margin: 8px 0 0 10px;"
-            ),
+            ns("saved_settings_ui_%widget_id%"),
             onclick = paste0("Shiny.setInputValue('", id, "-show_saved_settings_tab_%widget_id%', Math.random())")
         ),
         class = "widget_icon",
