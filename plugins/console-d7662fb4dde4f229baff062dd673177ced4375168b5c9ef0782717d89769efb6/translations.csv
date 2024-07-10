@@ -7,6 +7,7 @@ figure_and_settings_side_by_side,Figure and settings/editor side by side,Figure 
 display_figure,Display figure,Afficher la figure
 save_figure_settings_and_code,Save,Sauvegarder
 language,Language,Langage
+output,Output,Output
 r,R,R
 python,Python,Python
 figure,Figure,Figure
@@ -28,3 +29,5 @@ name_already_used,This name is already used,Ce nom est déjà utilisé
 delete,Delete,Supprimer
 dont_delete,Cancel,Annuler
 no_settings_file_selected,No settings file selected,Pas de fichier de sauvegarde sélectionné
+new_settings_file_added,New settings file added,Nouveau fichier de sauvegarde des paramètres ajouté
+settings_file_deleted,Settings file deleted,Ficheir de sauvegarde des paramètres supprimé

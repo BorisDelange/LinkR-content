@@ -8,9 +8,9 @@ tabs <- c("figure", "figure_settings", "code", "general_settings")
 ## Create an observer by tab, show selected tab, hide all others
 sapply(tabs, function(tab){
 
-    observeEvent(input[[paste0(tab, "_%widget_id%")]], {
+    observeEvent(input[[paste0(tab, "_button_%widget_id%")]], {
         %req%
-        if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$", tab))
+        if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$", tab))
         
         tryCatch({
             if (tab == "general_settings") shinyjs::hide("figure_settings_code_div_%widget_id%")
@@ -25,7 +25,7 @@ sapply(tabs, function(tab){
                 shinyjs::show("figure_settings_code_sidenav_%widget_id%")
             }
             else shinyjs::hide("figure_settings_code_sidenav_%widget_id%")
-        }, error = function(e) cat(paste0("\n", now(), " - widget %widget_id% - error = ", toString(e))))
+        }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
     })
 })
 
@@ -49,7 +49,7 @@ sapply(tabs, function(tab){
 
 observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
     %req%
-    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$figure_and_settings_side_by_side"))
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$figure_and_settings_side_by_side"))
     
     tryCatch({
         if (input$figure_and_settings_side_by_side_%widget_id%){
@@ -68,7 +68,7 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
             ))
             shinyjs::show("figure_%widget_id%")
         }
-    }, error = function(e) cat(paste0("\n", now(), " - widget %widget_id% - error = ", toString(e))))
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
 
 # -----------------

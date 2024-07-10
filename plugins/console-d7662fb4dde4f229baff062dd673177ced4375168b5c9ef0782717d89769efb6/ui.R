@@ -1,9 +1,9 @@
 tagList(
     div(
-        shiny.fluent::IconButton.shinyInput(ns("figure_%widget_id%"), iconProps = list(iconName = "BarChart4"), title = i18np$t("show_figure")),
-        shiny.fluent::IconButton.shinyInput(ns("figure_settings_%widget_id%"), iconProps = list(iconName = "AllApps"), title = i18np$t("show_figure_settings")),
-        shiny.fluent::IconButton.shinyInput(ns("code_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor")),
-        shiny.fluent::IconButton.shinyInput(ns("general_settings_%widget_id%"), iconProps = list(iconName = "Settings"), title = i18np$t("show_general_settings")),
+        shiny.fluent::IconButton.shinyInput(ns("figure_button_%widget_id%"), iconProps = list(iconName = "BarChart4"), title = i18np$t("show_figure")),
+        shiny.fluent::IconButton.shinyInput(ns("figure_settings_button_%widget_id%"), iconProps = list(iconName = "AllApps"), title = i18np$t("show_figure_settings")),
+        shiny.fluent::IconButton.shinyInput(ns("code_button_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor")),
+        shiny.fluent::IconButton.shinyInput(ns("general_settings_button_%widget_id%"), iconProps = list(iconName = "Settings"), title = i18np$t("show_general_settings")),
         uiOutput(
             ns("saved_settings_ui_%widget_id%"),
             onclick = paste0("Shiny.setInputValue('", id, "-show_saved_settings_tab_%widget_id%', Math.random())")
@@ -38,7 +38,7 @@ tagList(
             div(
                 id = ns("code_div_%widget_id%"),
                 shinyAce::aceEditor(
-                    ns("code_editor_%widget_id%"), value = "", mode = "r",
+                    ns("code_%widget_id%"), value = "", mode = "r",
                     autoScrollEditorIntoView = TRUE, height = "100%", debounce = 100, fontSize = 11, showPrintMargin = FALSE
                 ),
                 style = "height: 100%; width: 100%; overflow: auto;"

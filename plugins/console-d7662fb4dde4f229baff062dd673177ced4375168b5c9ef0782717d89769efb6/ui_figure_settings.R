@@ -1,7 +1,7 @@
 div(
     div(
         shiny.fluent::Dropdown.shinyInput(
-            ns("language_%widget_id%"), label = i18np$t("language"),
+            ns("prog_language_%widget_id%"), label = i18np$t("language"),
             options = list(
                 list(key = "r", text = i18np$t("r")),
                 list(key = "python", text = i18np$t("python"))
@@ -12,7 +12,7 @@ div(
     ),
     div(
         shiny.fluent::Dropdown.shinyInput(
-            ns("output_%widget_id%"), label = i18np$t("language"),
+            ns("output_%widget_id%"), label = i18np$t("output"),
             options = list(
                 list(key = "console", text = i18np$t("console")),
                 list(key = "figure", text = i18np$t("figure")),
