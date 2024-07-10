@@ -3,7 +3,7 @@
 # -------
 
 ## All tabs
-tabs <- c("figure", "figure_settings", "code", "general_settings")
+tabs <- c("figure", "figure_settings", "code", "general_settings", "saved_settings")
 
 ## Create an observer by tab, show selected tab, hide all others
 sapply(tabs, function(tab){
@@ -74,14 +74,4 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
 # Saved settings --
 # -----------------
 
-output$saved_settings_%widget_id% <- renderUI({
-    %req%
-    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer output$saved_settings"))
-    
-    i18np$t("parameters_not_saved")
-})
-
-observeEvent(input$show_saved_setting_tab_%widget_id%, {
-    %req%
-    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer output$show_saved_setting_tab"))
-})
+%import_script('server_saved_settings.R')%

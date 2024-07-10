@@ -10,7 +10,7 @@ tagList(
                 "display: inline-block; color: white; background-color: #606060ab; max-width: 200px; border-radius: 8px; padding: 1px 5px; align-items: center;",
                 "height: 18px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; margin: 8px 0 0 10px;"
             ),
-            onclick = paste0("Shiny.setInputValue('", id, "-show_saved_setting_tab_%widget_id%', Math.random())")
+            onclick = paste0("Shiny.setInputValue('", id, "-show_saved_settings_tab_%widget_id%', Math.random())")
         ),
         class = "widget_icon",
         style = "display: flex; color: #808080; border-bottom: solid grey 0.5px;"
@@ -29,7 +29,7 @@ tagList(
         div(
             id = ns("figure_div_%widget_id%"),
             %import_script('ui_figure.R')%,
-            style = "height: 100%; margin: 5px 10px; overflow: auto;"
+            style = "height: 100%; margin: 0px 10px; overflow: auto;"
         ),
         shinyjs::hidden(
             div(
@@ -63,7 +63,14 @@ tagList(
                 tags$label(i18np$t("figure_and_settings_side_by_side"), `for` = ns("figure_and_settings_side_by_side_%widget_id%"), style = "margin-left: 5px;"),
                 style = "display: flex; margin-top: 5px;" 
             ),
-            style = "margin: 10px 5px 0 5px; height: calc(100% - 45px);"
+            style = "margin: 10px 5px 10px 5px; height: calc(100% - 55px);"
+        )
+    ),
+    shinyjs::hidden(
+        div(
+            id = ns("saved_settings_div_%widget_id%"),
+            %import_script('ui_saved_settings.R')%,
+            style = "display: flex; height: calc(100% - 40px);"
         )
     )
 )
