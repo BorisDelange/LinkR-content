@@ -33,3 +33,6 @@ new_settings_file_added,New settings file added,Nouveau fichier de sauvegarde de
 settings_file_deleted,Settings file deleted,Fichier de sauvegarde des paramètres supprimé
 run_code_at_patient_update,Run code at patient update,Exécuter le code au changement de patient
 save_general_settings,Save general settings,Sauvegarder les paramètres généraux
+display,Display,Affichage
+code_execution,Code execution,Exécution du code
+run_code_at_settings_file_load,Run code when a settings file is loaded,Exécuter le code au chargement d'un fichier de sauvegarde

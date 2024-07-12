@@ -69,29 +69,30 @@ observeEvent(input$run_code_%widget_id%, {
     tryCatch({
         
         language <- input$prog_language_%widget_id%
+        code_output <- input$output_%widget_id%
         code <- m$code_%widget_id%
         
         # Hide all outputs
         sapply(paste0(outputs[[language]], "_output_%widget_id%"), shinyjs::hide)
-        shinyjs::show(paste0(input$output_%widget_id%, "_output_%widget_id%"))
+        shinyjs::show(paste0(code_output, "_output_%widget_id%"))
     
         # Language = R
         if (language == "r"){
             
             # Output = console
-            if (input$output_%widget_id% == "console"){
+            if (code_output == "console"){
                 captured_output <- capture.output(tryCatch(eval(parse(text = code)), error = function(e) print(e), warning = function(w) print(w))) %>% paste(collapse = "\\n")
                 output$console_output_%widget_id% <- renderText(captured_output)
             }
             
             # Output = figure
-            else if (input$output_%widget_id% == "figure") output$figure_output_%widget_id% <- renderPlot(eval(parse(text = code)))
+            else if (code_output == "figure") output$figure_output_%widget_id% <- renderPlot(eval(parse(text = code)))
             
             # Output = table
-            else if (input$output_%widget_id% == "table") output$table_output_%widget_id% <- renderTable(eval(parse(text = code)))
+            else if (code_output == "table") output$table_output_%widget_id% <- renderTable(eval(parse(text = code)))
             
             # Output = DataTable
-            else if (input$output_%widget_id% == "datatable") output$datatable_output_%widget_id% <- DT::renderDT(
+            else if (code_output == "datatable") output$datatable_output_%widget_id% <- DT::renderDT(
                 DT::datatable(
                     eval(parse(text = code)),
                     
@@ -116,7 +117,7 @@ observeEvent(input$run_code_%widget_id%, {
             )
             
             # Output = RMarkdown
-            else if (input$output_%widget_id% == "rmarkdown"){
+            else if (code_output == "rmarkdown"){
                 
                 # Create temp dir
                 dir <- paste0(m$app_folder, "/temp_files/", m$user_id, "/markdowns")
@@ -133,9 +134,9 @@ observeEvent(input$run_code_%widget_id%, {
         # Language = Python
         else if (language == "python"){
             
-            if (input$output_%widget_id% == "console") output$console_output_%widget_id% <- renderText(capture_python_output(code))
+            if (code_output == "console") output$console_output_%widget_id% <- renderText(capture_python_output(code))
             
-            # else if (input$output_%widget_id% == "matplotlib")
+            # else if (code_output == "matplotlib")
         }
         
         # Go to figure tab

@@ -64,15 +64,22 @@ tagList(
                 style = "border-right: solid grey 0.5px;"
             ),
             div(
+                tags$strong(i18np$t("display")), br(),
                 div(
                     shiny.fluent::Toggle.shinyInput(ns("show_saved_file_%widget_id%"), value = toggle_values$show_saved_file),
                     tags$label(i18np$t("show_saved_file"), `for` = ns("show_saved_file_%widget_id%"), style = "margin-left: 5px;"),
-                    style = "display: flex;" 
+                    style = "display: flex; margin-top: 8px;" 
                 ),
                 div(
                     shiny.fluent::Toggle.shinyInput(ns("figure_and_settings_side_by_side_%widget_id%"), value = toggle_values$figure_and_settings_side_by_side),
                     tags$label(i18np$t("figure_and_settings_side_by_side"), `for` = ns("figure_and_settings_side_by_side_%widget_id%"), style = "margin-left: 5px;"),
                     style = "display: flex; margin-top: 5px;" 
+                ), br(),
+                tags$strong(i18np$t("code_execution")), br(),
+                div(
+                    shiny.fluent::Toggle.shinyInput(ns("run_code_at_settings_file_load_%widget_id%"), value = toggle_values$run_code_at_patient_update),
+                    tags$label(i18np$t("run_code_at_settings_file_load"), `for` = ns("run_code_at_settings_file_load_%widget_id%"), style = "margin-left: 5px;"),
+                    style = "display: flex; margin-top: 8px;" 
                 ),
                 div(
                     shiny.fluent::Toggle.shinyInput(ns("run_code_at_patient_update_%widget_id%"), value = toggle_values$run_code_at_patient_update),

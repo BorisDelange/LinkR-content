@@ -10,6 +10,7 @@ if (nrow(general_settings) == 0){
     toggle_values$show_saved_file <- TRUE
     toggle_values$figure_and_settings_side_by_side <- TRUE
     toggle_values$run_code_at_patient_update <- TRUE
+    toggle_values$run_code_at_settings_file_load <- TRUE
     
     dropdown_options <- list()
     selected_file <- NULL
@@ -18,7 +19,7 @@ if (nrow(general_settings) == 0){
 
     # Toggles values
     
-    for (name in c("show_saved_file", "figure_and_settings_side_by_side", "run_code_at_patient_update")){
+    for (name in c("show_saved_file", "figure_and_settings_side_by_side", "run_code_at_patient_update", "run_code_at_settings_file_load")){
     
         toggle_value <- general_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value_num)
         if (is.na(toggle_value)) toggle_value <- FALSE
