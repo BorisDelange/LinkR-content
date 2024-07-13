@@ -14,7 +14,7 @@ tagList(
             div(shiny.fluent::TextField.shinyInput(ns("settings_file_name_%widget_id%"), label = i18np$t("name")), style = "width: 200px;"),
             div(
                 shiny.fluent::PrimaryButton.shinyInput(ns("add_settings_file_%widget_id%"), i18np$t("add")),
-                style = "position: absolute; right: 10px; bottom: 3px;"
+                style = "position: absolute; right: 10px; bottom: 8px;"
             ),
             style = "background: #fff; padding: 5px 10px 10px 15px; position: relative; width: 400px; height: 120px;"
         ),
@@ -32,7 +32,7 @@ tagList(
             div(
                 shiny.fluent::DefaultButton.shinyInput(ns("close_file_deletion_modal_%widget_id%"), i18np$t("dont_delete")),
                 div(shiny.fluent::PrimaryButton.shinyInput(ns("confirm_file_deletion_%widget_id%"), i18np$t("delete")), class = "delete_button"),
-                style = "position: absolute; right: 10px; bottom: 3px; display: flex; gap: 5px;"
+                style = "position: absolute; right: 10px; bottom: 8px; display: flex; gap: 5px;"
             ),
             style = "background: #fff; padding: 5px 10px 10px 15px; position: relative; width: 400px; height: 120px;"
         ),
@@ -51,13 +51,7 @@ tagList(
     # Dropdown and delete button
     div(
         div(shiny.fluent::Dropdown.shinyInput(ns("saved_settings_%widget_id%"), label = i18np$t("file"), options = dropdown_options, value = selected_file), style = "width: 200px"),
-        shinyjs::hidden(
-            div(
-                id = ns("delete_saved_settings_file_div_%widget_id%"),
-                shiny.fluent::PrimaryButton.shinyInput(ns("delete_saved_settings_file_%widget_id%"), i18np$t("delete")),
-                class = "delete_button"
-            )
-        ),
-        style = "margin: 5px 10px;"
+        div(shiny.fluent::IconButton.shinyInput(ns("delete_saved_settings_file_%widget_id%"), iconProps = list(iconName = "Delete")), style = "margin-top: 26px;", class = "widget_icon"),
+        style = "display: flex; gap: 5px; margin: 5px 10px;"
     )
 )

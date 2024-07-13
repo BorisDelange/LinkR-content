@@ -45,7 +45,7 @@ observeEvent(input$save_params_and_code_%widget_id%, {
 
 saved_settings_ui_style <- paste0(
     "display: inline-block; color: white; max-width: 250px; border-radius: 8px; padding: 1px 5px; align-items: center;",
-    "height: 18px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; margin: 8px 0 0 10px;"
+    "height: 18px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; margin: 2px 5px;"
 )
 
 output$saved_settings_ui_%widget_id% <- renderUI({

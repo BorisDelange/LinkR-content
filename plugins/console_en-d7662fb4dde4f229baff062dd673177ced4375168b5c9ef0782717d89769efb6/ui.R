@@ -16,7 +16,7 @@ tagList(
             onclick = paste0("Shiny.setInputValue('", id, "-show_saved_settings_tab_%widget_id%', Math.random())")
         ),
         class = "widget_icon",
-        style = "display: flex; color: #808080; border-bottom: solid grey 0.5px;"
+        style = "display: flex; color: #808080; border-bottom: solid grey 0.5px; height: 28px; padding-top: 5px; font-size: 12px; color: #808080;"
     ),
     div(
         id = ns("figure_settings_code_div_%widget_id%"),
