@@ -8,11 +8,6 @@ div(
         tags$button(id = ns("layout_%widget_id%"), i18np$t("layout"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
         class = "pivot"
     ),
-    div(
-        id = ns("select_notes_div_%widget_id%"),
-        DT::DTOutput(ns("notes_datatable_%widget_id%")), 
-        style = "margin-top: 15px;"
-    ),
     
     # Add a words set modal
     shinyjs::hidden(
@@ -54,6 +49,44 @@ div(
       )
     ),
     
+    # Notes
+    div(
+        id = ns("select_notes_div_%widget_id%"),
+        DT::DTOutput(ns("notes_datatable_%widget_id%")), 
+        style = "margin-top: 15px;"
+    ),
+    
+    # Filters
+    shinyjs::hidden(
+        div(
+            id = ns("filters_div_%widget_id%"),
+            div(
+                shiny.fluent::Dropdown.shinyInput(
+                    ns("filters_category_%widget_id%"), label = i18np$t("category"),
+                    options = list(list(key = "words_set", text = i18np$t("words_set"))),
+                    value = "words_set"
+                ),
+                style = "width: 200px; margin-top: 15px;"
+            ),
+            div(
+                div(
+                    shiny.fluent::Dropdown.shinyInput(ns("filters_words_set_%widget_id%"), label = i18np$t("words_set")),
+                    style = "width: 200px;"
+                ),
+                shinyjs::hidden(
+                    div(
+                        id = ns("filters_add_words_set_div_%widget_id%"),
+                        create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("filters_add_words_set_%widget_id%"), iconProps = list(iconName = "Add")), text = i18np$t("add")),
+                        class = "small_icon_button", style = "margin-top: 27px;"
+                    )
+                ),
+                style = "display: flex; gap: 5px;"
+            ),
+            uiOutput(ns("filters_ui_%widget_id%"), style = "display: flex; flex-wrap: wrap; margin-top: 15px;"),
+        )
+    ),
+    
+    # Words sets
     shinyjs::hidden(
         div(
             id = ns("words_sets_div_%widget_id%"),
@@ -96,6 +129,8 @@ div(
             style = "margin-top: 15px;"
         )
     ),
+    
+    # Layout
     shinyjs::hidden(
         div(
             id = ns("layout_div_%widget_id%"),

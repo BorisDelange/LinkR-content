@@ -1,3 +1,21 @@
+# UI
+
+selected_word_style <- paste0("
+    display: inline-block;
+    color: white;
+    background-color: #FF8C00;
+    max-width: 320px;
+    border-radius: 8px;
+    padding: 1px 5px;
+    align-items: center;
+    height: 18px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+")
+
+
 ##############
 # TABS       #
 ##############
@@ -98,12 +116,117 @@ observeEvent(input$notes_datatable_%widget_id%_rows_selected, {
     }, error = function(e) cat(paste0("\\n", now(), " - ", toString(e))))
 })
 
+###########
+# FILTERS #
+###########
+
+# Initiate filters
+m$filters_%widget_id% <- tibble::tibble(id = integer(), category = character(), text = character())
+
+# A words set is selected
+observeEvent(input$filters_words_set_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$filters_words_set_%widget_id%"))
+    
+    # Show add button
+    shinyjs::show("filters_add_words_set_div_%widget_id%")
+})
+
+# Add a words set
+
+observeEvent(input$filters_add_words_set_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$filters_add_words_set_%widget_id%"))
+    
+    tryCatch({
+        
+        words_set <- m$words_sets_%widget_id% %>% dplyr::filter(id == input$filters_words_set_%widget_id%) %>% dplyr::transmute(id, category = "words_set", text)
+        
+        # Check if this word sets has already been added
+        sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id% AND name = 'filter' AND value_num = {words_set$id} AND link_id = %widget_id%", .con = m$db)
+        result <- DBI::dbGetQuery(m$db, sql)
+        print(result)
+        
+        if (nrow(result) == 0){
+        
+            # Add new word to words list and in db
+            new_options_row <- get_last_row(m$db, "widgets_options") + 1
+            new_options <- tibble::tibble(
+                id = new_options_row, widget_id = %widget_id%, person_id = NA_integer_, link_id = %widget_id%,
+                category = NA_character_, name = "filter", value = NA_character_, value_num = words_set$id,
+                creator_id = NA_integer_, datetime = now(), deleted = FALSE)
+                
+            DBI::dbAppendTable(m$db, "widgets_options", new_options)
+            
+            m$filters_%widget_id% <- m$filters_%widget_id% %>% dplyr::bind_rows(tibble::tibble(id = new_options_row, category = "filter", text = words_set$text))   
+        }
+        
+    }, error = function(e) cat(paste0("\\n", now(), " - ", toString(e))))
+})
+
+# Reload filters UI
+
+observeEvent(m$filters_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$filters_%widget_id% "))
+    
+    tryCatch({
+        
+        filters_ui <- tagList()
+        
+        if (nrow(m$filters_%widget_id%) > 0){
+            for (i in 1:nrow(m$filters_%widget_id%)){
+                row <- m$filters_%widget_id%[i, ]
+            
+                filters_ui <- tagList(
+                    filters_ui,
+                    div(
+                      div(
+                        shiny.fluent::IconButton.shinyInput(ns(paste0("remove_filter_", row$id)), iconProps = list(iconName = "Cancel"), style = "height: 20px; margin: 0; font-size: 10px;"),
+                        onclick = paste0(
+                          "Shiny.setInputValue('", id, "-remove_filter_trigger_%widget_id%', Math.random());",
+                          "Shiny.setInputValue('", id, "-remove_filter_%widget_id%', ", row$id, ");"
+                        ),
+                        class = "small_icon_button"
+                      ),
+                      create_hover_card(ui = div(row$text, style = selected_word_style), text = row$text),
+                      style = "display: flex; margin: 2px 10px 2px 0;"
+                    )
+                )
+            }
+        }
+        
+        output$filters_ui_%widget_id% <- renderUI(filters_ui)
+        
+    }, error = function(e) cat(paste0("\\n", now(), " - ", toString(e))))
+})
+
+# Remove a filter
+observeEvent(input$remove_filter_trigger_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$remove_filter_trigger_%widget_id%"))
+    
+    tryCatch({
+        
+        filter_id <- input$remove_filter_%widget_id%
+        
+        # Delete row in db
+        sql <- glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND name = 'filter' AND id = {filter_id}", .con = m$db)
+        sql_send_statement(m$db, sql)
+        
+        # Update m var
+        m$filters_%widget_id% <- m$filters_%widget_id% %>% dplyr::filter(id != filter_id)
+        
+    }, error = function(e) cat(paste0("\\n", now(), " - ", toString(e))))
+})
+
 ##############
 # WORDS SETS #
 ##############
 
 # Initiate words list
 m$words_list_%widget_id% <- tibble::tibble(id = integer(), text = character())
+m$words_sets_%widget_id% <- tibble::tibble(id = integer(), text = character())
 
 # Reload words sets
 
@@ -113,7 +236,9 @@ observeEvent(input$reload_words_sets_%widget_id%, {
     
     tryCatch({
         sql <- glue::glue_sql("SELECT id, value FROM widgets_options WHERE widget_id = %widget_id% AND name = 'word_set'", .con = m$db)
-        words_sets <- DBI::dbGetQuery(m$db, sql) %>% convert_tibble_to_list(key_col = "id", text_col = "value")
+        words_sets <- DBI::dbGetQuery(m$db, sql)
+        m$words_sets_%widget_id% <- words_sets %>% dplyr::select(id, text = value)
+        words_sets_dropdown <- words_sets %>% convert_tibble_to_list(key_col = "id", text_col = "value")
         
         if (length(input$update_words_set_value_%widget_id%) > 0) value <- input$update_words_set_value_%widget_id%
         else {
@@ -121,7 +246,12 @@ observeEvent(input$reload_words_sets_%widget_id%, {
             value <- NULL
         }
         
-        shiny.fluent::updateDropdown.shinyInput(session, "words_set_%widget_id%", options = words_sets, value = value)
+        shiny.fluent::updateDropdown.shinyInput(session, "words_set_%widget_id%", options = words_sets_dropdown, value = value)
+        shiny.fluent::updateDropdown.shinyInput(session, "filters_words_set_%widget_id%", options = words_sets_dropdown, value = NULL)
+        
+        # Hide filters / words set add button
+         shinyjs::hide("filters_add_words_set_div_%widget_id%")
+        
     }, error = function(e) cat(paste0("\\n", now(), " - ", toString(e))))
 })
 
@@ -327,21 +457,6 @@ observeEvent(input$remove_word_trigger_%widget_id%, {
 })
 
 # Reload words UI
-
-selected_word_style <- paste0("
-    display: inline-block;
-    color: white;
-    background-color: #FF8C00;
-    max-width: 320px;
-    border-radius: 8px;
-    padding: 1px 5px;
-    align-items: center;
-    height: 18px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-")
 
 observeEvent(m$words_list_%widget_id%, {
     %req%
