@@ -121,7 +121,7 @@ observeEvent(input$notes_datatable_%widget_id%_rows_selected, {
 ###########
 
 # Initiate filters
-m$filters_%widget_id% <- tibble::tibble(id = integer(), category = character(), text = character())
+m$filters_%widget_id% <- tibble::tibble(id = integer(), link_id = integer(), category = character(), text = character())
 
 # A words set is selected
 observeEvent(input$filters_words_set_%widget_id%, {
@@ -145,20 +145,19 @@ observeEvent(input$filters_add_words_set_%widget_id%, {
         # Check if this word sets has already been added
         sql <- glue::glue_sql("SELECT * FROM widgets_options WHERE widget_id = %widget_id% AND name = 'filter' AND value_num = {words_set$id} AND link_id = %widget_id%", .con = m$db)
         result <- DBI::dbGetQuery(m$db, sql)
-        print(result)
         
         if (nrow(result) == 0){
         
             # Add new word to words list and in db
             new_options_row <- get_last_row(m$db, "widgets_options") + 1
             new_options <- tibble::tibble(
-                id = new_options_row, widget_id = %widget_id%, person_id = NA_integer_, link_id = %widget_id%,
-                category = NA_character_, name = "filter", value = NA_character_, value_num = words_set$id,
+                id = new_options_row, widget_id = %widget_id%, person_id = NA_integer_, link_id = words_set$id,
+                category = NA_character_, name = "filter", value = NA_character_, value_num = NA_integer_,
                 creator_id = NA_integer_, datetime = now(), deleted = FALSE)
                 
             DBI::dbAppendTable(m$db, "widgets_options", new_options)
             
-            m$filters_%widget_id% <- m$filters_%widget_id% %>% dplyr::bind_rows(tibble::tibble(id = new_options_row, category = "filter", text = words_set$text))   
+            m$filters_%widget_id% <- m$filters_%widget_id% %>% dplyr::bind_rows(tibble::tibble(id = new_options_row, link_id = words_set$id, category = "filter", text = words_set$text))   
         }
         
     }, error = function(e) cat(paste0("\\n", now(), " - ", toString(e))))
@@ -224,8 +223,8 @@ observeEvent(input$remove_filter_trigger_%widget_id%, {
 # WORDS SETS #
 ##############
 
-# Initiate words list
-m$words_list_%widget_id% <- tibble::tibble(id = integer(), text = character())
+# Initiate words list and words sets vars
+m$words_%widget_id% <- tibble::tibble(id = integer(), words_set_id = integer(), text = character())
 m$words_sets_%widget_id% <- tibble::tibble(id = integer(), text = character())
 
 # Reload words sets
@@ -269,8 +268,14 @@ observeEvent(input$words_set_%widget_id%, {
         
         # Load words list
         words_set_id <- input$words_set_%widget_id%
-        sql <- glue::glue_sql("SELECT id, value FROM widgets_options WHERE widget_id = %widget_id% AND name = 'word' AND link_id = {words_set_id}", .con = m$db)
-        m$words_list_%widget_id% <- DBI::dbGetQuery(m$db, sql) %>% dplyr::select(id, text = value)
+        sql <- glue::glue_sql("SELECT id, link_id, value FROM widgets_options WHERE widget_id = %widget_id% AND name = 'word' AND link_id = {words_set_id}", .con = m$db)
+        m$words_%widget_id% <- 
+            m$words_%widget_id% %>%
+            dplyr::filter(words_set_id != !!words_set_id) %>%
+            dplyr::bind_rows(DBI::dbGetQuery(m$db, sql) %>% dplyr::select(id, words_set_id = link_id, text = value))
+        
+        # Reload words list
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_words_list_%widget_id%', Math.random())"))
         
     }, error = function(e) cat(paste0("\\n", now(), " - ", toString(e))))
 })
@@ -374,7 +379,7 @@ observeEvent(input$confirm_words_set_deletion_%widget_id%, {
     sql_send_statement(m$db, sql)
     
     # Reload words list
-    m$words_list_%widget_id% <- tibble::tibble(id = integer(), text = character())
+    m$words_%widget_id% <- tibble::tibble(id = integer(), words_set_id = integer(), text = character())
     
     # Update dropdown
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_words_set_value_%widget_id%', null)"))
@@ -428,10 +433,13 @@ observeEvent(input$add_new_word_%widget_id%, {
             
         DBI::dbAppendTable(m$db, "widgets_options", new_options)
         
-        m$words_list_%widget_id% <- m$words_list_%widget_id% %>% dplyr::bind_rows(tibble::tibble(id = new_options_row, text = new_name))
+        m$words_%widget_id% <- m$words_%widget_id% %>% dplyr::bind_rows(tibble::tibble(id = new_options_row, words_set_id = words_set_id, text = new_name))
         
         # Reset textfield
         shiny.fluent::updateTextField.shinyInput(session, "new_word_%widget_id%", value = "")
+        
+        # Reload words list
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_words_list_%widget_id%', Math.random())"))
         
     }, error = function(e) cat(paste0("\\n", now(), " - ", toString(e))))
 })
@@ -451,24 +459,28 @@ observeEvent(input$remove_word_trigger_%widget_id%, {
         sql_send_statement(m$db, sql)
         
         # Update m var
-        m$words_list_%widget_id% <- m$words_list_%widget_id% %>% dplyr::filter(id != word_id)
+        m$words_%widget_id% <- m$words_%widget_id% %>% dplyr::filter(id != word_id)
+        
+        # Reload words list
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_words_list_%widget_id%', Math.random())"))
         
     }, error = function(e) cat(paste0("\\n", now(), " - ", toString(e))))
 })
 
 # Reload words UI
 
-observeEvent(m$words_list_%widget_id%, {
+observeEvent(input$reload_words_list_%widget_id%, {
     %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$words_list_%widget_id% "))
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$reload_words_list_%widget_id% "))
     
     tryCatch({
         
         words_ui <- tagList()
+        words_list <- m$words_%widget_id% %>% dplyr::filter(words_set_id == input$words_set_%widget_id%)
         
-        if (nrow(m$words_list_%widget_id%) > 0){
-            for (i in 1:nrow(m$words_list_%widget_id%)){
-                row <- m$words_list_%widget_id%[i, ]
+        if (nrow(words_list) > 0){
+            for (i in 1:nrow(words_list)){
+                row <- words_list[i, ]
             
                 words_ui <- tagList(
                     words_ui,
