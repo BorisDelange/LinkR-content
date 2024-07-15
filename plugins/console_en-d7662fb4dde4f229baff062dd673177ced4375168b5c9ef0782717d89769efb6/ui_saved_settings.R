@@ -11,7 +11,7 @@ tagList(
                 style = "display: flex; justify-content: space-between;",
                 class = "small_close_button"
             ),
-            div(shiny.fluent::TextField.shinyInput(ns("settings_file_name_%widget_id%"), label = i18np$t("name")), style = "width: 200px;"),
+            div(shiny.fluent::TextField.shinyInput(ns("settings_file_name_%widget_id%"), label = i18np$t("file_name")), style = "width: 200px;"),
             div(
                 shiny.fluent::PrimaryButton.shinyInput(ns("add_settings_file_%widget_id%"), i18np$t("add")),
                 style = "position: absolute; right: 10px; bottom: 8px;"

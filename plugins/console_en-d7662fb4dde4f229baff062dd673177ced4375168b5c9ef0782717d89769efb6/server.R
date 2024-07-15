@@ -50,9 +50,9 @@ sapply(tabs, function(tab){
 
 %import_script('server_code.R')%
 
-# -----------
-# Settings --
-# -----------
+# -------------------
+# General settings --
+# -------------------
 
 %import_script('server_general_settings.R')%
 

@@ -198,6 +198,7 @@ observeEvent(input$saved_settings_%widget_id%, {
 # Open delete a settings file modal
 observeEvent(input$delete_saved_settings_file_%widget_id%, {
     %req%
+    req(length(input$saved_settings_%widget_id%) > 0)
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$delete_saved_settings_file"))
     
     shinyjs::show("delete_settings_file_modal_%widget_id%")

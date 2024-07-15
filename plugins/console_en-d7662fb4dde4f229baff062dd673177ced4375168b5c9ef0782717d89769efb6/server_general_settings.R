@@ -65,27 +65,3 @@ observeEvent(input$save_general_settings_%widget_id%, {
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
-
-#Load settings file
-# shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-load_settings_file_%widget_id%', Math.random());"))
-# 
-# observeEvent(input$load_settings_file_%widget_id%, {
-#     %req%
-#     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$load_general_settings"))
-#     
-#     tryCatch({
-#         
-#         # Get data from db
-#         sql <- glue::glue_sql("SELECT name, value, value_num FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings' AND name = 'selected_file_id'", .con = m$db)
-#         loaded_file <- DBI::dbGetQuery(m$db, sql) %>% dplyr::pull(value_num)
-#         if (length(loaded_file) == 0) loaded_file <- NULL
-#         
-#         # Reload dropdown
-#         sql <- glue::glue_sql("SELECT id, value AS name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'saved_settings' AND name = 'file_name'", .con = m$db)
-#         m$settings_filenames_%widget_id% <- DBI::dbGetQuery(m$db, sql)
-#         
-#         dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = "id", text_col = "name")
-#         shiny.fluent::updateDropdown.shinyInput(session, "saved_settings_%widget_id%", options = dropdown_options, value = loaded_file)
-#     
-#     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
-# })
