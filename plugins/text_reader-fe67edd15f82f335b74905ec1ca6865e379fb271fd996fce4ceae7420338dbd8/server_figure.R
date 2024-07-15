@@ -47,6 +47,8 @@ observeEvent(input$reload_notes_%widget_id%, {
             
                 words <- m$words_%widget_id% %>% dplyr::filter(words_set_id %in% m$filters_%widget_id%$link_id) %>% dplyr::pull(text)
                 
+                print(words)
+                
                 pattern <- stringr::str_c(words, collapse = "|")
                 m$notes_%widget_id% <-
                     m$notes_%widget_id% %>%
