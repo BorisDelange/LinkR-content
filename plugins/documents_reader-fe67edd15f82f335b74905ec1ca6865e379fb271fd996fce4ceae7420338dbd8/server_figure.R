@@ -9,21 +9,21 @@ shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_notes_datatable_%wid
 
 observeEvent(m$selected_person, {
     %req%
-    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
     
     tryCatch({
     
         # Reload notes
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_notes_%widget_id%', Math.random())"))
         
-    }, error = function(e) cat(paste0("\n", now(), " - ", toString(e))))
+    }, error = function(e) cat(paste0("\\n", now(), " - ", toString(e))))
 })
 
 # Reload notes
 
 observeEvent(input$reload_notes_%widget_id%, {
     %req%
-    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$reload_notes_%widget_id%"))
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$reload_notes_%widget_id%"))
     
     tryCatch({
         
@@ -35,14 +35,14 @@ observeEvent(input$reload_notes_%widget_id%, {
         # Reload datatable
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_notes_datatable_%widget_id%', Math.random())"))
         
-    }, error = function(e) cat(paste0("\n", now(), " - widget %widget_id% - error = ", toString(e))))
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
 
 # Show notes
 
 observeEvent(input$show_notes_%widget_id%, {
     %req%
-    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$show_notes_%widget_id%"))
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$show_notes_%widget_id%"))
     
     tryCatch({
         
@@ -54,7 +54,7 @@ observeEvent(input$show_notes_%widget_id%, {
             
             ## Transform multiple \n in one \n
             if (length(input$remove_multiple_line_breaks_%widget_id%) > 0) if (input$remove_multiple_line_breaks_%widget_id%) notes <-
-                notes %>% dplyr::mutate(note_text = gsub("\n([[:space:]]*\n)+", "\n", note_text))
+                notes %>% dplyr::mutate(note_text = gsub("\n([[:space:]]*\n)+", "\\n", note_text))
             
             output$notes_%widget_id% <- renderUI({
             
@@ -73,5 +73,5 @@ observeEvent(input$show_notes_%widget_id%, {
         }
         else output$notes_%widget_id% <- renderUI(div(i18np$t("no_notes_to_display"), style = "margin-top: 10px;"))
         
-    }, error = function(e) cat(paste0("\n", now(), " - widget %widget_id% - error = ", toString(e))))
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })

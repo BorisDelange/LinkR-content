@@ -1,3 +1,5 @@
+%import_script('ui_load_general_settings.R')%
+
 figure_settings_tab_item_js <- paste0("
     Shiny.setInputValue('", id, "-current_figure_settings_tab_%widget_id%', this.id);
     Shiny.setInputValue('", id, "-current_figure_settings_tab_trigger_%widget_id%', Math.random());"
@@ -5,12 +7,21 @@ figure_settings_tab_item_js <- paste0("
 
 tagList(
     div(
-        shiny.fluent::IconButton.shinyInput(ns("figure_%widget_id%"), iconProps = list(iconName = "BarChart4"), title = i18np$t("show_figure")),
-        shiny.fluent::IconButton.shinyInput(ns("figure_settings_%widget_id%"), iconProps = list(iconName = "AllApps"), title = i18np$t("show_figure_settings")),
-        shiny.fluent::IconButton.shinyInput(ns("code_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor")),
-        shiny.fluent::IconButton.shinyInput(ns("general_settings_%widget_id%"), iconProps = list(iconName = "Settings"), title = i18np$t("show_general_settings")),
+        shinyjs::hidden(
+            div(
+                id = ns("figure_button_div_%widget_id%"),
+                shiny.fluent::IconButton.shinyInput(ns("figure_button_%widget_id%"), iconProps = list(iconName = "BarChart4"), title = i18np$t("show_figure"))
+            )
+        ),
+        shiny.fluent::IconButton.shinyInput(ns("figure_settings_button_%widget_id%"), iconProps = list(iconName = "AllApps"), title = i18np$t("show_figure_settings")),
+        shiny.fluent::IconButton.shinyInput(ns("code_button_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor")),
+        shiny.fluent::IconButton.shinyInput(ns("general_settings_button_%widget_id%"), iconProps = list(iconName = "Settings"), title = i18np$t("show_general_settings")),
+        uiOutput(
+            ns("saved_settings_ui_%widget_id%"),
+            onclick = paste0("Shiny.setInputValue('", id, "-show_saved_settings_tab_%widget_id%', Math.random())")
+        ),
         class = "widget_icon",
-        style = "display: flex; color: #808080; border-bottom: solid grey 0.5px;"
+        style = "display: flex; color: #808080; border-bottom: solid grey 0.5px; height: 28px; padding-top: 5px; font-size: 12px; color: #808080;"
     ),
     div(
         id = ns("figure_settings_code_div_%widget_id%"),
@@ -48,6 +59,13 @@ tagList(
                 style = "display: flex;" 
             ),
             style = "margin-top: 5px; height: calc(100% - 45px);"
+        )
+    ),
+    shinyjs::hidden(
+        div(
+            id = ns("saved_settings_div_%widget_id%"),
+            %import_script('ui_saved_settings.R')%,
+            style = "display: flex; height: calc(100% - 40px);"
         )
     )
 )
