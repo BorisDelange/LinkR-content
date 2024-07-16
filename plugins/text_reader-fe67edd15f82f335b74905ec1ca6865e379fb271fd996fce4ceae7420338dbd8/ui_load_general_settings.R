@@ -12,7 +12,7 @@ if (nrow(general_settings) == 0){
         
     dropdown_options <- list()
     selected_file <- NULL
-#     
+    
 } else if (nrow(general_settings) > 0){
 
     # Toggles values

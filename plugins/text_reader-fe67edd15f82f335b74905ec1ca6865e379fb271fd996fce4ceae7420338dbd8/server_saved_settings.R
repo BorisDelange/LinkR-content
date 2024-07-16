@@ -190,7 +190,7 @@ observeEvent(input$confirm_file_deletion_%widget_id%, {
         # Delete row in db
         sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE id = {file_id}", .con = m$db))
         
-        # Update dropdown
+        # Update dropdowns
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-saved_settings_%widget_id%', null);"))
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_dropdown_%widget_id%', Math.random());"))
         
@@ -198,6 +198,9 @@ observeEvent(input$confirm_file_deletion_%widget_id%, {
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_words_sets_%widget_id%', Math.random())"))
         shinyjs::hide("words_set_details_div_%widget_id%")
         output$words_ui_%widget_id% <- renderUI(div())
+        
+        # Update general settings
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_general_settings_%widget_id%', Math.random());"))
         
         m$filters_%widget_id% <- tibble::tibble()
         
