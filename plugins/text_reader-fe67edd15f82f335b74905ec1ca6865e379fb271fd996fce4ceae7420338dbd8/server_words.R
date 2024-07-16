@@ -29,8 +29,6 @@ observeEvent(input$add_new_word_%widget_id%, {
             stop()
         }
         
-        shiny.fluent::updateTextField.shinyInput(session, "new_words_set_name_%widget_id%", errorMessage = NULL)
-        
         # Add new word to words list and in db
         new_options <- tibble::tibble(id = get_last_row(m$db, "widgets_options") + 1, link_id = words_set_id, value = new_name)
         m$words_%widget_id% <- m$words_%widget_id% %>% dplyr::bind_rows(new_options)
@@ -42,7 +40,7 @@ observeEvent(input$add_new_word_%widget_id%, {
         DBI::dbAppendTable(m$db, "widgets_options", new_options)
         
         # Reset textfield
-        shiny.fluent::updateTextField.shinyInput(session, "new_word_%widget_id%", value = "")
+        shiny.fluent::updateTextField.shinyInput(session, "new_word_%widget_id%", value = "", errorMessage = NULL)
         
         # Reload words list
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_words_list_%widget_id%', Math.random())"))

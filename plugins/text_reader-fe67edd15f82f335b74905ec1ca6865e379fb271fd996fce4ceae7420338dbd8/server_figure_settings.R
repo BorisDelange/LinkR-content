@@ -16,7 +16,8 @@ selected_element_style <- paste0("
 ")
 
 selected_word_style <- paste0(selected_element_style, "background-color: #FF8C00;")
-selected_filter_style <- paste0(selected_element_style, "background-color: #FF8C00;")
+selected_words_set_filter_style <- paste0(selected_element_style, "background-color: #FF8C00;")
+selected_title_filter_style <- paste0(selected_element_style, "background-color: #17A589;")
 
 ##############
 # TABS       #

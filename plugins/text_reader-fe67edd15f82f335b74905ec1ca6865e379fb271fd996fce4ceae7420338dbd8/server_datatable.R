@@ -34,8 +34,8 @@ observeEvent(input$reload_notes_datatable_%widget_id%, {
               searchable_cols = c("note_type_concept_name", "note_title", "note_datetime"), factorize_cols = "note_type_concept_name", filter = TRUE
             )
             
-            # Create datatable proxy
-            m$notes_datatable_proxy_%widget_id% <- DT::dataTableProxy("notes_datatable_%widget_id%", deferUntilFlush = FALSE)
+            # Create datatable proxy only if notes is not empty (if we create DT with an empty tibble, it freezes search textfields)
+            if (nrow(notes) > 0) m$notes_datatable_proxy_%widget_id% <- DT::dataTableProxy("notes_datatable_%widget_id%", deferUntilFlush = FALSE)
         }
         else {
             DT::replaceData(m$notes_datatable_proxy_%widget_id%, notes, resetPaging = FALSE, rownames = FALSE)

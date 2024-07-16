@@ -40,6 +40,7 @@ tagList(
         ),
         div(
             id = ns("figure_div_%widget_id%"),
+            uiOutput(ns("notes_nav_%widget_id%")),
             uiOutput(ns("notes_%widget_id%")),
             style = "width: 50%; margin: 0 10px; overflow-y: auto;"
         ),

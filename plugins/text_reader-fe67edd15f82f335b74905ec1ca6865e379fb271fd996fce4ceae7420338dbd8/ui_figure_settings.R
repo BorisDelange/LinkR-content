@@ -63,24 +63,41 @@ div(
             div(
                 shiny.fluent::Dropdown.shinyInput(
                     ns("filters_category_%widget_id%"), label = i18np$t("category"),
-                    options = list(list(key = "words_set", text = i18np$t("words_set"))),
+                    options = list(
+                        list(key = "words_set", text = i18np$t("words_set")),
+                        list(key = "title", text = i18np$t("title"))
+                    ),
                     value = "words_set"
                 ),
                 style = "width: 200px; margin-top: 15px;"
             ),
             div(
                 div(
-                    shiny.fluent::Dropdown.shinyInput(ns("filters_words_set_%widget_id%"), label = i18np$t("words_set"), options = words_sets_options),
-                    style = "width: 200px;"
+                    id = ns("filters_words_set_div_%widget_id%"),
+                    div(
+                        shiny.fluent::Dropdown.shinyInput(ns("filters_words_set_%widget_id%"), label = i18np$t("words_set"), options = words_sets_options),
+                        style = "width: 200px;"
+                    ),
+                    shinyjs::hidden(
+                        div(
+                            id = ns("filters_add_words_set_div_%widget_id%"),
+                            create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("filters_add_words_set_%widget_id%"), iconProps = list(iconName = "Add")), text = i18np$t("add")),
+                            class = "small_icon_button", style = "margin-top: 27px;"
+                        )
+                    ),
+                    style = "display: flex; gap: 5px;"
                 ),
                 shinyjs::hidden(
                     div(
-                        id = ns("filters_add_words_set_div_%widget_id%"),
-                        create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("filters_add_words_set_%widget_id%"), iconProps = list(iconName = "Add")), text = i18np$t("add")),
-                        class = "small_icon_button", style = "margin-top: 27px;"
+                        id = ns("filters_title_div_%widget_id%"),
+                        div(shiny.fluent::TextField.shinyInput(ns("filters_title_%widget_id%"), label = i18np$t("title")), style = "width: 200px;"),
+                        div(
+                            create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("filters_add_title_%widget_id%"), iconProps = list(iconName = "Add")), text = i18np$t("add")),
+                            class = "small_icon_button", style = "margin-top: 27px;"
+                        ),
+                        style = "display: flex; gap: 5px;" 
                     )
                 ),
-                style = "display: flex; gap: 5px;"
             ),
             uiOutput(ns("filters_ui_%widget_id%"), style = "display: flex; flex-wrap: wrap; margin-top: 15px;"),
         )
