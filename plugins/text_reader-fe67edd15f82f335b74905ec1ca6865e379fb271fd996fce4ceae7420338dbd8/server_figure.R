@@ -27,7 +27,9 @@ observeEvent(m$selected_person, {
 observeEvent(input$display_figure_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$display_figure_%widget_id%"))
+    
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_notes_%widget_id%', Math.random())"))
+    shinyjs::click("select_notes_%widget_id%")
 })
 
 observeEvent(input$reload_notes_%widget_id%, {
@@ -45,11 +47,12 @@ observeEvent(input$reload_notes_%widget_id%, {
             # Apply filters
             if (nrow(m$filters_%widget_id%) > 0){
             
-                words <- m$words_%widget_id% %>% dplyr::filter(words_set_id %in% m$filters_%widget_id%$link_id) %>% dplyr::pull(text)
+                words <- m$words_%widget_id% %>% dplyr::filter(link_id %in% m$filters_%widget_id%$value_num) %>% dplyr::pull(value)
                 
                 print(words)
-                
                 pattern <- stringr::str_c(words, collapse = "|")
+                print(pattern)
+                
                 m$notes_%widget_id% <-
                     m$notes_%widget_id% %>%
                     dplyr::filter(stringr::str_detect(tolower(note_text), tolower(pattern))) %>%

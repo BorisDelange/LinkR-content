@@ -49,6 +49,10 @@ sapply(tabs, function(tab){
 # ------------------
 
 %import_script('server_figure_settings.R')%
+%import_script('server_datatable.R')%
+%import_script('server_filters.R')%
+%import_script('server_words_sets.R')%
+%import_script('server_words.R')%
 
 # -------
 # Code --

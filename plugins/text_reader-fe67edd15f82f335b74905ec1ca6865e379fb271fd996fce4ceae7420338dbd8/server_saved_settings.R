@@ -8,34 +8,8 @@ observeEvent(input$save_params_and_code_%widget_id%, {
     
     tryCatch({
     
-        # If no saved settings file is selected, go to settings files management page
-        if (length(input$saved_settings_%widget_id%) == 0) shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-show_saved_settings_tab_%widget_id%', Math.random());"))
-        
-        if (length(input$saved_settings_%widget_id%) > 0){
-            
-            link_id <- input$saved_settings_%widget_id%
-        
-            # Delete old settings
-            sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND link_id = {link_id}", .con = m$db))
-            
-            # Add new settings in db
-            new_data <- tibble::tribble(
-                ~name, ~value, ~value_num,
-                "prog_language", input$prog_language_%widget_id%, NA_real_,
-                "output", input$output_%widget_id%, NA_real_,
-                "code", input$code_%widget_id%, NA_real_
-            ) %>%
-            dplyr::transmute(
-                id = get_last_row(m$db, "widgets_options") + 1:3, widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
-                category = "saved_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
-            )
-            
-            DBI::dbAppendTable(m$db, "widgets_options", new_data)
-            
-            # Notify user
-            show_message_bar(output, "modif_saved", "success", i18n = i18n, ns = ns)
-        }
-        
+    
+    
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
 
@@ -145,7 +119,14 @@ observeEvent(input$reload_dropdown_%widget_id%, {
         m$settings_filenames_%widget_id% <- DBI::dbGetQuery(m$db, sql)
         
         dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = "id", text_col = "name")
-        shiny.fluent::updateDropdown.shinyInput(session, "saved_settings_%widget_id%", options = dropdown_options, value = NULL)
+        
+        if (length(input$saved_settings_%widget_id%) > 0) value <- input$saved_settings_%widget_id% 
+        else {
+            if (nrow(m$settings_filenames_%widget_id%) > 0) value <- m$settings_filenames_%widget_id% %>% dplyr::slice(1) %>% dplyr::pull(id)
+            else value <- NULL
+        }
+        
+        shiny.fluent::updateDropdown.shinyInput(session, "saved_settings_%widget_id%", options = dropdown_options, value = value)
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
@@ -168,18 +149,15 @@ observeEvent(input$saved_settings_%widget_id%, {
         
         # Save that this file is selected
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_general_settings_%widget_id%', Math.random());"))
+
+        # Reload words sets and words
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_words_sets_%widget_id%', Math.random())"))
+        shinyjs::hide("words_set_details_div_%widget_id%")
+        output$words_ui_%widget_id% <- renderUI(div())
         
-        # Load saved settings
-        link_id <- input$saved_settings_%widget_id%
-        sql <- glue::glue_sql("SELECT name, value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'saved_settings' AND link_id = {link_id}", .con = m$db)
-        saved_settings <- DBI::dbGetQuery(m$db, sql)
-        
-        if (nrow(saved_settings) > 0){
-            sapply(saved_settings$name, function(name){
-            
-                value <- saved_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value)
-            })
-        }
+        # Get filters
+        sql <- glue::glue_sql("SELECT id, name, value, value_num FROM widgets_options WHERE widget_id = %widget_id% AND link_id = {file_id} AND category = 'filter'", .con = m$db)
+        m$filters_%widget_id% <- DBI::dbGetQuery(m$db, sql)
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
@@ -213,7 +191,15 @@ observeEvent(input$confirm_file_deletion_%widget_id%, {
         sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE id = {file_id}", .con = m$db))
         
         # Update dropdown
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-saved_settings_%widget_id%', null);"))
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_dropdown_%widget_id%', Math.random());"))
+        
+        # Reload words set and filters
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_words_sets_%widget_id%', Math.random())"))
+        shinyjs::hide("words_set_details_div_%widget_id%")
+        output$words_ui_%widget_id% <- renderUI(div())
+        
+        m$filters_%widget_id% <- tibble::tibble()
         
         # Close modal
         shinyjs::hide("delete_settings_file_modal_%widget_id%")

@@ -70,7 +70,7 @@ div(
             ),
             div(
                 div(
-                    shiny.fluent::Dropdown.shinyInput(ns("filters_words_set_%widget_id%"), label = i18np$t("words_set")),
+                    shiny.fluent::Dropdown.shinyInput(ns("filters_words_set_%widget_id%"), label = i18np$t("words_set"), options = words_sets_options),
                     style = "width: 200px;"
                 ),
                 shinyjs::hidden(
@@ -93,7 +93,7 @@ div(
             div(
                 id = ns("edit_words_sets_div_%widget_id%"),
                 div(
-                    shiny.fluent::Dropdown.shinyInput(ns("words_set_%widget_id%"), label = i18np$t("words_set")),
+                    shiny.fluent::Dropdown.shinyInput(ns("words_set_%widget_id%"), label = i18np$t("words_set"), options = words_sets_options),
                     style = "width: 200px;"
                 ),
                 create_hover_card(

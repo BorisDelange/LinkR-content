@@ -41,3 +41,6 @@ delete_a_words_set_title,Delete a words set,Supprimer un set de mots
 delete_a_words_set_text,Confirm deletion of this words set?,Confirmer la suppression de ce set de mots ?
 words_set_deleted,Words set deleted,Set de mots supprimé
 word_may_contain_at_least_two_chars,A word has to contain at least two characters,Un mot doit contenir au moins deux caractères
+show_saved_file,Show saved file,Afficher le fichier de sauvegarde
+save_general_settings,Save general settings,Sauvegarder les paramètres généraux
+new_settings_file_added,New settings file added,Nouveau fichier de sauvegarde des paramètres ajouté
