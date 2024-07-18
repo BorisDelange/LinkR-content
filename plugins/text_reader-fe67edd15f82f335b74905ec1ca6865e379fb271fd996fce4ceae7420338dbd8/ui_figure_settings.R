@@ -152,7 +152,7 @@ div(
         div(
             id = ns("layout_div_%widget_id%"),
             div(
-                shiny.fluent::Toggle.shinyInput(ns("remove_multiple_line_breaks_%widget_id%"), value = TRUE),
+                shiny.fluent::Toggle.shinyInput(ns("remove_multiple_line_breaks_%widget_id%"), value = FALSE),
                 tags$label(i18np$t("remove_multiple_line_breaks"), `for` = ns("remove_multiple_line_breaks_%widget_id%"), style = "margin-left: 5px;"),
                 style = "display: flex; margin-top: 15px;" 
             ),

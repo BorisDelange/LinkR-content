@@ -41,8 +41,8 @@ tagList(
         div(
             id = ns("figure_div_%widget_id%"),
             uiOutput(ns("notes_nav_%widget_id%")),
-            uiOutput(ns("notes_%widget_id%")),
-            style = "width: 50%; margin: 0 10px; overflow-y: auto;"
+            div(uiOutput(ns("notes_%widget_id%")), style = "display: flex;"),
+            style = "width: 50%; margin: 0 10px; overflow: auto;"
         ),
         %import_script('ui_figure_settings.R')%,
         shinyjs::hidden(
