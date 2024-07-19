@@ -1,3 +1,6 @@
+# Init code var
+m$code_%widget_id% <- ""
+
 # Outputs
 outputs <- list()
 outputs$r <- c("console", "figure", "table", "datatable", "rmarkdown")
@@ -84,6 +87,9 @@ observeEvent(input$run_code_%widget_id%, {
                 captured_output <- capture.output(tryCatch(eval(parse(text = code)), error = function(e) print(e), warning = function(w) print(w))) %>% paste(collapse = "\\n")
                 output$console_output_%widget_id% <- renderText(captured_output)
             }
+            
+            # Output = UI
+            else if (code_output == "ui") output$ui_output_%widget_id% <- renderUI(eval(parse(text = code)))
             
             # Output = figure
             else if (code_output == "figure") output$figure_output_%widget_id% <- renderPlot(eval(parse(text = code)))

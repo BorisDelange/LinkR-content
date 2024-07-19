@@ -36,3 +36,4 @@ save_general_settings,Save general settings,Sauvegarder les paramètres généra
 display,Display,Affichage
 code_execution,Code execution,Exécution du code
 run_code_at_settings_file_load,Run code when a settings file is loaded,Exécuter le code au chargement d'un fichier de sauvegarde
+ui_html,UI (HTML),UI (HTML)

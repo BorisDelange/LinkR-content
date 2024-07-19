@@ -15,6 +15,7 @@ div(
             ns("output_%widget_id%"), label = i18np$t("output"),
             options = list(
                 list(key = "console", text = i18np$t("console")),
+                list(key = "ui", text = i18np$t("ui_html")),
                 list(key = "figure", text = i18np$t("figure")),
                 list(key = "table", text = i18np$t("table")),
                 list(key = "datatable", text = i18np$t("datatable")),

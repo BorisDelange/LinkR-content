@@ -3,6 +3,7 @@
 output_dropdown_options <- list()
 output_dropdown_options$r <- list(
     list(key = "console", text = i18np$t("console")),
+    list(key = "ui", text = i18np$t("ui_html")),
     list(key = "figure", text = i18np$t("figure")),
     list(key = "table", text = i18np$t("table")),
     list(key = "datatable", text = i18np$t("datatable")),
