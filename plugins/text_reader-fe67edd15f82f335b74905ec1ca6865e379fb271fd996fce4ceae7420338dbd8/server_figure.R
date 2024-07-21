@@ -124,7 +124,7 @@ observeEvent(input$show_notes_%widget_id%, {
                     div(
                         strong(note$note_title), " - ", format_datetime(note$note_datetime, m$language), br(), br(), 
                         tags$pre(HTML(note$note_text), style = "white-space: pre-wrap;"),
-                        style = "padding:10px 5px; overflow: auto;"
+                        style = "padding: 10px 5px; overflow: auto;"
                     )
                 })
                 

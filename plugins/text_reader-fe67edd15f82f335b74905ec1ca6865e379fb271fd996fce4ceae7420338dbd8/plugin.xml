@@ -11,8 +11,10 @@
     <category_fr></category_fr>
     <description_en></description_en>
     <description_fr></description_fr>
+    <short_description_en></short_description_en>
+    <short_description_fr>Permet de visualiser et de filtrer des donn&#xE9;es textuelles (CRH, notes cliniques etc)</short_description_fr>
     <creation_datetime>2024-06-18 09:36:21</creation_datetime>
-    <update_datetime>2024-07-18 18:48:03</update_datetime>
+    <update_datetime>2024-07-21 23:28:59</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>

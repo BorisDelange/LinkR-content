@@ -5,14 +5,14 @@ observeEvent(input$reload_notes_datatable_%widget_id%, {
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$reload_notes_datatable_%widget_id%"))
     
     tryCatch({
-    
+        
         if (nrow(m$notes_%widget_id%) > 0){
             
             notes <-
                 m$notes_%widget_id% %>%
                 dplyr::select(note_type_concept_id, note_title, note_datetime) %>%
                 dplyr::left_join(
-                    d$dataset_all_concepts %>% dplyr::select(note_type_concept_id = concept_id_1, note_type_concept_name = concept_name_1),
+                    d$concept %>% dplyr::select(note_type_concept_id = concept_id, note_type_concept_name = concept_name),
                     by = "note_type_concept_id"
                 ) %>%
                 dplyr::relocate("note_type_concept_name", .before = "note_type_concept_id") %>%
