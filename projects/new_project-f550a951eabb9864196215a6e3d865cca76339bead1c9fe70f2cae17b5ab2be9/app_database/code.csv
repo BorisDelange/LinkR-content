@@ -1,0 +1,852 @@
+id,category,link_id,code,creator_id,datetime,deleted
+1,plugin,15,"# Init code var
+m$code_%widget_id% <- """"
+
+# Outputs
+outputs <- list()
+outputs$r <- c(""console"", ""ui"", ""figure"", ""table"", ""datatable"", ""rmarkdown"")
+outputs$python <- c(""console"", ""matplotlib"")
+
+# Prevent a bug with scroll into ace editor
+shinyjs::delay(300, shinyjs::runjs(""var event = new Event('resize'); window.dispatchEvent(event);""))
+
+# Run code at patient update
+observeEvent(m$selected_person, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer m$selected_person""))
+    
+    req(length(m$selected_person) > 0)
+    req(!is.na(m$selected_person))
+    
+    shinyjs::runjs(paste0(""Shiny.setInputValue('"", id, ""-run_code_%widget_id%', Math.random());""))
+})
+
+# Comment code
+observeEvent(input$code_%widget_id%_comment, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$code_comment""))
+
+    tryCatch({
+        lines <- strsplit(input$code_%widget_id%, ""\\n"")[[1]]
+        req(length(lines) > 0)
+        
+        start_row <- input$code_%widget_id%_comment$range$start$row + 1
+        end_row <- input$code_%widget_id%_comment$range$end$row + 1
+        
+        for (i in start_row:end_row) if (startsWith(lines[i], ""# "")) lines[i] <- substr(lines[i], 3, nchar(lines[i])) else lines[i] <- paste0(""# "", lines[i])
+        
+        shinyAce::updateAceEditor(session, ""code_%widget_id%"", value = paste0(lines, collapse = ""\\n""))
+        
+        shinyjs::runjs(sprintf(""
+            var editor = ace.edit('%s-rode');
+            editor.moveCursorTo(%d, %d);
+            editor.focus();
+        "", id, input$code_%widget_id%_comment$range$end$row, input$code_%widget_id%_comment$range$end$column))
+    }, error = function(e) cat(paste0(""\\n"", now(), "" - widget %widget_id% - error = "", toString(e))))
+})
+
+# Run all code with shortcut
+observeEvent(input$code_%widget_id%_run_all, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$code_run_all""))
+
+    m$code_%widget_id% <- input$code_%widget_id%
+    shinyjs::runjs(paste0(""Shiny.setInputValue('"", id, ""-run_code_%widget_id%', Math.random());""))
+})
+
+# Run code when button is clicked
+observeEvent(input$display_figure_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$display_figure""))
+    
+    m$code_%widget_id% <- input$code_%widget_id%
+    shinyjs::runjs(paste0(""Shiny.setInputValue('"", id, ""-run_code_%widget_id%', Math.random());""))
+})
+
+# Run code
+observeEvent(input$run_code_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$run_code""))
+    
+    req(length(input$prog_language_%widget_id%) > 0)
+    
+    tryCatch({
+        
+        language <- input$prog_language_%widget_id%
+        code_output <- input$output_%widget_id%
+        code <- m$code_%widget_id%
+        
+        # Hide all outputs
+        sapply(paste0(outputs[[language]], ""_output_%widget_id%""), shinyjs::hide)
+        shinyjs::show(paste0(code_output, ""_output_%widget_id%""))
+    
+        # Language = R
+        if (language == ""r""){
+            
+            # Output = console
+            if (code_output == ""console""){
+                captured_output <- capture.output(tryCatch(eval(parse(text = code)), error = function(e) print(e), warning = function(w) print(w))) %>% paste(collapse = ""\\n"")
+                output$console_output_%widget_id% <- renderText(captured_output)
+            }
+            
+            # Output = UI
+            else if (code_output == ""ui"") output$ui_output_%widget_id% <- renderUI(eval(parse(text = code)))
+            
+            # Output = figure
+            else if (code_output == ""figure"") output$figure_output_%widget_id% <- renderPlot(eval(parse(text = code)))
+            
+            # Output = table
+            else if (code_output == ""table"") output$table_output_%widget_id% <- renderTable(eval(parse(text = code)))
+            
+            # Output = DataTable
+            else if (code_output == ""datatable"") output$datatable_output_%widget_id% <- DT::renderDT(
+                DT::datatable(
+                    eval(parse(text = code)),
+                    
+                    rownames = FALSE,
+                    options = list(
+                        dom = ""<'datatable_length'l><'top't><'bottom'p>"",
+                        compact = TRUE, hover = TRUE
+                    ),
+                    
+                    # CSS for datatable
+                    callback = htmlwidgets::JS(
+                      ""table.on('draw.dt', function() {"",
+                      ""  $('.dataTable tbody tr td').css({"",
+                      ""    'height': '12px',"",
+                      ""    'padding': '2px 5px'"",
+                      ""  });"",
+                      ""  $('.dataTable thead tr td div .form-control').css('font-size', '12px');"",
+                      ""  $('.dataTable thead tr td').css('padding', '5px');"",
+                      ""});""
+                    )
+                )
+            )
+            
+            # Output = RMarkdown
+            else if (code_output == ""rmarkdown""){
+                
+                # Create temp dir
+                dir <- paste0(m$app_folder, ""/temp_files/"", m$user_id, ""/markdowns"")
+                output_file <- paste0(dir, ""/"", paste0(sample(c(0:9, letters[1:6]), 8, TRUE), collapse = ''), ""_"", now() %>% stringr::str_replace_all("":"", ""_"") %>% stringr::str_replace_all("" "", ""_""), "".Md"")
+                if (!dir.exists(dir)) dir.create(dir)
+                  
+                # Create the markdown file
+                knitr::knit(text = code, output = output_file, quiet = TRUE)
+          
+                output$rmarkdown_output_%widget_id% <- renderUI(div(class = ""markdown"", withMathJax(includeMarkdown(output_file))))
+            }
+        }
+        
+        # Language = Python
+        else if (language == ""python""){
+            
+            if (code_output == ""console"") output$console_output_%widget_id% <- renderText(capture_python_output(code))
+            
+            # else if (code_output == ""matplotlib"")
+        }
+        
+        # Go to figure tab
+        if (!input$figure_and_settings_side_by_side_%widget_id%) shinyjs::click(""figure_button_%widget_id%"")
+        
+    }, error = function(e){
+        show_message_bar(output, ""error_displaying_figure"", ""severeWarning"", i18n = i18np, ns = ns)
+        cat(paste0(""\\n"", now(), "" - widget %widget_id% - input$display_figure - error = "", toString(e)))
+    })
+})
+
+# Save code with shortcut
+observeEvent(input$code_%widget_id%_save, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$code_save""))
+    
+    shinyjs::runjs(paste0(""Shiny.setInputValue('"", id, ""-save_params_and_code_%widget_id%', Math.random());""))
+})",1,2024-07-22 12:37:28,0
+2,plugin,16,"# Change programmation language
+
+output_dropdown_options <- list()
+output_dropdown_options$r <- list(
+    list(key = ""console"", text = i18np$t(""console"")),
+    list(key = ""ui"", text = i18np$t(""ui_html"")),
+    list(key = ""figure"", text = i18np$t(""figure"")),
+    list(key = ""table"", text = i18np$t(""table"")),
+    list(key = ""datatable"", text = i18np$t(""datatable"")),
+    list(key = ""rmarkdown"", text = i18np$t(""rmarkdown""))
+)
+output_dropdown_options$python <- list(
+    list(key = ""console"", text = i18n$t(""console"")),
+    list(key = ""matplotlib"", text = i18n$t(""matplotlib""))
+)
+
+observeEvent(input$prog_language_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$prog_language""))
+    
+    tryCatch({
+    
+        # Update ace editor
+        shinyAce::updateAceEditor(session, ""code_editor_%widget_id%"", mode = input$prog_language_%widget_id%)
+        
+        # Update output dropdown
+        shiny.fluent::updateDropdown.shinyInput(session, ""output_%widget_id%"", options = output_dropdown_options[[input$prog_language_%widget_id%]], value = ""console"")
+        
+    }, error = function(e) cat(paste0(""\\n"", now(), "" - widget %widget_id% - input$prog_language - error = "", toString(e))))
+})
+
+observeEvent(input$output_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$output""))
+    
+    tryCatch({
+    
+        # Update ace editor
+        if (input$output_%widget_id% == ""rmarkdown"") mode <- ""markdown""
+        else mode <- input$prog_language_%widget_id%
+        shinyAce::updateAceEditor(session, ""code_editor_%widget_id%"", mode = mode)
+        
+    }, error = function(e) cat(paste0(""\\n"", now(), "" - widget %widget_id% - input$prog_language - error = "", toString(e))))
+})",1,2024-07-22 12:37:28,0
+3,plugin,17,"# Settings / editor side-by-side with figure
+observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$figure_and_settings_side_by_side""))
+    
+    tryCatch({
+        if (input$figure_and_settings_side_by_side_%widget_id%){
+            shinyjs::runjs(paste0(
+                ""$('#"", id, ""-figure_div_%widget_id%').css('width', '50%');"",
+                ""$('#"", id, ""-figure_settings_div_%widget_id%').css('width', '50%');"",
+                ""$('#"", id, ""-code_div_%widget_id%').css('width', '50%');""
+            ))
+            shinyjs::hide(""figure_button_div_%widget_id%"")
+        }
+        else {
+            shinyjs::runjs(paste0(
+                ""$('#"", id, ""-figure_div_%widget_id%').css('width', '100%');"",
+                ""$('#"", id, ""-figure_settings_div_%widget_id%').css('width', '100%');"",
+                ""$('#"", id, ""-code_div_%widget_id%').css('width', '100%');""
+            ))
+            shinyjs::show(""figure_button_div_%widget_id%"")
+        }
+        
+    }, error = function(e) cat(paste0(""\\n"", now(), "" - widget %widget_id% - error = "", toString(e))))
+})
+
+# Save general settings in db
+
+observeEvent(input$save_general_settings_button_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$save_general_settings_button""))
+    
+    shinyjs::runjs(paste0(""Shiny.setInputValue('"", id, ""-save_general_settings_%widget_id%', Math.random());""))
+    
+    # Notify user
+    show_message_bar(output, ""modif_saved"", ""success"", i18n = i18n, ns = ns)
+})
+observeEvent(input$save_general_settings_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$save_general_settings""))
+    
+    tryCatch({
+    
+        # Delete old rows
+        sql_send_statement(m$db, glue::glue_sql(""DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings'"", .con = m$db))
+        
+        file_id <- input$saved_settings_%widget_id%
+        new_data <- tibble::tibble(name = ""selected_file_id"", value = NA_character_, value_num = file_id)
+        
+        for (name in c(""show_saved_file"", ""figure_and_settings_side_by_side"", ""run_code_at_patient_update"", ""run_code_at_settings_file_load"")){
+            toggle_value <- 0L
+            input_name <- paste0(name, ""_%widget_id%"")
+            if (length(input[[input_name]]) > 0) if (input[[input_name]]) toggle_value <- 1L
+            new_data <- new_data %>% dplyr::bind_rows(tibble::tibble(name = name, value = NA_character_, value_num = toggle_value))
+        }
+        
+        new_data <-
+            new_data %>%
+            dplyr::transmute(
+                id = get_last_row(m$db, ""widgets_options"") + 1:5, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
+                category = ""general_settings"", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
+            )
+        
+        DBI::dbAppendTable(m$db, ""widgets_options"", new_data)
+        
+    }, error = function(e) cat(paste0(""\\n"", now(), "" - widget %widget_id% - error = "", toString(e))))
+})",1,2024-07-22 12:37:28,0
+4,plugin,18,"###################################
+# The user saves current settings #
+###################################
+
+observeEvent(input$save_params_and_code_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$save_params_and_code""))
+    
+    tryCatch({
+    
+        # If no saved settings file is selected, go to settings files management page
+        if (length(input$saved_settings_%widget_id%) == 0) shinyjs::runjs(paste0(""Shiny.setInputValue('"", id, ""-show_saved_settings_tab_%widget_id%', Math.random());""))
+        
+        if (length(input$saved_settings_%widget_id%) > 0){
+            
+            link_id <- input$saved_settings_%widget_id%
+        
+            # Delete old settings
+            sql_send_statement(m$db, glue::glue_sql(""DELETE FROM widgets_options WHERE widget_id = %widget_id% AND link_id = {link_id}"", .con = m$db))
+            
+            # Add new settings in db
+            new_data <- tibble::tribble(
+                ~name, ~value, ~value_num,
+                ""prog_language"", input$prog_language_%widget_id%, NA_real_,
+                ""output"", input$output_%widget_id%, NA_real_,
+                ""code"", input$code_%widget_id%, NA_real_
+            ) %>%
+            dplyr::transmute(
+                id = get_last_row(m$db, ""widgets_options"") + 1:3, widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
+                category = ""saved_settings"", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
+            )
+            
+            DBI::dbAppendTable(m$db, ""widgets_options"", new_data)
+            
+            # Notify user
+            show_message_bar(output, ""modif_saved"", ""success"", i18n = i18n, ns = ns)
+        }
+        
+    }, error = function(e) cat(paste0(""\\n"", now(), "" - widget %widget_id% - error = "", toString(e))))
+})
+
+###################################
+# Saved settings files management #
+###################################
+
+saved_settings_ui_style <- paste0(
+    ""display: inline-block; color: white; max-width: 250px; border-radius: 8px; padding: 1px 5px; align-items: center;"",
+    ""height: 18px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; margin: 2px 5px;""
+)
+
+output$saved_settings_ui_%widget_id% <- renderUI({
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer output$saved_settings""))
+    
+    div(i18np$t(""no_settings_file_selected""), style = paste0(saved_settings_ui_style, ""background-color: #606060ab;""))
+})
+
+# Show / hide saved settings file
+observeEvent(input$show_saved_file_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$show_saved_file""))
+    
+    if (input$show_saved_file_%widget_id%) shinyjs::show(""saved_settings_ui_%widget_id%"")
+    else shinyjs::hide(""saved_settings_ui_%widget_id%"")
+})
+
+# Show / hide saved settings div
+observeEvent(input$show_saved_settings_tab_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$show_saved_settings_tab""))
+    
+    sapply(c(paste0(tabs, ""_div_%widget_id%""), ""figure_settings_code_div_%widget_id%""), shinyjs::hide)
+    shinyjs::show(""saved_settings_div_%widget_id%"")
+})
+
+# Show add settings file modal
+observeEvent(input$create_settings_file_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$create_settings_file""))
+    
+    shinyjs::show(""add_settings_file_modal_%widget_id%"")
+})
+
+# Close add settings file modal
+observeEvent(input$close_add_settings_file_modal_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$close_add_settings_file_modal""))
+    
+    shinyjs::hide(""add_settings_file_modal_%widget_id%"")
+})
+
+# Confirm creation of settings file
+observeEvent(input$add_settings_file_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$add_settings_file""))
+    
+    tryCatch({
+        file_name <- input$settings_file_name_%widget_id%
+        
+        # Check if name if empty
+        empty_name <- TRUE
+        if (length(file_name) > 0) if (!is.na(file_name) & file_name != """") empty_name <- FALSE
+        if (empty_name) shiny.fluent::updateTextField.shinyInput(session, ""settings_file_name_%widget_id%"", errorMessage = i18np$t(""provide_valid_name""))
+        else {
+        
+            shiny.fluent::updateTextField.shinyInput(session, ""settings_file_name_%widget_id%"", errorMessage = NULL)
+            
+            # Check if name is already used
+            sql <- glue::glue_sql(""SELECT name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'saved_settings' AND name = 'file_name' AND LOWER(value) = {tolower(file_name)}"", .con = m$db)
+            name_already_used <- nrow(DBI::dbGetQuery(m$db, sql) > 0)
+            
+            if (name_already_used) shiny.fluent::updateTextField.shinyInput(session, ""settings_file_name_%widget_id%"", errorMessage = i18np$t(""name_already_used""))
+            else {
+                
+                # Add settings file in database
+                new_data <- tibble::tibble(
+                    id = get_last_row(m$db, ""widgets_options"") + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
+                    category = ""saved_settings"", name = ""file_name"", value = file_name, value_num = NA_real_, creator_id = m$user_id, datetime = now(), deleted = FALSE
+                )
+                DBI::dbAppendTable(m$db, ""widgets_options"", new_data)
+                
+                # Reset fields
+                shiny.fluent::updateTextField.shinyInput(session, ""settings_file_name_%widget_id%"", value = """")
+                
+                # Update dropdown
+                shinyjs::runjs(paste0(""Shiny.setInputValue('"", id, ""-reload_dropdown_%widget_id%', Math.random());""))
+                
+                # Close modal
+                shinyjs::hide(""add_settings_file_modal_%widget_id%"")
+                
+                # Notify user
+                show_message_bar(output, ""new_settings_file_added"", ""success"", i18n = i18np, ns = ns)
+            }
+        }
+    }, error = function(e) cat(paste0(""\\n"", now(), "" - widget %widget_id% - error = "", toString(e))))
+})
+
+# Update dropdown
+observeEvent(input$reload_dropdown_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$settings_file""))
+    
+    tryCatch({
+        sql <- glue::glue_sql(""SELECT id, value AS name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'saved_settings' AND name = 'file_name'"", .con = m$db)
+        m$settings_filenames_%widget_id% <- DBI::dbGetQuery(m$db, sql)
+        
+        dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = ""id"", text_col = ""name"")
+        shiny.fluent::updateDropdown.shinyInput(session, ""saved_settings_%widget_id%"", options = dropdown_options, value = NULL)
+        
+    }, error = function(e) cat(paste0(""\\n"", now(), "" - widget %widget_id% - error = "", toString(e))))
+})
+
+# A settings file is selected
+observeEvent(input$saved_settings_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$settings_file""))
+    
+    tryCatch({
+    
+        # Show delete button
+        shinyjs::show(""delete_saved_settings_file_div_%widget_id%"")
+    
+        # Get file name
+        file_id <- input$saved_settings_%widget_id%
+        filename <- m$settings_filenames_%widget_id% %>% dplyr::filter(id == file_id) %>% dplyr::pull(name)
+        
+        output$saved_settings_ui_%widget_id% <- renderUI(div(filename, style = paste0(saved_settings_ui_style, ""background-color: #1d94ce;"")))
+        
+        # Save that this file is selected
+        shinyjs::runjs(paste0(""Shiny.setInputValue('"", id, ""-save_general_settings_%widget_id%', Math.random());""))
+        
+        # Load saved settings
+        link_id <- input$saved_settings_%widget_id%
+        sql <- glue::glue_sql(""SELECT name, value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'saved_settings' AND link_id = {link_id}"", .con = m$db)
+        saved_settings <- DBI::dbGetQuery(m$db, sql)
+        
+        if (nrow(saved_settings) > 0){
+            sapply(saved_settings$name, function(name){
+            
+                value <- saved_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value)
+                
+                if (name == ""prog_language"") shiny.fluent::updateDropdown.shinyInput(session, paste0(name, ""_%widget_id%""), value = value)
+                else if (name == ""output""){
+                    prog_language <- saved_settings %>% dplyr::filter(name == ""prog_language"") %>% dplyr::pull(value)
+                    shinyjs::delay(100, shiny.fluent::updateDropdown.shinyInput(session, paste0(name, ""_%widget_id%""), options = output_dropdown_options[[prog_language]], value = value))
+                }
+                else if (name == ""code"") shinyAce::updateAceEditor(session, ""code_%widget_id%"", value = value)
+            })
+        }
+        
+        # Run code if toggle is activated
+        if (length(input$run_code_at_settings_file_load_%widget_id%) > 0) if (input$run_code_at_settings_file_load_%widget_id%) shinyjs::delay(500, 
+            shinyjs::runjs(paste0(""Shiny.setInputValue('"", id, ""-display_figure_%widget_id%', Math.random());"")))
+        
+    }, error = function(e) cat(paste0(""\\n"", now(), "" - widget %widget_id% - error = "", toString(e))))
+})
+
+# Open delete a settings file modal
+observeEvent(input$delete_saved_settings_file_%widget_id%, {
+    %req%
+    req(length(input$saved_settings_%widget_id%) > 0)
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$delete_saved_settings_file""))
+    
+    shinyjs::show(""delete_settings_file_modal_%widget_id%"")
+})
+
+# Close delete a settings file modal
+observeEvent(input$close_file_deletion_modal_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$close_file_deletion_modal""))
+    
+    shinyjs::hide(""delete_settings_file_modal_%widget_id%"")
+})
+
+# Confirm settings file deletion
+observeEvent(input$confirm_file_deletion_%widget_id%, {
+    %req%
+    if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$confirm_file_deletion""))
+    
+    tryCatch({
+        file_id <- input$saved_settings_%widget_id%
+        
+        # Delete row in db
+        sql_send_statement(m$db, glue::glue_sql(""DELETE FROM widgets_options WHERE id = {file_id}"", .con = m$db))
+        
+        # Update dropdown
+        shinyjs::runjs(paste0(""Shiny.setInputValue('"", id, ""-reload_dropdown_%widget_id%', Math.random());""))
+        
+        # Close modal
+        shinyjs::hide(""delete_settings_file_modal_%widget_id%"")
+        
+        # Update selected settings file UI
+        output$saved_settings_ui_%widget_id% <- renderUI(div(i18np$t(""no_settings_file_selected""), style = paste0(saved_settings_ui_style, ""background-color: #606060ab;"")))
+        
+        # Hide delete button
+        shinyjs::hide(""delete_saved_settings_file_div_%widget_id%"")
+        
+        # Notify user
+        show_message_bar(output, ""settings_file_delete"", ""warning"", i18n = i18np, ns = ns)
+        
+    }, error = function(e) cat(paste0(""\\n"", now(), "" - widget %widget_id% - error = "", toString(e))))
+})",1,2024-07-22 12:37:28,0
+5,plugin,19,"# -------
+# Tabs --
+# -------
+
+## All tabs
+tabs <- c(""figure"", ""figure_settings"", ""code"", ""general_settings"")
+
+## Create an observer by tab, show selected tab, hide all others
+sapply(tabs, function(tab){
+
+    observeEvent(input[[paste0(tab, ""_button_%widget_id%"")]], {
+        %req%
+        if (debug) cat(paste0(""\\n"", now(), "" - mod_"", id, "" - widget_id = %widget_id% - observer input$"", tab))
+        
+        tryCatch({
+            if (tab == ""general_settings"") shinyjs::hide(""figure_settings_code_div_%widget_id%"")
+            else shinyjs::show(""figure_settings_code_div_%widget_id%"")
+            
+            sapply(paste0(setdiff(c(""figure_settings"", ""code"", ""general_settings""), tab), ""_div_%widget_id%""), shinyjs::hide)
+            shinyjs::hide(""saved_settings_div_%widget_id%"")
+            shinyjs::show(paste0(tab, ""_div_%widget_id%""))
+            
+            if (tab %in% c(""figure_settings"", ""code"")){
+                if (length(input$figure_and_settings_side_by_side_%widget_id%) > 0) if (input$figure_and_settings_side_by_side_%widget_id%) shinyjs::show(""figure_div_%widget_id%"")
+                else shinyjs::hide(""figure_div_%widget_id%"")
+                
+                shinyjs::show(""figure_settings_code_sidenav_%widget_id%"")
+            }
+            else {
+                shinyjs::hide(""figure_settings_code_sidenav_%widget_id%"")
+                if (tab != ""figure"") shinyjs::hide(""figure_div_%widget_id%"")
+            }
+            
+            # Prevent a bug with scroll into ace editor
+            shinyjs::runjs(""var event = new Event('resize'); window.dispatchEvent(event);"")
+            
+        }, error = function(e) cat(paste0(""\\n"", now(), "" - widget %widget_id% - error = "", toString(e))))
+    })
+})
+
+# ------------------
+# Figure settings --
+# ------------------
+
+%import_script('server_figure_settings.R')%
+
+# -------
+# Code --
+# -------
+
+%import_script('server_code.R')%
+
+# -------------------
+# General settings --
+# -------------------
+
+%import_script('server_general_settings.R')%
+
+# -----------------
+# Saved settings --
+# -----------------
+
+%import_script('server_saved_settings.R')%",1,2024-07-22 12:37:28,0
+6,plugin,20,"base,en,fr
+show_figure,Figure,Figure
+show_figure_settings,Set up the figure,Paramétrer la figure
+show_code_editor,Edit figure code,Editer le code de la figure
+show_general_settings,General settings,Paramètres généraux
+figure_and_settings_side_by_side,Figure and settings/editor side by side,Figure et paramètres/éditeur côte à côte
+display_figure,Display figure,Afficher la figure
+save_figure_settings_and_code,Save,Sauvegarder
+language,Language,Langage
+output,Output,Output
+r,R,R
+python,Python,Python
+figure,Figure,Figure
+console,Console,Console
+table,Table,Table
+datatable,DataTable,DataTable
+rmarkdown,RMarkdown,RMarkdown
+matplotlib,Matplotlib,Matplotlib
+parameters_not_saved,Parameters not saved,Paramètres non sauvegardés
+show_saved_file,Show saved file,Afficher le fichier de sauvegarde
+create_settings_file,Create a settings file,Créer un fichier de sauvegarde
+delete_settings_file_title,Delete a settings file,Supprimer un fichier de sauvegarde
+delete_settings_file_text,Confirm deletion of the settings file?,Confirmer la suppression du fichier de sauvegarde ?
+add,Add,Ajouter
+file_name,File name,Nom du fichier
+file,File,Fichier
+provide_valid_name,Provide valid name,Nom valide requis
+name_already_used,This name is already used,Ce nom est déjà utilisé
+delete,Delete,Supprimer
+dont_delete,Cancel,Annuler
+no_settings_file_selected,No settings file selected,Pas de fichier de sauvegarde sélectionné
+new_settings_file_added,New settings file added,Nouveau fichier de sauvegarde des paramètres ajouté
+settings_file_deleted,Settings file deleted,Fichier de sauvegarde des paramètres supprimé
+run_code_at_patient_update,Run code at patient update,Exécuter le code au changement de patient
+save_general_settings,Save general settings,Sauvegarder les paramètres généraux
+display,Display,Affichage
+code_execution,Code execution,Exécution du code
+run_code_at_settings_file_load,Run code when a settings file is loaded,Exécuter le code au chargement d'un fichier de sauvegarde
+ui_html,UI (HTML),UI (HTML)",1,2024-07-22 12:37:28,0
+7,plugin,21,"div(
+    div(
+        shiny.fluent::Dropdown.shinyInput(
+            ns(""prog_language_%widget_id%""), label = i18np$t(""language""),
+            options = list(
+                list(key = ""r"", text = i18np$t(""r"")),
+                list(key = ""python"", text = i18np$t(""python""))
+            ),
+            value = ""r""
+        ), 
+        style = ""width: 150px;""
+    ),
+    div(
+        shiny.fluent::Dropdown.shinyInput(
+            ns(""output_%widget_id%""), label = i18np$t(""output""),
+            options = list(
+                list(key = ""console"", text = i18np$t(""console"")),
+                list(key = ""ui"", text = i18np$t(""ui_html"")),
+                list(key = ""figure"", text = i18np$t(""figure"")),
+                list(key = ""table"", text = i18np$t(""table"")),
+                list(key = ""datatable"", text = i18np$t(""datatable"")),
+                list(key = ""rmarkdown"", text = i18np$t(""rmarkdown""))
+            ),
+            value = ""figure""
+        ), 
+        style = ""width: 150px;""
+    ),
+    style = ""display: flex; gap: 10px;""
+)",1,2024-07-22 12:37:28,0
+8,plugin,22,"tagList(
+    shinyjs::hidden(verbatimTextOutput(ns(""console_output_%widget_id%""))),
+    shinyjs::hidden(uiOutput(ns(""ui_output_%widget_id%""))),
+    shinyjs::hidden(plotOutput(ns(""figure_output_%widget_id%""), height = ""calc(100% - 5px)"")),
+    shinyjs::hidden(tableOutput(ns(""table_output_%widget_id%""))),
+    shinyjs::hidden(DT::DTOutput(ns(""datatable_output_%widget_id%""))),
+    shinyjs::hidden(uiOutput(ns(""rmarkdown_output_%widget_id%"")))
+)",1,2024-07-22 12:37:28,0
+9,plugin,23,"# Load general settings
+
+sql <- glue::glue_sql(""SELECT name, value, value_num FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings'"", .con = m$db)
+general_settings <- DBI::dbGetQuery(m$db, sql)
+
+toggle_values <- list()
+
+if (nrow(general_settings) == 0){
+
+    toggle_values$show_saved_file <- TRUE
+    toggle_values$figure_and_settings_side_by_side <- TRUE
+    toggle_values$run_code_at_patient_update <- TRUE
+    toggle_values$run_code_at_settings_file_load <- TRUE
+    
+    dropdown_options <- list()
+    selected_file <- NULL
+    
+} else if (nrow(general_settings) > 0){
+
+    # Toggles values
+    
+    for (name in c(""show_saved_file"", ""figure_and_settings_side_by_side"", ""run_code_at_patient_update"", ""run_code_at_settings_file_load"")){
+    
+        toggle_value <- general_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value_num)
+        if (is.na(toggle_value)) toggle_value <- FALSE
+        else (toggle_value <- as.logical(toggle_value))
+        toggle_values[[name]] <- toggle_value
+    }
+    
+    # Selected saved settings file
+    
+    sql <- glue::glue_sql(""SELECT id, value AS name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'saved_settings' AND name = 'file_name'"", .con = m$db)
+    m$settings_filenames_%widget_id% <- DBI::dbGetQuery(m$db, sql)
+    dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = ""id"", text_col = ""name"")
+    selected_file <- general_settings %>% dplyr::filter(name == ""selected_file_id"") %>% dplyr::pull(value_num)
+}
+
+if (toggle_values$figure_and_settings_side_by_side) div_width <- ""50%"" else div_width <- ""100%""",1,2024-07-22 12:37:28,0
+10,plugin,24,"tagList(
+
+    # Add settings file modal
+    shinyjs::hidden(
+      div(
+        id = ns(""add_settings_file_modal_%widget_id%""),
+        div(
+            div(
+                tags$h1(i18np$t(""create_settings_file""), style = ""font-size: 14px;""),
+                shiny.fluent::IconButton.shinyInput(ns(""close_add_settings_file_modal_%widget_id%""), iconProps = list(iconName = ""ChromeClose"")),
+                style = ""display: flex; justify-content: space-between;"",
+                class = ""small_close_button""
+            ),
+            div(shiny.fluent::TextField.shinyInput(ns(""settings_file_name_%widget_id%""), label = i18np$t(""file_name"")), style = ""width: 200px;""),
+            div(
+                shiny.fluent::PrimaryButton.shinyInput(ns(""add_settings_file_%widget_id%""), i18np$t(""add"")),
+                style = ""position: absolute; right: 10px; bottom: 8px;""
+            ),
+            style = ""background: #fff; padding: 5px 10px 10px 15px; position: relative; width: 400px; height: 120px;""
+        ),
+        style = ""display: flex; align-items: center; justify-content: center; position: absolute; left: 0; top: 0;  width: 100%; height: 100%; background-color: rgba(0,0,0,0.2); z-index: 1000;""
+      )
+    ),
+    
+    # Delete settings file modal
+    shinyjs::hidden(
+      div(
+        id = ns(""delete_settings_file_modal_%widget_id%""),
+        div(
+            tags$h1(i18np$t(""delete_settings_file_title""), style = ""font-size: 14px;""),
+            tags$p(i18np$t(""delete_settings_file_text"")),
+            div(
+                shiny.fluent::DefaultButton.shinyInput(ns(""close_file_deletion_modal_%widget_id%""), i18np$t(""dont_delete"")),
+                div(shiny.fluent::PrimaryButton.shinyInput(ns(""confirm_file_deletion_%widget_id%""), i18np$t(""delete"")), class = ""delete_button""),
+                style = ""position: absolute; right: 10px; bottom: 8px; display: flex; gap: 5px;""
+            ),
+            style = ""background: #fff; padding: 5px 10px 10px 15px; position: relative; width: 400px; height: 120px;""
+        ),
+        style = ""display: flex; align-items: center; justify-content: center; position: absolute; left: 0; top: 0;  width: 100%; height: 100%; background-color: rgba(0,0,0,0.2); z-index: 1000;""
+      )
+    ),
+    
+    # Sidenav
+    div(
+        id = ns(""saved_settings_sidenav_%widget_id%""),
+        shiny.fluent::IconButton.shinyInput(ns(""create_settings_file_%widget_id%""), iconProps = list(iconName = ""Add""), title = i18np$t(""create_settings_file""), style = ""margin: 0""),
+        class = ""widget_icon"",
+        style = ""border-right: solid grey 0.5px;""
+    ),
+    
+    # Dropdown and delete button
+    div(
+        div(shiny.fluent::Dropdown.shinyInput(ns(""saved_settings_%widget_id%""), label = i18np$t(""file""), options = dropdown_options, value = selected_file), style = ""width: 200px""),
+        div(shiny.fluent::IconButton.shinyInput(ns(""delete_saved_settings_file_%widget_id%""), iconProps = list(iconName = ""Delete"")), style = ""margin-top: 26px;"", class = ""widget_icon""),
+        style = ""display: flex; gap: 5px; margin: 5px 10px;""
+    )
+)",1,2024-07-22 12:37:28,0
+11,plugin,25,"%import_script('ui_load_general_settings.R')%
+
+tagList(
+    div(
+        shinyjs::hidden(
+            div(
+                id = ns(""figure_button_div_%widget_id%""),
+                shiny.fluent::IconButton.shinyInput(ns(""figure_button_%widget_id%""), iconProps = list(iconName = ""BarChart4""), title = i18np$t(""show_figure""))
+            )
+        ),
+        shiny.fluent::IconButton.shinyInput(ns(""figure_settings_button_%widget_id%""), iconProps = list(iconName = ""AllApps""), title = i18np$t(""show_figure_settings"")),
+        shiny.fluent::IconButton.shinyInput(ns(""code_button_%widget_id%""), iconProps = list(iconName = ""Code""), title = i18np$t(""show_code_editor"")),
+        shiny.fluent::IconButton.shinyInput(ns(""general_settings_button_%widget_id%""), iconProps = list(iconName = ""Settings""), title = i18np$t(""show_general_settings"")),
+        uiOutput(
+            ns(""saved_settings_ui_%widget_id%""),
+            onclick = paste0(""Shiny.setInputValue('"", id, ""-show_saved_settings_tab_%widget_id%', Math.random())"")
+        ),
+        class = ""widget_icon"",
+        style = ""display: flex; color: #808080; border-bottom: solid grey 0.5px; height: 28px; padding-top: 5px; font-size: 12px; color: #808080;""
+    ),
+    div(
+        id = ns(""figure_settings_code_div_%widget_id%""),
+        div(
+            id = ns(""figure_settings_code_sidenav_%widget_id%""),
+            shiny.fluent::IconButton.shinyInput(ns(""display_figure_%widget_id%""), iconProps = list(iconName = ""Play""), title = i18np$t(""display_figure""), style = ""margin: 0""),
+            shiny.fluent::IconButton.shinyInput(ns(""save_params_and_code_%widget_id%""), iconProps = list(iconName = ""Save""), title = i18np$t(""save_figure_settings_and_code""), style = ""margin: 0""),
+            class = ""widget_icon"",
+            style = ""border-right: solid grey 0.5px;""
+        ),
+        div(
+            id = ns(""figure_div_%widget_id%""),
+            %import_script('ui_figure.R')%,
+            style = paste0(""height: 100%; width: "", div_width, ""; margin: 5px 10px; overflow: auto;"")
+        ),
+        shinyjs::hidden(
+            div(
+                id = ns(""figure_settings_div_%widget_id%""),
+                %import_script('ui_figure_settings.R')%,
+                style = paste0(""height: 100%; width: "", div_width, ""%; margin: 5px 10px; overflow: auto;"")
+            )
+        ),
+        div(
+            id = ns(""code_div_%widget_id%""),
+            shinyAce::aceEditor(
+                ns(""code_%widget_id%""), value = """", mode = ""r"",
+                hotkeys = list(
+                    save = list(win = ""CTRL-S"", mac = ""CTRL-S|CMD-S""),
+                    run_all = list(win = ""CTRL-SHIFT-ENTER"", mac = ""CTRL-SHIFT-ENTER|CMD-SHIFT-ENTER""),
+                    comment = list(win = ""CTRL-SHIFT-C"", mac = ""CTRL-SHIFT-C|CMD-SHIFT-C"")
+                ),
+                autoScrollEditorIntoView = TRUE, height = ""100%"", debounce = 100, fontSize = 11, showPrintMargin = FALSE
+            ),
+            style = paste0(""height: 100%; width: "", div_width, ""%; overflow: auto;"")
+        ),
+        style = ""display: flex; height: calc(100% - 40px);""
+    ),
+    shinyjs::hidden(
+        div(
+            id = ns(""general_settings_div_%widget_id%""),
+            div(
+                id = ns(""general_settings_sidenav_%widget_id%""),
+                shiny.fluent::IconButton.shinyInput(ns(""save_general_settings_button_%widget_id%""), iconProps = list(iconName = ""Save""), title = i18np$t(""save_general_settings""), style = ""margin: 0""),
+                class = ""widget_icon"",
+                style = ""border-right: solid grey 0.5px;""
+            ),
+            div(
+                tags$strong(i18np$t(""display"")), br(),
+                div(
+                    shiny.fluent::Toggle.shinyInput(ns(""show_saved_file_%widget_id%""), value = toggle_values$show_saved_file),
+                    tags$label(i18np$t(""show_saved_file""), `for` = ns(""show_saved_file_%widget_id%""), style = ""margin-left: 5px;""),
+                    style = ""display: flex; margin-top: 8px;"" 
+                ),
+                div(
+                    shiny.fluent::Toggle.shinyInput(ns(""figure_and_settings_side_by_side_%widget_id%""), value = toggle_values$figure_and_settings_side_by_side),
+                    tags$label(i18np$t(""figure_and_settings_side_by_side""), `for` = ns(""figure_and_settings_side_by_side_%widget_id%""), style = ""margin-left: 5px;""),
+                    style = ""display: flex; margin-top: 5px;"" 
+                ), br(),
+                tags$strong(i18np$t(""code_execution"")), br(),
+                div(
+                    shiny.fluent::Toggle.shinyInput(ns(""run_code_at_settings_file_load_%widget_id%""), value = toggle_values$run_code_at_patient_update),
+                    tags$label(i18np$t(""run_code_at_settings_file_load""), `for` = ns(""run_code_at_settings_file_load_%widget_id%""), style = ""margin-left: 5px;""),
+                    style = ""display: flex; margin-top: 8px;"" 
+                ),
+                div(
+                    shiny.fluent::Toggle.shinyInput(ns(""run_code_at_patient_update_%widget_id%""), value = toggle_values$run_code_at_patient_update),
+                    tags$label(i18np$t(""run_code_at_patient_update""), `for` = ns(""run_code_at_patient_update_%widget_id%""), style = ""margin-left: 5px;""),
+                    style = ""display: flex; margin-top: 5px;"" 
+                ),
+                style = ""margin: 5px 10px;""
+            ),
+            style = ""display: flex; height: calc(100% - 40px);""
+        )
+    ),
+    shinyjs::hidden(
+        div(
+            id = ns(""saved_settings_div_%widget_id%""),
+            %import_script('ui_saved_settings.R')%,
+            style = ""display: flex; height: calc(100% - 40px);""
+        )
+    )
+)",1,2024-07-22 12:37:28,0

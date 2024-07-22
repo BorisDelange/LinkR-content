@@ -1,0 +1,4 @@
+id,category,name,description,tab_group_id,parent_tab_id,display_order,creator_id,datetime,deleted
+1,patient_lvl,tab 1,NA,1,NA,1,NA,2024-07-22 22:35:41,0
+2,patient_lvl,tab 2,NA,1,NA,2,NA,2024-07-22 22:35:44,0
+3,aggregated,tab 1,NA,2,NA,1,NA,2024-07-22 22:35:57,0

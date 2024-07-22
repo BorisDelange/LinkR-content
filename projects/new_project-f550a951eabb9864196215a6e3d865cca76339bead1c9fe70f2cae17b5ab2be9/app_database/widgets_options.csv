@@ -1,0 +1,7 @@
+id,widget_id,person_id,link_id,category,name,value,value_num,creator_id,datetime,deleted
+1,1,NA,NA,saved_settings,file_name,f1,NA,NA,2024-07-22 22:36:13,0
+2,1,NA,NA,general_settings,selected_file_id,NA,3171,NA,2024-07-22 22:36:14,0
+3,1,NA,NA,general_settings,show_saved_file,NA,1,NA,2024-07-22 22:36:14,0
+4,1,NA,NA,general_settings,figure_and_settings_side_by_side,NA,1,NA,2024-07-22 22:36:14,0
+5,1,NA,NA,general_settings,run_code_at_patient_update,NA,1,NA,2024-07-22 22:36:14,0
+6,1,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2024-07-22 22:36:14,0
