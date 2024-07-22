@@ -1,0 +1,46 @@
+base,en,fr
+show_figure,Figure,Figure
+show_figure_settings,Set up the figure,Paramétrer la figure
+show_code_editor,Edit figure code,Editer le code de la figure
+show_general_settings,General settings,Paramètres généraux
+figure_and_settings_side_by_side,Figure and settings/editor side by side,Figure et paramètres/éditeur côte à côte
+display_figure,Display figure,Afficher la figure
+save_figure_settings_and_code,Save,Sauvegarder
+category,Category,Catégorie
+title,Title,Titre
+datetime,Datetime, Date & heure
+select_a_note_to_display,Select a note to display,Sélectionnez une note à afficher
+notes,Notes,Notes
+words_sets,Words sets,Sets de mots
+words_set,Words set,Set de mots
+filters,Filters,Filtres
+layout,Layout,Mise en page
+cancel,Cancel,Annuler
+add_new_words_set,Add a new words set,Ajouter un nouveau set de mots
+new_words_set,New words set,Nouveau set de mots
+add,Add,Ajouter
+provide_valid_name,Please provide a valid name,Nom valide requis
+new_words_set_added,New words set added,Nouveau set de mots ajouté
+remove_multiple_line_breaks,Remove multiple line breaks,Retirer les retours à la ligne multiples
+name_already_used,This name is already used,Ce nom est déjà utilisé
+new_word,New word,Nouveau mot
+add_new_word,Add this word ,Ajouter ce mot
+create_settings_file,Create a settings file,Créer un fichier de sauvegarde
+delete_settings_file_title,Delete a settings file,Supprimer un fichier de sauvegarde
+delete_settings_file_text,Confirm deletion of the settings file?,Confirmer la suppression du fichier de sauvegarde ?
+delete,Delete,Supprimer
+dont_delete,Cancel,Annuler
+file,File,Fichier
+no_settings_file_selected,No settings file selected,Pas de fichier de sauvegarde sélectionné
+file_name,File name,Nom du fichier
+name,Name,Nom
+settings_file_deleted,Settings file deleted,Fichier de sauvegarde des paramètres supprimé
+add_a_words_set,Add a words set,Ajouter un set de mots
+delete_this_words_set,Delete this words set,Supprimer ce sets de mots
+delete_a_words_set_title,Delete a words set,Supprimer un set de mots
+delete_a_words_set_text,Confirm deletion of this words set?,Confirmer la suppression de ce set de mots ?
+words_set_deleted,Words set deleted,Set de mots supprimé
+word_may_contain_at_least_two_chars,A word has to contain at least two characters,Un mot doit contenir au moins deux caractères
+show_saved_file,Show saved file,Afficher le fichier de sauvegarde
+save_general_settings,Save general settings,Sauvegarder les paramètres généraux
+new_settings_file_added,New settings file added,Nouveau fichier de sauvegarde des paramètres ajouté
