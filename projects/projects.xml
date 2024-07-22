@@ -1,2 +1,21 @@
-<?xml version="1.0"?>
-<projects/>
+<?xml version="1.0" encoding="UTF-8"?>
+<projects>
+  <projects>
+    <project>
+      <app_version>0.3.0.9012</app_version>
+      <unique_id/>
+      <version/>
+      <author>Boris Delange</author>
+      <name_en>test6</name_en>
+      <name_fr>test6</name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en/>
+      <description_fr/>
+      <short_description_en/>
+      <short_description_fr>ab</short_description_fr>
+      <creation_datetime>2024-07-22 16:08:34</creation_datetime>
+      <update_datetime>2024-07-22 20:27:09</update_datetime>
+    </project>
+  </projects>
+</projects>
