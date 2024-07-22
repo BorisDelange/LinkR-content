@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<datasets>
+  <dataset>
+    <app_version>0.3.0.9012</app_version>
+    <unique_id>f142819890d47b5643130004a806a209a50837e3cd3dab4962e319c79b1548b3</unique_id>
+    <version>0.0.1.9000</version>
+    <author>Boris Delange</author>
+    <name_en>MIMIC-III</name_en>
+    <name_fr>MIMIC-III</name_fr>
+    <category_en></category_en>
+    <category_fr></category_fr>
+    <description_en># MIMIC-III
+
+Description EN</description_en>
+    <description_fr></description_fr>
+    <short_description_en></short_description_en>
+    <short_description_fr>Short desc fr</short_description_fr>
+    <creation_datetime>2024-07-11 18:58:11</creation_datetime>
+    <update_datetime>2024-07-22 16:56:54</update_datetime>
+    <omop_version>5.3</omop_version>
+  </dataset>
+</datasets>

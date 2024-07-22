@@ -1,169 +1,20 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <datasets>
-  <dataset>
-    <app_version>0.2.0</app_version>
-    <unique_id>3d3aaab2f83b4acccb9b67bd107db82f66282ae972d7dfbd7baf05c690ed73c0</unique_id>
-    <version>0.0.1.9002</version>
-    <author>Boris Delange</author>
-    <description_en></description_en>
-    <name_en>MIMIC-IV demo</name_en>
-    <category_en></category_en>
-    <description_fr></description_fr>
-    <name_fr>MIMIC-IV demo</name_fr>
-    <category_fr></category_fr>
-    <creation_datetime>2023-10-15 17:08:40</creation_datetime>
-    <update_datetime>2023-10-25 13:44:46</update_datetime>
-    <code>create_ids &lt;- function(col_name = character(), data = tibble::tibble(), new_cols = list(), col_left_join = character()){
-  
-  new_cols[[col_name]] &lt;&lt;-
-    data %&gt;%
-    dplyr::distinct(get(col_name)) %&gt;%
-    dplyr::rename_at(1, ~col_name)
-  
-  if (length(col_left_join) &gt; 0) new_cols[[col_name]] &lt;&lt;- 
-      new_cols[[col_name]] %&gt;%
-      dplyr::left_join(
-        new_cols[[col_left_join]] %&gt;%
-          dplyr::rename_at(1, ~col_name) %&gt;%
-          dplyr::rename_at(2, ~paste0("new_", col_name)),
-        by = col_name
-      )
-  
-  else new_cols[[col_name]] &lt;&lt;- 
-      new_cols[[col_name]] %&gt;% 
-      dplyr::mutate(!!paste0("new_", col_name) := 1:dplyr::n())
-}
-
-join_new_ids &lt;- function(col_name = character(), data = tibble::tibble()){
-  
-  data &lt;&lt;-
-    data %&gt;%
-    dplyr::left_join(new_cols[[col_name]], by = col_name) %&gt;%
-    dplyr::relocate(!!paste0("new_", col_name), .before = !!col_name) %&gt;%
-    dplyr::select(-!!col_name) %&gt;%
-    dplyr::rename_at(paste0("new_", col_name), ~col_name)
-}
-
-cols_left_join &lt;- c(
-  "preceding_visit_occurrence_id" = "visit_occurrence_id",
-  "preceding_visit_detail_id" = "visit_detail_id"
-)
-
-new_cols &lt;- list()
-data &lt;- tibble::tibble()
-
-prefix &lt;- "https://www.physionet.org/files/mimic-iv-demo-omop/0.9/1_omop_data_csv/"
-
-tables &lt;- tibble::tribble(
-  ~table_name, ~col_types, ~ids_to_join, ~ids_to_create, 
-  "person", "niiiiTiiiiiccicici", "person_id", "person_id",
-  "observation_period", "nnDDi", 
-  c("observation_period_id", "person_id"),
-  c("observation_period_id"),
-  "care_site", "nciicc", 
-  c("care_site_id"), 
-  c("care_site_id"),
-  "visit_occurrence", "nniDTDTiiiciicicn", 
-  c("visit_occurrence_id", "person_id", "preceding_visit_occurrence_id"), 
-  c("visit_occurrence_id", "preceding_visit_occurrence_id"),
-  "visit_detail", "nniDTDTiiniinciccin",
-  c("visit_detail_id", "person_id", "care_site_id", "preceding_visit_detail_id", "visit_occurrence_id"),
-  c("visit_detail_id", "preceding_visit_detail_id"),
-  "condition_occurrence", "nniDTDTicinncici",
-  c("condition_occurrence_id", "person_id", "visit_occurrence_id", "visit_detail_id"),
-  c("condition_occurrence_id"),
-  "drug_exposure", "nniDTDTDicinicicinicicc",
-  c("drug_exposure_id", "person_id", "visit_occurrence_id"),
-  c("drug_exposure_id"),
-  "procedure_occurrence", "nniDTiiiinicic",
-  c("procedure_occurrence_id", "person_id", "visit_occurrence_id"),
-  c("procedure_occurrence_id"),
-  "measurement", "nniDTciiniinninncicc",
-  c("measurement_id", "person_id", "visit_occurrence_id", "visit_detail_id"),
-  c("measurement_id"),
-  "observation", "nniDTinciiiinicicc",
-  c("observation_id", "person_id", "visit_occurrence_id"),
-  c("observation_id"),
-  "death", "nDTiici",
-  c("person_id"),
-  character(),
-  "specimen", "nniiDTniiiccccc",
-  c("specimen_id", "person_id"),
-  c("specimen_id"),
-  "location", "iccccccc",
-  character(),
-  character(),
-  "drug_era", "nniDDii",
-  c("drug_era_id", "person_id"),
-  c("drug_era_id"),
-  "dose_era", "nniinDD",
-  c("dose_era_id", "person_id"),
-  c("dose_era_id"),
-  "condition_era", "nniDDi",
-  c("condition_era_id", "person_id"),
-  c("condition_era_id")
-)
-
-# Have all tables already been saved as csv ?
-all_tables_saved_as_csv &lt;- all(paste0(tables$table_name, ".csv") %in% list.files(paste0(r$app_folder, "/datasets/", %dataset_id%)))
-
-for (i in 1:nrow(tables)){
-  table &lt;- tables[i, ]
-  if (i != 1) cat("\n\n")
-  cat(paste0(toupper(table$table_name), "\n\n"))
-  
-  get_data &lt;- function(){
-    data &lt;&lt;- vroom::vroom(paste0(prefix, table$table_name, ".csv"), col_types = table$col_types, progress = FALSE)
-    
-    if (table$table_name == "visit_detail") data &lt;&lt;- data %&gt;%
-        dplyr::relocate(visit_detail_source_value, visit_detail_source_concept_id, admitting_source_value, admitting_source_concept_id,
-          discharge_to_source_value, discharge_to_concept_id, preceding_visit_detail_id, visit_detail_parent_id, visit_occurrence_id, .after = "care_site_id")
-    if (table$table_name == "condition_occurrence") data &lt;&lt;- data %&gt;%
-        dplyr::relocate(condition_status_concept_id, .after = "condition_type_concept_id")
-    
-    ids_to_join &lt;- table$ids_to_join %&gt;% unlist()
-    ids_to_create &lt;- table$ids_to_create %&gt;% unlist()
-    
-    if (length(ids_to_join) &gt; 0){
-      for (j in 1:length(ids_to_join)){
-        id_to_join &lt;- ids_to_join[j]
-        
-        if (id_to_join %in% ids_to_create){
-          col_left_join &lt;- character()
-          if (id_to_join %in% names(cols_left_join)) col_left_join &lt;- cols_left_join[id_to_join]
-          
-          create_ids(col_name = id_to_join, data = data, new_cols = new_cols, col_left_join = col_left_join)
-        }
-        
-        join_new_ids(col_name = id_to_join, data = data)
-      }
-    }
-    
-    data
-  }
-  
-  if (table$table_name %in% c("person", "care_site", "visit_occurrence", "visit_detail") &amp; !all_tables_saved_as_csv) get_data()
-  
-  import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = get_data(), 
-    type = table$table_name, omop_version = %omop_version%, read_with = "vroom", save_as = "csv", rewrite = FALSE)
-}</code>
-    <omop_version>5.3</omop_version>
-    <images></images>
-  </dataset>
-  <dataset>
-    <app_version>0.2.0</app_version>
-    <unique_id>54c13d66961036f9d681b0f4b2d06174049dd0a4dc44af260c34a10f4e71d2db</unique_id>
-    <version>0.0.1.9002</version>
-    <author>Boris Delange</author>
-    <description_en></description_en>
-    <name_en>MIMIC-III</name_en>
-    <category_en></category_en>
-    <description_fr></description_fr>
-    <name_fr>MIMIC-III</name_fr>
-    <category_fr></category_fr>
-    <creation_datetime>2023-10-16 09:11:07</creation_datetime>
-    <update_datetime>2023-10-16 20:31:30</update_datetime>
-    <code># BigQuery authentification
+  <datasets>
+    <dataset>
+      <app_version>0.2.0</app_version>
+      <unique_id>54c13d66961036f9d681b0f4b2d06174049dd0a4dc44af260c34a10f4e71d2db</unique_id>
+      <version>0.0.1.9002</version>
+      <author>Boris Delange</author>
+      <name_en>MIMIC-III</name_en>
+      <name_fr>MIMIC-III</name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en/>
+      <description_fr/>
+      <creation_datetime>2023-10-16 09:11:07</creation_datetime>
+      <update_datetime>2023-10-16 20:31:30</update_datetime>
+      <code># BigQuery authentification
 # bigrquery::bq_auth()
 
 # Get BigQuery project ID
@@ -386,7 +237,45 @@ import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id =
 # 
 # import_dataset(output = output, ns = ns, i18n = i18n, r = r, d = d, dataset_id = %dataset_id%, data = device_exposure(),
 #     type = "device_exposure", omop_version = %omop_version%, read_with = "duckdb", save_as = "parquet", rewrite = FALSE)</code>
-    <omop_version>6.0</omop_version>
-    <images></images>
-  </dataset>
+      <omop_version>6.0</omop_version>
+      <images/>
+    </dataset>
+  </datasets>
+  <datasets>
+    <dataset>
+      <app_version>0.3.0.9012</app_version>
+      <unique_id>f142819890d47b5643130004a806a209a50837e3cd3dab4962e319c79b1548b3</unique_id>
+      <version>0.0.1.9000</version>
+      <author>Boris Delange</author>
+      <name_en>MIMIC-III</name_en>
+      <name_fr>MIMIC-III</name_fr>
+      <category_en/>
+      <category_fr/>
+      <description_en># MIMIC-III
+
+Description EN</description_en>
+      <description_fr/>
+      <short_description_en/>
+      <short_description_fr>Short desc fr</short_description_fr>
+      <creation_datetime>2024-07-11 18:58:11</creation_datetime>
+      <update_datetime>2024-07-22 16:56:54</update_datetime>
+      <omop_version>5.3</omop_version>
+    </dataset>
+  </datasets>
+  <datasets>
+    <dataset>
+      <app_version>0.3.0.9010</app_version>
+      <unique_id>3d3aaab2f83b4acccb9b67bd107db82f66282ae972d7dfbd7baf05c690ed73c0</unique_id>
+      <version>0.0.1.9002</version>
+      <author>Boris Delange</author>
+      <name_en>MIMIC-IV demo</name_en>
+      <name_fr>MIMIC-IV demo</name_fr>
+      <category_en>NA</category_en>
+      <category_fr>NA</category_fr>
+      <description_en>NA</description_en>
+      <description_fr>NA</description_fr>
+      <creation_datetime>2023-10-15 17:08:40</creation_datetime>
+      <update_datetime>2024-06-26 17:26:51</update_datetime>
+    </dataset>
+  </datasets>
 </datasets>
