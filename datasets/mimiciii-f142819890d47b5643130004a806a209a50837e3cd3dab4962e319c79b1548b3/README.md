@@ -1,3 +1,0 @@
-# MIMIC-III
-
-Description EN
