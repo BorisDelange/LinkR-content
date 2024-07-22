@@ -3,7 +3,7 @@ m$code_%widget_id% <- ""
 
 # Outputs
 outputs <- list()
-outputs$r <- c("console", "figure", "table", "datatable", "rmarkdown")
+outputs$r <- c("console", "ui", "figure", "table", "datatable", "rmarkdown")
 outputs$python <- c("console", "matplotlib")
 
 # Prevent a bug with scroll into ace editor
