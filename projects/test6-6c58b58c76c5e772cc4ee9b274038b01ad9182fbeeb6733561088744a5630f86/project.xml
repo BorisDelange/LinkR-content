@@ -2,18 +2,20 @@
 <projects>
   <project>
     <app_version>0.3.0.9012</app_version>
-    <unique_id/>
-    <version/>
+    <unique_id>6c58b58c76c5e772cc4ee9b274038b01ad9182fbeeb6733561088744a5630f86</unique_id>
+    <version>0.0.1.9000</version>
     <author>Boris Delange</author>
     <name_en>test6</name_en>
     <name_fr>test6</name_fr>
-    <category_en/>
-    <category_fr/>
-    <description_en/>
-    <description_fr/>
-    <short_description_en></short_description_en>
-    <short_description_fr>ab</short_description_fr>
+    <category_en></category_en>
+    <category_fr></category_fr>
+    <description_en># Title en</description_en>
+    <description_fr># Test 6
+
+desct FR</description_fr>
+    <short_description_en>test en</short_description_en>
+    <short_description_fr>test desc fr</short_description_fr>
     <creation_datetime>2024-07-22 16:08:34</creation_datetime>
-    <update_datetime>2024-07-22 21:51:49</update_datetime>
+    <update_datetime>2024-07-22 22:05:19</update_datetime>
   </project>
 </projects>
