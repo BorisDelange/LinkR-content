@@ -45,19 +45,19 @@ observeEvent(input$save_general_settings_%widget_id%, {
         sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings'", .con = m$db))
         
         file_id <- input$saved_settings_%widget_id%
-        new_data <- tibble::tibble(name = "selected_file_id", value = NA_character_, value_num = file_id)
+        new_data <- tibble::tibble(name = "selected_file_id", value = NA_character_, value_num = NA_integer_, link_id = file_id)
         
         for (name in c("show_saved_file", "figure_and_settings_side_by_side", "run_code_at_patient_update", "run_code_at_settings_file_load")){
             toggle_value <- 0L
             input_name <- paste0(name, "_%widget_id%")
             if (length(input[[input_name]]) > 0) if (input[[input_name]]) toggle_value <- 1L
-            new_data <- new_data %>% dplyr::bind_rows(tibble::tibble(name = name, value = NA_character_, value_num = toggle_value))
+            new_data <- new_data %>% dplyr::bind_rows(tibble::tibble(name = name, value = NA_character_, value_num = toggle_value, link_id = NA_integer_))
         }
         
         new_data <-
             new_data %>%
             dplyr::transmute(
-                id = get_last_row(m$db, "widgets_options") + 1:5, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
+                id = get_last_row(m$db, "widgets_options") + 1:5, widget_id = %widget_id%, person_id = NA_integer_, link_id,
                 category = "general_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
             )
         
