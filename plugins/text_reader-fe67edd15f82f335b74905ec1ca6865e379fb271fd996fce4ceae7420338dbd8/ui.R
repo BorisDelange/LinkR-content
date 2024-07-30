@@ -42,9 +42,10 @@ tagList(
         div(
             id = ns("figure_div_%widget_id%"),
             uiOutput(ns("notes_nav_%widget_id%")),
-            div(uiOutput(ns("notes_%widget_id%")), style = "display: flex;"),
-            #style = "width: 50%; margin: 0 10px; overflow: auto; border-right: solid 1px #ccc;"
-            style = "width: 50%; margin: 0 10px; overflow: auto;"
+            uiOutput(ns("notes_%widget_id%"), style = "height: calc(100% - 60px);"),
+#             div(uiOutput(ns("notes_%widget_id%")), style = "display: flex;"),
+            style = "width: 50%; height: calc(100% - 25px); margin: 0 10px; border-right: solid 1px #ccc;"
+            #style = "width: 50%; margin: 0 10px; overflow: auto;"
         ),
         %import_script('ui_figure_settings.R')%,
         shinyjs::hidden(

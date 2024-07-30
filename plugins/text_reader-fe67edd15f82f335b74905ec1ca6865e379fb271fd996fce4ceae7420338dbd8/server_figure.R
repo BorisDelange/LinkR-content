@@ -116,23 +116,47 @@ observeEvent(input$show_notes_%widget_id%, {
             
             # Render notes
             
-            output$notes_%widget_id% <- renderUI({
-            
-                note_panels <- lapply(1:nrow(notes), function(i) {
-                    note <- notes[i,]
-                    
-                    div(
-                        strong(note$note_title), " - ", format_datetime(note$note_datetime, m$language), br(), br(), 
-                        tags$pre(HTML(note$note_text), style = "white-space: pre-wrap;"),
-                        style = "padding: 10px 5px; overflow: auto;"
-                    )
-                })
-                
-                do.call(div, note_panels)
-            })
+#             output$notes_%widget_id% <- renderUI({
+#             
+#                 note_panels <- lapply(1:nrow(notes), function(i) {
+#                     note <- notes[i,]
+#                     
+#                     note_content <-
+#                         div(
+#                             strong(note$note_title), " - ", format_datetime(note$note_datetime, m$language), br(), br(), 
+#                             tags$pre(HTML(note$note_text), style = "white-space: pre-wrap;"),
+#                             style = "padding: 10px 5px; overflow: auto; height: 100%"
+#                         )
+#                      tags$iframe(
+#                          srcdoc = as.character(note_content),
+#                          style = "width: 100%; height: 100%; border: none;"
+#                      )
+#                 })
+#                 
+#                 do.call(div, note_panels)
+#             })
             
             # Render notes navigation
             if (nrow(notes) == 1){
+            
+                output$notes_%widget_id% <- renderUI({
+                    
+#                     note_content <-
+#                         div(
+#                             strong(notes$note_title), " - ", format_datetime(notes$note_datetime, m$language), br(), br(), 
+#                             tags$pre(HTML(notes$note_text), style = "white-space: pre-wrap;"),
+#                             style = "padding: 10px 5px; overflow: auto; height: 100%"
+#                         )
+                    div(
+                        br(),
+                        strong(notes$note_title), " - ", format_datetime(notes$note_datetime, m$language), br(), br(), 
+                        tags$iframe(
+                            srcdoc = div(HTML(notes$note_text), style = "white-space: pre-wrap; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 12px;"),
+                            style = "width: 100%; height: 100%; border: none;"
+                        ),
+                        style = "height: 100%;"
+                    )
+                })
                 
                 previous_note_div <- div(style = "width: 20px;")
                 next_note_div <- div(style = "width: 20px;")
