@@ -1,7 +1,0 @@
-page,type,category,key,title,markdown_file,display_order,datetime
-home,pivot_item,overview,overview,Overview,,1,2023-04-10 08:00:00
-home,pivot_item,news,news,News,,2,2023-04-10 08:00:00
-home,pivot_item,versions,versions,Versions,,3,2023-04-10 08:00:00
-home,card,overview,overview,,2024-01-05_overview.md,1,2023-05-29 08:00:00
-get_started,pivot_item,default_data,default_data,Default data,,1,2023-06-05 00:00:00
-get_started,pivot_item,first_study,first_study,Your first study with LinkR,,1,2023-06-05 00:00:00
