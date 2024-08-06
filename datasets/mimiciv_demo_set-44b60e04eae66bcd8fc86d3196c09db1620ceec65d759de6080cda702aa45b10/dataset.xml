@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <datasets>
   <dataset>
     <app_version>0.3.0.9014</app_version>
@@ -6,9 +6,9 @@
     <version>0.0.1.9000</version>
     <author>Boris Delange</author>
     <name_en>MIMIC-IV demo set</name_en>
-    <name_fr>MIMIC-IV set de démo</name_fr>
-    <category_en/>
-    <category_fr/>
+    <name_fr>MIMIC-IV set de d&#xE9;mo</name_fr>
+    <category_en></category_en>
+    <category_fr></category_fr>
     <description_en>The [MIMIC](https://mimic.mit.edu/) database, which stands for Medical Information Mart for Intensive Care, is a North American database containing data from over **50,000 patients** admitted to intensive care. It is one of the most widely used intensive care databases, due to its free access.
 
 Despite having data of imperfect quality, it serves as a good foundation for **learning to manipulate** data from **health data warehouses** (HDWs).
@@ -77,11 +77,11 @@ You can then **download the certificate** once the CITI Course is completed, and
 
 Finally, you will need to sign the [data use agreement](https://physionet.org/login/?next=/sign-dua/mimiciii/1.4/).
 </description_en>
-    <description_fr>La base de données [MIMIC](https://mimic.mit.edu/), pour Medical Information Mart for Intensive Care, est une base de données nord-américaine contenant des données de plus de **50 000 patients** admis en réanimation. Il s'agit de l'une des bases de données de réanimation les plus utilisées, du fait de son accès gratuit.
+    <description_fr>La base de donn&#xE9;es [MIMIC](https://mimic.mit.edu/), pour Medical Information Mart for Intensive Care, est une base de donn&#xE9;es nord-am&#xE9;ricaine contenant des donn&#xE9;es de plus de **50 000 patients** admis en r&#xE9;animation. Il s'agit de l'une des bases de donn&#xE9;es de r&#xE9;animation les plus utilis&#xE9;es, du fait de son acc&#xE8;s gratuit.
 
-Malgré des données d'une qualité imparfaite, elle constitue un bon socle pour **apprendre à manipuler** les données issues d'**entrepôts de données de santé** (EDS).
+Malgr&#xE9; des donn&#xE9;es d'une qualit&#xE9; imparfaite, elle constitue un bon socle pour **apprendre &#xE0; manipuler** les donn&#xE9;es issues d'**entrep&#xF4;ts de donn&#xE9;es de sant&#xE9;** (EDS).
 
-Elle existe en plusieurs versions, dont la plus récente est la MIMIC-IV.
+Elle existe en plusieurs versions, dont la plus r&#xE9;cente est la MIMIC-IV.
 
 &lt;br /&gt;
 &lt;div style="border-radius: 10px; background-color: #E5F4FB; padding: 10px; margin: 0;"&gt;
@@ -92,33 +92,33 @@ Elle existe en plusieurs versions, dont la plus récente est la MIMIC-IV.
 &lt;/div&gt;
 &lt;br /&gt;
 
-Non, il n'est **pas forcément nécessaire** d'avoir des connaissances en programmation pour manipuler les données de cette base de données.
+Non, il n'est **pas forc&#xE9;ment n&#xE9;cessaire** d'avoir des connaissances en programmation pour manipuler les donn&#xE9;es de cette base de donn&#xE9;es.
 
-La manipulation de la base de données en elle-même nécessitera des connaissances en programmation, notamment en SQL. Il s'agit d'une base de données avec un schéma particulier, qui est difficile à prendre en main.
+La manipulation de la base de donn&#xE9;es en elle-m&#xEA;me n&#xE9;cessitera des connaissances en programmation, notamment en SQL. Il s'agit d'une base de donn&#xE9;es avec un sch&#xE9;ma particulier, qui est difficile &#xE0; prendre en main.
 
-Cependant, il est possible de manipuler ces données entièrement avec une **interface graphique** : c'est une des raisons pour lesquelles **LinkR** a été créé.
+Cependant, il est possible de manipuler ces donn&#xE9;es enti&#xE8;rement avec une **interface graphique** : c'est une des raisons pour lesquelles **LinkR** a &#xE9;t&#xE9; cr&#xE9;&#xE9;.
 
 &lt;br /&gt;
 &lt;div style="border-radius: 10px; background-color: #E5F4FB; padding: 10px; margin: 0;"&gt;
   &lt;div style="display: flex; align-items: center;"&gt;
     &lt;i class="fas fa-question-circle" style="color: #4283c4; margin-right: 10px;"&gt;&lt;/i&gt;
-    &lt;p style="margin: 0;"&gt;Comment accéder aux données ?&lt;/p&gt;
+    &lt;p style="margin: 0;"&gt;Comment acc&#xE9;der aux donn&#xE9;es ?&lt;/p&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 &lt;br /&gt;
 
-La base de donneés MIMIC comporte pour les versions III et IV des **bases tests**, qui contiennent les données anonymisées de 100 patients et qui sont accessibles publiquement.
+La base de donne&#xE9;s MIMIC comporte pour les versions III et IV des **bases tests**, qui contiennent les donn&#xE9;es anonymis&#xE9;es de 100 patients et qui sont accessibles publiquement.
 
-Vous pouvez télécharger les données ici :
+Vous pouvez t&#xE9;l&#xE9;charger les donn&#xE9;es ici :
 
-- [MIMIC-III test](https://physionet.org/content/mimiciii-demo/1.4/) : données avec le schéma de données [MIMIC](https://mimic.mit.edu/docs/iii/tables/)
-- [MIMIC-IV OMOP test](https://physionet.org/content/mimic-iv-demo-omop/0.9/) : données avec le schéma de données [OMOP](https://ohdsi.github.io/CommonDataModel/cdm54.html)
+- [MIMIC-III test](https://physionet.org/content/mimiciii-demo/1.4/) : donn&#xE9;es avec le sch&#xE9;ma de donn&#xE9;es [MIMIC](https://mimic.mit.edu/docs/iii/tables/)
+- [MIMIC-IV OMOP test](https://physionet.org/content/mimic-iv-demo-omop/0.9/) : donn&#xE9;es avec le sch&#xE9;ma de donn&#xE9;es [OMOP](https://ohdsi.github.io/CommonDataModel/cdm54.html)
 
-Pour accéder aux **bases de données complètes**, il est nécessaire de valider quelques étapes.
+Pour acc&#xE9;der aux **bases de donn&#xE9;es compl&#xE8;tes**, il est n&#xE9;cessaire de valider quelques &#xE9;tapes.
 
 Rendez-vous sur la [page de la base MIMIC-III](https://physionet.org/content/mimiciii/1.4/).
 
-Vous verrez cet encadré tout en bas de la page :
+Vous verrez cet encadr&#xE9; tout en bas de la page :
 
 &lt;div class="alert alert-danger col-md-8" role="alert"&gt;
   This is a restricted-access resource. To access the files, you must fulfill all of the following requirements:
@@ -137,16 +137,16 @@ Vous verrez cet encadré tout en bas de la page :
 
 Vous devez donc commencer par vous inscrire sur le site [physionet.org](https://physionet.org/register/).
 
-Vous devrez faire une [demande d'accès](https://physionet.org/settings/credentialing/) à Physionet, en renseignant quelques informations et en donnant les coordonnées d'un superviseur ou d'un collègue, à qui un mail sera envoyé.
+Vous devrez faire une [demande d'acc&#xE8;s](https://physionet.org/settings/credentialing/) &#xE0; Physionet, en renseignant quelques informations et en donnant les coordonn&#xE9;es d'un superviseur ou d'un coll&#xE8;gue, &#xE0; qui un mail sera envoy&#xE9;.
 
-Vous devrez ensuite compléter le CITI Course, il s'agit d'une formation nécessaire afin d'accéder aux données hébergées sur le site Physionet. Les différentes étapes sont [détaillées ici](https://physionet.org/about/citi-course/).
+Vous devrez ensuite compl&#xE9;ter le CITI Course, il s'agit d'une formation n&#xE9;cessaire afin d'acc&#xE9;der aux donn&#xE9;es h&#xE9;berg&#xE9;es sur le site Physionet. Les diff&#xE9;rentes &#xE9;tapes sont [d&#xE9;taill&#xE9;es ici](https://physionet.org/about/citi-course/).
 
-Vous pourrez ensuite **télécharger le certificat** une fois le CITI Course terminé, vous pourrez le le [déposer ici](https://physionet.org/settings/training/) pour validation par l'équipe de Physionet.
+Vous pourrez ensuite **t&#xE9;l&#xE9;charger le certificat** une fois le CITI Course termin&#xE9;, vous pourrez le le [d&#xE9;poser ici](https://physionet.org/settings/training/) pour validation par l'&#xE9;quipe de Physionet.
 
-Il ne vous restera plus qu'à signer le [data use agreement](https://physionet.org/login/?next=/sign-dua/mimiciii/1.4/).
+Il ne vous restera plus qu'&#xE0; signer le [data use agreement](https://physionet.org/login/?next=/sign-dua/mimiciii/1.4/).
 </description_fr>
     <short_description_en>MIMIC-IV demo set containing 100 patients</short_description_en>
-    <short_description_fr>Set de démo de la MIMIC-IV contenant 100 patients</short_description_fr>
+    <short_description_fr>Set de d&#xE9;mo de la MIMIC-IV contenant 100 patients</short_description_fr>
     <creation_datetime>2024-08-06 16:30:16</creation_datetime>
     <update_datetime>2024-08-06 18:02:43</update_datetime>
     <omop_version>5.3</omop_version>
