@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugins>
-  <plugins>
-    <plugin>
-      <app_version>0.3.0.9013</app_version>
-      <unique_id>d7662fb4dde4f229baff062dd673177ced4375168b5c9ef0782717d89769efb6</unique_id>
-      <version>0.0.1.9000</version>
-      <author>Boris Delange</author>
-      <name_en>Console en</name_en>
-      <name_fr>Console</name_fr>
-      <category_en>NA</category_en>
-      <category_fr>NA</category_fr>
-      <description_en># Console
+  <plugin>
+    <app_version>0.3.0.9013</app_version>
+    <unique_id>d7662fb4dde4f229baff062dd673177ced4375168b5c9ef0782717d89769efb6</unique_id>
+    <version>0.0.1.9000</version>
+    <author>Boris Delange</author>
+    <name_en>Console en</name_en>
+    <name_fr>Console</name_fr>
+    <category_en>NA</category_en>
+    <category_fr>NA</category_fr>
+    <description_en># Console
 
 Readme ...
 
@@ -24,7 +23,7 @@ Test 3"
 # R code
 print('test')
 ```</description_en>
-      <description_fr># Console
+    <description_fr># Console
 
 Description du plugin...
 
@@ -41,47 +40,27 @@ Test3 "
 4
 
 e</description_fr>
-      <short_description_en>R and Python console, with choice of output (console, figure, datatable etc)</short_description_en>
-      <short_description_fr>Une console R et Python, avec choix de l'output (console, figure, datatable etc)</short_description_fr>
-      <creation_datetime>2024-07-07 13:21:53</creation_datetime>
-      <update_datetime>2024-08-02 14:56:23</update_datetime>
-      <type>12</type>
-    </plugin>
-  </plugins>
-  <plugins>
-    <plugin>
-      <app_version>0.3.0.9010</app_version>
-      <unique_id>e70816bf13141b8ed016f5480061c55d79cf0b698297a8ba8fae58a0e1807fd2</unique_id>
-      <version>0.0.1.9016</version>
-      <author>Boris Delange</author>
-      <name_en>Séries temporelles {dygraphs}</name_en>
-      <name_fr>Séries temporelles {dygraphs}</name_fr>
-      <category_en/>
-      <category_fr/>
-      <description_en/>
-      <description_fr/>
-      <creation_datetime>2023-11-20 22:43:59</creation_datetime>
-      <update_datetime>2024-06-26 18:30:11</update_datetime>
-      <type>1</type>
-    </plugin>
-  </plugins>
-  <plugins>
-    <plugin>
-      <app_version>0.3.0.9013</app_version>
-      <unique_id>fe67edd15f82f335b74905ec1ca6865e379fb271fd996fce4ceae7420338dbd8</unique_id>
-      <version>0.0.1.9000</version>
-      <author>Boris Delange</author>
-      <name_en>Text reader</name_en>
-      <name_fr>Lecteur de texte</name_fr>
-      <category_en/>
-      <category_fr/>
-      <description_en/>
-      <description_fr/>
-      <short_description_en/>
-      <short_description_fr>Permet de visualiser et de filtrer des données textuelles (CRH, notes cliniques etc)</short_description_fr>
-      <creation_datetime>2024-06-18 09:36:21</creation_datetime>
-      <update_datetime>2024-07-23 15:19:59</update_datetime>
-      <type>1</type>
-    </plugin>
-  </plugins>
+    <short_description_en>R and Python console, with choice of output (console, figure, datatable etc)</short_description_en>
+    <short_description_fr>Une console R et Python, avec choix de l'output (console, figure, datatable etc)</short_description_fr>
+    <creation_datetime>2024-07-07 13:21:53</creation_datetime>
+    <update_datetime>2024-08-02 14:56:23</update_datetime>
+    <type>12</type>
+  </plugin>
+  <plugin>
+    <app_version>0.3.0.9013</app_version>
+    <unique_id>fe67edd15f82f335b74905ec1ca6865e379fb271fd996fce4ceae7420338dbd8</unique_id>
+    <version>0.0.1.9000</version>
+    <author>Boris Delange</author>
+    <name_en>Text reader</name_en>
+    <name_fr>Lecteur de texte</name_fr>
+    <category_en/>
+    <category_fr/>
+    <description_en/>
+    <description_fr/>
+    <short_description_en/>
+    <short_description_fr>Permet de visualiser et de filtrer des données textuelles (CRH, notes cliniques etc)</short_description_fr>
+    <creation_datetime>2024-06-18 09:36:21</creation_datetime>
+    <update_datetime>2024-07-23 15:19:59</update_datetime>
+    <type>1</type>
+  </plugin>
 </plugins>
