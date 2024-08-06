@@ -6,7 +6,6 @@
 
 <details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
 <summary><span style = 'font-size:15px;'>New project</summary>
-Test
 
 
 </details>
