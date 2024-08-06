@@ -1,6 +1,6 @@
-The [MIMIC](https://mimic.mit.edu/) database, which stands for Medical Information Mart for Intensive Care, is a North American database containing data from over **50,000 patients** admitted to intensive care. It is one of the most widely used intensive care databases, due to its free access.
+The <a href="https://mimic.mit.edu/" target="_blank">MIMIC</a> database, which stands for Medical Information Mart for Intensive Care, is a North American database containing data from over <strong>50,000 patients</strong> admitted to intensive care. It is one of the most widely used intensive care databases, due to its free access.
 
-Despite having data of imperfect quality, it serves as a good foundation for **learning to manipulate** data from **health data warehouses** (HDWs).
+Despite having data of imperfect quality, it serves as a good foundation for <strong>learning to manipulate</strong> data from <strong>health data warehouses</strong> (HDWs).
 
 It exists in several versions, with the most recent being MIMIC-IV.
 
@@ -13,11 +13,11 @@ It exists in several versions, with the most recent being MIMIC-IV.
 </div>
 <br />
 
-No, it is **not necessarily required** to have programming knowledge to manipulate the data in this database.
+No, it is <strong>not necessarily required</strong> to have programming knowledge to manipulate the data in this database.
 
 Handling the database itself will require programming knowledge, especially in SQL. It is a database with a particular schema, which is difficult to grasp.
 
-However, it is possible to manipulate this data entirely with a **graphical interface**: this is one of the reasons why **LinkR** was created.
+However, it is possible to manipulate this data entirely with a <strong>graphical interface</strong>: this is one of the reasons why <strong>LinkR</strong> was created.
 
 <br />
 <div style="border-radius: 10px; background-color: #E5F4FB; padding: 10px; margin: 0;">
@@ -28,16 +28,16 @@ However, it is possible to manipulate this data entirely with a **graphical inte
 </div>
 <br />
 
-The MIMIC database includes **test databases** for versions III and IV, which contain anonymized data from 100 patients and are publicly accessible.
+The MIMIC database includes <strong>test databases</strong> for versions III and IV, which contain anonymized data from 100 patients and are publicly accessible.
 
 You can download the data here:
 
-- [MIMIC-III test](https://physionet.org/content/mimiciii-demo/1.4/): data with the [MIMIC](https://mimic.mit.edu/docs/iii/tables/) data schema
-- [MIMIC-IV OMOP test](https://physionet.org/content/mimic-iv-demo-omop/0.9/): data with the [OMOP](https://ohdsi.github.io/CommonDataModel/cdm54.html) data schema
+- <a href="https://physionet.org/content/mimiciii-demo/1.4/" target="_blank">MIMIC-III test</a>: data with the <a href="https://mimic.mit.edu/docs/iii/tables/" target="_blank">MIMIC</a> data schema
+- <a href="https://physionet.org/content/mimic-iv-demo-omop/0.9/" target="_blank">MIMIC-IV OMOP test</a>: data with the <a href="https://ohdsi.github.io/CommonDataModel/cdm54.html" target="_blank">OMOP</a> data schema
 
-To access the **complete databases**, you need to complete a few steps.
+To access the <strong>complete databases</strong>, you need to complete a few steps.
 
-Visit the [MIMIC-III database page](https://physionet.org/content/mimiciii/1.4/).
+Visit the <a href="https://physionet.org/content/mimiciii/1.4/" target="_blank">MIMIC-III database page</a>.
 
 You will see this box at the bottom of the page:
 
@@ -56,13 +56,13 @@ You will see this box at the bottom of the page:
   </ul>
 </div>
 
-You must start by registering on the site [physionet.org](https://physionet.org/register/).
+You must start by registering on the site <a href="https://physionet.org/register/" target="_blank">physionet.org</a>.
 
-You will need to submit an [access request](https://physionet.org/settings/credentialing/) to Physionet, providing some information and the contact details of a supervisor or colleague, who will receive an email.
+You will need to submit an <a href="https://physionet.org/settings/credentialing/" target="_blank">access request</a> to Physionet, providing some information and the contact details of a supervisor or colleague, who will receive an email.
 
-You will then need to complete the CITI Course, a necessary training to access data hosted on the Physionet site. The different steps are [detailed here](https://physionet.org/about/citi-course/).
+You will then need to complete the CITI Course, a necessary training to access data hosted on the Physionet site. The different steps are <a href="https://physionet.org/about/citi-course/" target="_blank">detailed here</a>.
 
-You can then **download the certificate** once the CITI Course is completed, and you can [submit it here](https://physionet.org/settings/training/) for validation by the Physionet team.
+You can then <strong>download the certificate</strong> once the CITI Course is completed, and you can <a href="https://physionet.org/settings/training/" target="_blank">submit it here</a> for validation by the Physionet team.
 
-Finally, you will need to sign the [data use agreement](https://physionet.org/login/?next=/sign-dua/mimiciii/1.4/).
+Finally, you will need to sign the <a href="https://physionet.org/login/?next=/sign-dua/mimiciii/1.4/" target="_blank">data use agreement</a>.
 

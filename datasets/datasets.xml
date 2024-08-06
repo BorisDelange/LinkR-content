@@ -9,9 +9,9 @@
     <name_fr>MIMIC-IV set de démo</name_fr>
     <category_en/>
     <category_fr/>
-    <description_en>The [MIMIC](https://mimic.mit.edu/) database, which stands for Medical Information Mart for Intensive Care, is a North American database containing data from over **50,000 patients** admitted to intensive care. It is one of the most widely used intensive care databases, due to its free access.
+    <description_en>The &lt;a href="https://mimic.mit.edu/" target="_blank"&gt;MIMIC&lt;/a&gt; database, which stands for Medical Information Mart for Intensive Care, is a North American database containing data from over &lt;strong&gt;50,000 patients&lt;/strong&gt; admitted to intensive care. It is one of the most widely used intensive care databases, due to its free access.
 
-Despite having data of imperfect quality, it serves as a good foundation for **learning to manipulate** data from **health data warehouses** (HDWs).
+Despite having data of imperfect quality, it serves as a good foundation for &lt;strong&gt;learning to manipulate&lt;/strong&gt; data from &lt;strong&gt;health data warehouses&lt;/strong&gt; (HDWs).
 
 It exists in several versions, with the most recent being MIMIC-IV.
 
@@ -24,11 +24,11 @@ It exists in several versions, with the most recent being MIMIC-IV.
 &lt;/div&gt;
 &lt;br /&gt;
 
-No, it is **not necessarily required** to have programming knowledge to manipulate the data in this database.
+No, it is &lt;strong&gt;not necessarily required&lt;/strong&gt; to have programming knowledge to manipulate the data in this database.
 
 Handling the database itself will require programming knowledge, especially in SQL. It is a database with a particular schema, which is difficult to grasp.
 
-However, it is possible to manipulate this data entirely with a **graphical interface**: this is one of the reasons why **LinkR** was created.
+However, it is possible to manipulate this data entirely with a &lt;strong&gt;graphical interface&lt;/strong&gt;: this is one of the reasons why &lt;strong&gt;LinkR&lt;/strong&gt; was created.
 
 &lt;br /&gt;
 &lt;div style="border-radius: 10px; background-color: #E5F4FB; padding: 10px; margin: 0;"&gt;
@@ -39,16 +39,16 @@ However, it is possible to manipulate this data entirely with a **graphical inte
 &lt;/div&gt;
 &lt;br /&gt;
 
-The MIMIC database includes **test databases** for versions III and IV, which contain anonymized data from 100 patients and are publicly accessible.
+The MIMIC database includes &lt;strong&gt;test databases&lt;/strong&gt; for versions III and IV, which contain anonymized data from 100 patients and are publicly accessible.
 
 You can download the data here:
 
-- [MIMIC-III test](https://physionet.org/content/mimiciii-demo/1.4/): data with the [MIMIC](https://mimic.mit.edu/docs/iii/tables/) data schema
-- [MIMIC-IV OMOP test](https://physionet.org/content/mimic-iv-demo-omop/0.9/): data with the [OMOP](https://ohdsi.github.io/CommonDataModel/cdm54.html) data schema
+- &lt;a href="https://physionet.org/content/mimiciii-demo/1.4/" target="_blank"&gt;MIMIC-III test&lt;/a&gt;: data with the &lt;a href="https://mimic.mit.edu/docs/iii/tables/" target="_blank"&gt;MIMIC&lt;/a&gt; data schema
+- &lt;a href="https://physionet.org/content/mimic-iv-demo-omop/0.9/" target="_blank"&gt;MIMIC-IV OMOP test&lt;/a&gt;: data with the &lt;a href="https://ohdsi.github.io/CommonDataModel/cdm54.html" target="_blank"&gt;OMOP&lt;/a&gt; data schema
 
-To access the **complete databases**, you need to complete a few steps.
+To access the &lt;strong&gt;complete databases&lt;/strong&gt;, you need to complete a few steps.
 
-Visit the [MIMIC-III database page](https://physionet.org/content/mimiciii/1.4/).
+Visit the &lt;a href="https://physionet.org/content/mimiciii/1.4/" target="_blank"&gt;MIMIC-III database page&lt;/a&gt;.
 
 You will see this box at the bottom of the page:
 
@@ -67,19 +67,19 @@ You will see this box at the bottom of the page:
   &lt;/ul&gt;
 &lt;/div&gt;
 
-You must start by registering on the site [physionet.org](https://physionet.org/register/).
+You must start by registering on the site &lt;a href="https://physionet.org/register/" target="_blank"&gt;physionet.org&lt;/a&gt;.
 
-You will need to submit an [access request](https://physionet.org/settings/credentialing/) to Physionet, providing some information and the contact details of a supervisor or colleague, who will receive an email.
+You will need to submit an &lt;a href="https://physionet.org/settings/credentialing/" target="_blank"&gt;access request&lt;/a&gt; to Physionet, providing some information and the contact details of a supervisor or colleague, who will receive an email.
 
-You will then need to complete the CITI Course, a necessary training to access data hosted on the Physionet site. The different steps are [detailed here](https://physionet.org/about/citi-course/).
+You will then need to complete the CITI Course, a necessary training to access data hosted on the Physionet site. The different steps are &lt;a href="https://physionet.org/about/citi-course/" target="_blank"&gt;detailed here&lt;/a&gt;.
 
-You can then **download the certificate** once the CITI Course is completed, and you can [submit it here](https://physionet.org/settings/training/) for validation by the Physionet team.
+You can then &lt;strong&gt;download the certificate&lt;/strong&gt; once the CITI Course is completed, and you can &lt;a href="https://physionet.org/settings/training/" target="_blank"&gt;submit it here&lt;/a&gt; for validation by the Physionet team.
 
-Finally, you will need to sign the [data use agreement](https://physionet.org/login/?next=/sign-dua/mimiciii/1.4/).
+Finally, you will need to sign the &lt;a href="https://physionet.org/login/?next=/sign-dua/mimiciii/1.4/" target="_blank"&gt;data use agreement&lt;/a&gt;.
 </description_en>
-    <description_fr>La base de données [MIMIC](https://mimic.mit.edu/), pour Medical Information Mart for Intensive Care, est une base de données nord-américaine contenant des données de plus de **50 000 patients** admis en réanimation. Il s'agit de l'une des bases de données de réanimation les plus utilisées, du fait de son accès gratuit.
+    <description_fr>La base de données &lt;a href="https://mimic.mit.edu/" target="_blank"&gt;MIMIC&lt;/a&gt;, pour Medical Information Mart for Intensive Care, est une base de données nord-américaine contenant des données de plus de &lt;strong&gt;50 000 patients&lt;/strong&gt; admis en réanimation. Il s'agit de l'une des bases de données de réanimation les plus utilisées, du fait de son accès gratuit.
 
-Malgré des données d'une qualité imparfaite, elle constitue un bon socle pour **apprendre à manipuler** les données issues d'**entrepôts de données de santé** (EDS).
+Malgré des données d'une qualité imparfaite, elle constitue un bon socle pour &lt;strong&gt;apprendre à manipuler&lt;/strong&gt; les données issues d'&lt;strong&gt;entrepôts de données de santé&lt;/strong&gt; (EDS).
 
 Elle existe en plusieurs versions, dont la plus récente est la MIMIC-IV.
 
@@ -92,11 +92,11 @@ Elle existe en plusieurs versions, dont la plus récente est la MIMIC-IV.
 &lt;/div&gt;
 &lt;br /&gt;
 
-Non, il n'est **pas forcément nécessaire** d'avoir des connaissances en programmation pour manipuler les données de cette base de données.
+Non, il n'est &lt;strong&gt;pas forcément nécessaire&lt;/strong&gt; d'avoir des connaissances en programmation pour manipuler les données de cette base de données.
 
 La manipulation de la base de données en elle-même nécessitera des connaissances en programmation, notamment en SQL. Il s'agit d'une base de données avec un schéma particulier, qui est difficile à prendre en main.
 
-Cependant, il est possible de manipuler ces données entièrement avec une **interface graphique** : c'est une des raisons pour lesquelles **LinkR** a été créé.
+Cependant, il est possible de manipuler ces données entièrement avec une &lt;strong&gt;interface graphique&lt;/strong&gt; : c'est une des raisons pour lesquelles &lt;strong&gt;LinkR&lt;/strong&gt; a été créé.
 
 &lt;br /&gt;
 &lt;div style="border-radius: 10px; background-color: #E5F4FB; padding: 10px; margin: 0;"&gt;
@@ -107,16 +107,16 @@ Cependant, il est possible de manipuler ces données entièrement avec une **int
 &lt;/div&gt;
 &lt;br /&gt;
 
-La base de donneés MIMIC comporte pour les versions III et IV des **bases tests**, qui contiennent les données anonymisées de 100 patients et qui sont accessibles publiquement.
+La base de données MIMIC comporte pour les versions III et IV des &lt;strong&gt;bases tests&lt;/strong&gt;, qui contiennent les données anonymisées de 100 patients et qui sont accessibles publiquement.
 
 Vous pouvez télécharger les données ici :
 
-- [MIMIC-III test](https://physionet.org/content/mimiciii-demo/1.4/) : données avec le schéma de données [MIMIC](https://mimic.mit.edu/docs/iii/tables/)
-- [MIMIC-IV OMOP test](https://physionet.org/content/mimic-iv-demo-omop/0.9/) : données avec le schéma de données [OMOP](https://ohdsi.github.io/CommonDataModel/cdm54.html)
+- &lt;a href="https://physionet.org/content/mimiciii-demo/1.4/" target="_blank"&gt;MIMIC-III test&lt;/a&gt; : données avec le schéma de données &lt;a href="https://mimic.mit.edu/docs/iii/tables/" target="_blank"&gt;MIMIC&lt;/a&gt;
+- &lt;a href="https://physionet.org/content/mimic-iv-demo-omop/0.9/" target="_blank"&gt;MIMIC-IV OMOP test&lt;/a&gt; : données avec le schéma de données &lt;a href="https://ohdsi.github.io/CommonDataModel/cdm54.html" target="_blank"&gt;OMOP&lt;/a&gt;
 
-Pour accéder aux **bases de données complètes**, il est nécessaire de valider quelques étapes.
+Pour accéder aux &lt;strong&gt;bases de données complètes&lt;/strong&gt;, il est nécessaire de valider quelques étapes.
 
-Rendez-vous sur la [page de la base MIMIC-III](https://physionet.org/content/mimiciii/1.4/).
+Rendez-vous sur la &lt;a href="https://physionet.org/content/mimiciii/1.4/" target="_blank"&gt;page de la base MIMIC-III&lt;/a&gt;.
 
 Vous verrez cet encadré tout en bas de la page :
 
@@ -135,20 +135,20 @@ Vous verrez cet encadré tout en bas de la page :
   &lt;/ul&gt;
 &lt;/div&gt;
 
-Vous devez donc commencer par vous inscrire sur le site [physionet.org](https://physionet.org/register/).
+Vous devez donc commencer par vous inscrire sur le site &lt;a href="https://physionet.org/register/" target="_blank"&gt;physionet.org&lt;/a&gt;.
 
-Vous devrez faire une [demande d'accès](https://physionet.org/settings/credentialing/) à Physionet, en renseignant quelques informations et en donnant les coordonnées d'un superviseur ou d'un collègue, à qui un mail sera envoyé.
+Vous devrez faire une &lt;a href="https://physionet.org/settings/credentialing/" target="_blank"&gt;demande d'accès&lt;/a&gt; à Physionet, en renseignant quelques informations et en donnant les coordonnées d'un superviseur ou d'un collègue, à qui un mail sera envoyé.
 
-Vous devrez ensuite compléter le CITI Course, il s'agit d'une formation nécessaire afin d'accéder aux données hébergées sur le site Physionet. Les différentes étapes sont [détaillées ici](https://physionet.org/about/citi-course/).
+Vous devrez ensuite compléter le CITI Course, il s'agit d'une formation nécessaire afin d'accéder aux données hébergées sur le site Physionet. Les différentes étapes sont &lt;a href="https://physionet.org/about/citi-course/" target="_blank"&gt;détaillées ici&lt;/a&gt;.
 
-Vous pourrez ensuite **télécharger le certificat** une fois le CITI Course terminé, vous pourrez le le [déposer ici](https://physionet.org/settings/training/) pour validation par l'équipe de Physionet.
+Vous pourrez ensuite &lt;strong&gt;télécharger le certificat&lt;/strong&gt; une fois le CITI Course terminé, vous pourrez le &lt;a href="https://physionet.org/settings/training/" target="_blank"&gt;déposer ici&lt;/a&gt; pour validation par l'équipe de Physionet.
 
-Il ne vous restera plus qu'à signer le [data use agreement](https://physionet.org/login/?next=/sign-dua/mimiciii/1.4/).
+Il ne vous restera plus qu'à signer le &lt;a href="https://physionet.org/login/?next=/sign-dua/mimiciii/1.4/" target="_blank"&gt;data use agreement&lt;/a&gt;.
 </description_fr>
     <short_description_en>MIMIC-IV demo set containing 100 patients</short_description_en>
     <short_description_fr>Set de démo de la MIMIC-IV contenant 100 patients</short_description_fr>
     <creation_datetime>2024-08-06 16:30:16</creation_datetime>
-    <update_datetime>2024-08-06 18:02:43</update_datetime>
+    <update_datetime>2024-08-06 18:06:50</update_datetime>
     <omop_version>5.3</omop_version>
   </dataset>
 </datasets>
