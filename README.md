@@ -37,12 +37,7 @@ print('test')
 
 ## <i class='fa fa-database' style='color: steelblue; margin-right: 5px;'></i> Datasets
 
-<details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
-<summary><span style = 'font-size:13px;'>MIMIC-IV demo</summary>
-
-NA
-
-</details>
+No datasets available.
 
 ## <i class='fa fa-code' style='color: steelblue; margin-right: 5px;'></i> Data cleaning scripts
 
