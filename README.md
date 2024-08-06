@@ -4,16 +4,12 @@
 
 ## <i class='fa fa-file-alt' style='color: steelblue; margin-right: 5px;'></i> Projects
 
-<details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
-<summary><span style = 'font-size:15px;'>New project</summary>
-
-
-</details>
+No projects available.
 
 ## <i class='fa fa-terminal' style='color: steelblue; margin-right: 5px;'></i> Plugins
 
 <details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
-<summary><span style = 'font-size:15px;'>Console en</summary>
+<summary><span style = 'font-size:13px;'>Console en</summary>
 
 # Console
 
@@ -33,14 +29,7 @@ print('test')
 </details>
 
 <details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
-<summary><span style = 'font-size:15px;'>Séries temporelles {dygraphs}</summary>
-
-
-
-</details>
-
-<details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
-<summary><span style = 'font-size:15px;'>Text reader</summary>
+<summary><span style = 'font-size:13px;'>Text reader</summary>
 
 
 
@@ -49,14 +38,7 @@ print('test')
 ## <i class='fa fa-database' style='color: steelblue; margin-right: 5px;'></i> Datasets
 
 <details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
-<summary><span style = 'font-size:15px;'>MIMIC-III</summary>
-
-
-
-</details>
-
-<details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
-<summary><span style = 'font-size:15px;'>MIMIC-IV demo</summary>
+<summary><span style = 'font-size:13px;'>MIMIC-IV demo</summary>
 
 NA
 
