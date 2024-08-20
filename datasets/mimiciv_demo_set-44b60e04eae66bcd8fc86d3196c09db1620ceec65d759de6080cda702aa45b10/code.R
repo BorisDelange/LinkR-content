@@ -25,7 +25,7 @@ for (table in tables) {
     
         # Download and read the CSV file
         csv_file <- file.path(output_dir, paste0(table, ".csv"))
-        data <- suppressWarnings(vroom::vroom(file_url, progress = FALSE))
+        data <- suppressWarnings(vroom::vroom(file_url, progress = FALSE, show_col_types = FALSE))
         
         # Correct _id cols, with large positive and negative numeric values
         correct_id_columns <- function(data) {
