@@ -9,22 +9,9 @@ No projects available.
 ## <i class='fa fa-terminal' style='color: steelblue; margin-right: 5px;'></i> Plugins
 
 <details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
-<summary><span style = 'font-size:13px;'>Console en</summary>
+<summary><span style = 'font-size:13px;'>Console</summary>
 
-# Console
 
-Readme ...
-
-Test'
-
-Test2''
-
-Test 3"
-
-```{r}
-# R code
-print('test')
-```
 
 </details>
 
