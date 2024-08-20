@@ -1,49 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugins>
   <plugin>
-    <app_version>0.3.0.9013</app_version>
+    <app_version>0.3.0.9014</app_version>
     <unique_id>d7662fb4dde4f229baff062dd673177ced4375168b5c9ef0782717d89769efb6</unique_id>
     <version>0.0.1.9000</version>
     <author>Boris Delange</author>
-    <name_en>Console en</name_en>
+    <name_en>Console</name_en>
     <name_fr>Console</name_fr>
     <category_en>NA</category_en>
     <category_fr>NA</category_fr>
-    <description_en># Console
-
-Readme ...
-
-Test'
-
-Test2''
-
-Test 3"
-
-```{r}
-# R code
-print('test')
-```</description_en>
-    <description_fr># Console
-
-Description du plugin...
-
-```{r}
-print("test")
-```
-
-Test'
-
-Test2 ''
-
-Test3 "
-
-4
-
-e</description_fr>
+    <description_en/>
+    <description_fr/>
     <short_description_en>R and Python console, with choice of output (console, figure, datatable etc)</short_description_en>
     <short_description_fr>Une console R et Python, avec choix de l'output (console, figure, datatable etc)</short_description_fr>
     <creation_datetime>2024-07-07 13:21:53</creation_datetime>
-    <update_datetime>2024-08-02 14:56:23</update_datetime>
+    <update_datetime>2024-08-20 17:27:13</update_datetime>
     <type>12</type>
   </plugin>
   <plugin>
