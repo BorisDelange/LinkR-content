@@ -112,9 +112,11 @@ observeEvent(input$add_settings_file_%widget_id%, {
             if (name_already_used) shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", errorMessage = i18np$t("name_already_used"))
             else {
                 
+                new_id <- get_last_row(m$db, "widgets_options") + 1
+                
                 # Add settings file in database
                 new_data <- tibble::tibble(
-                    id = get_last_row(m$db, "widgets_options") + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
+                    id = new_id, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
                     category = "saved_settings", name = "file_name", value = file_name, value_num = NA_real_, creator_id = m$user_id, datetime = now(), deleted = FALSE
                 )
                 DBI::dbAppendTable(m$db, "widgets_options", new_data)
@@ -123,6 +125,7 @@ observeEvent(input$add_settings_file_%widget_id%, {
                 shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", value = "")
                 
                 # Update dropdown
+                shiny.fluent::updateDropdown.shinyInput(session, "saved_settings_%widget_id%", value = new_id)
                 shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_dropdown_%widget_id%', Math.random());"))
                 
                 # Close modal
@@ -145,7 +148,7 @@ observeEvent(input$reload_dropdown_%widget_id%, {
         m$settings_filenames_%widget_id% <- DBI::dbGetQuery(m$db, sql)
         
         dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = "id", text_col = "name")
-        shiny.fluent::updateDropdown.shinyInput(session, "saved_settings_%widget_id%", options = dropdown_options, value = NULL)
+        shiny.fluent::updateDropdown.shinyInput(session, "saved_settings_%widget_id%", options = dropdown_options)
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })

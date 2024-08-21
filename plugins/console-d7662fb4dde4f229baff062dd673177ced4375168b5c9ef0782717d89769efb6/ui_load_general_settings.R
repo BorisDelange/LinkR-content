@@ -19,13 +19,12 @@ if (nrow(general_settings) == 0){
 
     # Toggles values
     
-    for (name in c("show_saved_file", "figure_and_settings_side_by_side", "run_code_at_patient_update", "run_code_at_settings_file_load")){
-    
+    sapply(c("show_saved_file", "figure_and_settings_side_by_side", "run_code_at_patient_update", "run_code_at_settings_file_load"), function(name){
         toggle_value <- general_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value_num)
         if (is.na(toggle_value)) toggle_value <- FALSE
         else (toggle_value <- as.logical(toggle_value))
-        toggle_values[[name]] <- toggle_value
-    }
+        toggle_values[[name]] <<- toggle_value
+    })
     
     # Selected saved settings file
     

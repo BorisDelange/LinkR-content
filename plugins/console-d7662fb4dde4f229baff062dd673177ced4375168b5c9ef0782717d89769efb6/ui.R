@@ -77,7 +77,7 @@ tagList(
                 ), br(),
                 tags$strong(i18np$t("code_execution")), br(),
                 div(
-                    shiny.fluent::Toggle.shinyInput(ns("run_code_at_settings_file_load_%widget_id%"), value = toggle_values$run_code_at_patient_update),
+                    shiny.fluent::Toggle.shinyInput(ns("run_code_at_settings_file_load_%widget_id%"), value = toggle_values$run_code_at_settings_file_load),
                     tags$label(i18np$t("run_code_at_settings_file_load"), `for` = ns("run_code_at_settings_file_load_%widget_id%"), style = "margin-left: 5px;"),
                     style = "display: flex; margin-top: 8px;" 
                 ),
