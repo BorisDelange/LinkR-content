@@ -10,7 +10,7 @@ sapply(tabs, function(tab){
 
     observeEvent(input[[paste0(tab, "_button_%widget_id%")]], {
         %req%
-        if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$", tab))
+        if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$", tab))
         
         tryCatch({
             if (tab == "general_settings") shinyjs::hide("figure_settings_code_div_%widget_id%")
@@ -34,7 +34,7 @@ sapply(tabs, function(tab){
             # Prevent a bug with scroll into ace editor
             shinyjs::runjs("var event = new Event('resize'); window.dispatchEvent(event);")
             
-        }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+        }, error = function(e) cat(paste0("\n", now(), " - widget %widget_id% - error = ", toString(e))))
     })
 })
 

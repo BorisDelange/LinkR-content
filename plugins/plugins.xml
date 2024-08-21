@@ -14,7 +14,7 @@
     <short_description_en>R and Python console, with choice of output (console, figure, datatable etc)</short_description_en>
     <short_description_fr>Une console R et Python, avec choix de l'output (console, figure, datatable etc)</short_description_fr>
     <creation_datetime>2024-07-07 13:21:53</creation_datetime>
-    <update_datetime>2024-08-21 16:53:42</update_datetime>
+    <update_datetime>2024-08-21 17:01:23</update_datetime>
     <type>12</type>
   </plugin>
   <plugin>
