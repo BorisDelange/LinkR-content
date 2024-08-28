@@ -18,6 +18,23 @@
     <type>12</type>
   </plugin>
   <plugin>
+    <app_version>0.3.0.9016</app_version>
+    <unique_id>b205c8c15d31cdbb8e160bea4b2a938c5e3157079efc813965212b31b9cc82e2</unique_id>
+    <version>0.0.1.9000</version>
+    <author>Boris Delange</author>
+    <name_en>Development template</name_en>
+    <name_fr>Template de développement</name_fr>
+    <category_en/>
+    <category_fr/>
+    <description_en/>
+    <description_fr/>
+    <short_description_en>This plugin is a template used as a basis for the development of plugins.</short_description_en>
+    <short_description_fr>Ce plugin est un template servant de base pour le développement de plugins</short_description_fr>
+    <creation_datetime>2024-08-28 16:24:47</creation_datetime>
+    <update_datetime>2024-08-28 16:47:28</update_datetime>
+    <type>12</type>
+  </plugin>
+  <plugin>
     <app_version>0.3.0.9013</app_version>
     <unique_id>fe67edd15f82f335b74905ec1ca6865e379fb271fd996fce4ceae7420338dbd8</unique_id>
     <version>0.0.1.9000</version>
