@@ -4,12 +4,24 @@
 
 ## <i class='fa fa-file-alt' style='color: steelblue; margin-right: 5px;'></i> Projects
 
-No projects available.
+<details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
+<summary><span style = 'font-size:13px;'>InterHop 2024 datathon template</summary>
+
+
+
+</details>
 
 ## <i class='fa fa-terminal' style='color: steelblue; margin-right: 5px;'></i> Plugins
 
 <details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
 <summary><span style = 'font-size:13px;'>Console</summary>
+
+NA
+
+</details>
+
+<details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
+<summary><span style = 'font-size:13px;'>Development template</summary>
 
 
 
@@ -17,6 +29,13 @@ No projects available.
 
 <details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
 <summary><span style = 'font-size:13px;'>Text reader</summary>
+
+
+
+</details>
+
+<details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
+<summary><span style = 'font-size:13px;'>Timeline {dygraphs}</summary>
 
 
 
