@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <projects>
   <project>
     <app_version>0.3.0.9017</app_version>
@@ -7,12 +7,12 @@
     <author>Boris Delange</author>
     <name_en>InterHop 2024 datathon template</name_en>
     <name_fr>Template datathon InterHop 2024</name_fr>
-    <category_en/>
-    <category_fr/>
-    <description_en/>
-    <description_fr/>
+    <category_en></category_en>
+    <category_fr></category_fr>
+    <description_en></description_en>
+    <description_fr></description_fr>
     <short_description_en>Template with reusable code for the InterHop 2024 datathon</short_description_en>
-    <short_description_fr>Template avec code à réutiliser pour le datathon d'InterHop 2024</short_description_fr>
+    <short_description_fr>Template avec code &#xE0; r&#xE9;utiliser pour le datathon d'InterHop 2024</short_description_fr>
     <creation_datetime>2024-09-04 09:32:57</creation_datetime>
     <update_datetime>2024-09-04 10:03:49</update_datetime>
   </project>
