@@ -1,0 +1,26 @@
+id,category,link_id,name,value,value_num,creator_id,datetime,deleted
+1,plugin,1,users_allowed_read_group,everybody,1,1,2024-07-31 19:00:43,0
+2,plugin,1,version,0.0.1.9000,NA,1,2024-07-31 19:00:43,0
+3,plugin,1,unique_id,d7662fb4dde4f229baff062dd673177ced4375168b5c9ef0782717d89769efb6,NA,1,2024-07-31 19:00:43,0
+4,plugin,1,author,Boris Delange,NA,1,2024-07-31 19:00:43,0
+5,plugin,1,downloaded_from,Console,NA,1,2024-07-31 19:00:43,0
+6,plugin,1,downloaded_from_url,https://framagit.org/interhop/linkr/linkr-content,NA,1,2024-07-31 19:00:43,0
+7,plugin,1,short_description_en,"R and Python console, with choice of output (console, figure, datatable etc)",NA,1,2024-07-31 19:00:43,0
+8,plugin,1,description_en,NA,NA,1,2024-07-31 19:00:43,0
+9,plugin,1,category_en,NA,NA,1,2024-07-31 19:00:43,0
+10,plugin,1,name_en,Console,NA,1,2024-07-31 19:00:43,0
+11,plugin,1,short_description_fr,"Une console R et Python, avec choix de l'output (console, figure, datatable etc)",NA,1,2024-07-31 19:00:43,0
+12,plugin,1,description_fr,NA,NA,1,2024-07-31 19:00:43,0
+13,plugin,1,category_fr,NA,NA,1,2024-07-31 19:00:43,0
+14,plugin,1,name_fr,Console,NA,1,2024-07-31 19:00:43,0
+15,plugin_code,1,filename,server_code.R,NA,1,2024-07-31 19:01:05,0
+16,plugin_code,1,filename,server_figure_settings.R,NA,1,2024-07-31 19:01:05,0
+17,plugin_code,1,filename,server_general_settings.R,NA,1,2024-07-31 19:01:05,0
+18,plugin_code,1,filename,server_saved_settings.R,NA,1,2024-07-31 19:01:05,0
+19,plugin_code,1,filename,server.R,NA,1,2024-07-31 19:01:05,0
+20,plugin_code,1,filename,translations.csv,NA,1,2024-07-31 19:01:05,0
+21,plugin_code,1,filename,ui_figure_settings.R,NA,1,2024-07-31 19:01:05,0
+22,plugin_code,1,filename,ui_figure.R,NA,1,2024-07-31 19:01:05,0
+23,plugin_code,1,filename,ui_load_general_settings.R,NA,1,2024-07-31 19:01:05,0
+24,plugin_code,1,filename,ui_saved_settings.R,NA,1,2024-07-31 19:01:05,0
+25,plugin_code,1,filename,ui.R,NA,1,2024-07-31 19:01:05,0

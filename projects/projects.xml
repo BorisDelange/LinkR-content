@@ -16,4 +16,68 @@
     <creation_datetime>2024-09-04 09:32:57</creation_datetime>
     <update_datetime>2024-09-04 10:03:49</update_datetime>
   </project>
+  <project>
+    <app_version>0.3.0.9017</app_version>
+    <unique_id>3d4f080600ddc576467f6097658493493d93536ba3fa90e1adb50c35eae5050b</unique_id>
+    <version>0.0.1.9000</version>
+    <author>Kathy CHAPELAIN, Fabio BOUDIS, Guillaume PRESSIAT, Xavier , Zeynep, Lucas BOURNEUF, Gilles, Pierre </author>
+    <name_en>Projet maternité</name_en>
+    <name_fr>Projet maternité</name_fr>
+    <category_en/>
+    <category_fr/>
+    <description_en/>
+    <description_fr># Introduction
+
+Les maternités en France fournissent annuellement des indicateurs d’activité essentiels, tels que le nombre de césariennes, de sièges, de transferts, ou encore le nombre de péridurales.  
+
+Ces indicateurs, cruciaux pour évaluer et améliorer les pratiques obstétricales, sont dérivés des séjours RSS1 (Résumé de Sortie Standardisé), 
+qui reprennent les informations médicales de chaque patient lors de leur séjour hospitalier produites à 
+travers plusieurs unités de soins   
+
+Le challenge de ce datathon réside non seulement dans la création automatisée de ces indicateurs à partir des données brutes, 
+mais aussi dans leur visualisation efficace facilement accessible pour les professionnels de santé.
+   
+# Matériel et méthodes
+
+Le datathon organisé par l’association InterHop.org vise à explorer ces aspects en utilisant l’outil open-source LinkR, une plateforme permettant la manipulation et l’analyse des données de santé, tant pour les cliniciens que pour les data scientists.
+
+Pour atteindre les objectifs de ce datathon, plusieurs outils et librairies R et Python seront employés pour transformer, analyser et visualiser les données RSS2.
+
+* Création des indicateurs (à partir du format RSS) :   
+R : Les librairies dplyr et pmeasyr3 ont été utilisées pour manipuler les données, effectuer des filtrages et des agrégations nécessaires pour restructurer les RSS
+
+* Transformation des données vers modèle OMOP :   
+ETL (Extract, Transform, Load) : des scritps R ont été développés permettant la conversion du format RSS vers OMOP.
+
+* Visualisation des données :   
+R : ggplot2 pourra être utilisé pour créer des graphiques clairs et esthétiques des indicateurs, tels que des histogrammes des taux de césariennes, ou des courbes de survie.
+
+## Ressources   
+Jeux de données fictif et pseudonymisé mis à disposition des participant⸱es
+
+# Résultats  
+
+Le datathon vise à implémenter le calcul d’indicateurs clés concernant les activités des maternités françaises, accessibles et interprétables par les cliniciens, tout en fournissant une base solide pour d’autres analyses secondaires. Cette connaissance métier sera apportée par un médecin responsable d’un Département d’Informatique Médical DIM d’un hôpital français.
+
+Pour exemple l’Agence technique de l’information sur l’hospitalisation (ATIH) met à disposition des indicateurs sur l’activité hospitalière en périnatalité produits à partir des données PMSI (Programme de médicalisation des systèmes d’informations).
+
+Avec ce datathon nous souhaitons proposer
+
+* une amélioration du pilotage de l’obstétrique aux différentes échelles (chu, bassin de soin, région…), notamment à terme avec des visu de données historisées et des tendances, couplée à des alertes et des seuils,
+* faire ressortir des nouvelles clé de compréhension et d’analyse de la MCO notamment pour les parcours MCO complexes
+
+L’utilisation de LinkR devrait faciliter la réutilisation de ces indicateurs au sein des services des Département d’Informatique Médical DIM améliorant ainsi la qualité des soins obstétricaux. Nous sou zhaitons aussi démocratiser l’utilisation des données et permettre à une utilisation plus large auprès des équipes soignantes.
+
+# Discussion
+
+Les scripts utilisées fonctionnent uniqument dans le cadre de ce challenge, et donc d'une création ex nihilo d'une base OMOP. Une évolution nécessaire pour l'intégration dans un ETL de type Airflow est donc d'adapter les script pour qu'ils alimentent une base existante.
+Dans le cadre de ce datathon nous aurions beaucoup bénéficié d'un outils permettant d'implémenter des patients, des observations, des séjours etc. facilement dans une base OMOP.
+
+
+</description_fr>
+    <short_description_en/>
+    <short_description_fr>Développer des outils et indicateurs de suivi des services de maternité </short_description_fr>
+    <creation_datetime>2024-09-05 10:33:36</creation_datetime>
+    <update_datetime>2024-09-06 12:31:45</update_datetime>
+  </project>
 </projects>
