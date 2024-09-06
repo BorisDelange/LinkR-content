@@ -1,0 +1,6 @@
+id,category,name,tab_id,plugin_id,display_order,creator_id,datetime,deleted
+1,aggregated,Age,1,1,NA,NA,2024-09-05 13:44:08,0
+2,aggregated,Admissions,1,1,NA,NA,2024-09-05 13:45:19,0
+3,aggregated,Groupes,2,1,NA,NA,2024-09-05 14:52:02,0
+4,aggregated,Groupes2,2,1,NA,NA,2024-09-06 09:44:28,0
+5,aggregated,Délai,2,1,NA,NA,2024-09-06 10:22:07,0

@@ -2,64 +2,43 @@
 <projects>
   <project>
     <app_version>0.3.0.9017</app_version>
-    <unique_id>f6094a78f573d9c2711ded58a8eef7f9e65b191f19731ef4db3ea6ae1121b902</unique_id>
+    <unique_id>c3bf35d117ff5295193d34d93059d140051ec19bd6d140a866247571ced0c6ad</unique_id>
     <version>0.0.1.9000</version>
-    <author>Jane Doe</author>
-    <name_en>Data cleaning</name_en>
-    <name_fr>Data cleaning</name_fr>
+    <author>DAVY Florentin, DELANGE Boris </author>
+    <name_en>Délai PTH</name_en>
+    <name_fr>HIP Fracture delay </name_fr>
     <category_en/>
     <category_fr/>
     <description_en/>
-    <description_fr>---
+    <description_fr>Fracture de l’extrémité supérieure du fémur (FESF) et anticoagulants oraux directs (AOD) : 
+Evaluation de la mise en place d’un protocole de prise en charge locale, exemple au Centre Hospitalier de Saint-Malo.
 
----
+## Introduction
 
-# Objectif du travail
+La FESF est un pathologie fréquente (&gt; 75 000 cas par an en France), touchant une population âgée et est à l’origine d’une mortalité, d’une morbidité et d’une perte d’autonomie importante entrainant un cout important. Son incidence est en augmentation du fait d’un vieillissement de la population. Tout ceci en fait un problème majeur de santé publique. 
+La prévalence de patient sous traitement anticoagulant est importante dans cette population gériatrique. On constate depuis 2012 et la mise sur le marché des « nouveaux » anticoagulant oraux une forte augmentation de patient traité par ces médicaments qui remplace les classiques AVK. 
+De nombreuse études ont maintenant prouvés l’importance d’une chirurgie précoce (&lt; 48h) pour réduire la morbi mortalité de ces fractures. Cependant la présence d’un traitement anticoagulant pourrait allonger les délais de prises en charges et augmenter la morbi-mortalité. 
+Afin d’uniformiser la prise en charge de ces patients et de réduire les délais de prise en charge un protocole de service a été mis en place au CH de Saint Malo en Janvier 2023. 
+L’objectif principal est l’évaluation de la mise en place de ce protocole. L’hypothèse formulée est que la mise en place d’un protocole, permet d’opérer les patients plus rapidement (dans un délai inférieur à 48h).
 
-Isoler les poids extrêmes pour définir si ce sont ou non des outlyers
+## Matériel et méthodes
 
-# Méthodes utilisées
+Nous réalisons une études de cohorte rétrospective, observationnelle, monocentrique. Le critère de jugement principale est le délai de prise en charge au bloc opératoire après l’admission des patients (en heures). 
+Les critères de jugements secondaire sont la mortalité à 30 jours et 1an et les complications hémorragiques (transfusion, saignement peropératoire, variation du taux hémoglobine préopératoire). 
+Les patients seront séparés en 3 groupes :
+A : Patients traité par AOD opéré avant la mise en place du protocole (avant 2023)
+B : Patients traité par AOD opéré après la mise en place du protocole (à partir de 2023) 
+C :	Patient contrôle non anticoagulé opéré sur la même période
 
-## L'écart à la médiane
-
-On calcule l'index de variation par rapport à la médiane des poids (d'un·e patient·e et d'un séjour) et on retient les variations \&gt; 1.5 fois la médiane
-
-## L'écart à l'interquatile
-
-On calcule les interquartiles 25 et 75% des poids (d'un·e patient·e et d'un séjour) et on retient les variations \&gt; 1.5
-
-## Les erreurs de saisie
-
-On isole tous les poids de plus de 300 kg ayant deux fois le même chiffre consécutif.&lt;br&gt; On isole les valeurs qui se répètent plusieurs jours de suite
-
-# Résultat attendu
-
-## Fonction de visualisation
-
-Nom de la fonction : naetaat
-
-Arguments :
-
--   meas_df : nom du dataframe d'exploration
-
--   concept_id : numéro du concept_id ou measurment_concept_id. Par défaut 3025315 (poids)
-
--   range_high : limite supérieure. Par défaut FALSE
-
--   range_low : limite inférieure. Par défaut FALSE
-
--   medianVariationPerson : limite de l'index de variation à la médiane par personne. Par défaut FALSE
-
--   medianVariationVisit : limite de l'index de variation à la médiane par venue. Par défaut FALSE
-
--   
-
--   numberDuplicateDigit :
-</description_fr>
+Une première analyse statistique descriptive sera réalisée. Les données quantitatives sont exprimées par une moyenne et un écart-types. Les données qualitatives sont exprimées en nombre et pourcentage.
+Pour le critère de jugement principale nous comparerons le délais de prise en charge au bloc (exprimé en Heures) entre les 3 groupes. Nous pouvons également comparer la proportion de patient opérés dans les 48 premières heures suivant leur admission. 
+S’agissant d’une variable quantitative nous utiliserons une analyse de la variance (ANOVA), après vérification de l'homogénéité des variances (par un test de Bartlett par exemple). Sinon nous utiliserons un test de Kruskal-Wallis. 
+Pour les critères de jugements secondaire, les variable quantitative seront comparées avec les même test et les variables qualitatives à l’aide d’un Test du Chi2 ou d’un Test exact de Fisher en cas d’échantillon trop petit. 
+Une analyse de survie selon Kaplan-Mayer sera réalisé pour la mortalité à 30 jours et à 1 an. Une comparaison des courbes de survies à l’aide d’un test du Log Rank sera ensuite réalisée. </description_fr>
     <short_description_en/>
-    <short_description_fr>Fonctions de cleaning de données numériques anormales</short_description_fr>
-    <creation_datetime>2024-09-05 10:24:51</creation_datetime>
-    <update_datetime>2024-09-06 13:34:46</update_datetime>
+    <short_description_fr/>
+    <creation_datetime>2024-09-05 12:58:58</creation_datetime>
+    <update_datetime>2024-09-06 13:29:46</update_datetime>
   </project>
   <project>
     <app_version>0.3.0.9017</app_version>
