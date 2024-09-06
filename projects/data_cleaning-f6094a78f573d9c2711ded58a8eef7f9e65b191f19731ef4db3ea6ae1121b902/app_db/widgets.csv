@@ -1,0 +1,8 @@
+id,category,name,tab_id,plugin_id,display_order,creator_id,datetime,deleted
+1,aggregated,Poids,2,1,NA,NA,2024-09-05 10:35:40,0
+2,aggregated,Propofol,2,1,NA,NA,2024-09-05 12:03:40,0
+3,aggregated,Poids des outlyers,2,1,NA,NA,2024-09-05 13:18:43,0
+4,aggregated,Poids_draft,2,1,NA,NA,2024-09-05 13:18:55,0
+5,aggregated,test1,3,1,NA,NA,2024-09-05 13:21:52,0
+6,aggregated,Poids des outlyers selon séjours,2,1,NA,NA,2024-09-05 13:28:40,0
+7,aggregated,Isolation Forest,2,1,NA,NA,2024-09-06 11:23:23,0
