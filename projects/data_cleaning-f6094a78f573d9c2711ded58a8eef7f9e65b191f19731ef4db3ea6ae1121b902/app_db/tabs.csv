@@ -1,0 +1,4 @@
+id,category,name,description,tab_group_id,parent_tab_id,display_order,creator_id,datetime,deleted
+1,patient_lvl,Choix des variables,NA,1,NA,1,NA,2024-09-05 10:28:41,0
+2,aggregated,Poids et taille,NA,2,NA,1,NA,2024-09-05 10:35:20,0
+3,aggregated,Test_YA,NA,2,NA,3,NA,2024-09-05 13:18:29,0

@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<projects>
+  <project>
+    <app_version>0.3.0.9017</app_version>
+    <unique_id>f6094a78f573d9c2711ded58a8eef7f9e65b191f19731ef4db3ea6ae1121b902</unique_id>
+    <version>0.0.1.9000</version>
+    <author>Jane Doe</author>
+    <name_en>Data cleaning</name_en>
+    <name_fr>Data cleaning</name_fr>
+    <category_en></category_en>
+    <category_fr></category_fr>
+    <description_en></description_en>
+    <description_fr>---
+
+---
+
+# Objectif du travail
+
+Isoler les poids extr&#xEA;mes pour d&#xE9;finir si ce sont ou non des outlyers
+
+# M&#xE9;thodes utilis&#xE9;es
+
+## L'&#xE9;cart &#xE0; la m&#xE9;diane
+
+On calcule l'index de variation par rapport &#xE0; la m&#xE9;diane des poids (d'un&#xB7;e patient&#xB7;e et d'un s&#xE9;jour) et on retient les variations \&gt; 1.5 fois la m&#xE9;diane
+
+## L'&#xE9;cart &#xE0; l'interquatile
+
+On calcule les interquartiles 25 et 75% des poids (d'un&#xB7;e patient&#xB7;e et d'un s&#xE9;jour) et on retient les variations \&gt; 1.5
+
+## Les erreurs de saisie
+
+On isole tous les poids de plus de 300 kg ayant deux fois le m&#xEA;me chiffre cons&#xE9;cutif.&lt;br&gt; On isole les valeurs qui se r&#xE9;p&#xE8;tent plusieurs jours de suite
+
+# R&#xE9;sultat attendu
+
+## Fonction de visualisation
+
+Nom de la fonction : naetaat
+
+Arguments :
+
+-   meas_df : nom du dataframe d'exploration
+
+-   concept_id : num&#xE9;ro du concept_id ou measurment_concept_id. Par d&#xE9;faut 3025315 (poids)
+
+-   range_high : limite sup&#xE9;rieure. Par d&#xE9;faut FALSE
+
+-   range_low : limite inf&#xE9;rieure. Par d&#xE9;faut FALSE
+
+-   medianVariationPerson : limite de l'index de variation &#xE0; la m&#xE9;diane par personne. Par d&#xE9;faut FALSE
+
+-   medianVariationVisit : limite de l'index de variation &#xE0; la m&#xE9;diane par venue. Par d&#xE9;faut FALSE
+
+-   
+
+-   numberDuplicateDigit :
+</description_fr>
+    <short_description_en></short_description_en>
+    <short_description_fr>Fonctions de cleaning de donn&#xE9;es num&#xE9;riques anormales</short_description_fr>
+    <creation_datetime>2024-09-05 10:24:51</creation_datetime>
+    <update_datetime>2024-09-06 13:34:46</update_datetime>
+  </project>
+</projects>

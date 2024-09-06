@@ -2,6 +2,67 @@
 <projects>
   <project>
     <app_version>0.3.0.9017</app_version>
+    <unique_id>f6094a78f573d9c2711ded58a8eef7f9e65b191f19731ef4db3ea6ae1121b902</unique_id>
+    <version>0.0.1.9000</version>
+    <author>Jane Doe</author>
+    <name_en>Data cleaning</name_en>
+    <name_fr>Data cleaning</name_fr>
+    <category_en/>
+    <category_fr/>
+    <description_en/>
+    <description_fr>---
+
+---
+
+# Objectif du travail
+
+Isoler les poids extrêmes pour définir si ce sont ou non des outlyers
+
+# Méthodes utilisées
+
+## L'écart à la médiane
+
+On calcule l'index de variation par rapport à la médiane des poids (d'un·e patient·e et d'un séjour) et on retient les variations \&gt; 1.5 fois la médiane
+
+## L'écart à l'interquatile
+
+On calcule les interquartiles 25 et 75% des poids (d'un·e patient·e et d'un séjour) et on retient les variations \&gt; 1.5
+
+## Les erreurs de saisie
+
+On isole tous les poids de plus de 300 kg ayant deux fois le même chiffre consécutif.&lt;br&gt; On isole les valeurs qui se répètent plusieurs jours de suite
+
+# Résultat attendu
+
+## Fonction de visualisation
+
+Nom de la fonction : naetaat
+
+Arguments :
+
+-   meas_df : nom du dataframe d'exploration
+
+-   concept_id : numéro du concept_id ou measurment_concept_id. Par défaut 3025315 (poids)
+
+-   range_high : limite supérieure. Par défaut FALSE
+
+-   range_low : limite inférieure. Par défaut FALSE
+
+-   medianVariationPerson : limite de l'index de variation à la médiane par personne. Par défaut FALSE
+
+-   medianVariationVisit : limite de l'index de variation à la médiane par venue. Par défaut FALSE
+
+-   
+
+-   numberDuplicateDigit :
+</description_fr>
+    <short_description_en/>
+    <short_description_fr>Fonctions de cleaning de données numériques anormales</short_description_fr>
+    <creation_datetime>2024-09-05 10:24:51</creation_datetime>
+    <update_datetime>2024-09-06 13:34:46</update_datetime>
+  </project>
+  <project>
+    <app_version>0.3.0.9017</app_version>
     <unique_id>5293b8076f91ab711863756a31ddd62d9fd4d3a49390eb3bb32f95c64b80b7b1</unique_id>
     <version>0.0.1.9000</version>
     <author>Boris Delange</author>

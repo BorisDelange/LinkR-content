@@ -1,0 +1,354 @@
+id,widget_id,person_id,link_id,category,name,value,value_num,creator_id,datetime,deleted
+1,1,NA,NA,saved_settings,file_name,poids,NA,NA,2024-09-05 10:36:04,0
+2,1,NA,NA,widget_position,NA,w=11;h=24;x=0;y=129;,NA,NA,2024-09-05 10:36:49,0
+3,2,NA,NA,saved_settings,file_name,Taille,NA,NA,2024-09-05 12:16:31,0
+4,2,NA,NA,widget_position,NA,w=11;h=22;x=0;y=153;,NA,NA,2024-09-05 12:39:35,0
+5,2,NA,3,saved_settings,prog_language,r,NA,NA,2024-09-05 12:41:23,0
+6,2,NA,3,saved_settings,output,figure,NA,NA,2024-09-05 12:41:23,0
+7,2,NA,3,saved_settings,code,"library(dplyr)
+library(ggplot2)
+filtered_height <- d$measurement %>%
+  filter(measurement_concept_id == 3036277) %>%
+  select(person_id, value_as_number, measurement_datetime, unit_concept_id) %>%
+  collect() %>%
+  mutate(index = row_number())  # Ajouter un index
+
+# Créer le graphique ggplot avec geom_point et geom_jitter
+ggplot(filtered_height, aes(x = index, y = value_as_number)) +
+  geom_point(color = 'blue') +
+  geom_jitter(width = 0.2, height = 0) +  # Ajuster le jitter pour éviter le chevauchement
+  labs(
+    x = ""Index des patients"",
+    y = ""Valeur de mesure"",
+    title = ""Distribution des mesures de tailles""
+  ) +
+  theme_minimal()",NA,NA,2024-09-05 12:41:23,0
+8,3,NA,NA,saved_settings,file_name,Poids des outlyers,NA,NA,2024-09-05 13:19:07,0
+9,3,NA,NA,widget_position,NA,w=12;h=24;x=0;y=22;,NA,NA,2024-09-05 13:20:54,0
+10,4,NA,NA,widget_position,NA,w=12;h=45;x=0;y=46;,NA,NA,2024-09-05 13:20:54,0
+11,4,NA,NA,saved_settings,file_name,SanderboxClaire,NA,NA,2024-09-05 13:27:58,0
+12,6,NA,NA,saved_settings,file_name,Poids des outlyers selon le séjour,NA,NA,2024-09-05 13:30:07,0
+13,5,NA,NA,saved_settings,file_name,test_YA,NA,NA,2024-09-05 13:38:29,0
+14,3,NA,8,saved_settings,prog_language,r,NA,NA,2024-09-06 08:39:31,0
+15,3,NA,8,saved_settings,output,figure,NA,NA,2024-09-06 08:39:31,0
+16,3,NA,8,saved_settings,code,"library(dplyr)
+library(ggplot2)
+filtered_weight <- d$measurement %>%
+  filter(measurement_concept_id == 3025315) %>%
+  select(person_id, value_as_number, measurement_datetime, unit_concept_id, unit_source_value) %>%
+  collect() %>%
+  mutate(index = row_number()) %>%  # Ajouter un index
+  filter(value_as_number > 250)
+  
+outlyers_weight <- d$measurement %>%
+  filter(measurement_concept_id == 3025315) %>%
+  select(person_id, value_as_number, measurement_datetime, unit_concept_id, unit_source_value) %>%
+  collect() %>%
+  filter(person_id %in% filtered_weight$person_id & value_as_number < 2000)
+
+ggplot(outlyers_weight, aes(x = person_id, y = value_as_number)) +
+  geom_point(color = 'blue') +
+  geom_jitter(width = 0.2, height = 0) +
+  labs(
+    x = 'Index des patients',
+    y = 'Poids',
+    title = ""distributions des différents poids par patient lorsqu'il existe un poids > 250""
+  )
+",NA,NA,2024-09-06 08:39:31,0
+17,1,NA,1,saved_settings,prog_language,r,NA,NA,2024-09-06 08:39:55,0
+18,1,NA,1,saved_settings,output,figure,NA,NA,2024-09-06 08:39:55,0
+19,1,NA,1,saved_settings,code,"library(dplyr)
+library(ggplot2)
+filtered_weight <- d$measurement %>%
+  filter(measurement_concept_id == 3025315 & value_as_number > 250) %>%
+  select(person_id, value_as_number, measurement_datetime, unit_concept_id) %>%
+  collect() %>%
+  mutate(index = row_number())  # Ajouter un index
+
+# Créer le graphique ggplot avec geom_point et geom_jitter
+ggplot(filtered_weight, aes(x = index, y = value_as_number)) +
+  geom_point(color = 'blue') +
+  geom_jitter(width = 0.2, height = 0) +  # Ajuster le jitter pour éviter le chevauchement
+  labs(
+    x = ""Index des patients"",
+    y = ""Valeur de mesure"",
+    title = ""Distribution des mesures de la poids > 250""
+  ) +
+  theme_minimal()",NA,NA,2024-09-06 08:39:55,0
+20,6,NA,12,saved_settings,prog_language,r,NA,NA,2024-09-06 08:40:49,0
+21,6,NA,12,saved_settings,output,figure,NA,NA,2024-09-06 08:40:49,0
+22,6,NA,12,saved_settings,code,"library(dplyr)
+library(ggplot2)
+filtered_weight <- d$measurement %>%
+  filter(measurement_concept_id == 3025315) %>%
+  select(person_id, value_as_number, measurement_datetime, unit_concept_id, unit_source_value, visit_occurrence_id) %>%
+  collect() %>%
+  mutate(index = row_number()) %>%  # Ajouter un index
+  filter(value_as_number > 250)
+
+outlyers_weight <- d$measurement %>%
+  filter(measurement_concept_id == 3025315) %>%
+  select(person_id, value_as_number, measurement_datetime, unit_concept_id, unit_source_value, visit_occurrence_id) %>%
+  collect() %>%
+  filter(person_id %in% filtered_weight$person_id & value_as_number < 2000)
+
+ggplot(outlyers_weight, aes(x = visit_occurrence_id, y = value_as_number)) +
+  geom_point(color = 'blue') +
+  geom_jitter(width = 0.2, height = 0) +
+  labs(
+    x = 'Index des séjours',
+    y = 'Poids',
+    title = ""distributions des différents poids par patient lorsqu'il existe un poids > 250""
+  )",NA,NA,2024-09-06 08:40:49,0
+23,7,NA,NA,saved_settings,file_name,Isolation forest,NA,NA,2024-09-06 11:24:19,0
+24,7,NA,23,saved_settings,prog_language,r,NA,NA,2024-09-06 11:37:29,0
+25,7,NA,23,saved_settings,output,ui,NA,NA,2024-09-06 11:37:29,0
+26,7,NA,23,saved_settings,code,"includeHTML(""/team_dq/test.html"")",NA,NA,2024-09-06 11:37:29,0
+27,6,NA,NA,widget_position,NA,w=12;h=22;x=0;y=0;,NA,NA,2024-09-06 11:38:00,0
+28,7,NA,NA,widget_position,NA,w=11;h=38;x=0;y=91;,NA,NA,2024-09-06 11:38:00,0
+29,4,NA,NA,saved_settings,file_name,Données filtrées,NA,NA,2024-09-06 12:35:11,0
+30,4,NA,NA,saved_settings,file_name,test,NA,NA,2024-09-06 12:46:19,0
+31,4,NA,30,saved_settings,prog_language,r,NA,NA,2024-09-06 12:47:09,0
+32,4,NA,30,saved_settings,output,console,NA,NA,2024-09-06 12:47:09,0
+33,4,NA,30,saved_settings,code,"library(dplyr)
+
+filtered_weight <- d$measurement %>%
+  filter(measurement_concept_id == 3025315) %>%
+  select(
+  
+  person_id, measurement_id, value_as_number, measurement_datetime, unit_concept_id, unit_source_value, visit_occurrence_id) %>%
+  collect()
+
+naetaat <- function(meas_df, range_high = 300, range_low = 0, double_chr = FALSE, zero = FALSE, 
+                    medianVariationIndexVisit = FALSE, medianVariationIndexPerson = FALSE, IQRVariationIndexVisit = FALSE, IQRVariationIndexPerson = FALSE){ 
+  # Check for range_high and add is_above_range column
+  if (!is.null(range_high)) {
+    meas_df <- meas_df %>%
+      mutate(is_above_range = value_as_number > range_high)
+  }
+  
+  # Check for range_low and add is_below_range column
+  if (!is.null(range_low)) {
+    meas_df <- meas_df %>%
+      mutate(is_below_range = value_as_number < range_low)
+  }
+  
+  # If double_chr is TRUE, add the double_chr column
+  if (double_chr) {
+    meas_df <- meas_df %>%
+      mutate(double_chr = nchar(as.character(value_as_number)) >= 3 & grepl(""(\\d)\\1"", as.character(value_as_number)))
+  }
+  
+  # If zero is TRUE, flag zero values
+  if (zero) {
+    meas_df <- meas_df %>%
+      mutate(zero = value_as_number == 0)
+  }
+  
+  # For median variation index by visit_occurrence_id
+  if (medianVariationIndexVisit) {
+    meas_df <- meas_df %>%
+      group_by(visit_occurrence_id) %>%
+      mutate(medianValue = median(value_as_number, na.rm = TRUE)) %>%
+      ungroup() %>%
+      mutate(medianVariationIndex = round(abs((medianValue - value_as_number) / medianValue), 2) > 1.5)
+  }
+  
+  # For median variation index by person_id
+  if (medianVariationIndexPerson) {
+    meas_df <- meas_df %>%
+      group_by(person_id) %>%
+      mutate(medianValue = median(value_as_number, na.rm = TRUE)) %>%
+      ungroup() %>%
+      mutate(medianVariationIndex = round(abs((medianValue - value_as_number) / medianValue), 2) > 1.5)
+  }
+  
+  # For IQR variation index by visit_occurrence_id
+  if (IQRVariationIndexVisit) {
+    index_var <- meas_df %>%
+      group_by(visit_occurrence_id) %>%
+      summarise(
+        mediane = median(value_as_number, na.rm = TRUE),
+        q1 = quantile(value_as_number, 0.25, na.rm = TRUE),  # First quartile (Q1)
+        q3 = quantile(value_as_number, 0.75, na.rm = TRUE),  # Third quartile (Q3)
+        iqr = IQR(value_as_number, na.rm = TRUE)  # Interquartile range (IQR)
+      ) %>%
+      mutate(
+        lower_bound = q1 - (1.5 * iqr),  # Lower bound
+        upper_bound = q3 + (1.5 * iqr)   # Upper bound
+      )
+    
+    # Identify outliers for visit_occurrence_id
+    meas_df <- meas_df %>%
+      left_join(index_var, by = ""visit_occurrence_id"") %>%
+      filter(value_as_number < lower_bound | value_as_number > upper_bound)
+  }
+  
+  # For IQR variation index by person_id
+  if (IQRVariationIndexPerson) {
+    index_var <- meas_df %>%
+      group_by(person_id) %>%
+      summarise(
+        mediane = median(value_as_number, na.rm = TRUE),
+        q1 = quantile(value_as_number, 0.25, na.rm = TRUE),  # First quartile (Q1)
+        q3 = quantile(value_as_number, 0.75, na.rm = TRUE),  # Third quartile (Q3)
+        iqr = IQR(value_as_number, na.rm = TRUE)  # Interquartile range (IQR)
+      ) %>%
+      mutate(
+        lower_bound = q1 - (1.5 * iqr),  # Lower bound
+        upper_bound = q3 + (1.5 * iqr)   # Upper bound
+      )
+    
+    # Identify outliers for person_id
+    meas_df <- meas_df %>%
+      left_join(index_var, by = ""person_id"") %>%
+      filter(value_as_number < lower_bound | value_as_number > upper_bound)
+  }
+  
+  return(meas_df)
+}
+
+# Example usage
+naetaat(filtered_weight, range_high = 300, range_low = 0, double_chr = FALSE, zero = FALSE, 
+        medianVariationIndexVisit = FALSE, medianVariationIndexPerson = FALSE, 
+        IQRVariationIndexVisit = FALSE, IQRVariationIndexPerson = FALSE)
+",NA,NA,2024-09-06 12:47:09,0
+34,5,NA,13,general_settings,selected_file_id,NA,NA,NA,2024-09-06 13:26:53,0
+35,5,NA,NA,general_settings,show_saved_file,NA,1,NA,2024-09-06 13:26:53,0
+36,5,NA,NA,general_settings,figure_and_settings_side_by_side,NA,1,NA,2024-09-06 13:26:53,0
+37,5,NA,NA,general_settings,run_code_at_patient_update,NA,1,NA,2024-09-06 13:26:53,0
+38,5,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2024-09-06 13:26:53,0
+39,7,NA,23,general_settings,selected_file_id,NA,NA,NA,2024-09-06 14:11:35,0
+40,7,NA,NA,general_settings,show_saved_file,NA,1,NA,2024-09-06 14:11:35,0
+41,7,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2024-09-06 14:11:35,0
+42,7,NA,NA,general_settings,run_code_at_patient_update,NA,0,NA,2024-09-06 14:11:35,0
+43,7,NA,NA,general_settings,run_code_at_settings_file_load,NA,0,NA,2024-09-06 14:11:35,0
+44,6,NA,12,general_settings,selected_file_id,NA,NA,NA,2024-09-06 14:11:35,0
+45,6,NA,NA,general_settings,show_saved_file,NA,1,NA,2024-09-06 14:11:35,0
+46,6,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2024-09-06 14:11:35,0
+47,6,NA,NA,general_settings,run_code_at_patient_update,NA,0,NA,2024-09-06 14:11:35,0
+48,6,NA,NA,general_settings,run_code_at_settings_file_load,NA,0,NA,2024-09-06 14:11:35,0
+49,3,NA,8,general_settings,selected_file_id,NA,NA,NA,2024-09-06 14:11:36,0
+50,3,NA,NA,general_settings,show_saved_file,NA,1,NA,2024-09-06 14:11:36,0
+51,3,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2024-09-06 14:11:36,0
+52,3,NA,NA,general_settings,run_code_at_patient_update,NA,0,NA,2024-09-06 14:11:36,0
+53,3,NA,NA,general_settings,run_code_at_settings_file_load,NA,0,NA,2024-09-06 14:11:36,0
+54,2,NA,3,general_settings,selected_file_id,NA,NA,NA,2024-09-06 14:11:36,0
+55,2,NA,NA,general_settings,show_saved_file,NA,1,NA,2024-09-06 14:11:36,0
+56,2,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2024-09-06 14:11:36,0
+57,2,NA,NA,general_settings,run_code_at_patient_update,NA,0,NA,2024-09-06 14:11:36,0
+58,2,NA,NA,general_settings,run_code_at_settings_file_load,NA,0,NA,2024-09-06 14:11:36,0
+59,1,NA,1,general_settings,selected_file_id,NA,NA,NA,2024-09-06 14:11:36,0
+60,1,NA,NA,general_settings,show_saved_file,NA,1,NA,2024-09-06 14:11:36,0
+61,1,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2024-09-06 14:11:36,0
+62,1,NA,NA,general_settings,run_code_at_patient_update,NA,0,NA,2024-09-06 14:11:36,0
+63,1,NA,NA,general_settings,run_code_at_settings_file_load,NA,0,NA,2024-09-06 14:11:36,0
+64,4,NA,NA,general_settings,show_saved_file,NA,1,NA,2024-09-06 14:13:19,0
+65,4,NA,NA,general_settings,figure_and_settings_side_by_side,NA,1,NA,2024-09-06 14:13:19,0
+66,4,NA,NA,general_settings,run_code_at_patient_update,NA,0,NA,2024-09-06 14:13:19,0
+67,4,NA,NA,general_settings,run_code_at_settings_file_load,NA,0,NA,2024-09-06 14:13:19,0
+68,4,NA,29,saved_settings,prog_language,r,NA,NA,2024-09-06 14:16:07,0
+69,4,NA,29,saved_settings,output,table,NA,NA,2024-09-06 14:16:07,0
+70,4,NA,29,saved_settings,code,"library(dplyr)
+
+filtered_weight <- d$measurement %>%
+  filter(measurement_concept_id == 3025315) %>%
+  select(
+  
+  person_id, measurement_id, value_as_number, measurement_datetime, unit_concept_id, unit_source_value, visit_occurrence_id) %>%
+  collect()
+
+naetaat <- function(meas_df, range_high = 300, range_low = 0, double_chr = FALSE, zero = FALSE, 
+                    medianVariationIndexVisit = FALSE, medianVariationIndexPerson = FALSE, IQRVariationIndexVisit = FALSE, IQRVariationIndexPerson = FALSE){ 
+  # Check for range_high and add is_above_range column
+  if (!is.null(range_high)) {
+    meas_df <- meas_df %>%
+      mutate(is_above_range = value_as_number > range_high)
+  }
+  
+  # Check for range_low and add is_below_range column
+  if (!is.null(range_low)) {
+    meas_df <- meas_df %>%
+      mutate(is_below_range = value_as_number < range_low)
+  }
+  
+  # If double_chr is TRUE, add the double_chr column
+  if (double_chr) {
+    meas_df <- meas_df %>%
+      mutate(double_chr = nchar(as.character(value_as_number)) >= 3 & grepl(""(\\d)\\1"", as.character(value_as_number)))
+  }
+  
+  # If zero is TRUE, flag zero values
+  if (zero) {
+    meas_df <- meas_df %>%
+      mutate(zero = value_as_number == 0)
+  }
+  
+  # For median variation index by visit_occurrence_id
+  if (medianVariationIndexVisit) {
+    meas_df <- meas_df %>%
+      group_by(visit_occurrence_id) %>%
+      mutate(medianValue = median(value_as_number, na.rm = TRUE)) %>%
+      ungroup() %>%
+      mutate(medianVariationIndex = round(abs((medianValue - value_as_number) / medianValue), 2) > 1.5)
+  }
+  
+  # For median variation index by person_id
+  if (medianVariationIndexPerson) {
+    meas_df <- meas_df %>%
+      group_by(person_id) %>%
+      mutate(medianValue = median(value_as_number, na.rm = TRUE)) %>%
+      ungroup() %>%
+      mutate(medianVariationIndex = round(abs((medianValue - value_as_number) / medianValue), 2) > 1.5)
+  }
+  
+  # For IQR variation index by visit_occurrence_id
+  if (IQRVariationIndexVisit) {
+    index_var <- meas_df %>%
+      group_by(visit_occurrence_id) %>%
+      summarise(
+        mediane = median(value_as_number, na.rm = TRUE),
+        q1 = quantile(value_as_number, 0.25, na.rm = TRUE),  # First quartile (Q1)
+        q3 = quantile(value_as_number, 0.75, na.rm = TRUE),  # Third quartile (Q3)
+        iqr = IQR(value_as_number, na.rm = TRUE)  # Interquartile range (IQR)
+      ) %>%
+      mutate(
+        lower_bound = q1 - (1.5 * iqr),  # Lower bound
+        upper_bound = q3 + (1.5 * iqr)   # Upper bound
+      )
+    
+    # Identify outliers for visit_occurrence_id
+    meas_df <- meas_df %>%
+      left_join(index_var, by = ""visit_occurrence_id"") %>%
+      filter(value_as_number < lower_bound | value_as_number > upper_bound)
+  }
+  
+  # For IQR variation index by person_id
+  if (IQRVariationIndexPerson) {
+    index_var <- meas_df %>%
+      group_by(person_id) %>%
+      summarise(
+        mediane = median(value_as_number, na.rm = TRUE),
+        q1 = quantile(value_as_number, 0.25, na.rm = TRUE),  # First quartile (Q1)
+        q3 = quantile(value_as_number, 0.75, na.rm = TRUE),  # Third quartile (Q3)
+        iqr = IQR(value_as_number, na.rm = TRUE)  # Interquartile range (IQR)
+      ) %>%
+      mutate(
+        lower_bound = q1 - (1.5 * iqr),  # Lower bound
+        upper_bound = q3 + (1.5 * iqr)   # Upper bound
+      )
+    
+    # Identify outliers for person_id
+    meas_df <- meas_df %>%
+      left_join(index_var, by = ""person_id"") %>%
+      filter(value_as_number < lower_bound | value_as_number > upper_bound)
+  }
+  
+  return(meas_df)
+}
+
+# Example usage
+naetaat(filtered_weight, range_high = 300, range_low = 0, double_chr = TRUE, zero = TRUE, 
+        medianVariationIndexVisit = TRUE, medianVariationIndexPerson = TRUE, 
+        IQRVariationIndexVisit = TRUE, IQRVariationIndexPerson = FALSE)
+",NA,NA,2024-09-06 14:16:07,0
