@@ -158,5 +158,5 @@ div(
             ),
         )
     ),
-    style = "width: 50%; height: 100%; margin-left: 10px; overflow: auto;"
+    style = "width: 50%; height: 100%; padding-left: 10px; overflow: auto;"
 )
