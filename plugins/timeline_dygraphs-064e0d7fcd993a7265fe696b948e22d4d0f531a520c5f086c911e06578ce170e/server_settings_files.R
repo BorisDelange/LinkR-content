@@ -12,16 +12,16 @@ output$settings_files_ui_%widget_id% <- renderUI({
     div(i18np$t("no_settings_file_selected"), style = paste0(settings_files_ui_style, "background-color: #606060ab;"))
 })
 
-## Show / hide saved settings file
-observeEvent(input$show_saved_file_%widget_id%, {
+## Show / hide settings file
+observeEvent(input$show_settings_file_%widget_id%, {
     %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$show_saved_file"))
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$show_settings_file"))
     
-    if (input$show_saved_file_%widget_id%) shinyjs::show("settings_files_ui_%widget_id%")
+    if (input$show_settings_file_%widget_id%) shinyjs::show("settings_files_ui_%widget_id%")
     else shinyjs::hide("settings_files_ui_%widget_id%")
 })
 
-## Show / hide saved settings div
+## Show / hide settings files div
 observeEvent(input$show_settings_files_tab_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$show_settings_files_tab"))
@@ -63,7 +63,7 @@ observeEvent(input$add_settings_file_%widget_id%, {
             shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", errorMessage = NULL)
             
             # Check if name is already used
-            sql <- glue::glue_sql("SELECT name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND name = 'file_name' AND LOWER(value) = {tolower(file_name)}", .con = m$db)
+            sql <- glue::glue_sql("SELECT name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'settings_files' AND name = 'file_name' AND LOWER(value) = {tolower(file_name)}", .con = m$db)
             name_already_used <- nrow(DBI::dbGetQuery(m$db, sql) > 0)
             
             if (name_already_used) shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", errorMessage = i18np$t("name_already_used"))
@@ -74,7 +74,7 @@ observeEvent(input$add_settings_file_%widget_id%, {
                 # Add settings file in database
                 new_data <- tibble::tibble(
                     id = new_id, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
-                    category = "figure_settings", name = "file_name", value = file_name, value_num = NA_real_, creator_id = m$user_id, datetime = now(), deleted = FALSE
+                    category = "settings_files", name = "file_name", value = file_name, value_num = NA_real_, creator_id = m$user_id, datetime = now(), deleted = FALSE
                 )
                 DBI::dbAppendTable(m$db, "widgets_options", new_data)
                 
@@ -101,7 +101,7 @@ observeEvent(input$reload_dropdown_%widget_id%, {
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$settings_file"))
     
     tryCatch({
-        sql <- glue::glue_sql("SELECT id, value AS name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND name = 'file_name'", .con = m$db)
+        sql <- glue::glue_sql("SELECT id, value AS name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'settings_files' AND name = 'file_name'", .con = m$db)
         m$settings_filenames_%widget_id% <- DBI::dbGetQuery(m$db, sql)
         
         dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = "id", text_col = "name")

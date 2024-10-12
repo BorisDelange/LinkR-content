@@ -1,4 +1,4 @@
-# UI - Saved settings
+# UI - Settings files
 #
 # This code corresponds to the page that appears when you click on the file icon at the top of the widget.
 # The UI allows you to select, add, and delete saved settings files.

@@ -48,10 +48,10 @@ observeEvent(input$save_general_settings_%widget_id%, {
         # Delete old rows
         sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings'", .con = m$db))
         
-        file_id <- input$saved_settings_%widget_id%
+        file_id <- input$settings_file_%widget_id%
         new_data <- tibble::tibble(name = "selected_file_id", value = NA_character_, value_num = NA_integer_, link_id = file_id)
         
-        sapply(c("show_saved_file", "figure_and_settings_side_by_side"), function(name){
+        sapply(c("show_settings_file", "figure_and_settings_side_by_side"), function(name){
             toggle_value <- 0L
             input_name <- paste0(name, "_%widget_id%")
             if (length(input[[input_name]]) > 0) if (input[[input_name]]) toggle_value <- 1L
