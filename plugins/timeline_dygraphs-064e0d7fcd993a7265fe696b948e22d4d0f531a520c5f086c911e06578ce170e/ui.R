@@ -32,7 +32,7 @@ tagList(
         div(
             id = ns("figure_div_%widget_id%"),
             %import_script('ui_figure.R')%,
-            style = paste0("height: 100%; width: ", div_width, "; margin: 5px 10px; overflow: auto;")
+            style = paste0("height: 100%; width: ", div_width, "; margin: 0 10px; border-right: solid 1px #ccc;")
         ),
         shinyjs::hidden(
             div(

@@ -11,15 +11,35 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
             shinyjs::runjs(paste0(
                 "$('#", id, "-figure_div_%widget_id%').css('width', '50%');",
                 "$('#", id, "-figure_settings_div_%widget_id%').css('width', '50%');",
-                "$('#", id, "-code_div_%widget_id%').css('width', '50%');"
+                "$('#", id, "-code_div_%widget_id%').css('width', '50%');",
+                "$('#", id, "-figure_div_%widget_id%').resizable({",
+                "    handles: 'e',",
+                "    resize: function(event, ui) {",
+                "        var containerWidth = $('#", id, "-figure_settings_code_div_%widget_id%').width();",
+                "        var leftWidth = (ui.size.width + 25) / containerWidth * 100;",
+                "        $('#", id, "-figure_div_%widget_id%').css('flex-basis', leftWidth + '%');",
+                "        $('#", id, "-figure_settings_div_%widget_id%').css('flex-basis', (100 - leftWidth) + '%');",
+                "        $('#", id, "-code_div_%widget_id%').css('flex-basis', (100 - leftWidth) + '%');",
+                "    },",
+                "    stop: function(event, ui) {",
+                "        var containerWidth = $('#", id, "-figure_settings_code_div_%widget_id%').width();",
+                "        var leftWidth = (ui.size.width + 25) / containerWidth * 100;",
+                "        $('#", id, "-figure_div_%widget_id%').css('flex-basis', leftWidth + '%');",
+                "        $('#", id, "-code_div_%widget_id%').css('flex-basis', (100 - leftWidth) + '%');",
+                "    }",
+                "});"
             ))
             shinyjs::hide("figure_button_div_%widget_id%")
         }
         else {
             shinyjs::runjs(paste0(
+                "$('#", id, "-figure_div_%widget_id%').resizable('destroy');",
                 "$('#", id, "-figure_div_%widget_id%').css('width', '100%');",
+                "$('#", id, "-figure_div_%widget_id%').css('flex-basis', '100%');",
                 "$('#", id, "-figure_settings_div_%widget_id%').css('width', '100%');",
-                "$('#", id, "-code_div_%widget_id%').css('width', '100%');"
+                "$('#", id, "-figure_settings_div_%widget_id%').css('flex-basis', '100%');",
+                "$('#", id, "-code_div_%widget_id%').css('width', '100%');",
+                "$('#", id, "-code_div_%widget_id%').css('flex-basis', '100%');"
             ))
             shinyjs::show("figure_button_div_%widget_id%")
         }

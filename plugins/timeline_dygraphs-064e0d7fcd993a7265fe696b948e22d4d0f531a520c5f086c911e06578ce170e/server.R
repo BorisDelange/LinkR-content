@@ -17,7 +17,7 @@ sapply(tabs, function(tab){
             else shinyjs::show("figure_settings_code_div_%widget_id%")
             
             sapply(paste0(setdiff(c("figure_settings", "code", "general_settings"), tab), "_div_%widget_id%"), shinyjs::hide)
-            shinyjs::hide("saved_settings_div_%widget_id%")
+            shinyjs::hide("settings_files_div_%widget_id%")
             shinyjs::show(paste0(tab, "_div_%widget_id%"))
             
             if (tab %in% c("figure_settings", "code")){

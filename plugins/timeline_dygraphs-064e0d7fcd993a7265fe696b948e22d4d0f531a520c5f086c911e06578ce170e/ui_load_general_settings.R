@@ -28,7 +28,7 @@ if (nrow(general_settings) == 0){
     
     # Selected settings file
     
-    sql <- glue::glue_sql("SELECT id, value AS name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'settings_file' AND name = 'file_name'", .con = m$db)
+    sql <- glue::glue_sql("SELECT id, value AS name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'settings_files' AND name = 'file_name'", .con = m$db)
     m$settings_filenames_%widget_id% <- DBI::dbGetQuery(m$db, sql)
     dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = "id", text_col = "name")
     selected_file <- general_settings %>% dplyr::filter(name == "selected_file_id") %>% dplyr::pull(link_id)

@@ -14,7 +14,7 @@
     <short_description_en>Allows displaying data as a timeline using the {dygraphs} library.</short_description_en>
     <short_description_fr>Permet d'afficher des donn&#xE9;es sous forme de timeline avec la librairie {dygraphs}</short_description_fr>
     <creation_datetime>2024-08-28 22:19:16</creation_datetime>
-    <update_datetime>2024-10-12 21:21:05</update_datetime>
+    <update_datetime>2024-10-12 23:13:18</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>
