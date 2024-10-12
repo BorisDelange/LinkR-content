@@ -38,6 +38,7 @@ observeEvent(input$save_general_settings_button_%widget_id%, {
     # Notify user
     show_message_bar(output, "modif_saved", "success", i18n = i18n, ns = ns)
 })
+
 observeEvent(input$save_general_settings_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$save_general_settings"))
@@ -60,7 +61,7 @@ observeEvent(input$save_general_settings_%widget_id%, {
         new_data <-
             new_data %>%
             dplyr::transmute(
-                id = get_last_row(m$db, "widgets_options") + 1:5, widget_id = %widget_id%, person_id = NA_integer_, link_id,
+                id = get_last_row(m$db, "widgets_options") + 1:3, widget_id = %widget_id%, person_id = NA_integer_, link_id,
                 category = "general_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
             )
         

@@ -3,11 +3,6 @@
 # Init code var
 m$code_%widget_id% <- ""
 
-# Outputs
-outputs <- list()
-outputs$r <- c("console", "ui", "figure", "table", "datatable", "rmarkdown")
-outputs$python <- c("console", "matplotlib")
-
 # Prevent a bug with scroll into ace editor
 shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.dispatchEvent(event);"))
 
@@ -69,20 +64,80 @@ observeEvent(input$run_code_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_code"))
     
-    req(length(input$prog_language_%widget_id%) > 0)
+    if (is.na(m$selected_person)){
+        shinyjs::show("figure_message_%widget_id%")
+        shinyjs::hide("dygraph_%widget_id%")
+        output$figure_message_%widget_id% <- renderUI(div(i18np$t("select_patient"), style = "font-weight: bold; color: red;"))
+    }
+    
+    req(!is.na(m$selected_person))
     
     tryCatch({
         
         # Put here the code to execute when the "Run code" button is clicked
         
-        # ...
+        if (length(input$features_%widget_id%) > 0){
+            
+            concept_ids <- input$features_%widget_id%
+            m$concepts <- input$features_%widget_id%
+            
+            features <- list()
+            features_names <- c()
+            
+            for (concept_id in concept_ids){
+            
+                concept <- selected_concepts %>% dplyr::filter(concept_id == !!concept_id)
+            
+                if (concept$domain_id == "Measurement"){
+                    
+                    data <- d[[tolower(concept$domain_id)]]
+                    
+                    if (data %>% dplyr::count() %>% dplyr::pull() > 0){
+                        data <-
+                            data %>%
+                            dplyr::filter(
+                                person_id == m$selected_person,
+                                !!rlang::sym(paste0(tolower(concept$domain_id), "_concept_id")) == concept_id
+                            ) %>%
+                            dplyr::rename(datetime = !!rlang::sym(paste0(tolower(concept$domain_id), "_datetime"))) %>%
+                            dplyr::select(datetime, value_as_number) %>%
+                            dplyr::collect()
+                        
+                        if (nrow(data) > 0){
+                            features[[paste0("concept_", concept_id)]] <- xts::xts(data$value_as_number, data$datetime)
+                            features_names <- c(features_names, concept$concept_name)
+                        }
+                    }
+                }
+            }
+            
+            if (length(features) == 0){
+                shinyjs::show("figure_message_%widget_id%")
+                shinyjs::hide("dygraph_%widget_id%")
+                output$figure_message_%widget_id% <- renderUI(div(i18np$t("no_data_to_display"), style = "font-weight: bold; color: red;"))
+            }
+            
+            if (length(features) > 0){
+                combined_features <- do.call(merge, features)
+                colnames(combined_features) <- features_names
+                
+                output$dygraph_%widget_id% <- dygraphs::renderDygraph({
+                    dygraphs::dygraph(combined_features) %>%
+                    dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2) %>%
+                    dygraphs::dyRangeSelector()
+                })
+                
+                shinyjs::hide("figure_message_%widget_id%")
+                shinyjs::show("dygraph_%widget_id%")
+            }
+        }
         
         # Go to figure tab
-        if (!input$figure_and_settings_side_by_side_%widget_id%) shinyjs::click("figure_button_%widget_id%")
+        if (length(input$figure_and_settings_side_by_side_%widget_id%) > 0) if (!input$figure_and_settings_side_by_side_%widget_id%) shinyjs::click("figure_button_%widget_id%")
         
     }, error = function(e){
         show_message_bar(output, "error_displaying_figure", "severeWarning", i18n = i18np, ns = ns)
-        cat(paste0("\\n", now(), " - widget %widget_id% - input$display_figure - error = ", toString(e)))
+        cat(paste0("\\n", now(), " - widget %widget_id% - input$run_code - error = ", toString(e)))
     })
 })
 

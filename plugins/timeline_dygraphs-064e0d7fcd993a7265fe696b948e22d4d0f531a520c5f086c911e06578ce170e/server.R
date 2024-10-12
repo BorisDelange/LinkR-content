@@ -44,8 +44,8 @@ sapply(tabs, function(tab){
 # Code
 %import_script('server_code.R')%
 
+# Settings files
+%import_script('server_settings_files.R')%
+
 # General settings
 %import_script('server_general_settings.R')%
-
-# Saved settings
-%import_script('server_saved_settings.R')%

@@ -14,8 +14,8 @@ tagList(
         shiny.fluent::IconButton.shinyInput(ns("code_button_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor")),
         shiny.fluent::IconButton.shinyInput(ns("general_settings_button_%widget_id%"), iconProps = list(iconName = "Settings"), title = i18np$t("show_general_settings")),
         uiOutput(
-            ns("saved_settings_ui_%widget_id%"),
-            onclick = paste0("Shiny.setInputValue('", id, "-show_saved_settings_tab_%widget_id%', Math.random())")
+            ns("settings_files_ui_%widget_id%"),
+            onclick = paste0("Shiny.setInputValue('", id, "-show_settings_files_tab_%widget_id%', Math.random())")
         ),
         class = "widget_icon",
         style = "display: flex; color: #808080; border-bottom: solid grey 0.5px; height: 28px; padding-top: 5px; font-size: 12px; color: #808080;"
@@ -63,8 +63,8 @@ tagList(
     ),
     shinyjs::hidden(
         div(
-            id = ns("saved_settings_div_%widget_id%"),
-            %import_script('ui_saved_settings.R')%,
+            id = ns("settings_files_div_%widget_id%"),
+            %import_script('ui_settings_files.R')%,
             style = "display: flex; height: calc(100% - 40px);"
         )
     )

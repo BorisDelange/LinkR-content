@@ -55,8 +55,14 @@ tagList(
     
     # Dropdown and delete button
     div(
-        div(shiny.fluent::Dropdown.shinyInput(ns("saved_settings_%widget_id%"), label = i18np$t("file"), options = dropdown_options, value = selected_file), style = "width: 200px"),
-        div(shiny.fluent::IconButton.shinyInput(ns("delete_saved_settings_file_%widget_id%"), iconProps = list(iconName = "Delete")), style = "margin-top: 26px;", class = "widget_icon"),
+        div(shiny.fluent::Dropdown.shinyInput(ns("settings_file_%widget_id%"), label = i18np$t("file"), options = dropdown_options, value = selected_file), style = "width: 200px"),
+        shinyjs::hidden(
+            div(
+                id = ns("delete_settings_file_div_%widget_id%"),
+                shiny.fluent::IconButton.shinyInput(ns("delete_settings_file_%widget_id%"), iconProps = list(iconName = "Delete")),
+                style = "margin-top: 26px;", class = "widget_icon"
+            )
+        ),
         style = "display: flex; gap: 5px; margin: 5px 10px;"
     )
 )
