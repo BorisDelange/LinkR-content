@@ -47,7 +47,6 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
                         
                         leftPanel.style.flexBasis = (offsetLeftPanel + deltaX) + 'px';
                         
-                        // Ajustement pour figure_settings_div et code_div
                         figureSettingsPanel.style.flexBasis = (offsetFigureSettingsPanel - deltaX) + 'px';
                         codePanel.style.flexBasis = (offsetCodePanel - deltaX) + 'px';
                 

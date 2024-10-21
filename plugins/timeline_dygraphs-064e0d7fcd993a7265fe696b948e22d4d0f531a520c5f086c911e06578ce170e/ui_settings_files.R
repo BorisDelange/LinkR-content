@@ -1,7 +1,7 @@
 # UI - Settings files
 #
 # This code corresponds to the page that appears when you click on the file icon at the top of the widget.
-# The UI allows you to select, add, and delete saved settings files.
+# The UI allows you to select, add, and delete settings files.
 
 tagList(
 
@@ -47,7 +47,7 @@ tagList(
     
     # Sidenav
     div(
-        id = ns("saved_settings_sidenav_%widget_id%"),
+        id = ns("settings_files_sidenav_%widget_id%"),
         shiny.fluent::IconButton.shinyInput(ns("create_settings_file_%widget_id%"), iconProps = list(iconName = "Add"), title = i18np$t("create_settings_file"), style = "margin: 0"),
         class = "widget_icon",
         style = "border-right: solid grey 0.5px;"
