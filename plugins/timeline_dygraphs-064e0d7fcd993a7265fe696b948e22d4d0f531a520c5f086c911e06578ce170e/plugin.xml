@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <plugins>
   <plugin>
-    <app_version>0.3.0.9018</app_version>
+    <app_version>0.3.0.9019</app_version>
     <unique_id>064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e</unique_id>
     <version>0.0.1.9000</version>
     <author>Boris Delange</author>
@@ -14,7 +14,7 @@
     <short_description_en>Allows displaying data as a timeline using the {dygraphs} library.</short_description_en>
     <short_description_fr>Permet d'afficher des donn&#xE9;es sous forme de timeline avec la librairie {dygraphs}</short_description_fr>
     <creation_datetime>2024-08-28 22:19:16</creation_datetime>
-    <update_datetime>2024-10-12 23:13:18</update_datetime>
+    <update_datetime>2024-10-21 08:40:19</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>

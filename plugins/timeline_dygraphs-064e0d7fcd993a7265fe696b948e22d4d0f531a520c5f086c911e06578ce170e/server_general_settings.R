@@ -8,40 +8,63 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
     
     tryCatch({
         if (input$figure_and_settings_side_by_side_%widget_id%){
-            shinyjs::runjs(paste0(
-                "$('#", id, "-figure_div_%widget_id%').css('width', '50%');",
-                "$('#", id, "-figure_settings_div_%widget_id%').css('width', '50%');",
-                "$('#", id, "-code_div_%widget_id%').css('width', '50%');",
-                "$('#", id, "-figure_div_%widget_id%').resizable({",
-                "    handles: 'e',",
-                "    resize: function(event, ui) {",
-                "        var containerWidth = $('#", id, "-figure_settings_code_div_%widget_id%').width();",
-                "        var leftWidth = (ui.size.width + 25) / containerWidth * 100;",
-                "        $('#", id, "-figure_div_%widget_id%').css('flex-basis', leftWidth + '%');",
-                "        $('#", id, "-figure_settings_div_%widget_id%').css('flex-basis', (100 - leftWidth) + '%');",
-                "        $('#", id, "-code_div_%widget_id%').css('flex-basis', (100 - leftWidth) + '%');",
-                "    },",
-                "    stop: function(event, ui) {",
-                "        var containerWidth = $('#", id, "-figure_settings_code_div_%widget_id%').width();",
-                "        var leftWidth = (ui.size.width + 25) / containerWidth * 100;",
-                "        $('#", id, "-figure_div_%widget_id%').css('flex-basis', leftWidth + '%');",
-                "        $('#", id, "-code_div_%widget_id%').css('flex-basis', (100 - leftWidth) + '%');",
-                "    }",
-                "});"
-            ))
+            shinyjs::runjs(paste0("
+                $('#", id, "-figure_div_%widget_id%').css('flex-basis', '50%');
+                $('#", id, "-figure_settings_div_%widget_id%').css('flex-basis', '50%');
+                $('#", id, "-code_div_%widget_id%').css('flex-basis', '50%');
+                
+                if (!window.resizingInitialized_%widget_id%) {
+                    container = document.getElementById('", id, "-figure_settings_code_div_%widget_id%');
+                    
+                    var isResizing = false;
+                    var lastDownX = 0;
+                    
+                    var leftPanel = container.querySelector('.left-panel');
+                    var rightPanel = container.querySelector('.right-panel');
+                    var resizer = container.querySelector('.resizer');
+                    
+                    resizer.addEventListener('mousedown', function(e) {
+                        isResizing = true;
+                        lastDownX = e.clientX;
+            
+                        document.addEventListener('mousemove', resizePanels);
+                        document.addEventListener('mouseup', stopResizing);
+                    });
+                    
+                    function resizePanels(e) {
+                        if (!isResizing) return;
+                        
+                        var offsetLeftPanel = leftPanel.offsetWidth;
+                        var offsetRightPanel = rightPanel.offsetWidth;
+                        var deltaX = e.clientX - lastDownX;
+                        
+                        leftPanel.style.flexBasis = (offsetLeftPanel + deltaX) + 'px';
+                        rightPanel.style.flexBasis = (offsetRightPanel - deltaX) + 'px';
+            
+                        lastDownX = e.clientX;
+                    }
+                    
+                    function stopResizing(e) {
+                        isResizing = false;
+                        document.removeEventListener('mousemove', resizePanels);
+                        document.removeEventListener('mouseup', stopResizing);
+                    }
+                }
+                
+                window.resizingInitialized_%widget_id% = true;
+            "))
             shinyjs::hide("figure_button_div_%widget_id%")
+            shinyjs::show("resizer_%widget_id%")
         }
         else {
-            shinyjs::runjs(paste0(
-                "$('#", id, "-figure_div_%widget_id%').resizable('destroy');",
-                "$('#", id, "-figure_div_%widget_id%').css('width', '100%');",
-                "$('#", id, "-figure_div_%widget_id%').css('flex-basis', '100%');",
-                "$('#", id, "-figure_settings_div_%widget_id%').css('width', '100%');",
-                "$('#", id, "-figure_settings_div_%widget_id%').css('flex-basis', '100%');",
-                "$('#", id, "-code_div_%widget_id%').css('width', '100%');",
-                "$('#", id, "-code_div_%widget_id%').css('flex-basis', '100%');"
-            ))
-            shinyjs::show("figure_button_div_%widget_id%")
+            shinyjs::runjs(paste0("
+                $('#", id, "-figure_div_%widget_id%').css('flex-basis', '100%');
+                $('#", id, "-figure_settings_div_%widget_id%').css('flex-basis', '100%');
+                $('#", id, "-code_div_%widget_id%').css('flex-basis', '100%');
+            "))
+            
+            shinyjs::show("figure_button_div_%widget_id%");
+            shinyjs::hide("resizer_%widget_id%");
         }
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
