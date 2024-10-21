@@ -14,19 +14,25 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
                 $('#", id, "-code_div_%widget_id%').css('flex-basis', '50%');
                 
                 if (!window.resizingInitialized_%widget_id%) {
-                    container = document.getElementById('", id, "-figure_settings_code_div_%widget_id%');
+                    var container = document.getElementById('", id, "-figure_settings_code_div_%widget_id%');
                     
                     var isResizing = false;
                     var lastDownX = 0;
                     
                     var leftPanel = container.querySelector('.left-panel');
-                    var rightPanel = container.querySelector('.right-panel');
+                    var figureSettingsPanel = document.getElementById('", id, "-figure_settings_div_%widget_id%');
+                    var codePanel = document.getElementById('", id, "-code_div_%widget_id%');
                     var resizer = container.querySelector('.resizer');
+                    
+                    function triggerResizeEvent() {
+                        var event = new Event('resize');
+                        window.dispatchEvent(event);
+                    }
                     
                     resizer.addEventListener('mousedown', function(e) {
                         isResizing = true;
                         lastDownX = e.clientX;
-            
+                
                         document.addEventListener('mousemove', resizePanels);
                         document.addEventListener('mouseup', stopResizing);
                     });
@@ -35,19 +41,25 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
                         if (!isResizing) return;
                         
                         var offsetLeftPanel = leftPanel.offsetWidth;
-                        var offsetRightPanel = rightPanel.offsetWidth;
+                        var offsetFigureSettingsPanel = figureSettingsPanel.offsetWidth;
+                        var offsetCodePanel = codePanel.offsetWidth;
                         var deltaX = e.clientX - lastDownX;
                         
                         leftPanel.style.flexBasis = (offsetLeftPanel + deltaX) + 'px';
-                        rightPanel.style.flexBasis = (offsetRightPanel - deltaX) + 'px';
-            
+                        
+                        // Ajustement pour figure_settings_div et code_div
+                        figureSettingsPanel.style.flexBasis = (offsetFigureSettingsPanel - deltaX) + 'px';
+                        codePanel.style.flexBasis = (offsetCodePanel - deltaX) + 'px';
+                
                         lastDownX = e.clientX;
+                        triggerResizeEvent();
                     }
                     
                     function stopResizing(e) {
                         isResizing = false;
                         document.removeEventListener('mousemove', resizePanels);
                         document.removeEventListener('mouseup', stopResizing);
+                        triggerResizeEvent();
                     }
                 }
                 

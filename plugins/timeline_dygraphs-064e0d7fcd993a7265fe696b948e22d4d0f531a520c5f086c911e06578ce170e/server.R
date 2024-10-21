@@ -25,6 +25,20 @@ sapply(tabs, function(tab){
                 else shinyjs::hide("figure_div_%widget_id%")
                 
                 shinyjs::show("figure_settings_code_sidenav_%widget_id%")
+                
+                if (tab == "figure_settings") anti_tab <- "code"
+                else anti_tab <- "figure_settings"
+                
+                shinyjs::runjs(paste0("
+                    var figureSettingsDiv = document.getElementById('", id, "-figure_settings_div_%widget_id%');
+                    var codeDiv = document.getElementById('", id, "-code_div_%widget_id%');
+                    
+                    if ('", tab, "' === 'figure_settings') {
+                        figureSettingsDiv.style.flexBasis = codeDiv.style.flexBasis;
+                    } else {
+                        codeDiv.style.flexBasis = figureSettingsDiv.style.flexBasis;
+                    }
+                "))
             }
             else {
                 shinyjs::hide("figure_settings_code_sidenav_%widget_id%")

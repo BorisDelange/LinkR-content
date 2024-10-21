@@ -32,7 +32,7 @@ tagList(
         div(
             id = ns("figure_div_%widget_id%"),
             %import_script('ui_figure.R')%,
-            style = paste0("height: 100%; flex-basis: ", div_width, "; margin: 0 10px; flex: 1; box-sizing: border-box;"),
+            style = paste0("height: 100%; flex-basis: ", div_width, "; margin: 0 10px; flex: 1; box-sizing: border-box; min-width: 50px;"),
             class = "left-panel"
         ),
         div(
