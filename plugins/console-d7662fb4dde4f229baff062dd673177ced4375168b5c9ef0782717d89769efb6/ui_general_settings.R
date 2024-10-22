@@ -3,8 +3,8 @@
 div(
     tags$strong(i18np$t("display")), br(),
     div(
-        shiny.fluent::Toggle.shinyInput(ns("show_saved_file_%widget_id%"), value = toggle_values$show_saved_file),
-        tags$label(i18np$t("show_saved_file"), `for` = ns("show_saved_file_%widget_id%"), style = "margin-left: 5px;"),
+        shiny.fluent::Toggle.shinyInput(ns("show_settings_file_%widget_id%"), value = toggle_values$show_settings_file),
+        tags$label(i18np$t("show_settings_file"), `for` = ns("show_settings_file_%widget_id%"), style = "margin-left: 5px;"),
         style = "display: flex; margin-top: 8px;" 
     ),
     div(
