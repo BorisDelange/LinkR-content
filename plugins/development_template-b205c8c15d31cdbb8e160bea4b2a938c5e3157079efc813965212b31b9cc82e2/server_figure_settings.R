@@ -20,6 +20,13 @@ observeEvent(input$load_figure_settings_%widget_id%, {
             # Update figure settings UI here with loaded figure settings
         })
     }
+    
+    # Run code if toggle is activated
+    # if (length(input$run_code_at_settings_file_load_%widget_id%) > 0){
+    #     if (input$run_code_at_settings_file_load_%widget_id%){
+    #        shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random());")))
+    #    }
+    # }
 })
 
 # Save current settings
@@ -38,7 +45,7 @@ observeEvent(input$save_params_and_code_%widget_id%, {
             link_id <- input$settings_file_%widget_id%
         
             # Delete old settings
-            sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND link_id = {link_id}", .con = m$db))
+            sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db))
             
             # Add new settings in db
             # new_data <- tibble::tribble(

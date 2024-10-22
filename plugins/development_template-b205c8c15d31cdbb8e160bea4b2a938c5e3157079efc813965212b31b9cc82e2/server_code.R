@@ -3,24 +3,21 @@
 # Init code var
 m$code_%widget_id% <- ""
 
-# Outputs
-outputs <- list()
-outputs$r <- c("console", "ui", "figure", "table", "datatable", "rmarkdown")
-outputs$python <- c("console", "matplotlib")
-
 # Prevent a bug with scroll into ace editor
 shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.dispatchEvent(event);"))
 
 # Run code at patient update
-observeEvent(m$selected_person, {
-    %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
-    
-    req(length(m$selected_person) > 0)
-    req(!is.na(m$selected_person))
-    
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-})
+# observeEvent(m$selected_person, {
+#     %req%
+#     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
+#     
+#     req(length(input$run_code_at_patient_update_%widget_id%) > 0){
+#     req(input$run_code_at_patient_update_%widget_id%)
+#     req(length(m$selected_person) > 0)
+#     req(!is.na(m$selected_person))
+#     
+#     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+# })
 
 # Comment code
 observeEvent(input$code_%widget_id%_comment, {
