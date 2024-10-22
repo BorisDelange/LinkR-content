@@ -45,7 +45,7 @@ observeEvent(input$save_params_and_code_%widget_id%, {
             link_id <- input$settings_file_%widget_id%
         
             # Delete old settings
-            sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND link_id = {link_id}", .con = m$db))
+            sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db))
             
             # Add new settings in db
             new_data <- tibble::tribble(

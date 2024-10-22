@@ -1,5 +1,9 @@
 # UI - main file
 
+if ("projects_console_access" %in% user_accesses){
+    code_button <- shiny.fluent::IconButton.shinyInput(ns("code_button_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor"))
+} else code_button <- ""
+
 %import_script('ui_load_general_settings.R')%
 
 tagList(
@@ -11,7 +15,7 @@ tagList(
             )
         ),
         shiny.fluent::IconButton.shinyInput(ns("figure_settings_button_%widget_id%"), iconProps = list(iconName = "AllApps"), title = i18np$t("show_figure_settings")),
-        shiny.fluent::IconButton.shinyInput(ns("code_button_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor")),
+        code_button,
         shiny.fluent::IconButton.shinyInput(ns("general_settings_button_%widget_id%"), iconProps = list(iconName = "Settings"), title = i18np$t("show_general_settings")),
         uiOutput(
             ns("settings_files_ui_%widget_id%"),
