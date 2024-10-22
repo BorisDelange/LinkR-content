@@ -48,8 +48,6 @@ observeEvent(input$code_%widget_id%_run_all, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$code_run_all"))
 
-    req("projects_console_access" %in% user_accesses)
-
     m$code_%widget_id% <- input$code_%widget_id%
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
 })
@@ -58,8 +56,6 @@ observeEvent(input$code_%widget_id%_run_all, {
 observeEvent(input$display_figure_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$display_figure"))
-    
-    req("projects_console_access" %in% user_accesses)
     
     m$code_%widget_id% <- input$code_%widget_id%
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
