@@ -1,24 +1,81 @@
+# Server - General settings
+
 # Settings / editor side-by-side with figure
+
 observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$figure_and_settings_side_by_side"))
     
     tryCatch({
         if (input$figure_and_settings_side_by_side_%widget_id%){
-            shinyjs::runjs(paste0(
-                "$('#", id, "-figure_div_%widget_id%').css('width', '50%');",
-                "$('#", id, "-figure_settings_div_%widget_id%').css('width', '50%');",
-                "$('#", id, "-code_div_%widget_id%').css('width', '50%');"
-            ))
+            shinyjs::runjs(paste0("
+                $('#", id, "-figure_div_%widget_id%').css('flex-basis', '50%');
+                $('#", id, "-figure_settings_div_%widget_id%').css('flex-basis', '50%');
+                $('#", id, "-code_div_%widget_id%').css('flex-basis', '50%');
+                
+                if (!window.resizingInitialized_%widget_id%) {
+                    var container = document.getElementById('", id, "-figure_settings_code_div_%widget_id%');
+                    
+                    var isResizing = false;
+                    var lastDownX = 0;
+                    
+                    var leftPanel = container.querySelector('.left-panel');
+                    var figureSettingsPanel = document.getElementById('", id, "-figure_settings_div_%widget_id%');
+                    var codePanel = document.getElementById('", id, "-code_div_%widget_id%');
+                    var resizer = container.querySelector('.resizer');
+                    
+                    function triggerResizeEvent() {
+                        var event = new Event('resize');
+                        window.dispatchEvent(event);
+                    }
+                    
+                    resizer.addEventListener('mousedown', function(e) {
+                        isResizing = true;
+                        lastDownX = e.clientX;
+                
+                        document.addEventListener('mousemove', resizePanels);
+                        document.addEventListener('mouseup', stopResizing);
+                    });
+                    
+                    function resizePanels(e) {
+                        if (!isResizing) return;
+                        
+                        var offsetLeftPanel = leftPanel.offsetWidth;
+                        var offsetFigureSettingsPanel = figureSettingsPanel.offsetWidth;
+                        var offsetCodePanel = codePanel.offsetWidth;
+                        var deltaX = e.clientX - lastDownX;
+                        
+                        leftPanel.style.flexBasis = (offsetLeftPanel + deltaX) + 'px';
+                        
+                        figureSettingsPanel.style.flexBasis = (offsetFigureSettingsPanel - deltaX) + 'px';
+                        codePanel.style.flexBasis = (offsetCodePanel - deltaX) + 'px';
+                
+                        lastDownX = e.clientX;
+                        triggerResizeEvent();
+                    }
+                    
+                    function stopResizing(e) {
+                        isResizing = false;
+                        document.removeEventListener('mousemove', resizePanels);
+                        document.removeEventListener('mouseup', stopResizing);
+                        triggerResizeEvent();
+                    }
+                }
+                
+                window.resizingInitialized_%widget_id% = true;
+            "))
             shinyjs::hide("figure_button_div_%widget_id%")
+            shinyjs::show("resizer_%widget_id%")
         }
         else {
-            shinyjs::runjs(paste0(
-                "$('#", id, "-figure_div_%widget_id%').css('width', '100%');",
-                "$('#", id, "-figure_settings_div_%widget_id%').css('width', '100%');",
-                "$('#", id, "-code_div_%widget_id%').css('width', '100%');"
-            ))
-            shinyjs::show("figure_button_div_%widget_id%")
+            shinyjs::runjs(paste0("
+                $('#", id, "-figure_div_%widget_id%').css('flex-basis', '100%');
+                $('#", id, "-figure_settings_div_%widget_id%').css('flex-basis', '100%');
+                $('#", id, "-code_div_%widget_id%').css('flex-basis', '100%');
+            "))
+            
+            shinyjs::show("figure_button_div_%widget_id%");
+            shinyjs::hide("resizer_%widget_id%");
         }
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
@@ -35,6 +92,7 @@ observeEvent(input$save_general_settings_button_%widget_id%, {
     # Notify user
     show_message_bar(output, "modif_saved", "success", i18n = i18n, ns = ns)
 })
+
 observeEvent(input$save_general_settings_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$save_general_settings"))
@@ -44,7 +102,7 @@ observeEvent(input$save_general_settings_%widget_id%, {
         # Delete old rows
         sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings'", .con = m$db))
         
-        file_id <- input$saved_settings_%widget_id%
+        file_id <- input$settings_file_%widget_id%
         new_data <- tibble::tibble(name = "selected_file_id", value = NA_character_, value_num = NA_integer_, link_id = file_id)
         
         sapply(c("show_saved_file", "figure_and_settings_side_by_side", "run_code_at_patient_update", "run_code_at_settings_file_load"), function(name){

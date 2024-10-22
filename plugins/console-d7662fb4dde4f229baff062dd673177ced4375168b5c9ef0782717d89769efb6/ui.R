@@ -1,3 +1,5 @@
+# UI - main file
+
 %import_script('ui_load_general_settings.R')%
 
 tagList(
@@ -12,11 +14,11 @@ tagList(
         shiny.fluent::IconButton.shinyInput(ns("code_button_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor")),
         shiny.fluent::IconButton.shinyInput(ns("general_settings_button_%widget_id%"), iconProps = list(iconName = "Settings"), title = i18np$t("show_general_settings")),
         uiOutput(
-            ns("saved_settings_ui_%widget_id%"),
-            onclick = paste0("Shiny.setInputValue('", id, "-show_saved_settings_tab_%widget_id%', Math.random())")
+            ns("settings_files_ui_%widget_id%"),
+            onclick = paste0("Shiny.setInputValue('", id, "-show_settings_files_tab_%widget_id%', Math.random())")
         ),
         class = "widget_icon",
-        style = "display: flex; color: #808080; border-bottom: solid grey 0.5px; height: 28px; padding-top: 5px; font-size: 12px; color: #808080;"
+        style = "display: flex; color: #808080; border-bottom: solid grey 0.5px; height: 28px; padding-top: 5px; font-size: 12px;"
     ),
     div(
         id = ns("figure_settings_code_div_%widget_id%"),
@@ -30,27 +32,26 @@ tagList(
         div(
             id = ns("figure_div_%widget_id%"),
             %import_script('ui_figure.R')%,
-            style = paste0("height: 100%; width: ", div_width, "; margin: 5px 10px; overflow: auto;")
+            style = paste0("height: 100%; flex-basis: ", div_width, "; margin: 0 10px; flex: 1; box-sizing: border-box; min-width: 50px;"),
+            class = "left-panel"
+        ),
+        div(
+            id = ns("resizer_%widget_id%"),
+            style = "width: 5px; cursor: col-resize; background-color: #ccc;",
+            class = "resizer"
         ),
         shinyjs::hidden(
             div(
                 id = ns("figure_settings_div_%widget_id%"),
                 %import_script('ui_figure_settings.R')%,
-                style = paste0("height: 100%; width: ", div_width, "%; margin: 5px 10px; overflow: auto;")
+                style = paste0("height: 100%; flex-basis: ", div_width, "%; margin: 5px 10px; overflow: auto; flex: 1; box-sizing: border-box;")
             )
         ),
         div(
             id = ns("code_div_%widget_id%"),
-            shinyAce::aceEditor(
-                ns("code_%widget_id%"), value = "", mode = "r",
-                hotkeys = list(
-                    save = list(win = "CTRL-S", mac = "CTRL-S|CMD-S"),
-                    run_all = list(win = "CTRL-SHIFT-ENTER", mac = "CTRL-SHIFT-ENTER|CMD-SHIFT-ENTER"),
-                    comment = list(win = "CTRL-SHIFT-C", mac = "CTRL-SHIFT-C|CMD-SHIFT-C")
-                ),
-                autoScrollEditorIntoView = TRUE, height = "100%", debounce = 100, fontSize = 11, showPrintMargin = FALSE
-            ),
-            style = paste0("height: 100%; width: ", div_width, "%; overflow: auto;")
+            %import_script('ui_code.R')%,
+            style = paste0("height: 100%; flex-basis: ", div_width, "%; overflow: auto; flex: 1; box-sizing: border-box;"),
+            class = "right-panel"
         ),
         style = "display: flex; height: calc(100% - 40px);"
     ),
@@ -63,38 +64,14 @@ tagList(
                 class = "widget_icon",
                 style = "border-right: solid grey 0.5px;"
             ),
-            div(
-                tags$strong(i18np$t("display")), br(),
-                div(
-                    shiny.fluent::Toggle.shinyInput(ns("show_saved_file_%widget_id%"), value = toggle_values$show_saved_file),
-                    tags$label(i18np$t("show_saved_file"), `for` = ns("show_saved_file_%widget_id%"), style = "margin-left: 5px;"),
-                    style = "display: flex; margin-top: 8px;" 
-                ),
-                div(
-                    shiny.fluent::Toggle.shinyInput(ns("figure_and_settings_side_by_side_%widget_id%"), value = toggle_values$figure_and_settings_side_by_side),
-                    tags$label(i18np$t("figure_and_settings_side_by_side"), `for` = ns("figure_and_settings_side_by_side_%widget_id%"), style = "margin-left: 5px;"),
-                    style = "display: flex; margin-top: 5px;" 
-                ), br(),
-                tags$strong(i18np$t("code_execution")), br(),
-                div(
-                    shiny.fluent::Toggle.shinyInput(ns("run_code_at_settings_file_load_%widget_id%"), value = toggle_values$run_code_at_settings_file_load),
-                    tags$label(i18np$t("run_code_at_settings_file_load"), `for` = ns("run_code_at_settings_file_load_%widget_id%"), style = "margin-left: 5px;"),
-                    style = "display: flex; margin-top: 8px;" 
-                ),
-                div(
-                    shiny.fluent::Toggle.shinyInput(ns("run_code_at_patient_update_%widget_id%"), value = toggle_values$run_code_at_patient_update),
-                    tags$label(i18np$t("run_code_at_patient_update"), `for` = ns("run_code_at_patient_update_%widget_id%"), style = "margin-left: 5px;"),
-                    style = "display: flex; margin-top: 5px;" 
-                ),
-                style = "margin: 5px 10px;"
-            ),
+            %import_script('ui_general_settings.R')%,
             style = "display: flex; height: calc(100% - 40px);"
         )
     ),
     shinyjs::hidden(
         div(
-            id = ns("saved_settings_div_%widget_id%"),
-            %import_script('ui_saved_settings.R')%,
+            id = ns("settings_files_div_%widget_id%"),
+            %import_script('ui_settings_files.R')%,
             style = "display: flex; height: calc(100% - 40px);"
         )
     )

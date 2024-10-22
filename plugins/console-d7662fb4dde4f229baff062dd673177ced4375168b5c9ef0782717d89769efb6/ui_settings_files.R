@@ -1,3 +1,8 @@
+# UI - Settings files
+#
+# This code corresponds to the page that appears when you click on the file icon at the top of the widget.
+# The UI allows you to select, add, and delete settings files.
+
 tagList(
 
     # Add settings file modal
@@ -42,7 +47,7 @@ tagList(
     
     # Sidenav
     div(
-        id = ns("saved_settings_sidenav_%widget_id%"),
+        id = ns("settings_files_sidenav_%widget_id%"),
         shiny.fluent::IconButton.shinyInput(ns("create_settings_file_%widget_id%"), iconProps = list(iconName = "Add"), title = i18np$t("create_settings_file"), style = "margin: 0"),
         class = "widget_icon",
         style = "border-right: solid grey 0.5px;"
@@ -50,8 +55,14 @@ tagList(
     
     # Dropdown and delete button
     div(
-        div(shiny.fluent::Dropdown.shinyInput(ns("saved_settings_%widget_id%"), label = i18np$t("file"), options = dropdown_options, value = selected_file), style = "width: 200px"),
-        div(shiny.fluent::IconButton.shinyInput(ns("delete_saved_settings_file_%widget_id%"), iconProps = list(iconName = "Delete")), style = "margin-top: 26px;", class = "widget_icon"),
+        div(shiny.fluent::Dropdown.shinyInput(ns("settings_file_%widget_id%"), label = i18np$t("file"), options = dropdown_options, value = selected_file), style = "width: 200px"),
+        shinyjs::hidden(
+            div(
+                id = ns("delete_settings_file_div_%widget_id%"),
+                shiny.fluent::IconButton.shinyInput(ns("delete_settings_file_%widget_id%"), iconProps = list(iconName = "Delete")),
+                style = "margin-top: 26px;", class = "widget_icon"
+            )
+        ),
         style = "display: flex; gap: 5px; margin: 5px 10px;"
     )
 )
