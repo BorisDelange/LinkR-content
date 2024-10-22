@@ -119,7 +119,7 @@ observeEvent(input$settings_file_%widget_id%, {
     
         # Show delete button
         shinyjs::show("delete_settings_file_div_%widget_id%")
-    
+        
         # Get file name
         file_id <- input$settings_file_%widget_id%
         filename <- m$settings_filenames_%widget_id% %>% dplyr::filter(id == file_id) %>% dplyr::pull(name)
