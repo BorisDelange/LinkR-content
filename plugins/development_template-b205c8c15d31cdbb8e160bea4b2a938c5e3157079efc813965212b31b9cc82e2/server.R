@@ -17,7 +17,7 @@ sapply(tabs, function(tab){
             else shinyjs::show("figure_settings_code_div_%widget_id%")
             
             sapply(paste0(setdiff(c("figure_settings", "code", "general_settings"), tab), "_div_%widget_id%"), shinyjs::hide)
-            shinyjs::hide("saved_settings_div_%widget_id%")
+            shinyjs::hide("settings_files_div_%widget_id%")
             shinyjs::show(paste0(tab, "_div_%widget_id%"))
             
             if (tab %in% c("figure_settings", "code")){
@@ -25,6 +25,20 @@ sapply(tabs, function(tab){
                 else shinyjs::hide("figure_div_%widget_id%")
                 
                 shinyjs::show("figure_settings_code_sidenav_%widget_id%")
+                
+                if (tab == "figure_settings") anti_tab <- "code"
+                else anti_tab <- "figure_settings"
+                
+                shinyjs::runjs(paste0("
+                    var figureSettingsDiv = document.getElementById('", id, "-figure_settings_div_%widget_id%');
+                    var codeDiv = document.getElementById('", id, "-code_div_%widget_id%');
+                    
+                    if ('", tab, "' === 'figure_settings') {
+                        figureSettingsDiv.style.flexBasis = codeDiv.style.flexBasis;
+                    } else {
+                        codeDiv.style.flexBasis = figureSettingsDiv.style.flexBasis;
+                    }
+                "))
             }
             else {
                 shinyjs::hide("figure_settings_code_sidenav_%widget_id%")
@@ -44,8 +58,8 @@ sapply(tabs, function(tab){
 # Code
 %import_script('server_code.R')%
 
+# Settings files
+%import_script('server_settings_files.R')%
+
 # General settings
 %import_script('server_general_settings.R')%
-
-# Saved settings
-%import_script('server_saved_settings.R')%

@@ -17,7 +17,7 @@ datatable,DataTable,DataTable
 rmarkdown,RMarkdown,RMarkdown
 matplotlib,Matplotlib,Matplotlib
 parameters_not_saved,Parameters not saved,Paramètres non sauvegardés
-show_saved_file,Show saved file,Afficher le fichier de sauvegarde
+show_settings_file,Show settings file,Afficher le fichier de sauvegarde
 create_settings_file,Create a settings file,Créer un fichier de sauvegarde
 delete_settings_file_title,Delete a settings file,Supprimer un fichier de sauvegarde
 delete_settings_file_text,Confirm deletion of the settings file?,Confirmer la suppression du fichier de sauvegarde ?
@@ -37,3 +37,7 @@ display,Display,Affichage
 code_execution,Code execution,Exécution du code
 run_code_at_settings_file_load,Run code when a settings file is loaded,Exécuter le code au chargement d'un fichier de sauvegarde
 ui_html,UI (HTML),UI (HTML)
+error_displaying_figure,Error displaying figure,Erreur lors de l'affichage de la figure
+features,Features,Variables
+select_patient,Select a patient,Sélectionnez un patient
+no_data_to_display,No data to display,Pas de données à afficher
