@@ -9,7 +9,7 @@ if (nrow(general_settings) == 0){
 
     toggle_values$show_settings_file <- TRUE
     toggle_values$figure_and_settings_side_by_side <- TRUE
-    toggle_values$run_code_at_patient_update <- FALSE
+#     toggle_values$run_code_at_patient_update <- FALSE
     toggle_values$run_code_at_settings_file_load <- FALSE
     
     dropdown_options <- list()
@@ -19,7 +19,8 @@ if (nrow(general_settings) == 0){
 
     # Toggles values
     
-    sapply(c("show_settings_file", "figure_and_settings_side_by_side", "run_code_at_patient_update", "run_code_at_settings_file_load"), function(name){
+#     sapply(c("show_settings_file", "figure_and_settings_side_by_side", "run_code_at_patient_update", "run_code_at_settings_file_load"), function(name){
+    sapply(c("show_settings_file", "figure_and_settings_side_by_side", "run_code_at_settings_file_load"), function(name){
         
         toggle_value <- FALSE
         
