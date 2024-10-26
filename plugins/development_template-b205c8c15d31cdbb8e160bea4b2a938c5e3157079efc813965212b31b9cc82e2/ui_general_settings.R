@@ -22,9 +22,9 @@ div(
 #         style = "display: flex; margin-top: 8px;" 
 #     ),
 #     div(
-#         shiny.fluent::Toggle.shinyInput(ns("run_code_at_patient_update_%widget_id%"), value = toggle_values$run_code_at_patient_update),
-#         tags$label(i18np$t("run_code_at_patient_update"), `for` = ns("run_code_at_patient_update_%widget_id%"), style = "margin-left: 5px;"),
+#         shiny.fluent::Toggle.shinyInput(ns("run_code_on_data_update_%widget_id%"), value = toggle_values$run_code_on_data_update),
+#         tags$label(i18np$t("run_code_on_data_update"), `for` = ns("run_code_on_data_update_%widget_id%"), style = "margin-left: 5px;"),
 #         style = "display: flex; margin-top: 5px;" 
-#     ),
+#     )
     style = "margin: 5px 10px;"
 )

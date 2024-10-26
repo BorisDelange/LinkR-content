@@ -19,6 +19,7 @@ if (nrow(general_settings) == 0){
 
     # Toggles values
     
+#     sapply(c("show_settings_file", "figure_and_settings_side_by_side", "run_code_on_data_update", "run_code_at_settings_file_load"), function(name){
     sapply(c("show_settings_file", "figure_and_settings_side_by_side"), function(name){
         
         toggle_value <- FALSE

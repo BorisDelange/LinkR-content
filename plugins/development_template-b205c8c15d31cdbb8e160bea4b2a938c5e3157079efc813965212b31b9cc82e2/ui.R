@@ -1,8 +1,18 @@
 # UI - main file
 
+## Hide save buttons if the user does not have access
+
 if ("projects_console_access" %in% user_accesses){
     code_button <- shiny.fluent::IconButton.shinyInput(ns("code_button_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor"))
 } else code_button <- ""
+
+if ("projects_widgets_settings" %in% user_accesses){
+    save_figure_settings_buttons <- shiny.fluent::IconButton.shinyInput(ns("save_params_and_code_%widget_id%"), iconProps = list(iconName = "Save"), title = i18np$t("save_figure_settings_and_code"), style = "margin: 0")
+    save_general_settings_button <- shiny.fluent::IconButton.shinyInput(ns("save_general_settings_button_%widget_id%"), iconProps = list(iconName = "Save"), title = i18np$t("save_general_settings"), style = "margin: 0")
+} else {
+    save_figure_settings_buttons <- ""
+    save_general_settings_button <- ""   
+}
 
 %import_script('ui_load_general_settings.R')%
 
@@ -29,9 +39,9 @@ tagList(
         div(
             id = ns("figure_settings_code_sidenav_%widget_id%"),
             shiny.fluent::IconButton.shinyInput(ns("display_figure_%widget_id%"), iconProps = list(iconName = "Play"), title = i18np$t("display_figure"), style = "margin: 0"),
-            shiny.fluent::IconButton.shinyInput(ns("save_params_and_code_%widget_id%"), iconProps = list(iconName = "Save"), title = i18np$t("save_figure_settings_and_code"), style = "margin: 0"),
+            save_figure_settings_buttons,
             class = "widget_icon",
-            style = "border-right: solid grey 0.5px;"
+            style = "border-right: solid grey 0.5px; width: 25px;"
         ),
         div(
             id = ns("figure_div_%widget_id%"),
@@ -64,9 +74,9 @@ tagList(
             id = ns("general_settings_div_%widget_id%"),
             div(
                 id = ns("general_settings_sidenav_%widget_id%"),
-                shiny.fluent::IconButton.shinyInput(ns("save_general_settings_button_%widget_id%"), iconProps = list(iconName = "Save"), title = i18np$t("save_general_settings"), style = "margin: 0"),
+                save_general_settings_button,
                 class = "widget_icon",
-                style = "border-right: solid grey 0.5px;"
+                style = "border-right: solid grey 0.5px; width: 25px;"
             ),
             %import_script('ui_general_settings.R')%,
             style = "display: flex; height: calc(100% - 40px);"
