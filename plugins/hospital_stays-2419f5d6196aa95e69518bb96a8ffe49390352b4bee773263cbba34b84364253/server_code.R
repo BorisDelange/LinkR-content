@@ -55,28 +55,49 @@ observeEvent(input$run_code_%widget_id%, {
     
     tryCatch({
         
-        # Put here the code to execute when the "Run code" button is clicked
+        isolate_code <- TRUE
+        if (length(input$run_code_on_data_update_%widget_id%) > 0) if (input$run_code_on_data_update_%widget_id%) isolate_code <- FALSE
+        
+        if (language == "fr") date_labels <- "%Y-%m-%d"
+        else date_labels <- "%d-%m-%Y"
         
         output$stays_plot_%widget_id% <- renderPlot({
-            d$data_person$visit_detail %>%
-                dplyr::select(visit_detail_start_datetime, visit_detail_end_datetime, care_site_id) %>%
-                dplyr::left_join(
-                    d$care_site %>% dplyr::select(care_site_id, care_site_name),
-                    by = "care_site_id"
-                ) %>%
-                dplyr::collect() %>%
-                dplyr::select(care_site_name, start = visit_detail_start_datetime, end = visit_detail_end_datetime) %>%
-                tidyr::gather(key = date_type, value = date, -care_site_name) %>%
-                ggplot2::ggplot() +
-                ggplot2::geom_line(ggplot2::aes(x = forcats::fct_rev(forcats::fct_inorder(care_site_name)), y = date, group = care_site_name), size = 5, color = "steelblue") +
-                ggplot2::scale_y_datetime(date_labels = "%Y-%m-%d") +
-                ggplot2::coord_flip() +
-                ggplot2::labs(
-                    title = "",
-                    x = "",
-                    y = ""
-                ) +
-                ggplot2::theme_minimal()
+            
+            if (isolate_code) data <- isolate(d$data_person$visit_detail)
+            else data <- d$data_person$visit_detail
+            
+            if (data %>% dplyr::count() %>% dplyr::pull() > 0){
+                data <-
+                    d$data_person$visit_detail %>%
+                    dplyr::select(visit_detail_start_datetime, visit_detail_end_datetime, care_site_id) %>%
+                    dplyr::left_join(
+                        d$care_site %>% dplyr::select(care_site_id, care_site_name),
+                        by = "care_site_id"
+                    ) %>%
+                    dplyr::collect() %>%
+                    dplyr::arrange(visit_detail_start_datetime) %>%
+                    dplyr::select(care_site_name, start = visit_detail_start_datetime, end = visit_detail_end_datetime) %>%
+                    dplyr::filter(!is.na(care_site_name))  # Supprime les lignes où le care_site_name est NA
+                
+                ggplot2::ggplot(data) +
+                    ggplot2::geom_segment(
+                        ggplot2::aes(
+                            x = start,
+                            xend = end,
+                            y = forcats::fct_rev(forcats::fct_inorder(care_site_name)),
+                            yend = forcats::fct_rev(forcats::fct_inorder(care_site_name))
+                        ),
+                        size = 5,
+                        color = "steelblue"
+                    ) +
+                    ggplot2::scale_x_datetime(date_labels = "%Y-%m-%d") +
+                    ggplot2::labs(
+                        title = "",
+                        x = "Date",
+                        y = "Service Hospitalier"
+                    ) +
+                    ggplot2::theme_minimal()
+            }
         })
 
         # Go to figure tab

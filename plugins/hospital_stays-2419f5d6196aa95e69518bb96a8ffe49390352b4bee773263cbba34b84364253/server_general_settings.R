@@ -118,7 +118,7 @@ observeEvent(input$save_general_settings_%widget_id%, {
                 # Create a row for selected file and a row by general setting
                 # If we have 4 general settings: get_last_row(m$db, "widgets_options") + 1:5
                 # In this case, we have 2 general settings, so: get_last_row(m$db, "widgets_options") + 1:3
-                id = get_last_row(m$db, "widgets_options") + 1:3, widget_id = %widget_id%, person_id = NA_integer_, link_id,
+                id = get_last_row(m$db, "widgets_options") + 1:5, widget_id = %widget_id%, person_id = NA_integer_, link_id,
                 category = "general_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
             )
         
