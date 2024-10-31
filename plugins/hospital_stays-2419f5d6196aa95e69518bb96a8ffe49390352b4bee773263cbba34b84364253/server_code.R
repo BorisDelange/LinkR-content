@@ -58,15 +58,22 @@ observeEvent(input$run_code_%widget_id%, {
         isolate_code <- TRUE
         if (length(input$run_code_on_data_update_%widget_id%) > 0) if (input$run_code_on_data_update_%widget_id%) isolate_code <- FALSE
         
-        if (language == "fr") date_labels <- "%Y-%m-%d"
-        else date_labels <- "%d-%m-%Y"
+        if (language == "fr"){
+            x_date_labels <- "%d-%m-%Y"
+            lines_date_labels <- "%d/%m/%Y %H:%M"
+        }
+        else {
+            x_date_labels <- "%Y-%m-%d"
+            lines_date_labels <- "%Y/%m/%d %H:%M"
+        }
         
-        output$stays_plot_%widget_id% <- renderPlot({
+        output$stays_plot_%widget_id% <- plotly::renderPlotly({
             
             if (isolate_code) data <- isolate(d$data_person$visit_detail)
             else data <- d$data_person$visit_detail
             
             if (data %>% dplyr::count() %>% dplyr::pull() > 0){
+                
                 data <-
                     d$data_person$visit_detail %>%
                     dplyr::select(visit_detail_start_datetime, visit_detail_end_datetime, care_site_id) %>%
@@ -77,26 +84,46 @@ observeEvent(input$run_code_%widget_id%, {
                     dplyr::collect() %>%
                     dplyr::arrange(visit_detail_start_datetime) %>%
                     dplyr::select(care_site_name, start = visit_detail_start_datetime, end = visit_detail_end_datetime) %>%
-                    dplyr::filter(!is.na(care_site_name))  # Supprime les lignes où le care_site_name est NA
+                    dplyr::filter(!is.na(care_site_name)) %>%
+                    dplyr::mutate(service_order = as.numeric(forcats::fct_rev(forcats::fct_inorder(care_site_name))))
                 
-                ggplot2::ggplot(data) +
-                    ggplot2::geom_segment(
+                p <-
+                    ggplot2::ggplot(data) +
+                    ggplot2::geom_rect(
                         ggplot2::aes(
-                            x = start,
-                            xend = end,
-                            y = forcats::fct_rev(forcats::fct_inorder(care_site_name)),
-                            yend = forcats::fct_rev(forcats::fct_inorder(care_site_name))
+                            xmin = start,
+                            xmax = end,
+                            ymin = service_order - 0.15,
+                            ymax = service_order + 0.15,
+                            text = paste(
+                                i18np$t("hospital_unit"), " :", care_site_name,
+                                "<br>", i18np$t("datetime_start"), " :", format(start, lines_date_labels),
+                                "<br>", i18np$t("datetime_end"), " :", format(end, lines_date_labels)
+                            )
                         ),
-                        size = 5,
-                        color = "steelblue"
+                        fill = "steelblue"
                     ) +
-                    ggplot2::scale_x_datetime(date_labels = "%Y-%m-%d") +
+                    ggplot2::scale_x_datetime(breaks = scales::breaks_pretty(n = 6), date_labels = x_date_labels) +
+                    ggplot2::scale_y_continuous(
+                        breaks = data$service_order,
+                        labels = data$care_site_name,
+                        name = ""
+                    ) +
                     ggplot2::labs(
                         title = "",
-                        x = "Date",
-                        y = "Service Hospitalier"
+                        x = "",
+                        y = ""
                     ) +
-                    ggplot2::theme_minimal()
+                    ggplot2::theme_minimal() +
+                    ggplot2::theme(
+                        axis.text.y = ggplot2::element_text(size = 8),
+                        axis.ticks.y = ggplot2::element_blank(),
+                        axis.text.x = ggplot2::element_text(size = 8)
+                    )
+                
+                plotly::ggplotly(p, tooltip = "text") %>%
+                    plotly::config(displayModeBar = FALSE)
+
             }
         })
 

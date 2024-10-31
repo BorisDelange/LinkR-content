@@ -41,3 +41,6 @@ error_displaying_figure,Error displaying figure,Erreur lors de l'affichage de la
 features,Features,Variables
 select_patient,Select a patient,Sélectionnez un patient
 no_data_to_display,No data to display,Pas de données à afficher
+hospital_unit,Hospital unit,Unité
+datetime_start,Start,Date de début
+datetime_end,End,Date de fin
