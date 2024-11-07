@@ -35,6 +35,14 @@ for (table in tables) {
         }
         data <- correct_id_columns(data)
         
+        # Specific transformation for 'person' table
+        if (table == "person") {
+            data <- data %>%
+                dplyr::mutate(
+                    birth_datetime = as.POSIXct(paste0(year_of_birth, "-01-01"), format = "%Y-%m-%d", tz = "UTC")
+                )
+        }
+        
         # Write the data to a Parquet file
         arrow::write_parquet(data, parquet_file)
         
