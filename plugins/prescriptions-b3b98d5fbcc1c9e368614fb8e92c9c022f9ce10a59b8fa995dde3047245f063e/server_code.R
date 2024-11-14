@@ -98,8 +98,8 @@ observeEvent(input$run_code_%widget_id%, {
                     dplyr::arrange(person_id, drug_exposure_start_datetime) %>%
                     dplyr::mutate(
                         amount = dplyr::case_when(
-                            !is.na(amount_value) ~ quantity * amount_value,
-                            !is.na(numerator_value) ~ quantity * numerator_value
+                            !is.na(amount_value) ~ round(quantity * amount_value, 1),
+                            !is.na(numerator_value) ~ round(quantity * numerator_value, 1)
                         ),
                         amount_unit = dplyr::case_when(
                             !is.na(amount_value) ~ amount_unit_concept_name,
@@ -107,7 +107,7 @@ observeEvent(input$run_code_%widget_id%, {
                         ),
                         duration_hours = as.numeric(difftime(drug_exposure_end_datetime, drug_exposure_start_datetime, units = "hours")),
                         rate = dplyr::case_when(
-                            !is.na(numerator_value) & !is.na(duration_hours) & duration_hours > 0 ~ amount / duration_hours
+                            !is.na(numerator_value) & !is.na(duration_hours) & duration_hours > 0 ~ round(amount / duration_hours, 1)
                         ),
                         rate_unit = dplyr::case_when(
                             !is.na(rate) & !is.na(amount_unit) ~ paste0(amount_unit, " per hour")
@@ -139,37 +139,40 @@ observeEvent(input$run_code_%widget_id%, {
                 unique_levels <- levels(data$drug_concept_name)
                 unique_labels <- ifelse(nchar(unique_levels) > 30, paste0(substr(unique_levels, 1, 27), "..."), unique_levels)
                 
-                p_drug_exposure <-
-                    ggplot2::ggplot(data) +
-                    ggplot2::geom_rect(
-                        ggplot2::aes(
-                            xmin = drug_exposure_start_datetime,
-                            xmax = drug_exposure_end_datetime,
-                            ymin = as.numeric(drug_concept_name) - 0.2,
-                            ymax = as.numeric(drug_concept_name) + 0.2,
-                            text = paste(
-                                "Médicament :", drug_concept_name,
-                                "<br>Début :", format(drug_exposure_start_datetime, "%Y-%m-%d %H:%M"),
-                                "<br>Fin :", format(drug_exposure_end_datetime, "%Y-%m-%d %H:%M"),
-                                "<br>Rate :", rate,
-                                "<br>Rate Unit :", rate_unit
-                            )
-                        ),
-                        fill = "coral"
-                    ) +
-                    ggplot2::scale_x_datetime(breaks = scales::breaks_pretty(n = 6)) +
-                    ggplot2::scale_y_continuous(
-                        breaks = seq_along(unique_levels),
-                        labels = unique_labels,
-                        name = ""
-                    ) +
-                    ggplot2::theme_minimal() +
-                    ggplot2::theme(
-                        axis.text.y = ggplot2::element_text(size = 8),
-                        axis.text.x = ggplot2::element_text(size = 8)
-                    )
+                if (language == "fr") datetime_format <- "%d-%m-%Y %H:%M"
+                else datetime_format <- "%Y-%m-%d %H:%M"
                 
-                plotly_drug_exposure <- plotly::ggplotly(p_drug_exposure, tooltip = "text") %>%
+                plotly_drug_exposure <- plotly::plot_ly(data = data) %>%
+                    plotly::add_segments(
+                        x = ~drug_exposure_start_datetime,
+                        xend = ~drug_exposure_end_datetime,
+                        y = ~as.numeric(drug_concept_name),
+                        yend = ~as.numeric(drug_concept_name),
+                        line = list(color = "coral", width = 5),
+                        text = ~paste0(
+                            i18np$t("drug"), " : ", drug_concept_name, "<br>",
+                            i18np$t("start"), " : ", format(drug_exposure_start_datetime, datetime_format), "<br>",
+                            i18np$t("end"), " : ", format(drug_exposure_end_datetime, datetime_format), "<br>",
+                            i18np$t("amount"), " : ", ifelse(is.na(amount), "/", amount), " ", ifelse(is.na(amount_unit), "", amount_unit), "<br>",
+                            i18np$t("rate"), " : ", ifelse(is.na(rate), "/", rate), " ", ifelse(is.na(rate_unit), "", rate_unit)
+                        ),
+                        hoverinfo = "text"
+                    ) %>%
+                    plotly::layout(
+                        xaxis = list(
+                            type = "date",
+                            tickmode = "auto",
+                            title = "",
+                            nticks = 10,
+                            tickformat = datetime_format
+                        ),
+                        yaxis = list(
+                            tickvals = seq_along(unique_levels),
+                            ticktext = unique_labels,
+                            title = ""
+                        ),
+                        hoverlabel = list(align = "left")
+                    ) %>%
                     plotly::config(displayModeBar = FALSE)
                 
                 output$drug_exposure_plot_%widget_id% <- plotly::renderPlotly(plotly_drug_exposure)

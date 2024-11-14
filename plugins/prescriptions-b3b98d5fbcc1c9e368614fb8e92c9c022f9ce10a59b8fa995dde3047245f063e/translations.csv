@@ -31,3 +31,8 @@ no_data_to_display,No data to display,Pas de données à afficher
 data_to_display,Data to display,Données à afficher
 patient_data,Patient data,Données du patient
 stay_data,Stay data,Données du séjour
+drug,Drug,Médicament
+start,Start,Début
+end,End,Fin
+amount,Amount,Quantité
+rate,Rate,Débit
