@@ -71,18 +71,18 @@ observeEvent(input$run_code_%widget_id%, {
     
     tryCatch({
         
-        if (is.na(m$selected_person) | is.na(m$selected_person)){
+        data_source <- "visit_detail"
+        if (length(input$data_source_%widget_id%) > 0) data_source <- input$data_source_%widget_id%
+        
+        if ((data_source == "person" & is.na(m$selected_person)) | (data_source == "visit_detail" & is.na(m$selected_visit_detail))){
             
-            if (is.na(m$selected_person)) output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("select_patient"), messageBarType = 5), style = "display: inline-block;"))
-            else if (is.na(m$selected_visit_detail)) output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("select_stay"), messageBarType = 5), style = "display: inline-block;"))
+            if (data_source == "person" & is.na(m$selected_person)) output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("select_patient"), messageBarType = 5), style = "display: inline-block;"))
+            else if (data_source == "visit_detail" & is.na(m$selected_visit_detail)) output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("select_stay"), messageBarType = 5), style = "display: inline-block;"))
             
             shinyjs::hide("drug_exposure_plot_%widget_id%")
             shinyjs::show("error_message_div_%widget_id%")
             
         } else {
-        
-            data_source <- "visit_detail"
-            if (length(input$data_source_%widget_id%) > 0) data_source <- input$data_source_%widget_id%
             
             data <- d[[paste0("data_", data_source)]]$drug_exposure
             
