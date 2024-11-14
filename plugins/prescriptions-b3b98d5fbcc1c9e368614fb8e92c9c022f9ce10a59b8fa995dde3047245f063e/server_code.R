@@ -48,6 +48,22 @@ observeEvent(input$display_figure_%widget_id%, {
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
 })
 
+# Run code at patient update
+observeEvent(m$selected_person, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
+    
+    if (length(input$data_source_%widget_id%) > 0) if (input$data_source_%widget_id% == "person") shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+})
+
+# Run code at visit_detail update
+observeEvent(m$selected_visit_detail, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_visit_detail"))
+    
+    if (length(input$data_source_%widget_id%) > 0) if (input$data_source_%widget_id% == "visit_detail") shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+})
+
 # Run code
 observeEvent(input$run_code_%widget_id%, {
     %req%
@@ -62,11 +78,17 @@ observeEvent(input$run_code_%widget_id%, {
             
             shinyjs::hide("drug_exposure_plot_%widget_id%")
             shinyjs::show("error_message_div_%widget_id%")
+            
         } else {
+        
             data_source <- "visit_detail"
             if (length(input$data_source_%widget_id%) > 0) data_source <- input$data_source_%widget_id%
             
             data <- d[[paste0("data_", data_source)]]$drug_exposure
+            
+            if (length(input$features_choice_%widget_id%) > 0) if (input$features_choice_%widget_id% == "selected_features"){
+                if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- data %>% dplyr::filter(drug_concept_id %in% input$features_%widget_id%)
+            }
             
             if (data %>% dplyr::count() %>% dplyr::pull() == 0){
                 
@@ -125,19 +147,14 @@ observeEvent(input$run_code_%widget_id%, {
                         amount, amount_unit, rate, rate_unit, daily_dose, daily_dose_unit
                     )
                     
-                data <-
-                    data %>%
-                    dplyr::mutate(
-                        drug_concept_name = factor(drug_concept_name, levels = unique(drug_concept_name)),
-                        drug_concept_name_short = ifelse(
-                            nchar(as.character(drug_concept_name)) > 30,
-                            paste0(substr(as.character(drug_concept_name), 1, 27), "..."),
-                            as.character(drug_concept_name)
-                        )
-                    )
+                data <- data %>% dplyr::mutate(drug_concept_name = factor(drug_concept_name, levels = unique(drug_concept_name)))
                 
                 unique_levels <- levels(data$drug_concept_name)
-                unique_labels <- ifelse(nchar(unique_levels) > 30, paste0(substr(unique_levels, 1, 27), "..."), unique_levels)
+                unique_labels <- ifelse(
+                    nchar(unique_levels) > 22,
+                    paste0(substr(unique_levels, 1, 17), "..."),
+                    unique_levels
+                )
                 
                 if (language == "fr") datetime_format <- "%d-%m-%Y %H:%M"
                 else datetime_format <- "%Y-%m-%d %H:%M"
@@ -164,14 +181,18 @@ observeEvent(input$run_code_%widget_id%, {
                             tickmode = "auto",
                             title = "",
                             nticks = 10,
+                            tickfont = list(size = 10),
                             tickformat = datetime_format
                         ),
                         yaxis = list(
                             tickvals = seq_along(unique_levels),
                             ticktext = unique_labels,
-                            title = ""
+                            title = "",
+                            tickfont = list(family = "Courier New", size = 11),
+                            automargin = FALSE
                         ),
-                        hoverlabel = list(align = "left")
+                        hoverlabel = list(align = "left"),
+                        margin = list(l = 150, r = 0, t = 0, b = 0)
                     ) %>%
                     plotly::config(displayModeBar = FALSE)
                 
