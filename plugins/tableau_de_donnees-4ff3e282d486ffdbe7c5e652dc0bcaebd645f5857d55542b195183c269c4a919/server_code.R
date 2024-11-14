@@ -63,85 +63,135 @@ observeEvent(input$run_code_%widget_id%, {
     
     tryCatch({
         
-        if (length(input$features_%widget_id%) > 0){
+        data_source <- "visit_detail"
+        if (length(input$data_source_%widget_id%) > 0) data_source <- input$data_source_%widget_id%
+        
+        if ((data_source == "person" & is.na(m$selected_person)) | (data_source == "visit_detail" & is.na(m$selected_visit_detail))){
             
-            num_cols <- 8
-
-            concept_ids <- input$features_%widget_id%
+            if (data_source == "person" & is.na(m$selected_person)) output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("select_patient"), messageBarType = 5), style = "display: inline-block;"))
+            else if (data_source == "visit_detail" & is.na(m$selected_visit_detail)) output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("select_stay"), messageBarType = 5), style = "display: inline-block;"))
             
-            data <-
-                d$data_person$measurement %>%
-                dplyr::collect() %>%
-                dplyr::left_join(
-                    d$concept %>% 
-                    dplyr::select(measurement_concept_id = concept_id, measurement_concept_name = concept_name),
-                    by = "measurement_concept_id"
+            shinyjs::hide("datatable_%widget_id%")
+            shinyjs::show("error_message_div_%widget_id%")
+            
+        } else {
+        
+            data <- d[[paste0("data_", data_source)]]$measurement
+            
+            if (length(input$concepts_choice_%widget_id%) > 0){
+                if (input$concepts_choice_%widget_id% == "selected_concept_classes"){
+                    if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- 
+                        data %>%
+                        dplyr::collect() %>%
+                        dplyr::inner_join(d$concept %>% dplyr::select(measurement_concept_id = concept_id, concept_class_id), by = "measurement_concept_id") %>%
+                        dplyr::filter(concept_class_id %in% input$concept_classes_%widget_id%) %>%
+                        dplyr::select(-concept_class_id)
+                }
+                else if (input$concepts_choice_%widget_id% == "selected_concepts"){
+                    if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- data %>% dplyr::filter(measurement_concept_id %in% input$concepts_%widget_id%)
+                }
+            }
+            
+            if (data %>% dplyr::count() %>% dplyr::pull() == 0){
+                
+                output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("no_data_to_display"), messageBarType = 5), style = "display: inline-block;"))
+                
+                shinyjs::hide("datatable_%widget_id%")
+                shinyjs::show("error_message_div_%widget_id%")
+            } else {
+                
+                shinyjs::hide("error_message_div_%widget_id%")
+                shinyjs::show("datatable_%widget_id%")
+                
+                num_cols <- 8
+                
+                data <-
+                    data %>%
+                    dplyr::collect() %>%
+                    dplyr::left_join(
+                        d$concept %>% 
+                        dplyr::select(measurement_concept_id = concept_id, measurement_concept_name = concept_name),
+                        by = "measurement_concept_id"
+                    ) %>%
+                    dplyr::select(measurement_concept_name, measurement_datetime, value_as_number) %>%
+                    dplyr::arrange(measurement_concept_name, measurement_datetime)
+                
+                time_range <- range(data$measurement_datetime)
+                interval_duration <- as.numeric(difftime(time_range[2], time_range[1], units = "secs")) / num_cols
+                
+                intervals <- tibble::tibble(
+                    interval = 0:(num_cols - 1),
+                    interval_start = time_range[1] + interval * interval_duration,
+                    interval_end = interval_start + interval_duration
                 ) %>%
-                dplyr::filter(measurement_concept_id %in% concept_ids) %>%
-                dplyr::select(measurement_concept_name, measurement_datetime, value_as_number) %>%
-                dplyr::arrange(measurement_concept_name, measurement_datetime)
-            
-            time_range <- range(data$measurement_datetime)
-            interval_duration <- as.numeric(difftime(time_range[2], time_range[1], units = "secs")) / num_cols
-            
-            intervals <- tibble::tibble(
-                interval = 0:(num_cols - 1),
-                interval_start = time_range[1] + interval * interval_duration,
-                interval_end = interval_start + interval_duration
-            ) %>%
-                dplyr::mutate(
-                    interval_label = paste(
-                        format(interval_start, "%Y-%m-%d %H:%M"),
-                        "\\nau\\n",
-                        format(interval_end, "%Y-%m-%d %H:%M")
+                    dplyr::mutate(
+                        interval_label = paste(
+                            format(interval_start, "%Y-%m-%d"),
+                            " <span style='color:#0084D8'>", format(interval_start, "%H:%M"), "</span>",
+                            " ", tolower(i18np$t("to")), " ",
+                            format(interval_end, "%Y-%m-%d"),
+                            " <span style='color:#0084D8'>", format(interval_end, "%H:%M"), "</span>"
+                        )
+                    )
+                
+                data <-
+                    data %>%
+                    dplyr::mutate(
+                        interval = floor(as.numeric(difftime(measurement_datetime, time_range[1], units = "secs")) / interval_duration)
+                    ) %>%
+                    dplyr::group_by(measurement_concept_name, interval) %>%
+                    dplyr::summarize(
+                        avg_value = round(mean(value_as_number, na.rm = TRUE), 1),
+                        n = sum(!is.na(value_as_number)),
+                        .groups = "drop"
+                    ) %>%
+                    dplyr::mutate(avg_value = paste0(avg_value, " (n = ", n, ")")) %>%
+                    dplyr::right_join(intervals, by = "interval") %>%
+                    dplyr::select(measurement_concept_name, interval_label, avg_value) %>%
+                    tidyr::pivot_wider(
+                        names_from = interval_label,
+                        values_from = avg_value
+                    ) %>%
+                    dplyr::arrange(measurement_concept_name) %>%
+                    dplyr::rename(!!i18np$t("concept") := measurement_concept_name)
+                
+                output$datatable_%widget_id% <- DT::renderDT(
+                    DT::datatable(
+                        data,
+                        rownames = FALSE,
+                        options = list(
+                            dom = "<'top't><'bottom'p>",
+                            compact = TRUE, 
+                            hover = TRUE
+                        ),
+                        escape = FALSE,
+                        
+                        # CSS for datatable
+                        callback = htmlwidgets::JS(
+                          "table.on('draw.dt', function() {",
+                          "  $('.dataTable tbody tr td').css({",
+                          "    'height': '12px',",
+                          "    'padding': '2px 5px'",
+                          "  });",
+                          "  $('.dataTable thead tr td div .form-control').css('font-size', '12px');",
+                          "  $('.dataTable thead tr td').css('padding', '5px');",
+                          "  $('.dataTable tbody tr td:first-child').css({",
+                          "    'min-width': '100px',",
+                          "    'max-width': '100px',",
+                          "    'width': '100px',",
+                          "    'white-space': 'nowrap'",
+                          "  });",
+                          "  $('.dataTable thead tr th:first-child').css({",
+                          "    'min-width': '100px',",
+                          "    'max-width': '100px',",
+                          "    'width': '100px',",
+                          "    'white-space': 'nowrap'",
+                          "  });",
+                          "});"
+                        )
                     )
                 )
-            
-            data <-
-                data %>%
-                dplyr::mutate(
-                    interval = floor(as.numeric(difftime(measurement_datetime, time_range[1], units = "secs")) / interval_duration)
-                ) %>%
-                dplyr::group_by(measurement_concept_name, interval) %>%
-                dplyr::summarize(
-                    avg_value = round(mean(value_as_number, na.rm = TRUE), 1),
-                    n = sum(!is.na(value_as_number)),
-                    .groups = "drop"
-                ) %>%
-                dplyr::mutate(avg_value = paste0(avg_value, " (n = ", n, ")")) %>%
-                dplyr::right_join(intervals, by = "interval") %>%
-                dplyr::select(measurement_concept_name, interval_label, avg_value) %>%
-                tidyr::pivot_wider(
-                    names_from = interval_label,
-                    values_from = avg_value
-                ) %>%
-                dplyr::arrange(measurement_concept_name) %>%
-                dplyr::rename(!!i18np$t("concept") := measurement_concept_name)
-            
-            output$datatable_%widget_id% <- DT::renderDT(
-                DT::datatable(
-                    data,
-                    rownames = FALSE,
-                    options = list(
-                        dom = "<'top't><'bottom'p>",
-                        compact = TRUE, 
-                        hover = TRUE,
-                        columnDefs = list(list(width = '200px', targets = 0))
-                    ),
-                    
-                    # CSS for datatable
-                    callback = htmlwidgets::JS(
-                      "table.on('draw.dt', function() {",
-                      "  $('.dataTable tbody tr td').css({",
-                      "    'height': '12px',",
-                      "    'padding': '2px 5px'",
-                      "  });",
-                      "  $('.dataTable thead tr td div .form-control').css('font-size', '12px');",
-                      "  $('.dataTable thead tr td').css('padding', '5px');",
-                      "});"
-                    )
-                )
-            )
+            }
         }
         
         # Go to figure tab

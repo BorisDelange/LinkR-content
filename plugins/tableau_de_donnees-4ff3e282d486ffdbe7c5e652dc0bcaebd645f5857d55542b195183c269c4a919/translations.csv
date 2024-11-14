@@ -6,16 +6,6 @@ show_general_settings,General settings,Paramètres généraux
 figure_and_settings_side_by_side,Figure and settings/editor side by side,Figure et paramètres/éditeur côte à côte
 display_figure,Display figure,Afficher la figure
 save_figure_settings_and_code,Save,Sauvegarder
-language,Language,Langage
-output,Output,Output
-r,R,R
-python,Python,Python
-figure,Figure,Figure
-console,Console,Console
-table,Table,Table
-datatable,DataTable,DataTable
-rmarkdown,RMarkdown,RMarkdown
-matplotlib,Matplotlib,Matplotlib
 parameters_not_saved,Parameters not saved,Paramètres non sauvegardés
 show_settings_file,Show settings file,Afficher le fichier de sauvegarde
 create_settings_file,Create a settings file,Créer un fichier de sauvegarde
@@ -39,6 +29,17 @@ run_code_at_settings_file_load,Run code when a settings file is loaded,Exécuter
 ui_html,UI (HTML),UI (HTML)
 error_displaying_figure,Error displaying figure,Erreur lors de l'affichage de la figure
 features,Features,Variables
-select_patient,Select a patient,Sélectionnez un patient
 no_data_to_display,No data to display,Pas de données à afficher
 concept,Concept,Concept
+to,To,Au
+data_to_display,Data to display,Données à afficher
+patient_data,Patient data,Données du patient
+stay_data,Stay data,Données du séjour
+select_patient,Select a patient,Sélectionnez un patient
+select_stay,Select a stay,Sélectionnez un séjour
+concepts_to_display,Concepts to display,Concepts à afficher
+all_concepts,All concepts,Tous les concepts
+selected_concept_classes,Selected concept classes,Classes de concepts sélectionnées
+selected_concepts,Selected concepts,Concepts sélectionnés
+concepts,Concepts,Concepts
+concept_classes,Concept classes,Classes de concepts
