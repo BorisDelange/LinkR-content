@@ -11,6 +11,8 @@ if (nrow(general_settings) == 0){
 
     toggle_values$show_settings_file <- TRUE
     toggle_values$figure_and_settings_side_by_side <- TRUE
+    toggle_values$run_code_on_data_update <- FALSE
+    toggle_values$run_code_at_settings_file_load <- FALSE
     
     dropdown_options <- list()
     selected_file <- NULL

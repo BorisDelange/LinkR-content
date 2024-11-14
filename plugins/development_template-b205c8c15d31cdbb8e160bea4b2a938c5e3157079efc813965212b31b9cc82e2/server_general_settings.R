@@ -105,8 +105,10 @@ observeEvent(input$save_general_settings_%widget_id%, {
         file_id <- input$settings_file_%widget_id%
         new_data <- tibble::tibble(name = "selected_file_id", value = NA_character_, value_num = NA_integer_, link_id = file_id)
         
-        # sapply(c("show_saved_file", "figure_and_settings_side_by_side", "run_code_on_data_update", "run_code_at_settings_file_load"), function(name){
-        sapply(c("show_settings_file", "figure_and_settings_side_by_side"), function(name){
+        # general_settings <- c("show_saved_file", "figure_and_settings_side_by_side", "run_code_on_data_update", "run_code_at_settings_file_load")
+        general_settings <- c("show_settings_file", "figure_and_settings_side_by_side")
+        
+        sapply(general_settings, function(name){
             toggle_value <- 0L
             input_name <- paste0(name, "_%widget_id%")
             if (length(input[[input_name]]) > 0) if (input[[input_name]]) toggle_value <- 1L
@@ -116,10 +118,7 @@ observeEvent(input$save_general_settings_%widget_id%, {
         new_data <-
             new_data %>%
             dplyr::transmute(
-                # Create a row for selected file and a row by general setting
-                # If we have 4 general settings: get_last_row(m$db, "widgets_options") + 1:5
-                # In this case, we have 2 general settings, so: get_last_row(m$db, "widgets_options") + 1:3
-                id = get_last_row(m$db, "widgets_options") + 1:3, widget_id = %widget_id%, person_id = NA_integer_, link_id,
+                id = get_last_row(m$db, "widgets_options") + 1:(length(general_settings) + 1), widget_id = %widget_id%, person_id = NA_integer_, link_id,
                 category = "general_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
             )
         

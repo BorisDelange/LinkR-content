@@ -48,14 +48,19 @@ observeEvent(input$save_params_and_code_%widget_id%, {
             sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db))
             
             # Add new settings in db
+            
+            # Add new settings in db
             # new_data <- tibble::tribble(
             #     ~name, ~value, ~value_num,
             #     ...
-            # ) %>%
-            # dplyr::transmute(
-            #     id = get_last_row(m$db, "widgets_options") + 1:1, widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
-            #     category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
             # )
+            
+            # new_data <-
+            #     new_data %>%
+            #     dplyr::transmute(
+            #         id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
+            #         category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
+            #     )
             
             # DBI::dbAppendTable(m$db, "widgets_options", new_data)
             
