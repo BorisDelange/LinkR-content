@@ -86,8 +86,18 @@ observeEvent(input$run_code_%widget_id%, {
             
             data <- d[[paste0("data_", data_source)]]$drug_exposure
             
-            if (length(input$features_choice_%widget_id%) > 0) if (input$features_choice_%widget_id% == "selected_features"){
-                if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- data %>% dplyr::filter(drug_concept_id %in% input$features_%widget_id%)
+            if (length(input$concepts_choice_%widget_id%) > 0){
+                if (input$concepts_choice_%widget_id% == "selected_concept_classes"){
+                    if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- 
+                        data %>%
+                        dplyr::collect() %>%
+                        dplyr::inner_join(d$concept %>% dplyr::select(drug_concept_id = concept_id, concept_class_id), by = "drug_concept_id") %>%
+                        dplyr::filter(concept_class_id %in% input$concept_classes_%widget_id%) %>%
+                        dplyr::select(-concept_class_id)
+                }
+                else if (input$concepts_choice_%widget_id% == "selected_concepts"){
+                    if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- data %>% dplyr::filter(drug_concept_id %in% input$concepts_%widget_id%)
+                }
             }
             
             if (data %>% dplyr::count() %>% dplyr::pull() == 0){

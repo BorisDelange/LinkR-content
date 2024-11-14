@@ -25,14 +25,16 @@ run_code_on_data_update,Run code on data update,Exécuter le code lors de la mis
 run_code_at_settings_file_load,Run code when a settings file is loaded,Exécuter le code au chargement d'un fichier de sauvegarde
 save_general_settings,Save general settings,Sauvegarder les paramètres généraux
 error_displaying_figure,Error displaying figure,Erreur lors de l'affichage de la figure
-features,Features,Variables
 select_patient,Select a patient,Sélectionnez un patient
 select_stay,Select a stay,Sélectionnez un séjour
 no_data_to_display,No data to display,Pas de données à afficher
 data_to_display,Data to display,Données à afficher
-drugs_to_display,Drugs to display, Médicaments à afficher
-all_drugs,All drugs,Tous les médicaments
-selected_drugs,Selected drugs,Médicaments sélectionnés
+concepts_to_display,Concepts to display,Concepts à afficher
+all_concepts,All concepts,Tous les concepts
+selected_concept_classes,Selected concept classes,Classes de concepts sélectionnées
+selected_concepts,Selected concepts,Concepts sélectionnés
+concepts,Concepts,Concepts
+concept_classes,Concept classes,Classes de concepts
 patient_data,Patient data,Données du patient
 stay_data,Stay data,Données du séjour
 drug,Drug,Médicament

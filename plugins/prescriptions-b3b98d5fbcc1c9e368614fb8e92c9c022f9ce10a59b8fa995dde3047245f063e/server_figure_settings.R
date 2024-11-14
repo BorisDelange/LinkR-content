@@ -75,12 +75,20 @@ observeEvent(input$save_params_and_code_%widget_id%, {
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
 
-# Show / hide features_div
+# Show / hide concepts_div and concept_classes_div_
 
-observeEvent(input$features_choice_%widget_id%, {
+observeEvent(input$concepts_choice_%widget_id%, {
     %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$features_choice"))
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$concepts_choice_"))
     
-    if (input$features_choice_%widget_id% == "selected_features") shinyjs::show("features_div_%widget_id%")
-    else shinyjs::hide("features_div_%widget_id%")
+   
+    if (input$concepts_choice_%widget_id% == "selected_concepts"){
+        shinyjs::hide("concept_classes_div_%widget_id%")
+        shinyjs::show("concepts_div_%widget_id%")
+    }
+    else if (input$concepts_choice_%widget_id% == "selected_concept_classes"){
+        shinyjs::hide("concepts_div_%widget_id%")
+        shinyjs::show("concept_classes_div_%widget_id%")
+    }
+    else sapply(c("concepts_div_%widget_id%", "concept_classes_div_%widget_id%"), shinyjs::hide)
 })
