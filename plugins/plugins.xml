@@ -65,7 +65,7 @@
     <short_description_en>Displays medication administrations as a timeline</short_description_en>
     <short_description_fr>Permet d'afficher les administrations médicamenteuses sous forme de timeline</short_description_fr>
     <creation_datetime>2024-11-13 07:56:14</creation_datetime>
-    <update_datetime>2024-11-18 22:24:37</update_datetime>
+    <update_datetime>2024-11-18 22:30:07</update_datetime>
     <type>1</type>
   </plugin>
   <plugin>

@@ -17,9 +17,10 @@ observeEvent(input$load_figure_settings_%widget_id%, {
         
             value <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value)
             
-            if (name %in% c("data_source", "features_choice")) shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
-            else if (name == "features"){
-                value <- as.numeric(unlist(strsplit(value, ", ")))
+            if (name %in% c("data_source", "concepts_choice")) shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            else if (name %in% c("concepts", "concept_classes")){
+                value <- unlist(strsplit(value, ", "))
+                if (name == "concepts") value <- as.numeric(value)
                 shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
             }
         })
@@ -55,8 +56,9 @@ observeEvent(input$save_params_and_code_%widget_id%, {
             new_data <- tibble::tribble(
                 ~name, ~value, ~value_num,
                 "data_source", input$data_source_%widget_id%, NA_real_,
-                "features_choice", input$features_choice_%widget_id%, NA_real_,
-                "features", input$features_%widget_id% %>% toString(), NA_real_
+                "concepts_choice", input$concepts_choice_%widget_id%, NA_real_,
+                "concept_classes", input$concept_classes_%widget_id% %>% toString(), NA_real_,
+                "concepts", input$concepts_%widget_id% %>% toString(), NA_real_
             )
             
             new_data <-
