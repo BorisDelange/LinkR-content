@@ -48,6 +48,22 @@ observeEvent(input$display_figure_%widget_id%, {
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
 })
 
+# Run code at patient update
+observeEvent(m$selected_person, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
+    
+    if (isTRUE(input$run_code_on_data_update_%widget_id%) && length(input$data_source_%widget_id%) > 0 && input$data_source_%widget_id% == "person") shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+})
+
+# Run code at visit_detail update
+observeEvent(m$selected_visit_detail, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_visit_detail"))
+    
+     if (isTRUE(input$run_code_on_data_update_%widget_id%) && length(input$data_source_%widget_id%) > 0 && input$data_source_%widget_id% == "visit_detail") shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+})
+
 # Run code
 observeEvent(input$run_code_%widget_id%, {
     %req%
@@ -103,7 +119,11 @@ observeEvent(input$run_code_%widget_id%, {
                 shinyjs::hide("error_message_div_%widget_id%")
                 shinyjs::show("datatable_%widget_id%")
                 
-                num_cols <- 8
+                if (length(input$num_cols_%widget_id%) > 0) num_cols <- input$num_cols_%widget_id%
+                else num_cols <- 8
+                
+                if (length(input$aggregate_fct_%widget_id%) > 0) aggregate_fct <- input$aggregate_fct_%widget_id%
+                else aggregate_fct <- 8
                 
                 data <-
                     data %>%
@@ -141,16 +161,16 @@ observeEvent(input$run_code_%widget_id%, {
                     ) %>%
                     dplyr::group_by(measurement_concept_name, interval) %>%
                     dplyr::summarize(
-                        avg_value = round(mean(value_as_number, na.rm = TRUE), 1),
+                        agg_value = round(do.call(aggregate_fct, list(value_as_number, na.rm = TRUE)), 1),
                         n = sum(!is.na(value_as_number)),
                         .groups = "drop"
                     ) %>%
-                    dplyr::mutate(avg_value = paste0(avg_value, " (n = ", n, ")")) %>%
+                    dplyr::mutate(agg_value = paste0(agg_value, " (n = ", n, ")")) %>%
                     dplyr::right_join(intervals, by = "interval") %>%
-                    dplyr::select(measurement_concept_name, interval_label, avg_value) %>%
+                    dplyr::select(measurement_concept_name, interval_label, agg_value) %>%
                     tidyr::pivot_wider(
                         names_from = interval_label,
-                        values_from = avg_value
+                        values_from = agg_value
                     ) %>%
                     dplyr::arrange(measurement_concept_name) %>%
                     dplyr::rename(!!i18np$t("concept") := measurement_concept_name)

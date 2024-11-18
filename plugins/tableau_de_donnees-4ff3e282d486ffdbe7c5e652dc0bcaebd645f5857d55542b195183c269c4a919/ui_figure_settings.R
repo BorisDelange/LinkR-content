@@ -55,6 +55,20 @@ div(
                 )
             )
         ),
-        style = "display: flex; gap: 10px;"
+        style = "display: flex; gap: 10px; padding-bottom: 15px; border-bottom: solid 1px #808080;"
+    ),
+    div(
+        div(i18np$t("num_cols"), style = "font-weight: 600; margin-bottom: 5px;"),
+        div(shiny.fluent::SpinButton.shinyInput(ns("num_cols_%widget_id%"), min = 1, max = 20, by = 1, value = 8), style = "width: 200px;"),
+        style = "margin-top: 10px;"
+    ),
+    div(
+        shiny.fluent::Dropdown.shinyInput(ns("aggregate_fct_%widget_id%"), label = "Aggregated function", value = "mean", options = list(
+            list(key = "min", text = i18np$t("min")),
+            list(key = "mean", text = i18np$t("mean")),
+            list(key = "median", text = i18np$t("median")),
+            list(key = "max", text = i18np$t("max"))
+        )),
+        style = "width: 200px;"
     )
 )

@@ -43,3 +43,9 @@ selected_concept_classes,Selected concept classes,Classes de concepts sélection
 selected_concepts,Selected concepts,Concepts sélectionnés
 concepts,Concepts,Concepts
 concept_classes,Concept classes,Classes de concepts
+num_cols,Number of columns,Nombre de colonnes
+aggregate_fct,Aggregate function,Fonction d'agrégat
+min,Min,Minimum
+median,Median,Médiane
+mean,Mean,Moyenne
+max,Max,Maximum

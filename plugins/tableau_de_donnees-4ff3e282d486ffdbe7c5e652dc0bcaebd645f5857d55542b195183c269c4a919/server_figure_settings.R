@@ -9,18 +9,21 @@ observeEvent(input$load_figure_settings_%widget_id%, {
     # Update figure settings UI
     
     link_id <- input$settings_file_%widget_id%
-    sql <- glue::glue_sql("SELECT name, value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db)
+    sql <- glue::glue_sql("SELECT name, value, value_num FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db)
     figure_settings <- DBI::dbGetQuery(m$db, sql)
     
     if (nrow(figure_settings) > 0){
         sapply(figure_settings$name, function(name){
         
             value <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value)
+            value_num <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value_num)
             
-            if (name == "features"){
+            if (name %in% c("data_source", "concepts_choice", "aggregate_fct")) shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            else if (name %in% c("concepts", "concept_classes")){
                 value <- as.numeric(unlist(strsplit(value, ", ")))
                 shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
             }
+            else if (name == "num_cols") shiny.fluent::updateSpinButton.shinyInput(session, paste0(name, "_%widget_id%"), value = value_num)
         })
     }
     
@@ -51,16 +54,24 @@ observeEvent(input$save_params_and_code_%widget_id%, {
             sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db))
             
             # Add new settings in db
-            # new_data <- tibble::tribble(
-            #     ~name, ~value, ~value_num,
-            #     ...
-            # ) %>%
-            # dplyr::transmute(
-            #     id = get_last_row(m$db, "widgets_options") + 1:1, widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
-            #     category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
-            # )
+            new_data <- tibble::tribble(
+                ~name, ~value, ~value_num,
+                "data_source", input$data_source_%widget_id%, NA_real_,
+                "concepts_choice", input$concepts_choice_%widget_id%, NA_real_,
+                "concept_classes", input$concept_classes_%widget_id% %>% toString(), NA_real_,
+                "concepts", input$concepts_%widget_id% %>% toString(), NA_real_,
+                "num_cols", NA_character_, input$num_cols_%widget_id%,
+                "aggregate_fct", input$aggregate_fct_%widget_id%, NA_real_
+            )
             
-            # DBI::dbAppendTable(m$db, "widgets_options", new_data)
+            new_data <-
+                new_data %>%
+                dplyr::transmute(
+                    id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
+                    category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
+                )
+            
+            DBI::dbAppendTable(m$db, "widgets_options", new_data)
             
             # Notify user
             show_message_bar(output, "modif_saved", "success", i18n = i18n, ns = ns)
