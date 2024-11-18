@@ -20,7 +20,8 @@ observeEvent(input$load_figure_settings_%widget_id%, {
             
             if (name %in% c("data_source", "concepts_choice", "aggregate_fct")) shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
             else if (name %in% c("concepts", "concept_classes")){
-                value <- as.numeric(unlist(strsplit(value, ", ")))
+                value <- unlist(strsplit(value, ", "))
+                if (name == "concepts") value <- as.numeric(value)
                 shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
             }
             else if (name == "num_cols") shiny.fluent::updateSpinButton.shinyInput(session, paste0(name, "_%widget_id%"), value = value_num)
