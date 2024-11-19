@@ -186,6 +186,10 @@ observeEvent(input$run_code_%widget_id%, {
                     ) %>%
                     dplyr::arrange(measurement_concept_name) %>%
                     dplyr::rename(!!i18np$t("concept") := measurement_concept_name)
+                    
+                data <-
+                    data %>%
+                    dplyr::relocate(sort(names(data)[-1]), .after = 1)
                 
                 output$datatable_%widget_id% <- DT::renderDT(
                     DT::datatable(
