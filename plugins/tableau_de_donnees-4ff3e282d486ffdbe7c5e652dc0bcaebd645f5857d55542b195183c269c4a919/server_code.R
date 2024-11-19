@@ -191,9 +191,16 @@ observeEvent(input$run_code_%widget_id%, {
                     dplyr::rename(!!i18np$t("concept") := measurement_concept_name) %>%
                     dplyr::filter(!is.na(!!rlang::sym(i18np$t("concept"))) & !!rlang::sym(i18np$t("concept")) != "")
                     
+                # Reorder date columns (works also with french date format)
+                date_cols <- names(data)[-1]
+                sorted_date_cols <- date_cols[order(as.Date(
+                    gsub(" <.*$", "", date_cols),
+                    format = date_format
+                ))]
+                
                 data <-
                     data %>%
-                    dplyr::relocate(sort(names(data)[-1]), .after = 1)
+                    dplyr::relocate(all_of(sorted_date_cols), .after = 1)
                 
                 output$datatable_%widget_id% <- DT::renderDT({
                     row_count <- nrow(data)
