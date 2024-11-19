@@ -31,12 +31,12 @@ tagList(
             shiny.fluent::IconButton.shinyInput(ns("display_figure_%widget_id%"), iconProps = list(iconName = "Play"), title = i18np$t("display_figure"), style = "margin: 0"),
             shiny.fluent::IconButton.shinyInput(ns("save_params_and_code_%widget_id%"), iconProps = list(iconName = "Save"), title = i18np$t("save_figure_settings_and_code"), style = "margin: 0"),
             class = "widget_icon",
-            style = "border-right: solid grey 0.5px;"
+            style = "border-right: solid grey 0.5px; margin-right: 10px;"
         ),
         div(
             id = ns("figure_div_%widget_id%"),
             %import_script('ui_figure.R')%,
-            style = paste0("height: 100%; flex-basis: ", div_width, "; margin: 0 10px; flex: 1; box-sizing: border-box; min-width: 100px;"),
+            style = paste0("height: 100%; flex-basis: ", div_width, "; flex: 1; box-sizing: border-box; min-width: 100px;"),
             class = "left-panel"
         ),
         div(

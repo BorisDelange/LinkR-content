@@ -104,6 +104,27 @@ observeEvent(input$run_code_%widget_id%, {
             features <- list()
             features_names <- c()
             
+            if (data_source == "person") {
+                datetimes <- 
+                    d$data_person$visit_occurrence %>%
+                    dplyr::summarize(
+                        min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
+                        max_visit_start_datetime = max(visit_end_datetime, na.rm = TRUE)
+                    ) %>%
+                    dplyr::collect()
+            } else if (data_source == "visit_detail") {
+                selected_visit_detail <- m$selected_visit_detail
+            
+                datetimes <- 
+                    d$data_person$visit_detail %>%
+                    dplyr::filter(visit_detail_id == selected_visit_detail) %>%
+                    dplyr::summarize(
+                        min_visit_start_datetime = min(visit_detail_start_datetime, na.rm = TRUE),
+                        max_visit_start_datetime = max(visit_detail_end_datetime, na.rm = TRUE)
+                    ) %>%
+                    dplyr::collect()
+            }
+            
             for (concept_id in concept_ids){
             
                 concept <- selected_concepts %>% dplyr::filter(concept_id == !!concept_id)
@@ -144,7 +165,10 @@ observeEvent(input$run_code_%widget_id%, {
                 output$dygraph_%widget_id% <- dygraphs::renderDygraph({
                     dygraphs::dygraph(combined_features) %>%
                     dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2) %>%
-                    dygraphs::dyRangeSelector()
+                    dygraphs::dyRangeSelector(dateWindow = c(
+                        format(datetimes$min_visit_start_datetime, "%Y-%m-%d %H:%M:%S"),
+                        format(datetimes$max_visit_start_datetime, "%Y-%m-%d %H:%M:%S")
+                    ))
                 })
                 
                 shinyjs::hide("error_message_div_%widget_id%")

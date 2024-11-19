@@ -10,6 +10,6 @@ div(
             style = "padding-top: 10px;"
         )
     ),
-    dygraphs::dygraphOutput(ns("dygraph_%widget_id%"), height = "100%", width = "100%"),
-    style = "height: 100%; width: 100%;"
+    div(dygraphs::dygraphOutput(ns("dygraph_%widget_id%"), height = "100%", width = "100%"), style = "width: 100%; height: calc(100% - 10px); padding-top: 10px;"),
+    style = "height: 100%; width: 100%; box-sizing: border-box; padding-right: 5px;"
 )
