@@ -24,6 +24,11 @@ div(
                 multiSelect = TRUE
             ),
             style = "width: 200px;"
-        )
+        ),
+        style = "display: flex; gap: 10px; padding-bottom: 15px; border-bottom: solid 1px #808080;"
+    ),
+    div(
+        shiny.fluent::Toggle.shinyInput(ns("synchronize_timelines_%widget_id%"), label = i18np$t("synchronize_timelines")),
+        style = "margin-top: 15px;"
     )
 )

@@ -163,12 +163,17 @@ observeEvent(input$run_code_%widget_id%, {
                 colnames(combined_features) <- features_names
                 
                 output$dygraph_%widget_id% <- dygraphs::renderDygraph({
-                    dygraphs::dygraph(combined_features) %>%
-                    dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2) %>%
-                    dygraphs::dyRangeSelector(dateWindow = c(
-                        format(datetimes$min_visit_start_datetime, "%Y-%m-%d %H:%M:%S"),
-                        format(datetimes$max_visit_start_datetime, "%Y-%m-%d %H:%M:%S")
-                    ))
+                
+                    if (isTRUE(input$synchronize_timelines_%widget_id%)) fig <- dygraphs::dygraph(combined_features, group = "tab_%tab_id%")
+                    else fig <- dygraphs::dygraph(combined_features)
+                
+                    fig <-
+                        fig %>%
+                        dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2) %>%
+                        dygraphs::dyRangeSelector(dateWindow = c(
+                            format(datetimes$min_visit_start_datetime, "%Y-%m-%d %H:%M:%S"),
+                            format(datetimes$max_visit_start_datetime, "%Y-%m-%d %H:%M:%S")
+                        ))
                 })
                 
                 shinyjs::hide("error_message_div_%widget_id%")
