@@ -41,7 +41,7 @@ tagList(
             shiny.fluent::IconButton.shinyInput(ns("display_figure_%widget_id%"), iconProps = list(iconName = "Play"), title = i18np$t("display_figure"), style = "margin: 0"),
             save_figure_settings_buttons,
             class = "widget_icon",
-            style = "border-right: solid grey 0.5px; width: 25px;"
+            style = "border-right: solid grey 0.5px; width: 25px; margin-right: 10px;"
         ),
         div(
             id = ns("figure_div_%widget_id%"),
