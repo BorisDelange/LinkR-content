@@ -17,7 +17,8 @@ observeEvent(input$load_figure_settings_%widget_id%, {
         
             value <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value)
             
-            if (name == "features"){
+            if (name == "data_source") shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            else if (name == "concepts"){
                 value <- as.numeric(unlist(strsplit(value, ", ")))
                 shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
             }
@@ -50,12 +51,16 @@ observeEvent(input$save_params_and_code_%widget_id%, {
             # Add new settings in db
             new_data <- tibble::tribble(
                 ~name, ~value, ~value_num,
-                "features", input$features_%widget_id% %>% toString(), NA_real_
-            ) %>%
-            dplyr::transmute(
-                id = get_last_row(m$db, "widgets_options") + 1:1, widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
-                category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
+                "data_source", input$data_source_%widget_id%, NA_real_,
+                "concepts", input$concepts_%widget_id% %>% toString(), NA_real_
             )
+            
+            new_data <-
+                new_data %>%
+                dplyr::transmute(
+                    id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
+                    category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
+                )
             
             DBI::dbAppendTable(m$db, "widgets_options", new_data)
             

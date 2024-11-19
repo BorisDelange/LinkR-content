@@ -11,6 +11,8 @@ if (nrow(general_settings) == 0){
 
     toggle_values$show_settings_file <- TRUE
     toggle_values$figure_and_settings_side_by_side <- TRUE
+    toggle_values$run_code_on_data_update <- FALSE
+    toggle_values$run_code_at_settings_file_load <- FALSE
     
     dropdown_options <- list()
     selected_file <- NULL
@@ -19,10 +21,18 @@ if (nrow(general_settings) == 0){
 
     # Toggles values
     
-    sapply(c("show_settings_file", "figure_and_settings_side_by_side"), function(name){
-        toggle_value <- general_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value_num)
-        if (is.na(toggle_value)) toggle_value <- FALSE
-        else (toggle_value <- as.logical(toggle_value))
+    general_settings_vec <- c("show_settings_file", "figure_and_settings_side_by_side", "run_code_on_data_update", "run_code_at_settings_file_load")
+    
+    sapply(general_settings_vec, function(name){
+        
+        toggle_value <- FALSE
+        
+        row <- general_settings %>% dplyr::filter(name == !!name)
+        if (nrow(row) > 0){
+            if (is.na(row %>% dplyr::pull(value_num))) toggle_value <- FALSE
+            else (toggle_value <- as.logical(row %>% dplyr::pull(value_num)))
+        }
+        
         toggle_values[[name]] <<- toggle_value
     })
     

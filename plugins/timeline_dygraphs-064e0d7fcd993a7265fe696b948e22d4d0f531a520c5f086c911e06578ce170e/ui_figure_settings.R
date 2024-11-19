@@ -3,8 +3,27 @@
 # Insert the UI components for configuring the figure settings in this section.
 
 div(
-    div(shiny.fluent::Dropdown.shinyInput(
-        ns("features_%widget_id%"), label = i18np$t("features"), multiSelect = TRUE,
-        options = convert_tibble_to_list(selected_concepts, key_col = "concept_id", text_col = "concept_name")
-    ), style = "width: 200px;")
+    div(
+        shiny.fluent::Dropdown.shinyInput(
+            ns("data_source_%widget_id%"), options = list(
+                list(key = "person", text = i18np$t("patient_data")),
+                list(key = "visit_detail", text = i18np$t("stay_data"))
+            ), value = "visit_detail", label = i18np$t("data_to_display")
+        ),
+        style = "width: 200px;"
+    ),
+    div(
+        id = ns("concepts_div_%widget_id%"),
+        div(
+            shiny.fluent::Dropdown.shinyInput(
+                ns("concepts_%widget_id%"), label = i18np$t("concepts"),
+                options = convert_tibble_to_list(
+                    selected_concepts %>% dplyr::filter(domain_id == "Measurement"),
+                    key_col = "concept_id", text_col = "concept_name"
+                ),
+                multiSelect = TRUE
+            ),
+            style = "width: 200px;"
+        )
+    )
 )

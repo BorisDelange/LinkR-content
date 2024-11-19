@@ -3,7 +3,13 @@
 # Insert the UI components for the figure in this section.
 
 div(
-    uiOutput(ns("figure_message_%widget_id%")),
+    shinyjs::hidden(
+        div(
+            id = ns("error_message_div_%widget_id%"),
+            uiOutput(ns("error_message_%widget_id%")),
+            style = "padding-top: 10px;"
+        )
+    ),
     dygraphs::dygraphOutput(ns("dygraph_%widget_id%"), height = "100%", width = "100%"),
     style = "height: 100%; width: 100%;"
 )

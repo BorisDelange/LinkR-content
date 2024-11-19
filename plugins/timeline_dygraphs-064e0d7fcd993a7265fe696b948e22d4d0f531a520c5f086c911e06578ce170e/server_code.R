@@ -59,28 +59,48 @@ observeEvent(input$display_figure_%widget_id%, {
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
 })
 
+# Run code at patient update
+observeEvent(m$selected_person, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
+    
+    if (isTRUE(input$run_code_on_data_update_%widget_id%) && length(input$data_source_%widget_id%) > 0 && input$data_source_%widget_id% == "person") shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+})
+
+# Run code at visit_detail update
+observeEvent(m$selected_visit_detail, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_visit_detail"))
+    
+    if (isTRUE(input$run_code_on_data_update_%widget_id%) && length(input$data_source_%widget_id%) > 0 && input$data_source_%widget_id% == "visit_detail") shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+})
+
 # Run code
 observeEvent(input$run_code_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_code"))
     
-    if (is.na(m$selected_person)){
-        shinyjs::show("figure_message_%widget_id%")
-        shinyjs::hide("dygraph_%widget_id%")
-        output$figure_message_%widget_id% <- renderUI(div(i18np$t("select_patient"), style = "font-weight: bold; color: red;"))
-    }
-    
-    req(!is.na(m$selected_person))
-    
     tryCatch({
         
-        # Put here the code to execute when the "Run code" button is clicked
+        data_source <- "visit_detail"
+        if (length(input$data_source_%widget_id%) > 0) data_source <- input$data_source_%widget_id%
         
-        if (length(input$features_%widget_id%) > 0){
+        if ((data_source == "person" & is.na(m$selected_person)) | (data_source == "visit_detail" & is.na(m$selected_visit_detail))){
             
-            concept_ids <- input$features_%widget_id%
-            m$concepts <- input$features_%widget_id%
+            if (data_source == "person" & is.na(m$selected_person)) output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("select_patient"), messageBarType = 5), style = "display: inline-block;"))
+            else if (data_source == "visit_detail" & is.na(m$selected_visit_detail)) output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("select_stay"), messageBarType = 5), style = "display: inline-block;"))
             
+            shinyjs::hide("dygraph_%widget_id%")
+            shinyjs::show("error_message_div_%widget_id%")
+            
+        } else {
+        
+            data <- d[[paste0("data_", data_source)]]$measurement
+            
+            concept_ids <- input$concepts_%widget_id%
+            
+            if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- data %>% dplyr::filter(measurement_concept_id %in% concept_ids)
+                
             features <- list()
             features_names <- c()
             
@@ -112,9 +132,9 @@ observeEvent(input$run_code_%widget_id%, {
             }
             
             if (length(features) == 0){
-                shinyjs::show("figure_message_%widget_id%")
+                shinyjs::show("error_message_div_%widget_id%")
                 shinyjs::hide("dygraph_%widget_id%")
-                output$figure_message_%widget_id% <- renderUI(div(i18np$t("no_data_to_display"), style = "font-weight: bold; color: red;"))
+                output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("no_data_to_display"), messageBarType = 5), style = "display: inline-block;"))
             }
             
             if (length(features) > 0){
@@ -127,7 +147,7 @@ observeEvent(input$run_code_%widget_id%, {
                     dygraphs::dyRangeSelector()
                 })
                 
-                shinyjs::hide("figure_message_%widget_id%")
+                shinyjs::hide("error_message_div_%widget_id%")
                 shinyjs::show("dygraph_%widget_id%")
             }
         }
