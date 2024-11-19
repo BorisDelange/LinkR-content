@@ -151,6 +151,9 @@ observeEvent(input$run_code_%widget_id%, {
                 
                 interval_duration <- as.numeric(difftime(datetimes$max_visit_start_datetime, datetimes$min_visit_start_datetime, units = "secs")) / num_cols
                 
+                if (language == "fr") date_format <- "%d-%m-%Y"
+                else date_format <- "%Y-%m-%d"
+                
                 intervals <- tibble::tibble(
                     interval = 0:(num_cols - 1),
                     interval_start = datetimes$min_visit_start_datetime + interval * interval_duration,
@@ -158,10 +161,10 @@ observeEvent(input$run_code_%widget_id%, {
                 ) %>%
                     dplyr::mutate(
                         interval_label = paste(
-                            format(interval_start, "%Y-%m-%d"),
+                            format(interval_start, date_format),
                             " <span style='color:#0084D8'>", format(interval_start, "%H:%M"), "</span>",
                             " ", tolower(i18np$t("to")), " ",
-                            format(interval_end, "%Y-%m-%d"),
+                            format(interval_end, date_format),
                             " <span style='color:#0084D8'>", format(interval_end, "%H:%M"), "</span>"
                         )
                     )
