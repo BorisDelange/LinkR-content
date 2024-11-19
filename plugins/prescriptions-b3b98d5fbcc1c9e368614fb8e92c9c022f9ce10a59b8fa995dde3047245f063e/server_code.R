@@ -169,6 +169,27 @@ observeEvent(input$run_code_%widget_id%, {
                 if (language == "fr") datetime_format <- "%d-%m-%Y %H:%M"
                 else datetime_format <- "%Y-%m-%d %H:%M"
                 
+                if (data_source == "person") {
+                    datetimes <- 
+                        d$data_person$visit_occurrence %>%
+                        dplyr::summarize(
+                            min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
+                            max_visit_start_datetime = max(visit_end_datetime, na.rm = TRUE)
+                        ) %>%
+                        dplyr::collect()
+                } else if (data_source == "visit_detail") {
+                    selected_visit_detail <- m$selected_visit_detail
+                
+                    datetimes <- 
+                        d$data_person$visit_detail %>%
+                        dplyr::filter(visit_detail_id == selected_visit_detail) %>%
+                        dplyr::summarize(
+                            min_visit_start_datetime = min(visit_detail_start_datetime, na.rm = TRUE),
+                            max_visit_start_datetime = max(visit_detail_end_datetime, na.rm = TRUE)
+                        ) %>%
+                        dplyr::collect()
+                }
+                
                 plotly_drug_exposure <- plotly::plot_ly(data = data) %>%
                     plotly::add_segments(
                         x = ~drug_exposure_start_datetime,
@@ -192,7 +213,11 @@ observeEvent(input$run_code_%widget_id%, {
                             title = "",
                             nticks = 10,
                             tickfont = list(size = 10),
-                            tickformat = datetime_format
+                            tickformat = datetime_format,
+                            range = c(
+                                format(datetimes$min_visit_start_datetime, "%Y-%m-%d %H:%M:%S"),
+                                format(datetimes$max_visit_start_datetime, "%Y-%m-%d %H:%M:%S")
+                            )
                         ),
                         yaxis = list(
                             tickvals = seq_along(unique_levels),
@@ -202,7 +227,7 @@ observeEvent(input$run_code_%widget_id%, {
                             automargin = FALSE
                         ),
                         hoverlabel = list(align = "left"),
-                        margin = list(l = 150, r = 0, t = 0, b = 0)
+                        margin = list(l = 145, r = 0, t = 0, b = 0)
                     ) %>%
                     plotly::config(displayModeBar = FALSE)
                 
