@@ -185,18 +185,22 @@ observeEvent(input$run_code_%widget_id%, {
                         values_from = agg_value
                     ) %>%
                     dplyr::arrange(measurement_concept_name) %>%
-                    dplyr::rename(!!i18np$t("concept") := measurement_concept_name)
+                    dplyr::rename(!!i18np$t("concept") := measurement_concept_name) %>%
+                    dplyr::filter(!is.na(!!rlang::sym(i18np$t("concept"))) & !!rlang::sym(i18np$t("concept")) != "")
                     
                 data <-
                     data %>%
                     dplyr::relocate(sort(names(data)[-1]), .after = 1)
                 
-                output$datatable_%widget_id% <- DT::renderDT(
+                output$datatable_%widget_id% <- DT::renderDT({
+                    row_count <- nrow(data)
+                
                     DT::datatable(
                         data,
                         rownames = FALSE,
                         options = list(
-                            dom = "<'top't><'bottom'p>",
+                            dom = if (row_count > 10) "<'top't><'bottom'p>" else "<'top't>",
+                            paging = row_count > 10,
                             compact = TRUE, 
                             hover = TRUE
                         ),
@@ -226,7 +230,7 @@ observeEvent(input$run_code_%widget_id%, {
                           "});"
                         )
                     )
-                )
+                })
             }
         }
         
