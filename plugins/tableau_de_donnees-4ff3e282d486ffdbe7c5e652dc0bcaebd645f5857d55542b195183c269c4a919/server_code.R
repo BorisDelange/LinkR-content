@@ -117,6 +117,27 @@ observeEvent(input$run_code_%widget_id%, {
                 if (length(input$aggregate_fct_%widget_id%) > 0) aggregate_fct <- input$aggregate_fct_%widget_id%
                 else aggregate_fct <- 8
                 
+                if (data_source == "person") {
+                    datetimes <- 
+                        d$data_person$visit_occurrence %>%
+                        dplyr::summarize(
+                            min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
+                            max_visit_start_datetime = max(visit_end_datetime, na.rm = TRUE)
+                        ) %>%
+                        dplyr::collect()
+                } else if (data_source == "visit_detail") {
+                    selected_visit_detail <- m$selected_visit_detail
+                
+                    datetimes <- 
+                        d$data_person$visit_detail %>%
+                        dplyr::filter(visit_detail_id == selected_visit_detail) %>%
+                        dplyr::summarize(
+                            min_visit_start_datetime = min(visit_detail_start_datetime, na.rm = TRUE),
+                            max_visit_start_datetime = max(visit_detail_end_datetime, na.rm = TRUE)
+                        ) %>%
+                        dplyr::collect()
+                }
+                
                 data <-
                     data %>%
                     dplyr::collect() %>%
@@ -128,12 +149,11 @@ observeEvent(input$run_code_%widget_id%, {
                     dplyr::select(measurement_concept_name, measurement_datetime, value_as_number) %>%
                     dplyr::arrange(measurement_concept_name, measurement_datetime)
                 
-                time_range <- range(data$measurement_datetime)
-                interval_duration <- as.numeric(difftime(time_range[2], time_range[1], units = "secs")) / num_cols
+                interval_duration <- as.numeric(difftime(datetimes$max_visit_start_datetime, datetimes$min_visit_start_datetime, units = "secs")) / num_cols
                 
                 intervals <- tibble::tibble(
                     interval = 0:(num_cols - 1),
-                    interval_start = time_range[1] + interval * interval_duration,
+                    interval_start = datetimes$min_visit_start_datetime + interval * interval_duration,
                     interval_end = interval_start + interval_duration
                 ) %>%
                     dplyr::mutate(
@@ -149,7 +169,7 @@ observeEvent(input$run_code_%widget_id%, {
                 data <-
                     data %>%
                     dplyr::mutate(
-                        interval = floor(as.numeric(difftime(measurement_datetime, time_range[1], units = "secs")) / interval_duration)
+                        interval = floor(as.numeric(difftime(measurement_datetime, datetimes$min_visit_start_datetime, units = "secs")) / interval_duration)
                     ) %>%
                     dplyr::group_by(measurement_concept_name, interval) %>%
                     dplyr::summarize(

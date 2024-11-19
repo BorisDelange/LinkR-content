@@ -10,6 +10,6 @@ div(
             style = "padding-top: 10px;"
         )
     ),
-    DT::DTOutput(ns("datatable_%widget_id%")),
-    style = "width: 100%; height: 100%; overflow: auto;"
+    div(DT::DTOutput(ns("datatable_%widget_id%")), style = "padding: 0 5px;"),
+    style = "width: 100%; height: 100%; overflow: auto; box-sizing: border-box;"
 )
