@@ -117,25 +117,31 @@ observeEvent(input$run_code_%widget_id%, {
                 if (length(input$aggregate_fct_%widget_id%) > 0) aggregate_fct <- input$aggregate_fct_%widget_id%
                 else aggregate_fct <- 8
                 
-                if (data_source == "person") {
-                    datetimes <- 
-                        d$data_person$visit_occurrence %>%
-                        dplyr::summarize(
-                            min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
-                            max_visit_start_datetime = max(visit_end_datetime, na.rm = TRUE)
-                        ) %>%
-                        dplyr::collect()
-                } else if (data_source == "visit_detail") {
-                    selected_visit_detail <- m$selected_visit_detail
-                
-                    datetimes <- 
-                        d$data_person$visit_detail %>%
-                        dplyr::filter(visit_detail_id == selected_visit_detail) %>%
-                        dplyr::summarize(
-                            min_visit_start_datetime = min(visit_detail_start_datetime, na.rm = TRUE),
-                            max_visit_start_datetime = max(visit_detail_end_datetime, na.rm = TRUE)
-                        ) %>%
-                        dplyr::collect()
+                if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
+                else {
+                    if (data_source == "person") {
+                        datetimes <- 
+                            d$data_person$visit_occurrence %>%
+                            dplyr::summarize(
+                                min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
+                                max_visit_end_datetime = max(visit_end_datetime, na.rm = TRUE)
+                            ) %>%
+                            dplyr::collect()
+                    }
+                    else if (data_source == "visit_detail") {
+                        selected_visit_detail <- m$selected_visit_detail
+                        
+                        datetimes <- 
+                            d$data_person$visit_detail %>%
+                            dplyr::filter(visit_detail_id == selected_visit_detail) %>%
+                            dplyr::summarize(
+                                min_visit_start_datetime = min(visit_detail_start_datetime, na.rm = TRUE),
+                                max_visit_end_datetime = max(visit_detail_end_datetime, na.rm = TRUE)
+                            ) %>%
+                            dplyr::collect()
+                    }
+                    
+                    datetimes <- c(datetimes$min_visit_start_datetime, datetimes$max_visit_end_datetime)
                 }
                 
                 data <-
@@ -149,30 +155,30 @@ observeEvent(input$run_code_%widget_id%, {
                     dplyr::select(measurement_concept_name, measurement_datetime, value_as_number) %>%
                     dplyr::arrange(measurement_concept_name, measurement_datetime)
                 
-                interval_duration <- as.numeric(difftime(datetimes$max_visit_start_datetime, datetimes$min_visit_start_datetime, units = "secs")) / num_cols
+                interval_duration <- as.numeric(difftime(datetimes[[2]], datetimes[[1]], units = "secs")) / num_cols
                 
                 if (language == "fr") date_format <- "%d-%m-%Y"
                 else date_format <- "%Y-%m-%d"
                 
                 intervals <- tibble::tibble(
                     interval = 0:(num_cols - 1),
-                    interval_start = datetimes$min_visit_start_datetime + interval * interval_duration,
+                    interval_start = datetimes[[1]] + interval * interval_duration,
                     interval_end = interval_start + interval_duration
                 ) %>%
-                    dplyr::mutate(
-                        interval_label = paste(
-                            format(interval_start, date_format),
-                            " <span style='color:#0084D8'>", format(interval_start, "%H:%M"), "</span>",
-                            " ", tolower(i18np$t("to")), " ",
-                            format(interval_end, date_format),
-                            " <span style='color:#0084D8'>", format(interval_end, "%H:%M"), "</span>"
-                        )
+                dplyr::mutate(
+                    interval_label = paste(
+                        format(interval_start, date_format),
+                        " <span style='color:#0084D8'>", format(interval_start, "%H:%M"), "</span>",
+                        " ", tolower(i18np$t("to")), " ",
+                        format(interval_end, date_format),
+                        " <span style='color:#0084D8'>", format(interval_end, "%H:%M"), "</span>"
                     )
+                )
                 
                 data <-
                     data %>%
                     dplyr::mutate(
-                        interval = floor(as.numeric(difftime(measurement_datetime, datetimes$min_visit_start_datetime, units = "secs")) / interval_duration)
+                        interval = floor(as.numeric(difftime(measurement_datetime, datetimes[[1]], units = "secs")) / interval_duration)
                     ) %>%
                     dplyr::group_by(measurement_concept_name, interval) %>%
                     dplyr::summarize(

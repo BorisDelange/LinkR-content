@@ -98,3 +98,23 @@ observeEvent(input$concepts_choice_%widget_id%, {
     }
     else sapply(c("concepts_div_%widget_id%", "concept_classes_div_%widget_id%"), shinyjs::hide)
 })
+
+# Synchronize timelines
+
+# Create a reactiveVal with timeline datetimes
+if (length(m$datetimes_timeline_%tab_id%) == 0){
+    m$datetimes_timeline_%tab_id% <- reactiveVal()
+    m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
+}
+
+observeEvent(m$debounced_datetimes_timeline_%tab_id%(), {
+    %req%
+    req(input$synchronize_timelines_%widget_id%)
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$debounced_datetimes_timeline"))
+    
+    tryCatch({
+        
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+        
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+}, ignoreInit = TRUE)
