@@ -81,7 +81,7 @@ observeEvent(input$save_params_and_code_%widget_id%, {
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
 
-# Show / hide concepts_div and concept_classes_div_
+# Show / hide concepts_div and concept_classes_div
 
 observeEvent(input$concepts_choice_%widget_id%, {
     %req%
