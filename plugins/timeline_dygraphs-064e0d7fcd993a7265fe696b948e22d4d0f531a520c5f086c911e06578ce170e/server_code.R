@@ -181,7 +181,8 @@ observeEvent(input$run_code_%widget_id%, {
                         dygraphs::dyRangeSelector(dateWindow = c(
                             format(datetimes$min_visit_start_datetime, "%Y-%m-%d %H:%M:%S"),
                             format(datetimes$max_visit_start_datetime, "%Y-%m-%d %H:%M:%S")
-                        ))
+                        )) %>%
+                        dygraphs::dyAxis("y", valueRange = c(0, NA))
                 })
                 
                 shinyjs::hide("error_message_div_%widget_id%")
