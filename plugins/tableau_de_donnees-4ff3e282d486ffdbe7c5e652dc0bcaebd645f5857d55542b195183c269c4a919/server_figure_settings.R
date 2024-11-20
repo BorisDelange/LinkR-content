@@ -25,6 +25,10 @@ observeEvent(input$load_figure_settings_%widget_id%, {
                 shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
             }
             else if (name == "num_cols") shiny.fluent::updateSpinButton.shinyInput(session, paste0(name, "_%widget_id%"), value = value_num)
+            else if (name == "synchronize_timelines"){
+                value <- as.logical(value_num)
+                shiny.fluent::updateToggle.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            }
         })
     }
     
@@ -62,7 +66,8 @@ observeEvent(input$save_params_and_code_%widget_id%, {
                 "concept_classes", input$concept_classes_%widget_id% %>% toString(), NA_real_,
                 "concepts", input$concepts_%widget_id% %>% toString(), NA_real_,
                 "num_cols", NA_character_, input$num_cols_%widget_id%,
-                "aggregate_fct", input$aggregate_fct_%widget_id%, NA_real_
+                "aggregate_fct", input$aggregate_fct_%widget_id%, NA_real_,
+                "synchronize_timelines", NA_character_, as.integer(input$synchronize_timelines_%widget_id%)
             )
             
             new_data <-
