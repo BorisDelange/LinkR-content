@@ -169,25 +169,31 @@ observeEvent(input$run_code_%widget_id%, {
                 if (language == "fr") datetime_format <- "%d-%m-%Y %H:%M"
                 else datetime_format <- "%Y-%m-%d %H:%M"
                 
-                if (data_source == "person") {
-                    datetimes <- 
-                        d$data_person$visit_occurrence %>%
-                        dplyr::summarize(
-                            min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
-                            max_visit_start_datetime = max(visit_end_datetime, na.rm = TRUE)
-                        ) %>%
-                        dplyr::collect()
-                } else if (data_source == "visit_detail") {
-                    selected_visit_detail <- m$selected_visit_detail
-                
-                    datetimes <- 
-                        d$data_person$visit_detail %>%
-                        dplyr::filter(visit_detail_id == selected_visit_detail) %>%
-                        dplyr::summarize(
-                            min_visit_start_datetime = min(visit_detail_start_datetime, na.rm = TRUE),
-                            max_visit_start_datetime = max(visit_detail_end_datetime, na.rm = TRUE)
-                        ) %>%
-                        dplyr::collect()
+                if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
+                else {
+                    if (data_source == "person") {
+                        datetimes <- 
+                            d$data_person$visit_occurrence %>%
+                            dplyr::summarize(
+                                min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
+                                max_visit_end_datetime = max(visit_end_datetime, na.rm = TRUE)
+                            ) %>%
+                            dplyr::collect()
+                    }
+                    else if (data_source == "visit_detail") {
+                        selected_visit_detail <- m$selected_visit_detail
+                        
+                        datetimes <- 
+                            d$data_person$visit_detail %>%
+                            dplyr::filter(visit_detail_id == selected_visit_detail) %>%
+                            dplyr::summarize(
+                                min_visit_start_datetime = min(visit_detail_start_datetime, na.rm = TRUE),
+                                max_visit_end_datetime = max(visit_detail_end_datetime, na.rm = TRUE)
+                            ) %>%
+                            dplyr::collect()
+                    }
+                    
+                    datetimes <- c(datetimes$min_visit_start_datetime, datetimes$max_visit_end_datetime)
                 }
                 
                 plotly_drug_exposure <- plotly::plot_ly(data = data) %>%
@@ -215,8 +221,8 @@ observeEvent(input$run_code_%widget_id%, {
                             tickfont = list(size = 10),
                             tickformat = datetime_format,
                             range = c(
-                                format(datetimes$min_visit_start_datetime, "%Y-%m-%d %H:%M:%S"),
-                                format(datetimes$max_visit_start_datetime, "%Y-%m-%d %H:%M:%S")
+                                format(datetimes[[1]], "%Y-%m-%d %H:%M:%S"),
+                                format(datetimes[[2]], "%Y-%m-%d %H:%M:%S")
                             )
                         ),
                         yaxis = list(

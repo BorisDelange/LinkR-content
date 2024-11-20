@@ -9,19 +9,24 @@ observeEvent(input$load_figure_settings_%widget_id%, {
     # Update figure settings UI
     
     link_id <- input$settings_file_%widget_id%
-    sql <- glue::glue_sql("SELECT name, value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db)
+    sql <- glue::glue_sql("SELECT name, value, value_num FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db)
     figure_settings <- DBI::dbGetQuery(m$db, sql)
     
     if (nrow(figure_settings) > 0){
         sapply(figure_settings$name, function(name){
         
             value <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value)
+            value_num <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value_num)
             
             if (name %in% c("data_source", "concepts_choice")) shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
             else if (name %in% c("concepts", "concept_classes")){
                 value <- unlist(strsplit(value, ", "))
                 if (name == "concepts") value <- as.numeric(value)
                 shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            }
+            else if (name == "synchronize_timelines"){
+                value <- as.logical(value_num)
+                shiny.fluent::updateToggle.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
             }
         })
     }
@@ -58,7 +63,8 @@ observeEvent(input$save_params_and_code_%widget_id%, {
                 "data_source", input$data_source_%widget_id%, NA_real_,
                 "concepts_choice", input$concepts_choice_%widget_id%, NA_real_,
                 "concept_classes", input$concept_classes_%widget_id% %>% toString(), NA_real_,
-                "concepts", input$concepts_%widget_id% %>% toString(), NA_real_
+                "concepts", input$concepts_%widget_id% %>% toString(), NA_real_,
+                "synchronize_timelines", NA_character_, as.integer(input$synchronize_timelines_%widget_id%)
             )
             
             new_data <-
@@ -94,3 +100,24 @@ observeEvent(input$concepts_choice_%widget_id%, {
     }
     else sapply(c("concepts_div_%widget_id%", "concept_classes_div_%widget_id%"), shinyjs::hide)
 })
+
+# Synchronize timelines
+
+# Create a reactiveVal with timeline datetimes
+
+if (length(m$datetimes_timeline_%tab_id%) == 0){
+    m$datetimes_timeline_%tab_id% <- reactiveVal()
+    m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
+}
+
+observeEvent(m$debounced_datetimes_timeline_%tab_id%(), {
+    %req%
+    req(input$synchronize_timelines_%widget_id%)
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$debounced_datetimes_timeline"))
+    
+    tryCatch({
+        
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+        
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+}, ignoreInit = TRUE)
