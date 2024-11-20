@@ -121,3 +121,24 @@ observeEvent(m$debounced_datetimes_timeline_%tab_id%(), {
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 }, ignoreInit = TRUE)
+
+observeEvent(plotly::event_data("plotly_relayout", source = "drug_exposure_plot_%widget_id%"), {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer plotly::event_date"))
+    
+    tryCatch({
+        relayout_data <- plotly::event_data("plotly_relayout", source = "drug_exposure_plot_%widget_id%")
+        
+        if (!is.null(relayout_data) && is.list(relayout_data)) {
+        
+            if ("xaxis.autorange" %in% names(relayout_data) && relayout_data[["xaxis.autorange"]]) {
+                m$datetimes_timeline_%tab_id%(m$data_datetimes_range_%widget_id%)
+            } else if ("xaxis.range[0]" %in% names(relayout_data) && "xaxis.range[1]" %in% names(relayout_data)) {
+                
+                selected_min <- as.POSIXct(relayout_data[["xaxis.range[0]"]], origin = "1970-01-01")
+                selected_max <- as.POSIXct(relayout_data[["xaxis.range[1]"]], origin = "1970-01-01")
+                m$datetimes_timeline_%tab_id%(c(selected_min, selected_max))
+            }
+        }
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+})
