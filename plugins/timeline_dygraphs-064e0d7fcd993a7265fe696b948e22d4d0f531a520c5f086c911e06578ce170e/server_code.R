@@ -145,6 +145,14 @@ observeEvent(input$run_code_%widget_id%, {
                             dplyr::collect()
                         
                         if (nrow(data) > 0){
+                            fake_data <- tibble::tibble(
+                                datetime = c(datetimes$min_visit_start_datetime, datetimes$max_visit_start_datetime),
+                                value_as_number = c(NA, NA)
+                            )
+                                
+                            data <- dplyr::bind_rows(fake_data, data)
+                            data <- data %>% dplyr::arrange(datetime)
+                        
                             features[[paste0("concept_", concept_id)]] <- xts::xts(data$value_as_number, data$datetime)
                             features_names <- c(features_names, concept$concept_name)
                         }
@@ -169,7 +177,7 @@ observeEvent(input$run_code_%widget_id%, {
                 
                     fig <-
                         fig %>%
-                        dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2) %>%
+                        dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2, useDataTimezone = TRUE) %>%
                         dygraphs::dyRangeSelector(dateWindow = c(
                             format(datetimes$min_visit_start_datetime, "%Y-%m-%d %H:%M:%S"),
                             format(datetimes$max_visit_start_datetime, "%Y-%m-%d %H:%M:%S")
