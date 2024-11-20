@@ -9,13 +9,14 @@ observeEvent(input$load_figure_settings_%widget_id%, {
     # Update figure settings UI
     
     link_id <- input$settings_file_%widget_id%
-    sql <- glue::glue_sql("SELECT name, value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db)
+    sql <- glue::glue_sql("SELECT name, value, value_num FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db)
     figure_settings <- DBI::dbGetQuery(m$db, sql)
     
     if (nrow(figure_settings) > 0){
         sapply(figure_settings$name, function(name){
         
             value <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value)
+            value_num <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value_num)
             
             # Update figure settings UI here with loaded figure settings
         })
