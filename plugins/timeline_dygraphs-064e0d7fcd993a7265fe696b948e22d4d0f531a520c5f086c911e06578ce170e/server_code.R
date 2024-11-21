@@ -154,7 +154,7 @@ observeEvent(input$run_code_%widget_id%, {
                         
                         if (nrow(data) > 0){
                             fake_data <- tibble::tibble(
-                                datetime = c(datetimes[[1]], datetimes[[2]]),
+                                datetime = c(datetimes[[1]] - lubridate::seconds(1), datetimes[[2]] + lubridate::seconds(1)),
                                 value_as_number = c(NA, NA)
                             )
                                 
