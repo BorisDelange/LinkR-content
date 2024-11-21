@@ -123,8 +123,8 @@ observeEvent(m$debounced_datetimes_timeline_%tab_id%(), {
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$debounced_datetimes_timeline"))
     
     tryCatch({
-        
-#         print(m$debounced_datetimes_timeline_%tab_id%())
+    
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 }, ignoreInit = TRUE)
