@@ -131,6 +131,8 @@ observeEvent(input$run_code_%widget_id%, {
                 datetimes <- c(datetimes$min_visit_start_datetime, datetimes$max_visit_end_datetime)
             }
             
+            m$datetimes_%widget_id% <- datetimes
+            
             for (concept_id in concept_ids){
             
                 concept <- selected_concepts %>% dplyr::filter(concept_id == !!concept_id)
