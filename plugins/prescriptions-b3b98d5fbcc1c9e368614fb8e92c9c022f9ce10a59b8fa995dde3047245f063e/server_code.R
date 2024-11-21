@@ -53,7 +53,20 @@ observeEvent(m$selected_person, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
     
-    if (isTRUE(input$run_code_on_data_update_%widget_id%) && length(input$data_source_%widget_id%) > 0 && input$data_source_%widget_id% == "person") shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    if (isTRUE(input$run_code_on_data_update_%widget_id%) && length(input$data_source_%widget_id%) > 0 && input$data_source_%widget_id% == "person"){
+        
+        tryCatch({
+        
+            # Reset synchronized datetimes
+            m$datetimes_timeline_%tab_id% <- reactiveVal()
+            m$debounced_datetimes_timeline_%tab_id% <- reactiveVal()
+            m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
+            
+            # Run code
+            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+            
+         }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+    }
 })
 
 # Run code at visit_detail update
@@ -61,7 +74,20 @@ observeEvent(m$selected_visit_detail, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_visit_detail"))
     
-     if (isTRUE(input$run_code_on_data_update_%widget_id%) && length(input$data_source_%widget_id%) > 0 && input$data_source_%widget_id% == "visit_detail") shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    if (isTRUE(input$run_code_on_data_update_%widget_id%) && length(input$data_source_%widget_id%) > 0 && input$data_source_%widget_id% == "visit_detail"){
+        
+        tryCatch({
+        
+            # Reset synchronized datetimes
+            m$datetimes_timeline_%tab_id% <- reactiveVal()
+            m$debounced_datetimes_timeline_%tab_id% <- reactiveVal()
+            m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
+            
+            # Run code
+            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+            
+         }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+    }
 })
 
 # Run code
@@ -239,7 +265,8 @@ observeEvent(input$run_code_%widget_id%, {
                         hoverlabel = list(align = "left"),
                         margin = list(l = 145, r = 0, t = 0, b = 0)
                     ) %>%
-                    plotly::config(displayModeBar = FALSE)
+                    plotly::config(displayModeBar = FALSE) %>%
+                    plotly::event_register("plotly_relayout")
                 
                 output$drug_exposure_plot_%widget_id% <- plotly::renderPlotly(plotly_drug_exposure)
             }
