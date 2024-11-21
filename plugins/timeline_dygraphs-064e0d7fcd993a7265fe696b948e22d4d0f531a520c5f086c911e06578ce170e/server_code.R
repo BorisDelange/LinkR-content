@@ -14,6 +14,12 @@ observeEvent(m$selected_person, {
     req(length(m$selected_person) > 0)
     req(!is.na(m$selected_person))
     
+    # Reset synchronized datetimes
+    tryCatch({
+        m$datetimes_timeline_%tab_id%(character(0))
+        
+     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+    
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
 })
 
