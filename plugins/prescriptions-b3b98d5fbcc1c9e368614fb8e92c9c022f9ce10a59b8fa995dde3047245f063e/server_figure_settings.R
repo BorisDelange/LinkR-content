@@ -117,7 +117,11 @@ observeEvent(m$debounced_datetimes_timeline_%tab_id%(), {
     
     tryCatch({
         
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+        if (
+            abs(as.numeric(m$debounced_datetimes_timeline_%tab_id%()[[1]]) - as.numeric(m$datetimes_%widget_id%[[1]])) > 5 |
+            abs(as.numeric(m$debounced_datetimes_timeline_%tab_id%()[[2]]) - as.numeric (m$datetimes_%widget_id%[[2]])) > 5){
+            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+        }
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 }, ignoreInit = TRUE)
@@ -135,8 +139,8 @@ observeEvent(plotly::event_data("plotly_relayout", source = "drug_exposure_plot_
                 m$datetimes_timeline_%tab_id%(m$data_datetimes_range_%widget_id%)
             } else if ("xaxis.range[0]" %in% names(relayout_data) && "xaxis.range[1]" %in% names(relayout_data)) {
                 
-                selected_min <- as.POSIXct(relayout_data[["xaxis.range[0]"]], origin = "1970-01-01")
-                selected_max <- as.POSIXct(relayout_data[["xaxis.range[1]"]], origin = "1970-01-01")
+                selected_min <- lubridate::force_tz(as.POSIXct(relayout_data[["xaxis.range[0]"]], origin = "1970-01-01"), tzone = "UTC")
+                selected_max <- lubridate::force_tz(as.POSIXct(relayout_data[["xaxis.range[1]"]], origin = "1970-01-01"), tzone = "UTC")
                 m$datetimes_timeline_%tab_id%(c(selected_min, selected_max))
             }
         }
