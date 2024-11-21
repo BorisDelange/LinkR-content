@@ -119,32 +119,33 @@ observeEvent(input$run_code_%widget_id%, {
             features <- list()
             features_names <- c()
             
-            if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
-            else {
-                if (data_source == "person") {
-                    datetimes <- 
-                        d$data_person$visit_occurrence %>%
-                        dplyr::summarize(
-                            min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
-                            max_visit_end_datetime = max(visit_end_datetime, na.rm = TRUE)
-                        ) %>%
-                        dplyr::collect()
-                }
-                else if (data_source == "visit_detail") {
-                    selected_visit_detail <- m$selected_visit_detail
-                    
-                    datetimes <- 
-                        d$data_person$visit_detail %>%
-                        dplyr::filter(visit_detail_id == selected_visit_detail) %>%
-                        dplyr::summarize(
-                            min_visit_start_datetime = min(visit_detail_start_datetime, na.rm = TRUE),
-                            max_visit_end_datetime = max(visit_detail_end_datetime, na.rm = TRUE)
-                        ) %>%
-                        dplyr::collect()
-                }
-                
-                datetimes <- c(datetimes$min_visit_start_datetime, datetimes$max_visit_end_datetime)
+            if (data_source == "person") {
+                data_datetimes_range <- 
+                    d$data_person$visit_occurrence %>%
+                    dplyr::summarize(
+                        min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
+                        max_visit_end_datetime = max(visit_end_datetime, na.rm = TRUE)
+                    ) %>%
+                    dplyr::collect()
             }
+            else if (data_source == "visit_detail") {
+                selected_visit_detail <- m$selected_visit_detail
+                
+                data_datetimes_range <- 
+                    d$data_person$visit_detail %>%
+                    dplyr::filter(visit_detail_id == selected_visit_detail) %>%
+                    dplyr::summarize(
+                        min_visit_start_datetime = min(visit_detail_start_datetime, na.rm = TRUE),
+                        max_visit_end_datetime = max(visit_detail_end_datetime, na.rm = TRUE)
+                    ) %>%
+                    dplyr::collect()
+            }
+            
+            data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)
+            m$data_datetimes_range_%widget_id% <- data_datetimes_range
+            
+            if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
+            else datetimes <- data_datetimes_range
             
             m$datetimes_%widget_id% <- datetimes
             
@@ -169,7 +170,7 @@ observeEvent(input$run_code_%widget_id%, {
                         
                         if (nrow(data) > 0){
                             fake_data <- tibble::tibble(
-                                datetime = c(datetimes[[1]] - lubridate::seconds(1), datetimes[[2]] + lubridate::seconds(1)),
+                                datetime = c(data_datetimes_range[[1]] - lubridate::seconds(1), data_datetimes_range[[2]] + lubridate::seconds(1)),
                                 value_as_number = c(NA, NA)
                             )
                                 
