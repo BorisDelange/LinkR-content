@@ -120,6 +120,7 @@ observeEvent(input$dygraph_%widget_id%_date_window, {
 observeEvent(m$debounced_datetimes_timeline_%tab_id%(), {
     %req%
     req(input$synchronize_timelines_%widget_id%)
+    req(length(m$debounced_datetimes_timeline_%tab_id%()) > 0)
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$debounced_datetimes_timeline"))
     
     tryCatch({
