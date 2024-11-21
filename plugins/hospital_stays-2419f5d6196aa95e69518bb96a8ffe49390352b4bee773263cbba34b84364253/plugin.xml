@@ -14,7 +14,7 @@
     <short_description_en>Displays a patient's hospital stays</short_description_en>
     <short_description_fr>Affiche les diff&#xE9;rents s&#xE9;jours hospitaliers d'un patient</short_description_fr>
     <creation_datetime>2024-10-30 08:00:05</creation_datetime>
-    <update_datetime>2024-11-21 22:56:58</update_datetime>
+    <update_datetime>2024-11-21 23:08:43</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>

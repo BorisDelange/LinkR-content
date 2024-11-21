@@ -63,62 +63,81 @@ observeEvent(input$run_code_%widget_id%, {
     
     tryCatch({
         
-        if (language == "fr") datetime_format <- "%d-%m-%Y %H:%M"
-        else datetime_format <- "%Y-%m-%d %H:%M"
+        if (is.na(m$selected_person)){
+            output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("select_patient"), messageBarType = 5), style = "display: inline-block;"))
+            shinyjs::hide("stays_plot_%widget_id%")
+            shinyjs::show("error_message_div_%widget_id%")
+        }
+        else {
 
-        if (d$data_person$visit_detail %>% dplyr::count() %>% dplyr::pull() > 0) {
+            data <- d$data_person$visit_detail
             
-            data <-
-                d$data_person$visit_detail %>%
-                dplyr::select(visit_detail_start_datetime, visit_detail_end_datetime, care_site_id) %>%
-                dplyr::left_join(
-                    d$care_site %>% dplyr::select(care_site_id, care_site_name),
-                    by = "care_site_id"
-                ) %>%
-                dplyr::collect() %>%
-                dplyr::arrange(visit_detail_start_datetime) %>%
-                dplyr::filter(!is.na(care_site_name)) %>%
-                dplyr::mutate(
-                    service_order = as.numeric(forcats::fct_rev(forcats::fct_inorder(care_site_name)))
-                )
+            if (data %>% dplyr::count() %>% dplyr::pull() == 0){
+                    
+                output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("no_data_to_display"), messageBarType = 5), style = "display: inline-block;"))
+                
+                shinyjs::hide("stays_plot_%widget_id%")
+                shinyjs::show("error_message_div_%widget_id%")
+            } else {
+                
+                shinyjs::hide("error_message_div_%widget_id%")
+                shinyjs::show("stays_plot_%widget_id%")
+                
+                data <-
+                    d$data_person$visit_detail %>%
+                    dplyr::select(visit_detail_start_datetime, visit_detail_end_datetime, care_site_id) %>%
+                    dplyr::left_join(
+                        d$care_site %>% dplyr::select(care_site_id, care_site_name),
+                        by = "care_site_id"
+                    ) %>%
+                    dplyr::collect() %>%
+                    dplyr::arrange(visit_detail_start_datetime) %>%
+                    dplyr::filter(!is.na(care_site_name)) %>%
+                    dplyr::mutate(
+                        service_order = as.numeric(forcats::fct_rev(forcats::fct_inorder(care_site_name)))
+                    )
+                
+                unique_levels <- data$service_order
+                unique_labels <- data$care_site_name
+                
+                if (language == "fr") datetime_format <- "%d-%m-%Y %H:%M"
+                else datetime_format <- "%Y-%m-%d %H:%M"
+                
+                plotly_visit_detail <- plotly::plot_ly(data = data, source = "visit_detail_plot_%widget_id%") %>%
+                    plotly::add_segments(
+                        x = ~visit_detail_start_datetime,
+                        xend = ~visit_detail_end_datetime,
+                        y = ~service_order,
+                        yend = ~service_order,
+                        line = list(color = "steelblue", width = 10),
+                        text = ~paste0(
+                            i18np$t("hospital_unit"), " : ", care_site_name, "<br>",
+                            i18np$t("datetime_start"), " : ", format(visit_detail_start_datetime, datetime_format), "<br>",
+                            i18np$t("datetime_end"), " : ", format(visit_detail_end_datetime, datetime_format)
+                        ),
+                        hoverinfo = "text"
+                    ) %>%
+                    plotly::layout(
+                        xaxis = list(
+                            type = "date",
+                            tickmode = "auto",
+                            title = "",
+                            nticks = 10,
+                            tickfont = list(size = 10),
+                            tickformat = datetime_format
+                        ),
+                        yaxis = list(
+                            tickvals = unique_levels,
+                            ticktext = unique_labels,
+                            title = "",
+                            automargin = TRUE
+                        ),
+                        hoverlabel = list(align = "left")
+                    ) %>%
+                    plotly::config(displayModeBar = FALSE)
             
-            unique_levels <- data$service_order
-            unique_labels <- data$care_site_name
-            
-            plotly_visit_detail <- plotly::plot_ly(data = data, source = "visit_detail_plot_%widget_id%") %>%
-                plotly::add_segments(
-                    x = ~visit_detail_start_datetime,
-                    xend = ~visit_detail_end_datetime,
-                    y = ~service_order,
-                    yend = ~service_order,
-                    line = list(color = "steelblue", width = 10),
-                    text = ~paste0(
-                        i18np$t("hospital_unit"), " : ", care_site_name, "<br>",
-                        i18np$t("datetime_start"), " : ", format(visit_detail_start_datetime, datetime_format), "<br>",
-                        i18np$t("datetime_end"), " : ", format(visit_detail_end_datetime, datetime_format)
-                    ),
-                    hoverinfo = "text"
-                ) %>%
-                plotly::layout(
-                    xaxis = list(
-                        type = "date",
-                        tickmode = "auto",
-                        title = "",
-                        nticks = 10,
-                        tickfont = list(size = 10),
-                        tickformat = datetime_format
-                    ),
-                    yaxis = list(
-                        tickvals = unique_levels,
-                        ticktext = unique_labels,
-                        title = "",
-                        automargin = TRUE
-                    ),
-                    hoverlabel = list(align = "left")
-                ) %>%
-                plotly::config(displayModeBar = FALSE)
-        
-            output$stays_plot_%widget_id% <- plotly::renderPlotly(plotly_visit_detail)
+                output$stays_plot_%widget_id% <- plotly::renderPlotly(plotly_visit_detail)
+            }
         }
 
         # Go to figure tab
