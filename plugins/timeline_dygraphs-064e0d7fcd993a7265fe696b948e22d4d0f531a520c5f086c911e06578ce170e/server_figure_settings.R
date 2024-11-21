@@ -122,9 +122,6 @@ observeEvent(m$debounced_datetimes_timeline_%tab_id%(), {
     req(input$synchronize_timelines_%widget_id%)
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$debounced_datetimes_timeline"))
     
-    print(m$debounced_datetimes_timeline_%tab_id%())
-    print(m$datetimes_%widget_id%)
-    
     tryCatch({
     
         if (
