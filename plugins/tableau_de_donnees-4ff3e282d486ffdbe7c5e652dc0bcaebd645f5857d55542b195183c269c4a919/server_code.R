@@ -105,7 +105,7 @@ observeEvent(input$run_code_%widget_id%, {
             if (data_source == "person" & is.na(m$selected_person)) output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("select_patient"), messageBarType = 5), style = "display: inline-block;"))
             else if (data_source == "visit_detail" & is.na(m$selected_visit_detail)) output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("select_stay"), messageBarType = 5), style = "display: inline-block;"))
             
-            shinyjs::hide("datatable_%widget_id%")
+            sapply(c("datatable_%widget_id%", "datetime_slider_div_%widget_id%"), shinyjs::hide)
             shinyjs::show("error_message_div_%widget_id%")
             
         } else {
@@ -130,12 +130,12 @@ observeEvent(input$run_code_%widget_id%, {
                 
                 output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("no_data_to_display"), messageBarType = 5), style = "display: inline-block;"))
                 
-                shinyjs::hide("datatable_%widget_id%")
+                sapply(c("datatable_%widget_id%", "datetime_slider_div_%widget_id%"), shinyjs::hide)
                 shinyjs::show("error_message_div_%widget_id%")
             } else {
                 
                 shinyjs::hide("error_message_div_%widget_id%")
-                shinyjs::show("datatable_%widget_id%")
+                sapply(c("datatable_%widget_id%", "datetime_slider_div_%widget_id%"), shinyjs::show)
                 
                 if (length(input$num_cols_%widget_id%) > 0) num_cols <- input$num_cols_%widget_id%
                 else num_cols <- 8
@@ -143,34 +143,42 @@ observeEvent(input$run_code_%widget_id%, {
                 if (length(input$aggregate_fct_%widget_id%) > 0) aggregate_fct <- input$aggregate_fct_%widget_id%
                 else aggregate_fct <- 8
                 
-                if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
-                else {
-                    if (data_source == "person") {
-                        datetimes <- 
-                            d$data_person$visit_occurrence %>%
-                            dplyr::summarize(
-                                min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
-                                max_visit_end_datetime = max(visit_end_datetime, na.rm = TRUE)
-                            ) %>%
-                            dplyr::collect()
-                    }
-                    else if (data_source == "visit_detail") {
-                        selected_visit_detail <- m$selected_visit_detail
-                        
-                        datetimes <- 
-                            d$data_person$visit_detail %>%
-                            dplyr::filter(visit_detail_id == selected_visit_detail) %>%
-                            dplyr::summarize(
-                                min_visit_start_datetime = min(visit_detail_start_datetime, na.rm = TRUE),
-                                max_visit_end_datetime = max(visit_detail_end_datetime, na.rm = TRUE)
-                            ) %>%
-                            dplyr::collect()
-                    }
+                
+                if (data_source == "person") {
+                    data_datetimes_range     <- 
+                        d$data_person$visit_occurrence %>%
+                        dplyr::summarize(
+                            min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
+                            max_visit_end_datetime = max(visit_end_datetime, na.rm = TRUE)
+                        ) %>%
+                        dplyr::collect()
+                }
+                else if (data_source == "visit_detail") {
+                    selected_visit_detail <- m$selected_visit_detail
                     
-                    datetimes <- c(datetimes$min_visit_start_datetime, datetimes$max_visit_end_datetime)
+                    data_datetimes_range <- 
+                        d$data_person$visit_detail %>%
+                        dplyr::filter(visit_detail_id == selected_visit_detail) %>%
+                        dplyr::summarize(
+                            min_visit_start_datetime = min(visit_detail_start_datetime, na.rm = TRUE),
+                            max_visit_end_datetime = max(visit_detail_end_datetime, na.rm = TRUE)
+                        ) %>%
+                        dplyr::collect()
                 }
                 
+                data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)
+                m$data_datetimes_range_%widget_id% <- data_datetimes_range
+                
+                if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
+                else datetimes <- data_datetimes_range
+                
                 m$datetimes_%widget_id% <- datetimes
+                
+                updateSliderInput(
+                    session, "datetime_slider_%widget_id%", min = data_datetimes_range[[1]], max = data_datetimes_range[[2]],
+                    value = c(datetimes[[1]], datetimes[[2]]),
+                    timeFormat = ifelse(language == "fr", "%d-%m-%Y %H:%M", "%Y-%m-%d %H:%M"), step = 3600000
+                )
                 
                 data <-
                     data %>%
@@ -294,3 +302,48 @@ observeEvent(input$code_%widget_id%_save, {
     
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_params_and_code_%widget_id%', Math.random());"))
 })
+
+# Adjust CSS of datetime sliderInput
+
+# shinyjs::delay(100, shinyjs::runjs(paste0("
+#     function adjustSliderLabels_%widget_id%() {
+#         const toLabel = document.querySelector('#", id, "-datetime_slider_div_%widget_id% .irs-to');
+#         const singleLabel = document.querySelector('#", id, "-datetime_slider_div_%widget_id% .irs-single');
+#     
+#         if (toLabel) {
+#             const toLeft = parseFloat(toLabel.style.left);
+#             if (toLeft > 72) {
+#                 toLabel.style.left = '72%';
+#             }
+#         }
+#     
+#         if (singleLabel) {
+#             const singleLeft = parseFloat(singleLabel.style.left);
+#             if (singleLeft < 0) {
+#                 singleLabel.style.left = '0%';
+#             } else if (singleLeft > 32) {
+#                 singleLabel.style.left = '32%';
+#             }
+#         }
+#     }
+#     
+#     window.observeSliderChanges_%widget_id% = function() {
+#         const toLabel = document.querySelector(('#", id, "-datetime_slider_div_%widget_id% .irs-to');
+#         const singleLabel = document.querySelector(('#", id, "-datetime_slider_div_%widget_id% .irs-single');
+#         
+#         if (toLabel) {
+#             const observer = new MutationObserver(adjustSliderLabels);
+#             
+#             observer.observe(fromLabel, { attributes: true, attributeFilter: ['style'] });
+#             observer.observe(toLabel, { attributes: true, attributeFilter: ['style'] });
+#             
+#             if (singleLabel) {
+#                 observer.observe(singleLabel, { attributes: true, attributeFilter: ['style'] });
+#             }
+#             
+#             adjustSliderLabels_%widget_id%();
+#         }
+#     }
+#     
+#     observeSliderChanges_%widget_id%();
+# ")))
