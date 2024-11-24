@@ -170,13 +170,20 @@ observeEvent(input$run_code_%widget_id%, {
                 m$data_datetimes_range_%widget_id% <- data_datetimes_range
                 
                 if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
-                else datetimes <- data_datetimes_range
+                else {
+                    datetimes <- data_datetimes_range
+                    if (length(m$debounced_datetime_slider_%widget_id%()) > 0) {
+                        if (m$debounced_datetime_slider_%widget_id%()[[1]] >= data_datetimes_range[[1]] & m$debounced_datetime_slider_%widget_id%()[[2]] <= data_datetimes_range[[2]]){
+                            datetimes <- m$debounced_datetime_slider_%widget_id%()
+                        }
+                    }
+                }
                 
                 m$datetimes_%widget_id% <- datetimes
                 
                 updateSliderInput(
                     session, "datetime_slider_%widget_id%", min = data_datetimes_range[[1]], max = data_datetimes_range[[2]],
-                    value = c(datetimes[[1]], datetimes[[2]]),
+                    value = datetimes,
                     timeFormat = ifelse(language == "fr", "%d-%m-%Y %H:%M", "%Y-%m-%d %H:%M"), step = 3600000
                 )
                 
@@ -251,7 +258,8 @@ observeEvent(input$run_code_%widget_id%, {
                         data,
                         rownames = FALSE,
                         options = list(
-                            dom = if (row_count > 10) "<'top't><'bottom'p>" else "<'top't>",
+                            dom = if (row_count > 10) "<'datatable_length'l><'top't><'bottom'p>" else "<'top't>",
+                            pageLength = if (row_count > 10) 25 else 10,
                             paging = row_count > 10,
                             compact = TRUE, 
                             hover = TRUE

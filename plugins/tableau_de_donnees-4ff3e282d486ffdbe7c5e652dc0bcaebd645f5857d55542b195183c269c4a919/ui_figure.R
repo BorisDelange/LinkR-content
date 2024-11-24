@@ -12,7 +12,7 @@ div(
     ),
     div(
         DT::DTOutput(ns("datatable_%widget_id%")),
-        style = "padding: 0 5px; position: relative; z-index: 100;"
+        style = "padding: 5px 5px 0 5px; position: relative; z-index: 100;"
     ),
     shinyjs::hidden(
         div(
@@ -24,6 +24,7 @@ div(
                 min = as.Date("1970-01-01"),
                 max = Sys.Date(),
                 value = c(as.Date("1970-01-01"), Sys.Date()),
+                timezone = "+0000",
                 width = "100%"
             ),
             style = "width: calc(100% - 130px); padding-left: 130px; overflow: hidden; position: relative; top: -10px;"

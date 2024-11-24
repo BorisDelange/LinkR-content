@@ -117,10 +117,19 @@ m$debounced_datetime_slider_%widget_id% <- reactive(input$datetime_slider_%widge
 observeEvent(m$debounced_datetime_slider_%widget_id%(), {
     %req%
     req(length(m$debounced_datetime_slider_%widget_id%()) > 0)
+    req(length(m$datetimes_%widget_id%[[1]]) > 0)
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$debounced_datetime_slider"))
     
     tryCatch({
         m$datetimes_timeline_%tab_id%(m$debounced_datetime_slider_%widget_id%() %>% as.POSIXct())
+        
+        if (
+            isFALSE(input$synchronize_timelines_%widget_id%) &
+            (abs(as.numeric(m$debounced_datetime_slider_%widget_id%()[[1]]) - as.numeric(m$datetimes_%widget_id%[[1]])) > 5 |
+            abs(as.numeric(m$debounced_datetime_slider_%widget_id%()[[2]]) - as.numeric (m$datetimes_%widget_id%[[2]])) > 5)){
+            print("RUN")
+            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+        }
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
 
