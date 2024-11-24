@@ -1,0 +1,5 @@
+id,name,tab_type_id,creation_datetime,update_datetime,deleted
+1,Timeline {dygraphs},1,2024-08-28 22:19:16,2024-11-21 23:50:54,0
+2,Séjours hospitaliers,1,2024-10-30 08:00:05,2024-11-21 23:08:43,0
+3,Tableau de données,1,2024-11-08 07:58:31,2024-11-24 21:25:11,0
+4,Prescriptions,1,2024-11-13 07:56:14,2024-11-21 23:41:13,0

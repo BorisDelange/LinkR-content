@@ -1,0 +1,7 @@
+id,category,name,tab_id,plugin_id,display_order,creator_id,datetime,deleted
+1,patient_lvl,Stays,1,2,NA,NA,2024-11-24 17:22:53,0
+2,patient_lvl,Vitals dygraphs,2,1,NA,NA,2024-11-24 17:24:31,0
+3,patient_lvl,Vitals datatable,2,3,NA,NA,2024-11-24 17:25:39,0
+4,patient_lvl,Drugs,2,4,NA,NA,2024-11-24 17:29:27,0
+5,patient_lvl,Drugs,3,4,NA,NA,2024-11-24 17:31:00,0
+6,patient_lvl,Labs,4,3,NA,NA,2024-11-24 17:33:23,0

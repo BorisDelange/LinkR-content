@@ -118,6 +118,22 @@ Une analyse de survie selon Kaplan-Mayer sera réalisé pour la mortalité à 30
     <update_datetime>2024-09-04 10:03:49</update_datetime>
   </project>
   <project>
+    <app_version>0.3.0.9019</app_version>
+    <unique_id>a188be1e3dfc03508df8291f2110fa18d1063a97e1a5c2b3202160397f262073</unique_id>
+    <version>0.0.1.9000</version>
+    <author>Boris Delange</author>
+    <name_en>LinkR demo</name_en>
+    <name_fr>Démo LinkR</name_fr>
+    <category_en/>
+    <category_fr/>
+    <description_en/>
+    <description_fr/>
+    <short_description_en/>
+    <short_description_fr/>
+    <creation_datetime>2024-11-24 17:20:50</creation_datetime>
+    <update_datetime>2024-11-24 21:59:56</update_datetime>
+  </project>
+  <project>
     <app_version>0.3.0.9017</app_version>
     <unique_id>3d4f080600ddc576467f6097658493493d93536ba3fa90e1adb50c35eae5050b</unique_id>
     <version>0.0.1.9000</version>

@@ -1,0 +1,71 @@
+id,widget_id,concept_id,concept_name,concept_display_name,domain_id,mapped_to_concept_id,merge_mapped_concepts,creator_id,datetime,deleted
+1,2,3027018,Heart rate,,Measurement,NA,0,NA,2024-11-24 17:24:31,0
+2,2,3027598,Mean blood pressure,,Measurement,NA,0,NA,2024-11-24 17:24:31,0
+3,2,3004249,Systolic blood pressure,,Measurement,NA,0,NA,2024-11-24 17:24:31,0
+4,2,3012888,Diastolic blood pressure,,Measurement,NA,0,NA,2024-11-24 17:24:31,0
+5,2,21492240,Diastolic blood pressure by Noninvasive,,Measurement,NA,0,NA,2024-11-24 17:24:31,0
+6,2,21492239,Systolic blood pressure by Noninvasive,,Measurement,NA,0,NA,2024-11-24 17:24:31,0
+7,2,21492241,Mean blood pressure by Noninvasive,,Measurement,NA,0,NA,2024-11-24 17:24:31,0
+8,3,3027018,Heart rate,,Measurement,NA,0,NA,2024-11-24 17:25:39,0
+9,3,3027598,Mean blood pressure,,Measurement,NA,0,NA,2024-11-24 17:25:39,0
+10,3,3004249,Systolic blood pressure,,Measurement,NA,0,NA,2024-11-24 17:25:39,0
+11,3,3012888,Diastolic blood pressure,,Measurement,NA,0,NA,2024-11-24 17:25:39,0
+12,3,21492240,Diastolic blood pressure by Noninvasive,,Measurement,NA,0,NA,2024-11-24 17:25:39,0
+13,3,21492239,Systolic blood pressure by Noninvasive,,Measurement,NA,0,NA,2024-11-24 17:25:39,0
+14,3,21492241,Mean blood pressure by Noninvasive,,Measurement,NA,0,NA,2024-11-24 17:25:39,0
+15,4,1154343,albuterol,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+16,4,19123989,albuterol 0.83 MG/ML Inhalation Solution,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+17,4,1321341,norepinephrine,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+18,4,1343916,epinephrine,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+19,4,40072394,norepinephrine Injectable Solution,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+20,4,35603226,2 ML furosemide 10 MG/ML Injection,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+21,4,35603227,4 ML furosemide 10 MG/ML Injection,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+22,4,956874,furosemide,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+23,4,35603224,10 ML furosemide 10 MG/ML Injection,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+24,4,19077546,furosemide 20 MG Oral Tablet,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+25,4,957136,furosemide 40 MG Oral Tablet,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+26,4,956877,furosemide 80 MG Oral Tablet,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+27,4,40167213,metoprolol tartrate 25 MG Oral Tablet,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+28,4,1307046,metoprolol,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+29,4,40167196,5 ML metoprolol tartrate 1 MG/ML Injection,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+30,4,40167218,metoprolol tartrate 50 MG Oral Tablet,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+31,4,40166830,24 HR metoprolol succinate 50 MG Extended Release Oral Tablet,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+32,4,40166825,24 HR metoprolol succinate 100 MG Extended Release Oral Tablet [Toprol],,Drug,NA,0,NA,2024-11-24 17:29:27,0
+33,4,40166828,24 HR metoprolol succinate 25 MG Extended Release Oral Tablet,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+34,4,40166824,24 HR metoprolol succinate 100 MG Extended Release Oral Tablet,,Drug,NA,0,NA,2024-11-24 17:29:27,0
+35,6,3024929,Platelets [#/volume] in Blood by Automated count,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+36,6,3003282,Leukocytes [#/volume] in Blood by Manual count,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+37,6,3009744,MCHC [Mass/volume] by Automated count,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+38,6,3012030,MCH [Entitic mass] by Automated count,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+39,6,3019897,Erythrocyte distribution width [Ratio] by Automated count,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+40,6,3020416,Erythrocytes [#/volume] in Blood by Automated count,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+41,6,3023599,MCV [Entitic volume] by Automated count,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+42,6,3012095,Magnesium [Moles/volume] in Serum or Plasma,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+43,6,3015377,Calcium [Moles/volume] in Serum or Plasma,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+44,6,3011904,Phosphate [Mass/volume] in Serum or Plasma,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+45,6,3004501,Glucose [Mass/volume] in Serum or Plasma,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+46,6,3004327,Lymphocytes [#/volume] in Blood by Automated count,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+47,6,3013429,Basophils [#/volume] in Blood by Automated count,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+48,6,3028615,Eosinophils [#/volume] in Blood by Automated count,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+49,6,3033575,Monocytes [#/volume] in Blood by Automated count,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+50,6,3034426,Prothrombin time (PT),,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+51,6,3007876,Appearance of Urine,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+52,6,3009540,Deprecated Glucose [Mass/volume] in Serum or Plasma,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+53,6,3013721,Aspartate aminotransferase [Enzymatic activity/volume] in Serum or Plasma,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+54,6,3024128,Bilirubin.total [Mass/volume] in Serum or Plasma,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+55,6,3006923,Alanine aminotransferase [Enzymatic activity/volume] in Serum or Plasma,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+56,6,3035995,Alkaline phosphatase [Enzymatic activity/volume] in Serum or Plasma,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+57,6,3027162,Color of Urine,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+58,6,3014886,Neutrophils [#/volume] in Urine by Automated count,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+59,6,3002888,Erythrocyte distribution width [Entitic volume],,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+60,6,3009363,Deprecated Activated partial thrombplastin time (aPTT) in Blood by Coagulation assay,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+61,6,3013466,aPTT in Blood by Coagulation assay,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+62,6,3022217,INR in Platelet poor plasma by Coagulation assay,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+63,6,3034795,Deprecated INR in Platelet poor plasma by Coagulation assay,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+64,6,3024561,Albumin [Mass/volume] in Serum or Plasma,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+65,6,3013650,Neutrophils [#/volume] in Blood by Automated count,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+66,6,3021119,Calcium.ionized [Moles/volume] in Blood,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+67,6,3009542,Hematocrit [Volume Fraction] of Blood,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+68,6,3010421,pH of Blood,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+69,6,3039000,Anion gap in Blood,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
+70,6,3004295,Urea nitrogen [Mass/volume] in Blood,,Measurement,NA,0,NA,2024-11-24 17:33:23,0
