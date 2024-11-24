@@ -287,6 +287,11 @@ observeEvent(input$run_code_%widget_id%, {
                           "    'width': '100px',",
                           "    'white-space': 'nowrap'",
                           "  });",
+                          "",
+                          "  $('.dataTable tbody td').each(function() {",
+                          "    var cellText = $(this).text();",
+                          "    $(this).attr('title', cellText);",
+                          "  });",
                           "});"
                         )
                     )

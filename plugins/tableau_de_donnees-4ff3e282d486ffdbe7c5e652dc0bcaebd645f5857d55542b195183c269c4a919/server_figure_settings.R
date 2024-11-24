@@ -127,7 +127,6 @@ observeEvent(m$debounced_datetime_slider_%widget_id%(), {
             isFALSE(input$synchronize_timelines_%widget_id%) &
             (abs(as.numeric(m$debounced_datetime_slider_%widget_id%()[[1]]) - as.numeric(m$datetimes_%widget_id%[[1]])) > 5 |
             abs(as.numeric(m$debounced_datetime_slider_%widget_id%()[[2]]) - as.numeric (m$datetimes_%widget_id%[[2]])) > 5)){
-            print("RUN")
             shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
         }
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
