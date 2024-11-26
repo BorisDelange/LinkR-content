@@ -110,3 +110,31 @@ id,category,link_id,name,value,value_num,creator_id,datetime,deleted
 109,plugin,4,short_description_en,Displays medication administrations as a timeline,NA,1,2024-11-13 07:56:45,0
 110,plugin,4,short_description_fr,Permet d'afficher les administrations médicamenteuses sous forme de timeline,NA,1,2024-11-13 07:56:45,0
 111,plugin,2,user_allowed_read,,1,1,2024-11-14 11:04:07,0
+112,plugin,5,users_allowed_read_group,everybody,1,1,2024-11-24 21:59:05,0
+113,plugin,5,user_allowed_read,,1,1,2024-11-24 21:59:05,0
+114,plugin,5,version,0.0.1.9000,NA,1,2024-11-24 21:59:05,0
+115,plugin,5,unique_id,d7662fb4dde4f229baff062dd673177ced4375168b5c9ef0782717d89769efb6,NA,1,2024-11-24 21:59:05,0
+116,plugin,5,author,Boris Delange,NA,1,2024-11-24 21:59:05,0
+117,plugin,5,downloaded_from,Console,NA,1,2024-11-24 21:59:05,0
+118,plugin,5,downloaded_from_url,https://framagit.org/interhop/linkr/linkr-content,NA,1,2024-11-24 21:59:05,0
+119,plugin,5,short_description_en,"R and Python console, with choice of output (console, figure, datatable etc)",NA,1,2024-11-24 21:59:05,0
+120,plugin,5,description_en,,NA,1,2024-11-24 21:59:05,0
+121,plugin,5,category_en,NA,NA,1,2024-11-24 21:59:05,0
+122,plugin,5,name_en,Console,NA,1,2024-11-24 21:59:05,0
+123,plugin,5,short_description_fr,"Une console R et Python, avec choix de l'output (console, figure, datatable etc)",NA,1,2024-11-24 21:59:05,0
+124,plugin,5,description_fr,,NA,1,2024-11-24 21:59:05,0
+125,plugin,5,category_fr,NA,NA,1,2024-11-24 21:59:05,0
+126,plugin,5,name_fr,Console,NA,1,2024-11-24 21:59:05,0
+127,plugin_code,5,filename,server_code.R,NA,1,2024-11-24 22:03:00,0
+128,plugin_code,5,filename,server_figure_settings.R,NA,1,2024-11-24 22:03:00,0
+129,plugin_code,5,filename,server_general_settings.R,NA,1,2024-11-24 22:03:00,0
+130,plugin_code,5,filename,server_settings_files.R,NA,1,2024-11-24 22:03:00,0
+131,plugin_code,5,filename,server.R,NA,1,2024-11-24 22:03:00,0
+132,plugin_code,5,filename,translations.csv,NA,1,2024-11-24 22:03:00,0
+133,plugin_code,5,filename,ui_code.R,NA,1,2024-11-24 22:03:00,0
+134,plugin_code,5,filename,ui_figure_settings.R,NA,1,2024-11-24 22:03:00,0
+135,plugin_code,5,filename,ui_figure.R,NA,1,2024-11-24 22:03:00,0
+136,plugin_code,5,filename,ui_general_settings.R,NA,1,2024-11-24 22:03:00,0
+137,plugin_code,5,filename,ui_load_general_settings.R,NA,1,2024-11-24 22:03:00,0
+138,plugin_code,5,filename,ui_settings_files.R,NA,1,2024-11-24 22:03:00,0
+139,plugin_code,5,filename,ui.R,NA,1,2024-11-24 22:03:00,0

@@ -5,3 +5,12 @@ id,category,name,tab_id,plugin_id,display_order,creator_id,datetime,deleted
 4,patient_lvl,Drugs,2,4,NA,NA,2024-11-24 17:29:27,0
 5,patient_lvl,Drugs,3,4,NA,NA,2024-11-24 17:31:00,0
 6,patient_lvl,Labs,4,3,NA,NA,2024-11-24 17:33:23,0
+7,aggregated,Gender,5,5,NA,NA,2024-11-24 22:03:36,0
+8,aggregated,Number of patients,5,5,NA,NA,2024-11-25 19:21:00,0
+9,aggregated,Mortality,5,5,NA,NA,2024-11-25 19:21:40,0
+10,aggregated,Age,5,5,NA,NA,2024-11-25 19:22:24,0
+11,aggregated,Diagnoses,5,5,NA,NA,2024-11-25 19:22:57,0
+12,aggregated,Number of admissions,6,5,NA,NA,2024-11-25 19:24:14,0
+13,aggregated,Stays,6,5,NA,NA,2024-11-25 19:24:44,0
+14,aggregated,LOS,6,5,NA,NA,2024-11-25 19:25:13,0
+15,aggregated,Care sites,6,5,NA,NA,2024-11-25 19:26:16,0

@@ -3,5 +3,5 @@ id,category,name,description,tab_group_id,parent_tab_id,display_order,creator_id
 2,patient_lvl,Haemodynamics,NA,1,NA,2,NA,2024-11-24 17:22:04,0
 3,patient_lvl,Drugs,NA,1,NA,3,NA,2024-11-24 17:22:12,0
 4,patient_lvl,Labs,NA,1,NA,4,NA,2024-11-24 17:22:17,0
-5,aggregated,Demographics,NA,2,NA,1,NA,2024-11-24 21:30:18,0
+5,aggregated,Patients,NA,2,NA,1,NA,2024-11-24 21:30:18,0
 6,aggregated,Stays,NA,2,NA,2,NA,2024-11-24 21:31:08,0
