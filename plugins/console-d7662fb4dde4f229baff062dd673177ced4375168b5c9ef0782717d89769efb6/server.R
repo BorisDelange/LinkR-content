@@ -10,7 +10,7 @@ sapply(tabs, function(tab){
 
     observeEvent(input[[paste0(tab, "_button_%widget_id%")]], {
         %req%
-        if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$", tab))
+        if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$", tab, "_button"))
         
         tryCatch({
             
