@@ -86,7 +86,7 @@
     <type>1</type>
   </plugin>
   <plugin>
-    <app_version>0.3.0.9018</app_version>
+    <app_version>0.3.0.9019</app_version>
     <unique_id>fe67edd15f82f335b74905ec1ca6865e379fb271fd996fce4ceae7420338dbd8</unique_id>
     <version>0.0.1.9000</version>
     <author>Boris Delange</author>
@@ -99,7 +99,7 @@
     <short_description_en>NA</short_description_en>
     <short_description_fr>Permet de visualiser et de filtrer des données textuelles (CRH, notes cliniques etc)</short_description_fr>
     <creation_datetime>2024-06-18 09:36:21</creation_datetime>
-    <update_datetime>2024-10-12 23:06:30</update_datetime>
+    <update_datetime>2024-11-26 07:58:57</update_datetime>
     <type>1</type>
   </plugin>
   <plugin>
