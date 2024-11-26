@@ -58,6 +58,7 @@ observeEvent(m$selected_person, {
         tryCatch({
         
             # Reset synchronized datetimes
+            m$debounced_datetimes_timeline_%tab_id% <- reactiveVal()
             m$datetimes_timeline_%tab_id% <- reactiveVal()
             m$debounced_datetimes_timeline_%tab_id% <- reactiveVal()
             m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
@@ -79,6 +80,7 @@ observeEvent(m$selected_visit_detail, {
         tryCatch({
         
             # Reset synchronized datetimes
+            m$debounced_datetimes_timeline_%tab_id% <- reactiveVal()
             m$datetimes_timeline_%tab_id% <- reactiveVal()
             m$debounced_datetimes_timeline_%tab_id% <- reactiveVal()
             m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
