@@ -81,7 +81,7 @@ observeEvent(input$save_params_and_code_%widget_id%, {
 
 # Create a reactiveVal with timeline datetimes
 if (length(m$datetimes_timeline_%tab_id%) == 0){
-    m$datetimes_timeline_%tab_id% <- reactiveVal(c(as.Date("1970-01-01"), Sys.Date()))
+    m$datetimes_timeline_%tab_id% <- reactiveVal()
     m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
 }
 
