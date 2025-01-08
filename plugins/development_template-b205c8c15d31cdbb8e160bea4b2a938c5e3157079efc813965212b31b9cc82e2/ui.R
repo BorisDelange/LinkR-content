@@ -3,7 +3,10 @@
 ## Hide save buttons if the user does not have access
 
 if ("projects_console_access" %in% user_accesses){
-    code_button <- shiny.fluent::IconButton.shinyInput(ns("code_button_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor"))
+    code_button <- shiny.fluent::IconButton.shinyInput(
+        ns("code_button_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor"),
+        onClick = htmlwidgets::JS(paste0("item => {Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'code');}"))
+    )
 } else code_button <- ""
 
 if ("projects_widgets_settings" %in% user_accesses){
@@ -21,12 +24,21 @@ tagList(
         shinyjs::hidden(
             div(
                 id = ns("figure_button_div_%widget_id%"),
-                shiny.fluent::IconButton.shinyInput(ns("figure_button_%widget_id%"), iconProps = list(iconName = "BarChart4"), title = i18np$t("show_figure"))
+                shiny.fluent::IconButton.shinyInput(
+                    ns("figure_button_%widget_id%"), iconProps = list(iconName = "BarChart4"), title = i18np$t("show_figure"),
+                    onClick = htmlwidgets::JS(paste0("item => {Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'figure');}"))
+                )
             )
         ),
-        shiny.fluent::IconButton.shinyInput(ns("figure_settings_button_%widget_id%"), iconProps = list(iconName = "AllApps"), title = i18np$t("show_figure_settings")),
+        shiny.fluent::IconButton.shinyInput(
+            ns("figure_settings_button_%widget_id%"), iconProps = list(iconName = "AllApps"), title = i18np$t("show_figure_settings"),
+            onClick = htmlwidgets::JS(paste0("item => {Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'figure_settings');}"))
+        ),
         code_button,
-        shiny.fluent::IconButton.shinyInput(ns("general_settings_button_%widget_id%"), iconProps = list(iconName = "Settings"), title = i18np$t("show_general_settings")),
+        shiny.fluent::IconButton.shinyInput(
+            ns("general_settings_button_%widget_id%"), iconProps = list(iconName = "Settings"), title = i18np$t("show_general_settings"),
+            onClick = htmlwidgets::JS(paste0("item => {Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'general_settings');}"))
+        ),
         uiOutput(
             ns("settings_files_ui_%widget_id%"),
             onclick = paste0("Shiny.setInputValue('", id, "-show_settings_files_tab_%widget_id%', Math.random())")

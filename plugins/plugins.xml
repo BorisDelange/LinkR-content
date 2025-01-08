@@ -18,7 +18,7 @@
     <type>12</type>
   </plugin>
   <plugin>
-    <app_version>0.3.0.9019</app_version>
+    <app_version>0.3.0.9021</app_version>
     <unique_id>b205c8c15d31cdbb8e160bea4b2a938c5e3157079efc813965212b31b9cc82e2</unique_id>
     <version>0.0.1.9000</version>
     <author>Boris Delange</author>
@@ -31,7 +31,7 @@
     <short_description_en>This plugin is a template used as a basis for the development of plugins.</short_description_en>
     <short_description_fr>Ce plugin est un template servant de base pour le développement de plugins</short_description_fr>
     <creation_datetime>2024-08-28 16:24:47</creation_datetime>
-    <update_datetime>2024-11-26 07:59:05</update_datetime>
+    <update_datetime>2025-01-08 08:27:04</update_datetime>
     <type>12</type>
   </plugin>
   <plugin>

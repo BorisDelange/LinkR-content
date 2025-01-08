@@ -44,7 +44,20 @@ observeEvent(input$display_figure_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$display_figure"))
     
-    m$code_%widget_id% <- input$code_%widget_id%
+    # If current selected tab is figure settings when run code button is clicked, generate code from these settings
+    if (length(input$current_tab_%widget_id%) == 0) current_tab <- "figure_settings"
+    else current_tab <- input$current_tab_%widget_id%
+    
+    if (current_tab == "figure_settings"){
+        
+        # Code to generate code from figure settings
+        
+        # ...
+        
+        m$code_%widget_id% <- ""
+    }
+    
+    else m$code_%widget_id% <- input$code_%widget_id%
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
 })
 
