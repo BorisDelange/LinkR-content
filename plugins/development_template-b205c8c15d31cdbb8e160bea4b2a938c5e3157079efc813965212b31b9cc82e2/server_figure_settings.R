@@ -50,7 +50,6 @@ observeEvent(input$save_params_and_code_%widget_id%, {
             
             # Add new settings in db
             
-            # Add new settings in db
             # new_data <- tibble::tribble(
             #     ~name, ~value, ~value_num,
             #     ...
