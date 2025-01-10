@@ -44,21 +44,33 @@ observeEvent(input$display_figure_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$display_figure"))
     
-    # If current selected tab is figure settings when run code button is clicked, generate code from these settings
-    if (length(input$current_tab_%widget_id%) == 0) current_tab <- "figure_settings"
-    else current_tab <- input$current_tab_%widget_id%
+    tryCatch({
     
-    if (current_tab == "figure_settings"){
+        # If current selected tab is figure settings when run code button is clicked, generate code from these settings
+        if (length(input$current_tab_%widget_id%) == 0) current_tab <- "figure_settings"
+        else current_tab <- input$current_tab_%widget_id%
         
-        # Code to generate code from figure settings
+        if (current_tab == "figure_settings"){
+            
+            # Code to generate code from figure settings
+            
+            # ...
+            code <- ""
+            
+            # Update ace editor with generated code
+            shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
+            
+            m$code_%widget_id% <- code
+        }
         
-        # ...
+        # Check if user has access
+        else if ("projects_console_access" %in% user_accesses) m$code_%widget_id% <- input$code_%widget_id%
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
         
-        m$code_%widget_id% <- ""
-    }
-    
-    else m$code_%widget_id% <- input$code_%widget_id%
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    }, error = function(e){
+        show_message_bar(output, "error_displaying_figure", "severeWarning", i18n = i18np, ns = ns)
+        cat(paste0("\\n", now(), " - widget %widget_id% - input$display_figure - error = ", toString(e)))
+    })
 })
 
 # Run code

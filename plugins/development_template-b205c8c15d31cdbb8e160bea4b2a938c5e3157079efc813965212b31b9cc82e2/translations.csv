@@ -1,5 +1,6 @@
 base,en,fr
 add,Add,Ajouter
+code_execution,Code execution,Exécution du code
 create_settings_file,Create a settings file,Créer un fichier de sauvegarde
 delete,Delete,Supprimer
 delete_settings_file_text,Confirm deletion of the settings file?,Confirmer la suppression du fichier de sauvegarde ?

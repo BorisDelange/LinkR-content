@@ -5,7 +5,10 @@
 if ("projects_console_access" %in% user_accesses){
     code_button <- shiny.fluent::IconButton.shinyInput(
         ns("code_button_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor"),
-        onClick = htmlwidgets::JS(paste0("item => {Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'code');}"))
+        onClick = htmlwidgets::JS(paste0("item => {",
+            "Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());",
+            "Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'code');",
+        "}"))
     )
 } else code_button <- ""
 
@@ -26,25 +29,34 @@ tagList(
                 id = ns("figure_button_div_%widget_id%"),
                 shiny.fluent::IconButton.shinyInput(
                     ns("figure_button_%widget_id%"), iconProps = list(iconName = "BarChart4"), title = i18np$t("show_figure"),
-                    onClick = htmlwidgets::JS(paste0("item => {Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'figure');}"))
+                    onClick = htmlwidgets::JS(paste0("item => {",
+                        "Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());",
+                        "Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'figure');",
+                    "}"))
                 )
             )
         ),
         shiny.fluent::IconButton.shinyInput(
             ns("figure_settings_button_%widget_id%"), iconProps = list(iconName = "AllApps"), title = i18np$t("show_figure_settings"),
-            onClick = htmlwidgets::JS(paste0("item => {Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'figure_settings');}"))
+            onClick = htmlwidgets::JS(paste0("item => {",
+                "Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());",
+                "Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'figure_settings');",
+            "}"))
         ),
         code_button,
         shiny.fluent::IconButton.shinyInput(
             ns("general_settings_button_%widget_id%"), iconProps = list(iconName = "Settings"), title = i18np$t("show_general_settings"),
-            onClick = htmlwidgets::JS(paste0("item => {Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'general_settings');}"))
+            onClick = htmlwidgets::JS(paste0("item => {",
+                "Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());",
+                "Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'general_settings');",
+            "}"))
         ),
         uiOutput(
             ns("settings_files_ui_%widget_id%"),
             onclick = paste0("Shiny.setInputValue('", id, "-show_settings_files_tab_%widget_id%', Math.random())")
         ),
         class = "widget_icon",
-        style = "display: flex; color: #808080; border-bottom: solid grey 0.5px; height: 28px; padding-top: 5px; font-size: 12px;"
+        style = "display: flex; color: #808080; border-bottom: solid grey 0.5px; height: 28px; padding: 5px 0 0 5px; font-size: 12px;"
     ),
     div(
         id = ns("figure_settings_code_div_%widget_id%"),
@@ -53,12 +65,12 @@ tagList(
             shiny.fluent::IconButton.shinyInput(ns("display_figure_%widget_id%"), iconProps = list(iconName = "Play"), title = i18np$t("display_figure"), style = "margin: 0"),
             save_figure_settings_buttons,
             class = "widget_icon",
-            style = "border-right: solid grey 0.5px; width: 25px; margin-right: 10px;"
+            style = "border-right: solid grey 0.5px; width: 25px; padding-left: 5px;"
         ),
         div(
             id = ns("figure_div_%widget_id%"),
             %import_script('ui_figure.R')%,
-            style = paste0("height: 100%; flex-basis: ", div_width, "; margin: 0 10px; flex: 1; box-sizing: border-box; min-width: 50px;"),
+            style = paste0("height: 100%; flex-basis: ", div_width, "; flex: 1; box-sizing: border-box; min-width: 50px;"),
             class = "left-panel"
         ),
         div(
@@ -69,7 +81,7 @@ tagList(
         div(
             id = ns("figure_settings_div_%widget_id%"),
             %import_script('ui_figure_settings.R')%,
-            style = paste0("height: 100%; flex-basis: ", div_width, "%; margin: 5px 10px; overflow: auto; flex: 1; box-sizing: border-box;")
+            style = paste0("height: 100%; flex-basis: ", div_width, "%; padding: 5px; overflow: auto; flex: 1; box-sizing: border-box;")
         ),
         shinyjs::hidden(
             div(
@@ -79,19 +91,13 @@ tagList(
                 class = "right-panel"
             )
         ),
-        style = "display: flex; height: calc(100% - 40px);"
+        style = "display: flex; height: calc(100% - 34px);"
     ),
     shinyjs::hidden(
         div(
             id = ns("general_settings_div_%widget_id%"),
-            div(
-                id = ns("general_settings_sidenav_%widget_id%"),
-                save_general_settings_button,
-                class = "widget_icon",
-                style = "border-right: solid grey 0.5px; width: 25px;"
-            ),
             %import_script('ui_general_settings.R')%,
-            style = "display: flex; height: calc(100% - 40px);"
+            style = "height: calc(100% - 40px);"
         )
     ),
     shinyjs::hidden(

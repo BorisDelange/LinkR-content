@@ -5,9 +5,9 @@
 ## All tabs
 tabs <- c("figure", "figure_settings", "code", "general_settings")
 
-observeEvent(input$current_tab_%widget_id%, {
+observeEvent(input$current_tab_trigger_%widget_id%, {
     %req%
-    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$current_tab"))
+    if (debug) cat(paste0("\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$current_tab_trigger"))
     
     tab <- input$current_tab_%widget_id%
     
