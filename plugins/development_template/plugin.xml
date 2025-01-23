@@ -4,7 +4,9 @@
     <app_version>0.3.0.9021</app_version>
     <unique_id>b205c8c15d31cdbb8e160bea4b2a938c5e3157079efc813965212b31b9cc82e2</unique_id>
     <version>0.0.1.9000</version>
-    <author>Boris Delange</author>
+    <authors>
+      <author>Boris Delange</author>
+    </authors>
     <name_en>Development template</name_en>
     <name_fr>Template de d&#xE9;veloppement</name_fr>
     <category_en></category_en>
