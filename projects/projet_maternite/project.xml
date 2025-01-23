@@ -4,7 +4,16 @@
     <app_version>0.3.0.9017</app_version>
     <unique_id>3d4f080600ddc576467f6097658493493d93536ba3fa90e1adb50c35eae5050b</unique_id>
     <version>0.0.1.9000</version>
-    <author>Kathy CHAPELAIN, Fabio BOUDIS, Guillaume PRESSIAT, Xavier , Zeynep, Lucas BOURNEUF, Gilles, Pierre </author>
+    <authors>
+      <author>Kathy CHAPELAIN</author>
+      <author>Fabio BOUDIS</author>
+      <author>Guillaume PRESSIAT</author>
+      <author>Xavier</author>
+      <author>Zeynep</author>
+      <author>Lucas BOURNEUF</author>
+      <author>Gilles</author>
+      <author>Pierre</author>
+    <authors>
     <name_en>Projet maternit&#xE9;</name_en>
     <name_fr>Projet maternit&#xE9;</name_fr>
     <category_en></category_en>

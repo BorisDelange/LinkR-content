@@ -4,7 +4,10 @@
     <app_version>0.3.0.9017</app_version>
     <unique_id>c3bf35d117ff5295193d34d93059d140051ec19bd6d140a866247571ced0c6ad</unique_id>
     <version>0.0.1.9000</version>
-    <author>DAVY Florentin, DELANGE Boris </author>
+    <authors>
+      <author>DAVY Florentin</author>
+      <author>DELANGE Boris</author>
+    </authors>
     <name_en>D&#xE9;lai PTH</name_en>
     <name_fr>HIP Fracture delay </name_fr>
     <category_en></category_en>
