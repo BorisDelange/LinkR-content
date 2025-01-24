@@ -1,5 +1,0 @@
-id,category,name,tab_id,plugin_id,display_order,creator_id,datetime,deleted
-1,patient_lvl,Notes,1,2,NA,NA,2024-09-04 09:33:41,0
-2,aggregated,Genre,2,1,NA,NA,2024-09-04 09:39:28,0
-3,aggregated,Age,2,1,NA,NA,2024-09-04 09:40:10,0
-4,patient_lvl,Labo,3,1,NA,NA,2024-09-04 10:03:43,0
