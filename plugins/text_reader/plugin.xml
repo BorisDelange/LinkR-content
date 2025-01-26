@@ -9,11 +9,11 @@
     </authors>
     <name_en>Text reader</name_en>
     <name_fr>Lecteur de texte</name_fr>
-    <category_en>NA</category_en>
-    <category_fr>NA</category_fr>
-    <description_en>NA</description_en>
-    <description_fr>NA</description_fr>
-    <short_description_en>NA</short_description_en>
+    <category_en></category_en>
+    <category_fr></category_fr>
+    <description_en></description_en>
+    <description_fr></description_fr>
+    <short_description_en></short_description_en>
     <short_description_fr>Permet de visualiser et de filtrer des donn&#xE9;es textuelles (CRH, notes cliniques etc)</short_description_fr>
     <creation_datetime>2024-06-18 09:36:21</creation_datetime>
     <update_datetime>2024-11-26 07:58:57</update_datetime>

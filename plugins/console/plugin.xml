@@ -9,8 +9,8 @@
     </authors>
     <name_en>Console</name_en>
     <name_fr>Console</name_fr>
-    <category_en>NA</category_en>
-    <category_fr>NA</category_fr>
+    <category_en></category_en>
+    <category_fr></category_fr>
     <description_en></description_en>
     <description_fr></description_fr>
     <short_description_en>R and Python console, with choice of output (console, figure, datatable etc)</short_description_en>
