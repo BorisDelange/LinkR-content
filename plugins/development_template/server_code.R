@@ -12,21 +12,10 @@ observeEvent(input$code_%widget_id%_comment, {
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$code_comment"))
 
     tryCatch({
-        lines <- strsplit(input$code_%widget_id%, "\\n")[[1]]
-        req(length(lines) > 0)
-        
-        start_row <- input$code_%widget_id%_comment$range$start$row + 1
-        end_row <- input$code_%widget_id%_comment$range$end$row + 1
-        
-        for (i in start_row:end_row) if (startsWith(lines[i], "# ")) lines[i] <- substr(lines[i], 3, nchar(lines[i])) else lines[i] <- paste0("# ", lines[i])
-        
-        shinyAce::updateAceEditor(session, "code_%widget_id%", value = paste0(lines, collapse = "\\n"))
-        
-        shinyjs::runjs(sprintf("
-            var editor = ace.edit('%s-rode');
-            editor.moveCursorTo(%d, %d);
-            editor.focus();
-        ", id, input$code_%widget_id%_comment$range$end$row, input$code_%widget_id%_comment$range$end$column))
+        toggle_comments(
+            id = id, input_id = "code_%widget_id%", code = input$code_%widget_id%,
+            selection = input$code_%widget_id%_comment$range, session = session
+        )
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
 
