@@ -40,26 +40,10 @@ observeEvent(input$display_figure_%widget_id%, {
     
     tryCatch({
     
-        # If current selected tab is figure settings when run code button is clicked, generate code from these settings
-        if (length(input$current_tab_%widget_id%) == 0) current_tab <- "figure_settings"
-        else current_tab <- input$current_tab_%widget_id%
-        
-        if (current_tab == "figure_settings"){
-            
-            # Code to generate code from figure settings
-            
-            # ...
-            code <- ""
-            
-            # Update ace editor with generated code
-            shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
-            
-            m$code_%widget_id% <- code
+        if ("projects_console_access" %in% user_accesses){
+            m$code_%widget_id% <- input$code_%widget_id%
+            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
         }
-        
-        # Check if user has access
-        else if ("projects_console_access" %in% user_accesses) m$code_%widget_id% <- input$code_%widget_id%
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
         
     }, error = function(e){
         show_message_bar(id, output, "error_displaying_figure", "severeWarning", i18n = i18np, ns = ns)
@@ -83,7 +67,7 @@ observeEvent(input$run_code_%widget_id%, {
         isolate_code <- TRUE
         if (length(input$run_code_on_data_update_%widget_id%) > 0) if (input$run_code_on_data_update_%widget_id%) isolate_code <- FALSE
         
-        if (isolate_code) code <- paste0("isolate({\\n", code, "\\n})")
+        if (isolate_code & language == "r" & code_output != "rmarkdown") code <- paste0("isolate({\\n", code, "\\n})")
         
         # Hide all outputs
         sapply(paste0(outputs[[language]], "_output_%widget_id%"), shinyjs::hide)
@@ -159,7 +143,7 @@ observeEvent(input$run_code_%widget_id%, {
         if (!input$figure_and_settings_side_by_side_%widget_id%) shinyjs::click("figure_button_%widget_id%")
         
     }, error = function(e){
-        show_message_bar(output, "error_displaying_figure", "severeWarning", i18n = i18np, ns = ns)
+        show_message_bar(id, output, "error_displaying_figure", "severeWarning", i18n = i18np, ns = ns)
         cat(paste0("\\n", now(), " - widget %widget_id% - input$display_figure - error = ", toString(e)))
     })
 })

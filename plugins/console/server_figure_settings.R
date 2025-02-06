@@ -63,7 +63,7 @@ observeEvent(input$save_params_and_code_%widget_id%, {
             DBI::dbAppendTable(m$db, "widgets_options", new_data)
             
             # Notify user
-            show_message_bar(output, "modif_saved", "success", i18n = i18n, ns = ns)
+            show_message_bar(id, output, "modif_saved", "success", i18n = i18n, ns = ns)
         }
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
@@ -92,7 +92,7 @@ observeEvent(input$prog_language_%widget_id%, {
     tryCatch({
     
         # Update ace editor
-        shinyAce::updateAceEditor(session, "code_editor_%widget_id%", mode = input$prog_language_%widget_id%)
+        shinyAce::updateAceEditor(session, "code_%widget_id%", mode = input$prog_language_%widget_id%)
         
         # Update output dropdown
         shiny.fluent::updateDropdown.shinyInput(session, "output_%widget_id%", options = output_dropdown_options[[input$prog_language_%widget_id%]], value = "console")
@@ -109,7 +109,7 @@ observeEvent(input$output_%widget_id%, {
         # Update ace editor
         if (input$output_%widget_id% == "rmarkdown") mode <- "markdown"
         else mode <- input$prog_language_%widget_id%
-        shinyAce::updateAceEditor(session, "code_editor_%widget_id%", mode = mode)
+        shinyAce::updateAceEditor(session, "code_%widget_id%", mode = mode)
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - input$prog_language - error = ", toString(e))))
 })
