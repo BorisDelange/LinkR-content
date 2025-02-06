@@ -11,5 +11,8 @@ div(
         )
     ),
     # Div containing the figure output
-    style = "width: 100%; height: 100%;"
+    div(
+        
+    ),
+    style = "width: 100%; padding: 5px; box-sizing: border-box; height: 100%; overflow-y: auto;"
 )

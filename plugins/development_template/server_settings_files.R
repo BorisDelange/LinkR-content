@@ -132,7 +132,6 @@ observeEvent(input$settings_file_%widget_id%, {
             id = get_last_row(m$db, "widgets_options") + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
             category = "general_settings", name = "selected_file_id", value = NA_character_, value_num = file_id, creator_id = m$user_id, datetime = now(), deleted = FALSE
         )
-        print(new_data)
         DBI::dbAppendTable(m$db, "widgets_options", new_data)
         
         # Load saved settings

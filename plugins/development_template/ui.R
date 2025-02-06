@@ -81,7 +81,7 @@ tagList(
         div(
             id = ns("figure_settings_div_%widget_id%"),
             %import_script('ui_figure_settings.R')%,
-            style = paste0("height: 100%; flex-basis: ", div_width, "%; padding: 5px; overflow: auto; flex: 1; box-sizing: border-box;")
+            style = paste0("height: 100%; flex-basis: ", div_width, "%; padding: 0 8px; overflow: auto; flex: 1; box-sizing: border-box;")
         ),
         shinyjs::hidden(
             div(
