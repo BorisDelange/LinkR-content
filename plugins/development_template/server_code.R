@@ -50,11 +50,15 @@ observeEvent(input$display_figure_%widget_id%, {
             shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
             
             m$code_%widget_id% <- code
+            
+            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
         }
         
         # Check if user has access
-        else if ("projects_console_access" %in% user_accesses) m$code_%widget_id% <- input$code_%widget_id%
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+        else if ("projects_console_access" %in% user_accesses){
+            m$code_%widget_id% <- input$code_%widget_id%
+            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+        }
         
     }, error = function(e){
         show_message_bar(id, output, "error_displaying_figure", "severeWarning", i18n = i18np, ns = ns)

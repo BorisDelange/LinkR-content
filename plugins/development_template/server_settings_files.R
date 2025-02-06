@@ -85,6 +85,9 @@ observeEvent(input$add_settings_file_%widget_id%, {
                 shiny.fluent::updateDropdown.shinyInput(session, "settings_file_%widget_id%", value = new_id)
                 shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_dropdown_%widget_id%', Math.random());"))
                 
+                # Reset ace editor code
+                shinyAce::updateAceEditor(session, "code_%widget_id%", value = "")
+                
                 # Close modal
                 shinyjs::hide("add_settings_file_modal_%widget_id%")
                 
