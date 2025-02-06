@@ -5,5 +5,5 @@ div(
     shinyjs::hidden(tableOutput(ns("table_output_%widget_id%"))),
     shinyjs::hidden(DT::DTOutput(ns("datatable_output_%widget_id%"))),
     shinyjs::hidden(uiOutput(ns("rmarkdown_output_%widget_id%"))),
-    style = "height: calc(100% - 5px); width: 100%; margin-top: 5px; "
+    style = "width: 100%; padding: 5px; box-sizing: border-box; height: 100%; overflow-y: auto;"
 )

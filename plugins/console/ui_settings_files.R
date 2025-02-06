@@ -50,7 +50,7 @@ tagList(
         id = ns("settings_files_sidenav_%widget_id%"),
         shiny.fluent::IconButton.shinyInput(ns("create_settings_file_%widget_id%"), iconProps = list(iconName = "Add"), title = i18np$t("create_settings_file"), style = "margin: 0"),
         class = "widget_icon",
-        style = "border-right: solid grey 0.5px;"
+        style = "border-right: solid grey 0.5px; padding-left: 5px;"
     ),
     
     # Dropdown and delete button
