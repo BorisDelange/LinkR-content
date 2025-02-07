@@ -6,8 +6,7 @@ div(
     shinyjs::hidden(
         div(
             id = ns("error_message_div_%widget_id%"),
-            uiOutput(ns("error_message_%widget_id%")),
-            style = "padding-top: 10px;"
+            uiOutput(ns("error_message_%widget_id%"))
         )
     ),
     div(
@@ -30,5 +29,5 @@ div(
             style = "width: calc(100% - 130px); padding-left: 130px; overflow: hidden; position: relative; top: -10px;"
         )
     ),
-    style = "width: 100%; height: 100%; overflow: auto; box-sizing: border-box;"
+    style = "width: 100%; padding: 5px; box-sizing: border-box; height: 100%; overflow-y: auto;"
 )

@@ -1,13 +1,9 @@
 <?xml version="1.0"?>
 <plugins>
   <plugin>
-    <app_version>0.3.0.9019</app_version>
+    <app_version>0.3.0.9022</app_version>
     <unique_id>4ff3e282d486ffdbe7c5e652dc0bcaebd645f5857d55542b195183c269c4a919</unique_id>
-    <version>0.0.1.9000</version>
-    <authors>
-      <author>Zeynep Erdem</author>
-      <author>Boris Delange</author>
-    </authors>
+    <version>0.0.1.9001</version>
     <name_en>Tableau de donn&#xE9;es</name_en>
     <name_fr>Tableau de donn&#xE9;es</name_fr>
     <category_en></category_en>
@@ -16,8 +12,12 @@
     <description_fr></description_fr>
     <short_description_en>Allows displaying data in table format</short_description_en>
     <short_description_fr>Permet d'afficher des donne&#xE9;s sous forme de tableau</short_description_fr>
+    <authors>
+      <author>Zeynep Erdem</author>
+      <author>Boris Delange</author>
+    </authors>
     <creation_datetime>2024-11-08 07:58:31</creation_datetime>
-    <update_datetime>2024-11-26 08:33:06</update_datetime>
+    <update_datetime>2025-02-07 19:09:53</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>
