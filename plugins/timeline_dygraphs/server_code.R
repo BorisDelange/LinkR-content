@@ -244,7 +244,7 @@ observeEvent(input$run_code_%widget_id%, {
         if (length(input$figure_and_settings_side_by_side_%widget_id%) > 0) if (!input$figure_and_settings_side_by_side_%widget_id%) shinyjs::click("figure_button_%widget_id%")
         
     }, error = function(e){
-        show_message_bar(output, "error_displaying_figure", "severeWarning", i18n = i18np, ns = ns)
+        show_message_bar(id, output, "error_displaying_figure", "severeWarning", i18n = i18np, ns = ns)
         cat(paste0("\\n", now(), " - widget %widget_id% - input$run_code - error = ", toString(e)))
     })
 })
