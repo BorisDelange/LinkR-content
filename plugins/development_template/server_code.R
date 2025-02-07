@@ -27,7 +27,7 @@ observeEvent(input$code_%widget_id%_run_all, {
     if ("projects_console_access" %in% user_accesses){
         m$code_%widget_id% <- input$code_%widget_id%
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-    )
+    }
 })
 
 # Run code when button is clicked
