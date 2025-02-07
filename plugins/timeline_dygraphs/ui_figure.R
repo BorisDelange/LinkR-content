@@ -6,8 +6,7 @@ div(
     shinyjs::hidden(
         div(
             id = ns("error_message_div_%widget_id%"),
-            uiOutput(ns("error_message_%widget_id%")),
-            style = "padding-top: 10px;"
+            uiOutput(ns("error_message_%widget_id%"))
         )
     ),
     div(
@@ -15,5 +14,5 @@ div(
         dygraphs::dygraphOutput(ns("dygraph_%widget_id%"), height = "100%", width = "100%"),
         style = "width: 100%; height: calc(100% - 10px); padding-top: 10px; box-sizing: border-box;"
     ),
-    style = "height: 100%; width: 100%; box-sizing: border-box; padding-right: 5px;"
+    style = "width: 100%; padding: 5px; box-sizing: border-box; height: 100%; overflow-y: auto;"
 )

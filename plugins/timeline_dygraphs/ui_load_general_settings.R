@@ -21,7 +21,7 @@ if (nrow(general_settings) == 0){
 
     # Toggles values
     
-    general_settings_vec <- c("show_settings_file", "figure_and_settings_side_by_side", "run_code_on_data_update", "run_code_at_settings_file_load")
+    general_settings_vec <- c("show_settings_file", "figure_and_settings_side_by_side")
     
     sapply(general_settings_vec, function(name){
         
@@ -41,7 +41,7 @@ if (nrow(general_settings) == 0){
     sql <- glue::glue_sql("SELECT id, value AS name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'settings_files' AND name = 'file_name'", .con = m$db)
     m$settings_filenames_%widget_id% <- DBI::dbGetQuery(m$db, sql)
     dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = "id", text_col = "name")
-    selected_file <- general_settings %>% dplyr::filter(name == "selected_file_id") %>% dplyr::pull(link_id)
+    selected_file <- general_settings %>% dplyr::filter(name == "selected_file_id") %>% dplyr::pull(value_num)
 }
 
 if (toggle_values$figure_and_settings_side_by_side) div_width <- "50%" else div_width <- "100%"
