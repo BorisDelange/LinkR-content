@@ -143,7 +143,7 @@ observeEvent(input$run_code_%widget_id%, {
                     if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- 
                         data %>%
                         dplyr::collect() %>%
-                        dplyr::inner_join(d$dataset_concepts %>% dplyr::select(measurement_concept_id = concept_id, concept_class_id), by = "measurement_concept_id") %>%
+                        dplyr::inner_join(d$dataset_concept %>% dplyr::select(measurement_concept_id = concept_id, concept_class_id), by = "measurement_concept_id") %>%
                         dplyr::filter(concept_class_id %in% input$concept_classes_%widget_id%) %>%
                         dplyr::select(-concept_class_id)
                 }
@@ -217,7 +217,7 @@ observeEvent(input$run_code_%widget_id%, {
                     data %>%
                     dplyr::collect() %>%
                     dplyr::left_join(
-                        d$dataset_concepts %>% 
+                        d$dataset_concept %>% 
                         dplyr::select(measurement_concept_id = concept_id, measurement_concept_name = concept_name),
                         by = "measurement_concept_id"
                     ) %>%
