@@ -1,0 +1,56 @@
+id,category,link_id,name,value,value_num,creator_id,datetime,deleted
+394,plugin,3,users_allowed_read_group,everybody,1,1,2025-02-06 20:48:30,0
+396,plugin,3,version,0.0.1.9002,NA,1,2025-02-06 20:48:30,0
+397,plugin,3,unique_id,064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e,NA,1,2025-02-06 20:48:30,0
+398,plugin,3,author,Boris Delange,NA,1,2025-02-06 20:48:30,0
+399,plugin,3,downloaded_from,,NA,1,2025-02-06 20:48:30,0
+400,plugin,3,downloaded_from_url,,NA,1,2025-02-06 20:48:30,0
+401,plugin,3,category_en,,NA,1,2025-02-06 20:48:30,0
+402,plugin,3,category_fr,,NA,1,2025-02-06 20:48:30,0
+403,plugin,3,name_en,Timeline {dygraphs},NA,1,2025-02-06 20:48:30,0
+404,plugin,3,name_fr,Timeline {dygraphs},NA,1,2025-02-06 20:48:30,0
+405,plugin,3,description_en,,NA,1,2025-02-06 20:48:30,0
+406,plugin,3,description_fr,,NA,1,2025-02-06 20:48:30,0
+407,plugin,3,short_description_en,Allows displaying data as a timeline using the {dygraphs} library.,NA,1,2025-02-06 20:48:30,0
+408,plugin,3,short_description_fr,Permet d'afficher des données sous forme de timeline avec la librairie {dygraphs},NA,1,2025-02-06 20:48:30,0
+459,plugin,4,users_allowed_read_group,everybody,1,1,2025-02-07 18:54:32,0
+461,plugin,4,version,0.0.1.9005,NA,1,2025-02-07 18:54:32,0
+462,plugin,4,unique_id,4ff3e282d486ffdbe7c5e652dc0bcaebd645f5857d55542b195183c269c4a919,NA,1,2025-02-07 18:54:32,0
+463,plugin,4,author,Zeynep Erdem; Boris Delange,NA,1,2025-02-07 18:54:32,0
+464,plugin,4,downloaded_from,,NA,1,2025-02-07 18:54:32,0
+465,plugin,4,downloaded_from_url,,NA,1,2025-02-07 18:54:32,0
+466,plugin,4,category_en,,NA,1,2025-02-07 18:54:32,0
+467,plugin,4,category_fr,,NA,1,2025-02-07 18:54:32,0
+468,plugin,4,name_en,Datatable,NA,1,2025-02-07 18:54:32,0
+469,plugin,4,name_fr,Tableau de données,NA,1,2025-02-07 18:54:32,0
+470,plugin,4,description_en,,NA,1,2025-02-07 18:54:32,0
+471,plugin,4,description_fr,,NA,1,2025-02-07 18:54:32,0
+472,plugin,4,short_description_en,Allows displaying data in table format,NA,1,2025-02-07 18:54:32,0
+473,plugin,4,short_description_fr,Permet d'afficher des donneés sous forme de tableau,NA,1,2025-02-07 18:54:32,0
+474,plugin,5,users_allowed_read_group,everybody,1,1,2025-02-07 19:11:31,0
+476,plugin,5,version,0.0.1.9001,NA,1,2025-02-07 19:11:31,0
+477,plugin,5,unique_id,b3b98d5fbcc1c9e368614fb8e92c9c022f9ce10a59b8fa995dde3047245f063e,NA,1,2025-02-07 19:11:31,0
+478,plugin,5,author,Jean Cupe; Boris Delange,NA,1,2025-02-07 19:11:31,0
+479,plugin,5,downloaded_from,,NA,1,2025-02-07 19:11:31,0
+480,plugin,5,downloaded_from_url,,NA,1,2025-02-07 19:11:31,0
+481,plugin,5,category_en,,NA,1,2025-02-07 19:11:31,0
+482,plugin,5,category_fr,,NA,1,2025-02-07 19:11:31,0
+483,plugin,5,name_en,Prescriptions,NA,1,2025-02-07 19:11:31,0
+484,plugin,5,name_fr,Prescriptions,NA,1,2025-02-07 19:11:31,0
+485,plugin,5,description_en,,NA,1,2025-02-07 19:11:31,0
+486,plugin,5,description_fr,,NA,1,2025-02-07 19:11:31,0
+487,plugin,5,short_description_en,Displays medication administrations as a timeline,NA,1,2025-02-07 19:11:31,0
+488,plugin,5,short_description_fr,Permet d'afficher les administrations médicamenteuses sous forme de timeline,NA,1,2025-02-07 19:11:31,0
+729,subset,16,users_allowed_read_group,people_picker,1,1,2025-02-09 07:43:31,0
+730,subset,16,user_allowed_read,,1,1,2025-02-09 07:43:31,0
+731,subset,16,version,0.0.1.9000,NA,1,2025-02-09 07:43:31,0
+732,subset,16,unique_id,1de79dee85c2e5d775c4e9f098253b52a60add20a9be89c4181bc53199dce074,NA,1,2025-02-09 07:43:31,0
+733,subset,16,author,Jane Doe,NA,1,2025-02-09 07:43:31,0
+734,subset,16,downloaded_from,,NA,1,2025-02-09 07:43:31,0
+735,subset,16,downloaded_from_url,,NA,1,2025-02-09 07:43:31,0
+736,subset,16,category_en,,NA,1,2025-02-09 07:43:31,0
+737,subset,16,description_en,,NA,1,2025-02-09 07:43:31,0
+738,subset,16,name_en,All patients,NA,1,2025-02-09 07:43:31,0
+739,subset,16,category_fr,,NA,1,2025-02-09 07:43:31,0
+740,subset,16,description_fr,,NA,1,2025-02-09 07:43:31,0
+741,subset,16,name_fr,All patients,NA,1,2025-02-09 07:43:31,0

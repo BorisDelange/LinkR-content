@@ -1,0 +1,4 @@
+id,category,name,tab_id,plugin_id,display_order,creator_id,datetime,deleted
+1,patient_lvl,Haemodynamics timeline,2,1,NA,NA,2025-02-09 07:45:59,0
+2,patient_lvl,Haemodynamics table,2,2,NA,NA,2025-02-09 07:47:50,0
+3,patient_lvl,Haemodynamics drugs,2,3,NA,NA,2025-02-09 07:50:38,0
