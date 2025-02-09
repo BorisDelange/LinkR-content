@@ -63,8 +63,9 @@ observeEvent(input$add_settings_file_%widget_id%, {
             shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", errorMessage = NULL)
             
             # Check if name is already used
-            sql <- glue::glue_sql("SELECT name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'settings_files' AND name = 'file_name' AND LOWER(value) = {tolower(file_name)}", .con = m$db)
-            name_already_used <- nrow(DBI::dbGetQuery(m$db, sql) > 0)
+            sql <- glue::glue_sql("SELECT value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'settings_files' AND name = 'file_name'", .con = m$db)
+            files_names <- DBI::dbGetQuery(m$db, sql) %>% dplyr::pull()
+            name_already_used <- remove_special_chars(file_name) %in% remove_special_chars(files_names)
             
             if (name_already_used) shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", errorMessage = i18np$t("name_already_used"))
             else {
