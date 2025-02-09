@@ -1,0 +1,23 @@
+id,widget_id,concept_id,concept_name,concept_display_name,domain_id,mapped_to_concept_id,merge_mapped_concepts,creator_id,datetime,deleted
+1,1,3027018,Heart rate,,Measurement,NA,0,NA,2025-02-09 07:45:59,0
+2,1,3004249,Systolic blood pressure,,Measurement,NA,0,NA,2025-02-09 07:45:59,0
+3,1,3027598,Mean blood pressure,,Measurement,NA,0,NA,2025-02-09 07:45:59,0
+4,1,3012888,Diastolic blood pressure,,Measurement,NA,0,NA,2025-02-09 07:45:59,0
+5,1,21492240,Diastolic blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-09 07:45:59,0
+6,1,21492239,Systolic blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-09 07:45:59,0
+7,1,21492241,Mean blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-09 07:45:59,0
+8,2,3027018,Heart rate,,Measurement,NA,0,NA,2025-02-09 07:47:50,0
+9,2,3027598,Mean blood pressure,,Measurement,NA,0,NA,2025-02-09 07:47:50,0
+10,2,3004249,Systolic blood pressure,,Measurement,NA,0,NA,2025-02-09 07:47:50,0
+11,2,3012888,Diastolic blood pressure,,Measurement,NA,0,NA,2025-02-09 07:47:50,0
+12,2,21492240,Diastolic blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-09 07:47:50,0
+13,2,21492239,Systolic blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-09 07:47:50,0
+14,2,21492241,Mean blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-09 07:47:50,0
+15,3,35603226,2 ML furosemide 10 MG/ML Injection,,Drug,NA,0,NA,2025-02-09 07:50:38,0
+16,3,35603227,4 ML furosemide 10 MG/ML Injection,,Drug,NA,0,NA,2025-02-09 07:50:38,0
+17,3,956874,furosemide,,Drug,NA,0,NA,2025-02-09 07:50:38,0
+18,3,35603224,10 ML furosemide 10 MG/ML Injection,,Drug,NA,0,NA,2025-02-09 07:50:38,0
+19,3,19077546,furosemide 20 MG Oral Tablet,,Drug,NA,0,NA,2025-02-09 07:50:38,0
+20,3,957136,furosemide 40 MG Oral Tablet,,Drug,NA,0,NA,2025-02-09 07:50:38,0
+21,3,1307046,metoprolol,,Drug,NA,0,NA,2025-02-09 07:50:38,0
+22,3,40167196,5 ML metoprolol tartrate 1 MG/ML Injection,,Drug,NA,0,NA,2025-02-09 07:50:38,0
