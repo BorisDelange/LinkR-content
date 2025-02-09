@@ -12,21 +12,10 @@ observeEvent(input$code_%widget_id%_comment, {
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$code_comment"))
 
     tryCatch({
-        lines <- strsplit(input$code_%widget_id%, "\\n")[[1]]
-        req(length(lines) > 0)
-        
-        start_row <- input$code_%widget_id%_comment$range$start$row + 1
-        end_row <- input$code_%widget_id%_comment$range$end$row + 1
-        
-        for (i in start_row:end_row) if (startsWith(lines[i], "# ")) lines[i] <- substr(lines[i], 3, nchar(lines[i])) else lines[i] <- paste0("# ", lines[i])
-        
-        shinyAce::updateAceEditor(session, "code_%widget_id%", value = paste0(lines, collapse = "\\n"))
-        
-        shinyjs::runjs(sprintf("
-            var editor = ace.edit('%s-rode');
-            editor.moveCursorTo(%d, %d);
-            editor.focus();
-        ", id, input$code_%widget_id%_comment$range$end$row, input$code_%widget_id%_comment$range$end$column))
+        toggle_comments(
+            id = id, input_id = "code_%widget_id%", code = input$code_%widget_id%,
+            selection = input$code_%widget_id%_comment$range, session = session
+        )
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
 
@@ -35,8 +24,10 @@ observeEvent(input$code_%widget_id%_run_all, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$code_run_all"))
 
-    m$code_%widget_id% <- input$code_%widget_id%
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    if ("projects_console_access" %in% user_accesses){
+        m$code_%widget_id% <- input$code_%widget_id%
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    }
 })
 
 # Run code when button is clicked
@@ -44,8 +35,37 @@ observeEvent(input$display_figure_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$display_figure"))
     
-    m$code_%widget_id% <- input$code_%widget_id%
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    tryCatch({
+    
+        # If current selected tab is figure settings when run code button is clicked, generate code from these settings
+        if (length(input$current_tab_%widget_id%) == 0) current_tab <- "figure_settings"
+        else current_tab <- input$current_tab_%widget_id%
+        
+        if (current_tab == "figure_settings"){
+            
+            # Code to generate code from figure settings
+            
+            # ...
+            code <- ""
+            
+            # Update ace editor with generated code
+            shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
+            
+            m$code_%widget_id% <- code
+            
+            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+        }
+        
+        # Check if user has access
+        else if ("projects_console_access" %in% user_accesses){
+            m$code_%widget_id% <- input$code_%widget_id%
+            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+        }
+        
+    }, error = function(e){
+        show_message_bar(id, output, "error_displaying_figure", "severeWarning", i18n = i18np, ns = ns)
+        cat(paste0("\\n", now(), " - widget %widget_id% - input$display_figure - error = ", toString(e)))
+    })
 })
 
 # Run code at patient update
@@ -104,8 +124,12 @@ observeEvent(input$run_code_%widget_id%, {
         
         if ((data_source == "person" & is.na(m$selected_person)) | (data_source == "visit_detail" & is.na(m$selected_visit_detail))){
             
-            if (data_source == "person" & is.na(m$selected_person)) output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("select_patient"), messageBarType = 5), style = "display: inline-block;"))
-            else if (data_source == "visit_detail" & is.na(m$selected_visit_detail)) output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("select_stay"), messageBarType = 5), style = "display: inline-block;"))
+            if (data_source == "person" & is.na(m$selected_person)) output$error_message_%widget_id% <- renderUI(
+                div(shiny.fluent::MessageBar(i18np$t("select_patient"), messageBarType = 5), style = "display: inline-block;")
+            )
+            else if (data_source == "visit_detail" & is.na(m$selected_visit_detail)) output$error_message_%widget_id% <- renderUI(
+                div(shiny.fluent::MessageBar(i18np$t("select_stay"), messageBarType = 5), style = "display: inline-block;")
+            )
             
             shinyjs::hide("drug_exposure_plot_%widget_id%")
             shinyjs::show("error_message_div_%widget_id%")
@@ -119,7 +143,7 @@ observeEvent(input$run_code_%widget_id%, {
                     if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- 
                         data %>%
                         dplyr::collect() %>%
-                        dplyr::inner_join(d$concept %>% dplyr::select(drug_concept_id = concept_id, concept_class_id), by = "drug_concept_id") %>%
+                        dplyr::inner_join(d$dataset_concept %>% dplyr::select(drug_concept_id = concept_id, concept_class_id), by = "drug_concept_id") %>%
                         dplyr::filter(concept_class_id %in% input$concept_classes_%widget_id%) %>%
                         dplyr::select(-concept_class_id)
                 }
@@ -138,13 +162,13 @@ observeEvent(input$run_code_%widget_id%, {
                 
                 shinyjs::hide("error_message_div_%widget_id%")
                 shinyjs::show("drug_exposure_plot_%widget_id%")
-                
+                m$data <- data
                 data <-
                     data %>%
-                    join_concepts(d$concept, c("drug", "drug_type", "route")) %>%
+                    join_concepts(d$dataset_concept, c("drug", "drug_type", "route")) %>%
                     dplyr::left_join(
-                        d$drug_strength %>%
-                            join_concepts(d$concept, c("ingredient", "amount_unit", "numerator_unit", "denominator_unit")) %>%
+                        d$dataset_drug_strength %>%
+                            join_concepts(d$dataset_concept, c("ingredient", "amount_unit", "numerator_unit", "denominator_unit")) %>%
                             dplyr::select(
                                 drug_concept_id, ingredient_concept_id, ingredient_concept_name,
                                 amount_value, amount_unit_concept_id, amount_unit_concept_name,
@@ -278,7 +302,7 @@ observeEvent(input$run_code_%widget_id%, {
         if (!input$figure_and_settings_side_by_side_%widget_id%) shinyjs::click("figure_button_%widget_id%")
         
     }, error = function(e){
-        show_message_bar(output, "error_displaying_figure", "severeWarning", i18n = i18np, ns = ns)
+        show_message_bar(id, output, "error_displaying_figure", "severeWarning", i18n = i18np, ns = ns)
         cat(paste0("\\n", now(), " - widget %widget_id% - input$display_figure - error = ", toString(e)))
     })
 })
