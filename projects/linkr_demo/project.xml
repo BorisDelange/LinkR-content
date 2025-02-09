@@ -3,7 +3,7 @@
   <project>
     <app_version>0.3.0.9022</app_version>
     <unique_id>a3e8c76293842734498fe2b18c385eb265e054eb48ebe5d48b029661c10d112b</unique_id>
-    <version>0.0.1.9002</version>
+    <version>0.0.1.9003</version>
     <name_en>LinkR demo</name_en>
     <name_fr>D&#xE9;mo LinkR</name_fr>
     <category_en></category_en>
@@ -16,6 +16,6 @@
       <author>Jane Doe</author>
     </authors>
     <creation_datetime>2025-02-09 07:43:31</creation_datetime>
-    <update_datetime>2025-02-09 13:30:22</update_datetime>
+    <update_datetime>2025-02-09 13:40:12</update_datetime>
   </project>
 </projects>
