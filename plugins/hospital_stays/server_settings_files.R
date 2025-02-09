@@ -63,8 +63,9 @@ observeEvent(input$add_settings_file_%widget_id%, {
             shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", errorMessage = NULL)
             
             # Check if name is already used
-            sql <- glue::glue_sql("SELECT name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'settings_files' AND name = 'file_name' AND LOWER(value) = {tolower(file_name)}", .con = m$db)
-            name_already_used <- nrow(DBI::dbGetQuery(m$db, sql) > 0)
+            sql <- glue::glue_sql("SELECT value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'settings_files' AND name = 'file_name'", .con = m$db)
+            files_names <- DBI::dbGetQuery(m$db, sql) %>% dplyr::pull()
+            name_already_used <- remove_special_chars(file_name) %in% remove_special_chars(files_names)
             
             if (name_already_used) shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", errorMessage = i18np$t("name_already_used"))
             else {
@@ -85,11 +86,14 @@ observeEvent(input$add_settings_file_%widget_id%, {
                 shiny.fluent::updateDropdown.shinyInput(session, "settings_file_%widget_id%", value = new_id)
                 shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_dropdown_%widget_id%', Math.random());"))
                 
+                # Reset ace editor code
+                shinyAce::updateAceEditor(session, "code_%widget_id%", value = "")
+                
                 # Close modal
                 shinyjs::hide("add_settings_file_modal_%widget_id%")
                 
                 # Notify user
-                show_message_bar(output, "new_settings_file_added", "success", i18n = i18np, ns = ns)
+                show_message_bar(id, output, "new_settings_file_added", "success", i18n = i18np, ns = ns)
             }
         }
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
@@ -127,7 +131,12 @@ observeEvent(input$settings_file_%widget_id%, {
         output$settings_files_ui_%widget_id% <- renderUI(div(filename, style = paste0(settings_files_ui_style, "background-color: #1d94ce;")))
         
         # Save that this file is selected
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_general_settings_%widget_id%', Math.random());"))
+        sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings' AND name = 'selected_file_id'", .con = m$db))
+        new_data <- tibble::tibble(
+            id = get_last_row(m$db, "widgets_options") + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
+            category = "general_settings", name = "selected_file_id", value = NA_character_, value_num = file_id, creator_id = m$user_id, datetime = now(), deleted = FALSE
+        )
+        DBI::dbAppendTable(m$db, "widgets_options", new_data)
         
         # Load saved settings
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-load_figure_settings_%widget_id%', Math.random());"))
@@ -176,7 +185,7 @@ observeEvent(input$confirm_file_deletion_%widget_id%, {
         shinyjs::hide("delete_settings_file_div_%widget_id%")
         
         # Notify user
-        show_message_bar(output, "settings_file_delete", "warning", i18n = i18np, ns = ns)
+        show_message_bar(id, output, "settings_file_delete", "warning", i18n = i18np, ns = ns)
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
