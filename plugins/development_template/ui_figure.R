@@ -6,8 +6,7 @@ div(
     shinyjs::hidden(
         div(
             id = ns("error_message_div_%widget_id%"),
-            uiOutput(ns("error_message_%widget_id%")),
-            style = "padding-top: 10px;"
+            uiOutput(ns("error_message_%widget_id%"))
         )
     ),
     # Div containing the figure output
