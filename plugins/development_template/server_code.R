@@ -68,6 +68,22 @@ observeEvent(input$display_figure_%widget_id%, {
     })
 })
 
+# Run code at patient update
+# observeEvent(m$selected_person, {
+    # %req%
+    # if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
+    
+    # if (isTRUE(input$run_code_on_data_update_%widget_id%)) shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+# })
+
+# Run code at visit_detail update
+# observeEvent(m$selected_visit_detail, {
+    # %req%
+    # if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
+    
+    # if (isTRUE(input$run_code_on_data_update_%widget_id%)) shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+# })
+
 # Run code
 observeEvent(input$run_code_%widget_id%, {
     %req%
