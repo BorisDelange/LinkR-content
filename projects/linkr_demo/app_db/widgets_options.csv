@@ -1,28 +1,40 @@
 id,widget_id,person_id,link_id,category,name,value,value_num,creator_id,datetime,deleted
 1,1,NA,NA,widget_position,NA,w=12;h=19;x=0;y=0;,NA,NA,2025-02-10 18:09:27,0
 2,1,NA,NA,settings_files,file_name,Patient stays,NA,NA,2025-02-10 18:09:42,0
-3,2,NA,NA,widget_position,NA,w=12;h=15;x=0;y=0;,NA,NA,2025-02-10 18:36:00,0
+3,2,NA,NA,widget_position,NA,w=12;h=14;x=0;y=0;,NA,NA,2025-02-10 18:36:00,0
 4,2,NA,NA,settings_files,file_name,Haemodynamics 1,NA,NA,2025-02-10 18:36:07,0
-5,2,NA,4,figure_settings,data_source,person,NA,NA,2025-02-10 19:05:04,0
-6,2,NA,4,figure_settings,concepts,"3027018, 3027598, 3004249, 3012888, 21492239, 21492240, 21492241",NA,NA,2025-02-10 19:05:04,0
-7,2,NA,4,figure_settings,synchronize_timelines,NA,1,NA,2025-02-10 19:05:04,0
-8,1,NA,NA,general_settings,show_settings_file,NA,1,NA,2025-02-10 19:13:44,0
-9,1,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-10 19:13:44,0
-10,1,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-10 19:13:44,0
-11,1,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-10 19:13:44,0
-12,1,NA,NA,general_settings,selected_file_id,NA,NA,NA,2025-02-10 19:13:50,0
-13,2,NA,NA,general_settings,selected_file_id,NA,NA,NA,2025-02-10 19:14:51,0
-14,2,NA,NA,general_settings,show_settings_file,NA,1,NA,2025-02-10 19:14:51,0
-15,2,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-10 19:14:51,0
-16,2,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-10 19:14:51,0
-17,2,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-10 19:14:51,0
-18,3,NA,NA,widget_position,NA,w=12;h=15;x=0;y=15;,NA,NA,2025-02-10 19:15:53,0
-19,3,NA,NA,settings_files,file_name,Haemodynamics 1,NA,NA,2025-02-10 19:15:59,0
-20,3,NA,NA,general_settings,selected_file_id,NA,NA,NA,2025-02-10 19:15:59,0
-21,3,NA,19,figure_settings,data_source,person,NA,NA,2025-02-10 19:16:30,0
-22,3,NA,19,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-02-10 19:16:30,0
-23,3,NA,19,figure_settings,concept_classes,,NA,NA,2025-02-10 19:16:30,0
-24,3,NA,19,figure_settings,concepts,"3027598, 3027018, 3004249, 3012888, 21492239, 21492240, 21492241",NA,NA,2025-02-10 19:16:30,0
-25,3,NA,19,figure_settings,num_cols,NA,8,NA,2025-02-10 19:16:30,0
-26,3,NA,19,figure_settings,aggregate_fct,mean,NA,NA,2025-02-10 19:16:30,0
-27,3,NA,19,figure_settings,synchronize_timelines,NA,1,NA,2025-02-10 19:16:30,0
+5,3,NA,NA,widget_position,NA,w=12;h=13;x=0;y=14;,NA,NA,2025-02-10 19:15:53,0
+6,3,NA,NA,settings_files,file_name,Haemodynamics 1,NA,NA,2025-02-10 19:15:59,0
+7,3,NA,6,figure_settings,data_source,person,NA,NA,2025-02-10 19:16:30,0
+8,3,NA,6,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-02-10 19:16:30,0
+9,3,NA,6,figure_settings,concept_classes,,NA,NA,2025-02-10 19:16:30,0
+10,3,NA,6,figure_settings,concepts,"3027598, 3027018, 3004249, 3012888, 21492239, 21492240, 21492241",NA,NA,2025-02-10 19:16:30,0
+11,3,NA,6,figure_settings,num_cols,NA,8,NA,2025-02-10 19:16:30,0
+12,3,NA,6,figure_settings,aggregate_fct,mean,NA,NA,2025-02-10 19:16:30,0
+13,3,NA,6,figure_settings,synchronize_timelines,NA,1,NA,2025-02-10 19:16:30,0
+14,2,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-10 19:33:26,0
+15,2,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-10 19:33:26,0
+16,2,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-10 19:33:26,0
+17,2,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-10 19:33:26,0
+18,2,NA,4,figure_settings,data_source,person,NA,NA,2025-02-10 19:33:27,0
+19,2,NA,4,figure_settings,concepts,"3027018, 3027598, 3004249, 3012888, 21492239, 21492240, 21492241",NA,NA,2025-02-10 19:33:27,0
+20,2,NA,4,figure_settings,synchronize_timelines,NA,1,NA,2025-02-10 19:33:27,0
+21,4,NA,NA,widget_position,NA,w=12;h=13;x=0;y=27;,NA,NA,2025-02-10 19:36:16,0
+22,4,NA,NA,settings_files,file_name,Drugs 1,NA,NA,2025-02-10 19:36:20,0
+23,4,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-10 19:36:48,0
+24,4,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-10 19:36:48,0
+25,4,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-10 19:36:48,0
+26,4,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-10 19:36:48,0
+27,4,NA,22,figure_settings,data_source,person,NA,NA,2025-02-10 19:37:03,0
+28,4,NA,22,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-02-10 19:37:03,0
+29,4,NA,22,figure_settings,concept_classes,,NA,NA,2025-02-10 19:37:03,0
+30,4,NA,22,figure_settings,concepts,"957136, 19077546, 35603227, 35603224, 956874, 35603226, 40166830, 40167218, 40166825, 40167196, 40167213, 1307046",NA,NA,2025-02-10 19:37:03,0
+31,4,NA,22,figure_settings,synchronize_timelines,NA,1,NA,2025-02-10 19:37:03,0
+32,1,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-10 19:45:35,0
+33,1,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-10 19:45:35,0
+34,1,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-10 19:45:35,0
+35,1,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-10 19:45:35,0
+36,1,NA,NA,general_settings,selected_file_id,NA,NA,NA,2025-02-10 19:58:34,0
+37,4,NA,NA,general_settings,selected_file_id,NA,NA,NA,2025-02-10 19:58:43,0
+38,3,NA,NA,general_settings,selected_file_id,NA,NA,NA,2025-02-10 19:58:43,0
+39,2,NA,NA,general_settings,selected_file_id,NA,NA,NA,2025-02-10 19:58:43,0

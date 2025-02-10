@@ -13,3 +13,15 @@ id,widget_id,concept_id,concept_name,concept_display_name,domain_id,mapped_to_co
 12,3,21492240,Diastolic blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-10 19:15:41,0
 13,3,21492239,Systolic blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-10 19:15:41,0
 14,3,21492241,Mean blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-10 19:15:41,0
+15,4,1307046,metoprolol,,Drug,NA,0,NA,2025-02-10 19:35:58,0
+16,4,40167213,metoprolol tartrate 25 MG Oral Tablet,,Drug,NA,0,NA,2025-02-10 19:35:58,0
+17,4,40167196,5 ML metoprolol tartrate 1 MG/ML Injection,,Drug,NA,0,NA,2025-02-10 19:35:58,0
+18,4,40167218,metoprolol tartrate 50 MG Oral Tablet,,Drug,NA,0,NA,2025-02-10 19:35:58,0
+19,4,40166830,24 HR metoprolol succinate 50 MG Extended Release Oral Tablet,,Drug,NA,0,NA,2025-02-10 19:35:58,0
+20,4,40166825,24 HR metoprolol succinate 100 MG Extended Release Oral Tablet [Toprol],,Drug,NA,0,NA,2025-02-10 19:35:58,0
+21,4,35603226,2 ML furosemide 10 MG/ML Injection,,Drug,NA,0,NA,2025-02-10 19:35:58,0
+22,4,956874,furosemide,,Drug,NA,0,NA,2025-02-10 19:35:58,0
+23,4,35603227,4 ML furosemide 10 MG/ML Injection,,Drug,NA,0,NA,2025-02-10 19:35:58,0
+24,4,35603224,10 ML furosemide 10 MG/ML Injection,,Drug,NA,0,NA,2025-02-10 19:35:58,0
+25,4,19077546,furosemide 20 MG Oral Tablet,,Drug,NA,0,NA,2025-02-10 19:35:58,0
+26,4,957136,furosemide 40 MG Oral Tablet,,Drug,NA,0,NA,2025-02-10 19:35:58,0

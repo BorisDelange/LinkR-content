@@ -100,7 +100,7 @@ observeEvent(input$save_general_settings_%widget_id%, {
     tryCatch({
     
         # Delete old rows
-        sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings'", .con = m$db))
+        sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings' AND name != 'selected_file_id'", .con = m$db))
         
         file_id <- input$settings_file_%widget_id%
         new_data <- tibble::tibble(name = "selected_file_id", value = NA_character_, value_num = NA_integer_, link_id = file_id)

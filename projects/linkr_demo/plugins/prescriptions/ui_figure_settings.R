@@ -29,10 +29,10 @@ div(
                 div(
                     shiny.fluent::Dropdown.shinyInput(
                         ns("concept_classes_%widget_id%"), label = i18np$t("concept_classes"),
-                        options = convert_tibble_to_list(
-                            d$dataset_concept %>% dplyr::filter(domain_id == "Measurement") %>% dplyr::distinct(concept_class_id),
-                            key_col = "concept_class_id", text_col = "concept_class_id"
-                        ),
+                        # options = convert_tibble_to_list(
+                            # d$dataset_concept %>% dplyr::filter(domain_id == "Drug") %>% dplyr::distinct(concept_class_id),
+                            # key_col = "concept_class_id", text_col = "concept_class_id"
+                        # ),
                         multiSelect = TRUE
                     ),
                     style = "width: 200px;"
@@ -46,7 +46,7 @@ div(
                     shiny.fluent::Dropdown.shinyInput(
                         ns("concepts_%widget_id%"), label = i18np$t("concepts"),
                         options = convert_tibble_to_list(
-                            selected_concepts %>% dplyr::filter(domain_id == "Measurement"),
+                            selected_concepts %>% dplyr::filter(domain_id == "Drug"),
                             key_col = "concept_id", text_col = "concept_name"
                         ),
                         multiSelect = TRUE
@@ -56,20 +56,6 @@ div(
             )
         ),
         style = "display: flex; gap: 10px; padding-bottom: 15px; border-bottom: solid 1px #808080;"
-    ),
-    div(
-        div(i18np$t("num_cols"), style = "font-weight: 600; margin-bottom: 5px;"),
-        div(shiny.fluent::SpinButton.shinyInput(ns("num_cols_%widget_id%"), min = 1, max = 20, by = 1, value = 8), style = "width: 200px;"),
-        style = "margin-top: 10px;"
-    ),
-    div(
-        shiny.fluent::Dropdown.shinyInput(ns("aggregate_fct_%widget_id%"), label = "Aggregated function", value = "mean", options = list(
-            list(key = "min", text = i18np$t("min")),
-            list(key = "mean", text = i18np$t("mean")),
-            list(key = "median", text = i18np$t("median")),
-            list(key = "max", text = i18np$t("max"))
-        )),
-        style = "width: 200px; padding-bottom: 15px; border-bottom: solid 1px #808080;"
     ),
     div(
         shiny.fluent::Toggle.shinyInput(ns("synchronize_timelines_%widget_id%"), label = i18np$t("synchronize_timelines")),
