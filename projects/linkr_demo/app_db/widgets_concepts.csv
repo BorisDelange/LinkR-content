@@ -1,0 +1,15 @@
+id,widget_id,concept_id,concept_name,concept_display_name,domain_id,mapped_to_concept_id,merge_mapped_concepts,creator_id,datetime,deleted
+1,2,3027018,Heart rate,,Measurement,NA,0,NA,2025-02-10 18:35:56,0
+2,2,3027598,Mean blood pressure,,Measurement,NA,0,NA,2025-02-10 18:35:56,0
+3,2,3004249,Systolic blood pressure,,Measurement,NA,0,NA,2025-02-10 18:35:56,0
+4,2,3012888,Diastolic blood pressure,,Measurement,NA,0,NA,2025-02-10 18:35:56,0
+5,2,21492240,Diastolic blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-10 18:35:56,0
+6,2,21492239,Systolic blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-10 18:35:56,0
+7,2,21492241,Mean blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-10 18:35:56,0
+8,3,3027018,Heart rate,,Measurement,NA,0,NA,2025-02-10 19:15:41,0
+9,3,3027598,Mean blood pressure,,Measurement,NA,0,NA,2025-02-10 19:15:41,0
+10,3,3004249,Systolic blood pressure,,Measurement,NA,0,NA,2025-02-10 19:15:41,0
+11,3,3012888,Diastolic blood pressure,,Measurement,NA,0,NA,2025-02-10 19:15:41,0
+12,3,21492240,Diastolic blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-10 19:15:41,0
+13,3,21492239,Systolic blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-10 19:15:41,0
+14,3,21492241,Mean blood pressure by Noninvasive,,Measurement,NA,0,NA,2025-02-10 19:15:41,0
