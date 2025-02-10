@@ -18,12 +18,13 @@ observeEvent(input$load_figure_settings_%widget_id%, {
             value <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value)
             value_num <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value_num)
             
-            if (name %in% c("data_source", "concepts_choice")) shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            if (name %in% c("data_source", "concepts_choice", "aggregate_fct")) shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
             else if (name %in% c("concepts", "concept_classes")){
                 value <- unlist(strsplit(value, ", "))
                 if (name == "concepts") value <- as.numeric(value)
                 shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
             }
+            else if (name == "num_cols") shiny.fluent::updateSpinButton.shinyInput(session, paste0(name, "_%widget_id%"), value = value_num)
             else if (name == "synchronize_timelines"){
                 value <- as.logical(value_num)
                 shiny.fluent::updateToggle.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
@@ -64,6 +65,8 @@ observeEvent(input$save_params_and_code_%widget_id%, {
                 "concepts_choice", input$concepts_choice_%widget_id%, NA_real_,
                 "concept_classes", input$concept_classes_%widget_id% %>% toString(), NA_real_,
                 "concepts", input$concepts_%widget_id% %>% toString(), NA_real_,
+                "num_cols", NA_character_, input$num_cols_%widget_id%,
+                "aggregate_fct", input$aggregate_fct_%widget_id%, NA_real_,
                 "synchronize_timelines", NA_character_, as.integer(input$synchronize_timelines_%widget_id%)
             )
             
@@ -83,7 +86,7 @@ observeEvent(input$save_params_and_code_%widget_id%, {
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
 
-# Show / hide concepts_div and concept_classes_div_
+# Show / hide concepts_div and concept_classes_div
 
 observeEvent(input$concepts_choice_%widget_id%, {
     %req%
@@ -104,11 +107,36 @@ observeEvent(input$concepts_choice_%widget_id%, {
 # Synchronize timelines
 
 # Create a reactiveVal with timeline datetimes
-
 if (length(m$datetimes_timeline_%tab_id%) == 0){
     m$datetimes_timeline_%tab_id% <- reactiveVal()
     m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
 }
+
+m$debounced_datetime_slider_%widget_id% <- reactive(input$datetime_slider_%widget_id%) %>% debounce(500)
+
+observeEvent(m$debounced_datetime_slider_%widget_id%(), {
+    %req%
+    req(length(m$debounced_datetime_slider_%widget_id%()) > 0)
+    req(length(m$datetimes_%widget_id%) > 0)
+    req(length(m$data_datetimes_range_%widget_id%) > 0)
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$debounced_datetime_slider"))
+    
+    tryCatch({
+        if (
+            m$debounced_datetime_slider_%widget_id%()[[1]] >= m$data_datetimes_range_%widget_id%[[1]] &
+            m$debounced_datetime_slider_%widget_id%()[[2]] <= m$data_datetimes_range_%widget_id%[[2]] 
+        ){
+            m$datetimes_timeline_%tab_id%(m$debounced_datetime_slider_%widget_id%() %>% as.POSIXct())
+            
+            if (
+                isFALSE(input$synchronize_timelines_%widget_id%) &
+                (abs(as.numeric(m$debounced_datetime_slider_%widget_id%()[[1]]) - as.numeric(m$datetimes_%widget_id%[[1]])) > 5 |
+                abs(as.numeric(m$debounced_datetime_slider_%widget_id%()[[2]]) - as.numeric (m$datetimes_%widget_id%[[2]])) > 5)){
+                shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+            }
+        }
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+})
 
 observeEvent(m$debounced_datetimes_timeline_%tab_id%(), {
     %req%
@@ -127,24 +155,3 @@ observeEvent(m$debounced_datetimes_timeline_%tab_id%(), {
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 }, ignoreInit = TRUE)
-
-observeEvent(plotly::event_data("plotly_relayout", source = "drug_exposure_plot_%widget_id%"), {
-    %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer plotly::event_date"))
-    
-    tryCatch({
-        relayout_data <- plotly::event_data("plotly_relayout", source = "drug_exposure_plot_%widget_id%")
-        
-        if (!is.null(relayout_data) && is.list(relayout_data)) {
-        
-            if ("xaxis.autorange" %in% names(relayout_data) && relayout_data[["xaxis.autorange"]]) {
-                m$datetimes_timeline_%tab_id%(m$data_datetimes_range_%widget_id%)
-            } else if ("xaxis.range[0]" %in% names(relayout_data) && "xaxis.range[1]" %in% names(relayout_data)) {
-                
-                selected_min <- lubridate::force_tz(as.POSIXct(relayout_data[["xaxis.range[0]"]], origin = "1970-01-01"), tzone = "UTC")
-                selected_max <- lubridate::force_tz(as.POSIXct(relayout_data[["xaxis.range[1]"]], origin = "1970-01-01"), tzone = "UTC")
-                m$datetimes_timeline_%tab_id%(c(selected_min, selected_max))
-            }
-        }
-    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
-})

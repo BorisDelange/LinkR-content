@@ -131,24 +131,24 @@ observeEvent(input$run_code_%widget_id%, {
                 div(shiny.fluent::MessageBar(i18np$t("select_stay"), messageBarType = 5), style = "display: inline-block;")
             )
             
-            shinyjs::hide("drug_exposure_plot_%widget_id%")
+            sapply(c("datatable_%widget_id%", "datetime_slider_div_%widget_id%"), shinyjs::hide)
             shinyjs::show("error_message_div_%widget_id%")
             
         } else {
-            
-            data <- d[[paste0("data_", data_source)]]$drug_exposure
+        
+            data <- d[[paste0("data_", data_source)]]$measurement
             
             if (length(input$concepts_choice_%widget_id%) > 0){
                 if (input$concepts_choice_%widget_id% == "selected_concept_classes"){
                     if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- 
                         data %>%
                         dplyr::collect() %>%
-                        dplyr::inner_join(d$dataset_concept %>% dplyr::select(drug_concept_id = concept_id, concept_class_id), by = "drug_concept_id") %>%
+                        dplyr::inner_join(d$dataset_concept %>% dplyr::select(measurement_concept_id = concept_id, concept_class_id), by = "measurement_concept_id") %>%
                         dplyr::filter(concept_class_id %in% input$concept_classes_%widget_id%) %>%
                         dplyr::select(-concept_class_id)
                 }
                 else if (input$concepts_choice_%widget_id% == "selected_concepts"){
-                    if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- data %>% dplyr::filter(drug_concept_id %in% input$concepts_%widget_id%)
+                    if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- data %>% dplyr::filter(measurement_concept_id %in% input$concepts_%widget_id%)
                 }
             }
             
@@ -156,73 +156,22 @@ observeEvent(input$run_code_%widget_id%, {
                 
                 output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("no_data_to_display"), messageBarType = 5), style = "display: inline-block;"))
                 
-                shinyjs::hide("drug_exposure_plot_%widget_id%")
+                sapply(c("datatable_%widget_id%", "datetime_slider_div_%widget_id%"), shinyjs::hide)
                 shinyjs::show("error_message_div_%widget_id%")
             } else {
                 
                 shinyjs::hide("error_message_div_%widget_id%")
-                shinyjs::show("drug_exposure_plot_%widget_id%")
-                m$data <- data
-                data <-
-                    data %>%
-                    join_concepts(d$dataset_concept, c("drug", "drug_type", "route")) %>%
-                    dplyr::left_join(
-                        d$dataset_drug_strength %>%
-                            join_concepts(d$dataset_concept, c("ingredient", "amount_unit", "numerator_unit", "denominator_unit")) %>%
-                            dplyr::select(
-                                drug_concept_id, ingredient_concept_id, ingredient_concept_name,
-                                amount_value, amount_unit_concept_id, amount_unit_concept_name,
-                                numerator_value, numerator_unit_concept_id, numerator_unit_concept_name,
-                                denominator_value, denominator_unit_concept_id, denominator_unit_concept_name
-                            ),
-                        by = "drug_concept_id",
-                        copy = TRUE
-                    ) %>%
-                    dplyr::collect() %>%
-                    dplyr::arrange(person_id, drug_exposure_start_datetime) %>%
-                    dplyr::mutate(
-                        amount = dplyr::case_when(
-                            !is.na(amount_value) ~ round(quantity * amount_value, 1),
-                            !is.na(numerator_value) ~ round(quantity * numerator_value, 1)
-                        ),
-                        amount_unit = dplyr::case_when(
-                            !is.na(amount_value) ~ amount_unit_concept_name,
-                            !is.na(numerator_value) ~ numerator_unit_concept_name
-                        ),
-                        duration_hours = as.numeric(difftime(drug_exposure_end_datetime, drug_exposure_start_datetime, units = "hours")),
-                        rate = dplyr::case_when(
-                            !is.na(numerator_value) & !is.na(duration_hours) & duration_hours > 0 ~ round(amount / duration_hours, 1)
-                        ),
-                        rate_unit = dplyr::case_when(
-                            !is.na(rate) & !is.na(amount_unit) ~ paste0(amount_unit, " per hour")
-                        ),
-                        daily_dose = dplyr::case_when(
-                            is.na(rate) & !is.na(amount) ~ amount / duration_hours * 24
-                        ),
-                        daily_dose_unit = dplyr::case_when(
-                            is.na(rate) & !is.na(amount_unit) ~ paste0(amount_unit, " per day")
-                        )
-                    ) %>%
-                    dplyr::select(
-                        person_id, drug_concept_name,
-                        drug_exposure_start_datetime, drug_exposure_end_datetime, duration_hours,
-                        amount, amount_unit, rate, rate_unit, daily_dose, daily_dose_unit
-                    )
-                    
-                data <- data %>% dplyr::mutate(drug_concept_name = factor(drug_concept_name, levels = unique(drug_concept_name)))
+                sapply(c("datatable_%widget_id%", "datetime_slider_div_%widget_id%"), shinyjs::show)
                 
-                unique_levels <- levels(data$drug_concept_name)
-                unique_labels <- ifelse(
-                    nchar(unique_levels) > 22,
-                    paste0(substr(unique_levels, 1, 17), "..."),
-                    unique_levels
-                )
+                if (length(input$num_cols_%widget_id%) > 0) num_cols <- input$num_cols_%widget_id%
+                else num_cols <- 8
                 
-                if (language == "fr") datetime_format <- "%d-%m-%Y %H:%M"
-                else datetime_format <- "%Y-%m-%d %H:%M"
+                if (length(input$aggregate_fct_%widget_id%) > 0) aggregate_fct <- input$aggregate_fct_%widget_id%
+                else aggregate_fct <- 8
+                
                 
                 if (data_source == "person") {
-                    data_datetimes_range <- 
+                    data_datetimes_range     <- 
                         d$data_person$visit_occurrence %>%
                         dplyr::summarize(
                             min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
@@ -247,54 +196,132 @@ observeEvent(input$run_code_%widget_id%, {
                 m$data_datetimes_range_%widget_id% <- data_datetimes_range
                 
                 if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
-                else datetimes <- data_datetimes_range
+                else {
+                    datetimes <- data_datetimes_range
+                    if (length(m$debounced_datetime_slider_%widget_id%()) > 0) {
+                        if (m$debounced_datetime_slider_%widget_id%()[[1]] >= data_datetimes_range[[1]] & m$debounced_datetime_slider_%widget_id%()[[2]] <= data_datetimes_range[[2]]){
+                            datetimes <- m$debounced_datetime_slider_%widget_id%()
+                        }
+                    }
+                }
                 
                 m$datetimes_%widget_id% <- datetimes
                 
-                plotly_drug_exposure <-
-                    plotly::plot_ly(data = data, source = "drug_exposure_plot_%widget_id%") %>%
-                    plotly::add_segments(
-                        x = ~drug_exposure_start_datetime,
-                        xend = ~drug_exposure_end_datetime,
-                        y = ~as.numeric(drug_concept_name),
-                        yend = ~as.numeric(drug_concept_name),
-                        line = list(color = "coral", width = 5),
-                        text = ~paste0(
-                            i18np$t("drug"), " : ", drug_concept_name, "<br>",
-                            i18np$t("start"), " : ", format(drug_exposure_start_datetime, datetime_format), "<br>",
-                            i18np$t("end"), " : ", format(drug_exposure_end_datetime, datetime_format), "<br>",
-                            i18np$t("amount"), " : ", ifelse(is.na(amount), "/", amount), " ", ifelse(is.na(amount_unit), "", amount_unit), "<br>",
-                            i18np$t("rate"), " : ", ifelse(is.na(rate), "/", rate), " ", ifelse(is.na(rate_unit), "", rate_unit)
-                        ),
-                        hoverinfo = "text"
-                    ) %>%
-                    plotly::layout(
-                        xaxis = list(
-                            type = "date",
-                            tickmode = "auto",
-                            title = "",
-                            nticks = 10,
-                            tickfont = list(size = 10),
-                            tickformat = datetime_format,
-                            range = c(
-                                format(datetimes[[1]], "%Y-%m-%d %H:%M:%S"),
-                                format(datetimes[[2]], "%Y-%m-%d %H:%M:%S")
-                            )
-                        ),
-                        yaxis = list(
-                            tickvals = seq_along(unique_levels),
-                            ticktext = unique_labels,
-                            title = "",
-                            tickfont = list(family = "Courier New", size = 11),
-                            automargin = FALSE
-                        ),
-                        hoverlabel = list(align = "left"),
-                        margin = list(l = 145, r = 0, t = 0, b = 0)
-                    ) %>%
-                    plotly::config(displayModeBar = FALSE) %>%
-                    plotly::event_register("plotly_relayout")
+                updateSliderInput(
+                    session, "datetime_slider_%widget_id%", min = data_datetimes_range[[1]], max = data_datetimes_range[[2]],
+                    value = datetimes,
+                    timeFormat = ifelse(language == "fr", "%d-%m-%Y %H:%M", "%Y-%m-%d %H:%M"), step = 3600000
+                )
                 
-                output$drug_exposure_plot_%widget_id% <- plotly::renderPlotly(plotly_drug_exposure)
+                data <-
+                    data %>%
+                    dplyr::collect() %>%
+                    dplyr::left_join(
+                        d$dataset_concept %>% 
+                        dplyr::select(measurement_concept_id = concept_id, measurement_concept_name = concept_name),
+                        by = "measurement_concept_id"
+                    ) %>%
+                    dplyr::select(measurement_concept_name, measurement_datetime, value_as_number) %>%
+                    dplyr::arrange(measurement_concept_name, measurement_datetime)
+                
+                interval_duration <- as.numeric(difftime(datetimes[[2]], datetimes[[1]], units = "secs")) / num_cols
+                
+                if (language == "fr") date_format <- "%d-%m-%Y"
+                else date_format <- "%Y-%m-%d"
+                
+                intervals <- tibble::tibble(
+                    interval = 0:(num_cols - 1),
+                    interval_start = datetimes[[1]] + interval * interval_duration,
+                    interval_end = interval_start + interval_duration
+                ) %>%
+                dplyr::mutate(
+                    interval_label = paste(
+                        format(interval_start, date_format),
+                        " <span style='color:#0084D8'>", format(interval_start, "%H:%M"), "</span>",
+                        " ", tolower(i18np$t("to")), " ",
+                        format(interval_end, date_format),
+                        " <span style='color:#0084D8'>", format(interval_end, "%H:%M"), "</span>"
+                    )
+                )
+                
+                data <-
+                    data %>%
+                    dplyr::mutate(
+                        interval = floor(as.numeric(difftime(measurement_datetime, datetimes[[1]], units = "secs")) / interval_duration)
+                    ) %>%
+                    dplyr::group_by(measurement_concept_name, interval) %>%
+                    dplyr::summarize(
+                        agg_value = round(do.call(aggregate_fct, list(value_as_number, na.rm = TRUE)), 1),
+                        n = sum(!is.na(value_as_number)),
+                        .groups = "drop"
+                    ) %>%
+                    dplyr::mutate(agg_value = paste0(agg_value, " (n = ", n, ")")) %>%
+                    dplyr::right_join(intervals, by = "interval") %>%
+                    dplyr::select(measurement_concept_name, interval_label, agg_value) %>%
+                    tidyr::pivot_wider(
+                        names_from = interval_label,
+                        values_from = agg_value
+                    ) %>%
+                    dplyr::arrange(measurement_concept_name) %>%
+                    dplyr::rename(!!i18np$t("concept") := measurement_concept_name) %>%
+                    dplyr::filter(!is.na(!!rlang::sym(i18np$t("concept"))) & !!rlang::sym(i18np$t("concept")) != "")
+                    
+                # Reorder date columns (works also with french date format)
+                date_cols <- names(data)[-1]
+                sorted_date_cols <- date_cols[order(as.Date(
+                    gsub(" <.*$", "", date_cols),
+                    format = date_format
+                ))]
+                
+                data <-
+                    data %>%
+                    dplyr::relocate(all_of(sorted_date_cols), .after = 1)
+                
+                output$datatable_%widget_id% <- DT::renderDT({
+                    row_count <- nrow(data)
+                
+                    DT::datatable(
+                        data,
+                        rownames = FALSE,
+                        options = list(
+                            dom = if (row_count > 10) "<'datatable_length'l><'top't><'bottom'p>" else "<'top't>",
+                            pageLength = if (row_count > 10) 25 else 10,
+                            paging = row_count > 10,
+                            compact = TRUE, 
+                            hover = TRUE
+                        ),
+                        escape = FALSE,
+                        
+                        # CSS for datatable
+                        callback = htmlwidgets::JS(
+                          "table.on('draw.dt', function() {",
+                          "  $('.dataTable tbody tr td').css({",
+                          "    'height': '12px',",
+                          "    'padding': '2px 5px'",
+                          "  });",
+                          "  $('.dataTable thead tr td div .form-control').css('font-size', '12px');",
+                          "  $('.dataTable thead tr td').css('padding', '5px');",
+                          "  $('.dataTable tbody tr td:first-child').css({",
+                          "    'min-width': '100px',",
+                          "    'max-width': '100px',",
+                          "    'width': '100px',",
+                          "    'white-space': 'nowrap'",
+                          "  });",
+                          "  $('.dataTable thead tr th:first-child').css({",
+                          "    'min-width': '100px',",
+                          "    'max-width': '100px',",
+                          "    'width': '100px',",
+                          "    'white-space': 'nowrap'",
+                          "  });",
+                          "",
+                          "  $('.dataTable tbody td').each(function() {",
+                          "    var cellText = $(this).text();",
+                          "    $(this).attr('title', cellText);",
+                          "  });",
+                          "});"
+                        )
+                    )
+                })
             }
         }
         
@@ -314,3 +341,48 @@ observeEvent(input$code_%widget_id%_save, {
     
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_params_and_code_%widget_id%', Math.random());"))
 })
+
+# Adjust CSS of datetime sliderInput
+
+# shinyjs::delay(100, shinyjs::runjs(paste0("
+#     function adjustSliderLabels_%widget_id%() {
+#         const toLabel = document.querySelector('#", id, "-datetime_slider_div_%widget_id% .irs-to');
+#         const singleLabel = document.querySelector('#", id, "-datetime_slider_div_%widget_id% .irs-single');
+#     
+#         if (toLabel) {
+#             const toLeft = parseFloat(toLabel.style.left);
+#             if (toLeft > 72) {
+#                 toLabel.style.left = '72%';
+#             }
+#         }
+#     
+#         if (singleLabel) {
+#             const singleLeft = parseFloat(singleLabel.style.left);
+#             if (singleLeft < 0) {
+#                 singleLabel.style.left = '0%';
+#             } else if (singleLeft > 32) {
+#                 singleLabel.style.left = '32%';
+#             }
+#         }
+#     }
+#     
+#     window.observeSliderChanges_%widget_id% = function() {
+#         const toLabel = document.querySelector(('#", id, "-datetime_slider_div_%widget_id% .irs-to');
+#         const singleLabel = document.querySelector(('#", id, "-datetime_slider_div_%widget_id% .irs-single');
+#         
+#         if (toLabel) {
+#             const observer = new MutationObserver(adjustSliderLabels);
+#             
+#             observer.observe(fromLabel, { attributes: true, attributeFilter: ['style'] });
+#             observer.observe(toLabel, { attributes: true, attributeFilter: ['style'] });
+#             
+#             if (singleLabel) {
+#                 observer.observe(singleLabel, { attributes: true, attributeFilter: ['style'] });
+#             }
+#             
+#             adjustSliderLabels_%widget_id%();
+#         }
+#     }
+#     
+#     observeSliderChanges_%widget_id%();
+# ")))
