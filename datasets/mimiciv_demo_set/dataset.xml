@@ -1,12 +1,9 @@
 <?xml version="1.0"?>
 <datasets>
   <dataset>
-    <app_version>0.3.0.9019</app_version>
+    <app_version>0.3.0.9022</app_version>
     <unique_id>44b60e04eae66bcd8fc86d3196c09db1620ceec65d759de6080cda702aa45b10</unique_id>
-    <version>0.0.1.9000</version>
-    <authors>
-      <author>Boris Delange</author>
-    </authors>
+    <version>0.0.1.9001</version>
     <name_en>MIMIC-IV demo set</name_en>
     <name_fr>MIMIC-IV set de d&#xE9;mo</name_fr>
     <category_en></category_en>
@@ -109,8 +106,11 @@ Il ne vous restera plus qu'&#xE0; signer le &lt;a href="https://physionet.org/lo
 </description_fr>
     <short_description_en>MIMIC-IV demo set containing 100 patients</short_description_en>
     <short_description_fr>Set de d&#xE9;mo de la MIMIC-IV contenant 100 patients</short_description_fr>
+    <authors>
+      <author>Boris Delange</author>
+    </authors>
     <creation_datetime>2024-08-06 16:30:16</creation_datetime>
-    <update_datetime>2024-11-07 21:54:04</update_datetime>
+    <update_datetime>2025-02-10 18:32:26</update_datetime>
     <omop_version>5.3</omop_version>
   </dataset>
 </datasets>

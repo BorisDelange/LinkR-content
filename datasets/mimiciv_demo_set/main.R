@@ -53,6 +53,7 @@ for (table in tables) {
 
 # Import data
 import_dataset(
-    r, d, dataset_id = %dataset_id%, omop_version = "5.3",
-    data_source = "disk", data_folder = "%dataset_folder%"
+    r, m, d, dataset_id = %dataset_id%, omop_version = "5.3",
+    data_source = "disk", data_folder = "%dataset_folder%",
+    save_as_duckdb_file = TRUE, rewrite = FALSE
 )
