@@ -90,7 +90,7 @@ observeEvent(input$save_general_settings_button_%widget_id%, {
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_general_settings_%widget_id%', Math.random());"))
     
     # Notify user
-    show_message_bar(output, "modif_saved", "success", i18n = i18n, ns = ns)
+    show_message_bar(id, output, "modif_saved", "success", i18n = i18n, ns = ns)
 })
 
 observeEvent(input$save_general_settings_%widget_id%, {
