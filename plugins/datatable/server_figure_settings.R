@@ -80,7 +80,7 @@ observeEvent(input$save_params_and_code_%widget_id%, {
             DBI::dbAppendTable(m$db, "widgets_options", new_data)
             
             # Notify user
-            show_message_bar(output, "modif_saved", "success", i18n = i18n, ns = ns)
+            show_message_bar(id, output, "modif_saved", "success", i18n = i18n, ns = ns)
         }
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
