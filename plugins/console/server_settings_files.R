@@ -133,8 +133,8 @@ observeEvent(input$settings_file_%widget_id%, {
         # Save that this file is selected
         sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings' AND name = 'selected_file_id'", .con = m$db))
         new_data <- tibble::tibble(
-            id = get_last_row(m$db, "widgets_options") + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
-            category = "general_settings", name = "selected_file_id", value = NA_character_, value_num = file_id, creator_id = m$user_id, datetime = now(), deleted = FALSE
+            id = get_last_row(m$db, "widgets_options") + 1, widget_id = %widget_id%, person_id = NA_integer_, link_id = file_id,
+            category = "general_settings", name = "selected_file_id", value = NA_character_, value_num = NA_real_, creator_id = m$user_id, datetime = now(), deleted = FALSE
         )
         DBI::dbAppendTable(m$db, "widgets_options", new_data)
         
