@@ -3,20 +3,20 @@
   <plugin>
     <app_version>0.3.0.9022</app_version>
     <unique_id>064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e</unique_id>
-    <version>0.0.1.9005</version>
+    <version>0.0.1.9006</version>
     <name_en>Timeline {dygraphs}</name_en>
     <name_fr>Timeline {dygraphs}</name_fr>
-    <category_en></category_en>
-    <category_fr></category_fr>
-    <description_en></description_en>
-    <description_fr></description_fr>
+    <category_en>NA</category_en>
+    <category_fr>NA</category_fr>
+    <description_en>NA</description_en>
+    <description_fr>NA</description_fr>
     <short_description_en>Allows displaying data as a timeline using the {dygraphs} library.</short_description_en>
     <short_description_fr>Permet d'afficher des donn&#xE9;es sous forme de timeline avec la librairie {dygraphs}</short_description_fr>
     <authors>
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-08-28 22:19:16</creation_datetime>
-    <update_datetime>2025-02-10 19:33:53</update_datetime>
+    <update_datetime>2025-02-11 08:23:09</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>
