@@ -93,7 +93,6 @@ observeEvent(input$save_general_settings_%widget_id%, {
         sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings' AND name != 'selected_file_id'", .con = m$db))
         
         file_id <- input$settings_file_%widget_id%
-        # new_data <- tibble::tibble(name = "selected_file_id", value = NA_character_, value_num = NA_integer_, link_id = file_id)
         new_data <- tibble::tibble(name = character(), value = character(), value_num = integer())
         
         # general_settings_vec <- c("show_settings_file", "figure_and_settings_side_by_side", "run_code_on_data_update", "run_code_at_settings_file_load")
