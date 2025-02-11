@@ -83,16 +83,6 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
 
 # Save general settings in db
 
-observeEvent(input$save_general_settings_button_%widget_id%, {
-    %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$save_general_settings_button"))
-    
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_general_settings_%widget_id%', Math.random());"))
-    
-    # Notify user
-    show_message_bar(id, output, "modif_saved", "success", i18n = i18n, ns = ns)
-})
-
 observeEvent(input$save_general_settings_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$save_general_settings"))
@@ -105,19 +95,19 @@ observeEvent(input$save_general_settings_%widget_id%, {
         file_id <- input$settings_file_%widget_id%
         new_data <- tibble::tibble(name = character(), value = character(), value_num = integer())
         
-        general_settings <- c("show_settings_file", "figure_and_settings_side_by_side", "run_code_on_data_update", "run_code_at_settings_file_load")
+        general_settings_vec <- c("show_settings_file", "figure_and_settings_side_by_side", "run_code_on_data_update", "run_code_at_settings_file_load")
         
-        sapply(general_settings, function(name){
+        sapply(general_settings_vec, function(name){
             toggle_value <- 0L
             input_name <- paste0(name, "_%widget_id%")
             if (length(input[[input_name]]) > 0) if (input[[input_name]]) toggle_value <- 1L
-            new_data <<- new_data %>% dplyr::bind_rows(tibble::tibble(name = name, value = NA_character_, value_num = toggle_value, link_id = NA_integer_))
+            new_data <<- new_data %>% dplyr::bind_rows(tibble::tibble(name = name, value = NA_character_, value_num = toggle_value))
         })
         
         new_data <-
             new_data %>%
             dplyr::transmute(
-                id = get_last_row(m$db, "widgets_options") + 1:(length(general_settings) + 1), widget_id = %widget_id%, person_id = NA_integer_, link_id,
+                id = get_last_row(m$db, "widgets_options") + 1:(length(general_settings_vec)), widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
                 category = "general_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
             )
         
