@@ -28,7 +28,7 @@ id,widget_id,person_id,link_id,category,name,value,value_num,creator_id,datetime
 27,2,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-11 13:56:54,0
 28,2,NA,4,figure_settings,data_source,person,NA,NA,2025-02-11 13:56:58,0
 29,2,NA,4,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-02-11 13:56:58,0
-30,2,NA,4,figure_settings,concept_classes,,NA,NA,2025-02-11 13:56:58,0
+30,2,NA,4,figure_settings,concept_classes,NA,NA,NA,2025-02-11 13:56:58,0
 31,2,NA,4,figure_settings,concepts,"3027598, 3027018, 3004249, 3012888, 21492239, 21492240, 21492241",NA,NA,2025-02-11 13:56:58,0
 32,2,NA,4,figure_settings,num_cols,NA,8,NA,2025-02-11 13:56:58,0
 33,2,NA,4,figure_settings,aggregate_fct,mean,NA,NA,2025-02-11 13:56:58,0
@@ -39,7 +39,7 @@ id,widget_id,person_id,link_id,category,name,value,value_num,creator_id,datetime
 38,3,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-11 13:58:59,0
 39,3,NA,6,figure_settings,data_source,person,NA,NA,2025-02-11 13:59:01,0
 40,3,NA,6,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-02-11 13:59:01,0
-41,3,NA,6,figure_settings,concept_classes,,NA,NA,2025-02-11 13:59:01,0
+41,3,NA,6,figure_settings,concept_classes,NA,NA,NA,2025-02-11 13:59:01,0
 42,3,NA,6,figure_settings,concepts,"957136, 19077546, 35603227, 35603224, 956874, 35603226, 40166830, 40167218, 40166825, 40167196, 40167213, 1307046",NA,NA,2025-02-11 13:59:01,0
 43,3,NA,6,figure_settings,synchronize_timelines,NA,1,NA,2025-02-11 13:59:01,0
 44,5,NA,NA,widget_position,NA,w=12;h=40;x=0;y=0;,NA,NA,2025-02-12 12:35:22,0
@@ -50,11 +50,11 @@ id,widget_id,person_id,link_id,category,name,value,value_num,creator_id,datetime
 49,5,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-12 12:35:30,0
 50,5,NA,45,figure_settings,data_source,person,NA,NA,2025-02-12 12:35:34,0
 51,5,NA,45,figure_settings,concepts_choice,all_concepts,NA,NA,2025-02-12 12:35:34,0
-52,5,NA,45,figure_settings,concept_classes,,NA,NA,2025-02-12 12:35:34,0
-53,5,NA,45,figure_settings,concepts,,NA,NA,2025-02-12 12:35:34,0
+52,5,NA,45,figure_settings,concept_classes,NA,NA,NA,2025-02-12 12:35:34,0
+53,5,NA,45,figure_settings,concepts,NA,NA,NA,2025-02-12 12:35:34,0
 54,5,NA,45,figure_settings,synchronize_timelines,NA,0,NA,2025-02-12 12:35:34,0
-55,1,NA,2,general_settings,selected_file_id,NA,NA,NA,2025-02-12 14:17:46,0
-56,4,NA,12,general_settings,selected_file_id,NA,NA,NA,2025-02-12 14:17:52,0
-57,3,NA,6,general_settings,selected_file_id,NA,NA,NA,2025-02-12 14:17:52,0
-58,2,NA,4,general_settings,selected_file_id,NA,NA,NA,2025-02-12 14:17:52,0
-59,5,NA,45,general_settings,selected_file_id,NA,NA,NA,2025-02-12 14:17:57,0
+55,1,NA,2,general_settings,selected_file_id,NA,NA,NA,2025-02-12 14:50:28,0
+56,5,NA,45,general_settings,selected_file_id,NA,NA,NA,2025-02-12 14:50:35,0
+57,4,NA,12,general_settings,selected_file_id,NA,NA,NA,2025-02-12 14:50:37,0
+58,3,NA,6,general_settings,selected_file_id,NA,NA,NA,2025-02-12 14:50:37,0
+59,2,NA,4,general_settings,selected_file_id,NA,NA,NA,2025-02-12 14:50:37,0

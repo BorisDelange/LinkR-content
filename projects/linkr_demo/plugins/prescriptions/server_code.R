@@ -136,19 +136,18 @@ observeEvent(input$run_code_%widget_id%, {
             
         } else {
             
-            data <- d[[paste0("data_", data_source)]]$drug_exposure
+            data <- d[[paste0("data_", data_source)]]$drug_exposure %>% dplyr::collect()
             
             if (length(input$concepts_choice_%widget_id%) > 0){
                 if (input$concepts_choice_%widget_id% == "selected_concept_classes"){
-                    if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- 
+                    if (nrow(data) > 0) data <- 
                         data %>%
-                        dplyr::collect() %>%
                         dplyr::inner_join(d$dataset_concept %>% dplyr::select(drug_concept_id = concept_id, concept_class_id), by = "drug_concept_id") %>%
                         dplyr::filter(concept_class_id %in% input$concept_classes_%widget_id%) %>%
                         dplyr::select(-concept_class_id)
                 }
                 else if (input$concepts_choice_%widget_id% == "selected_concepts"){
-                    if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- data %>% dplyr::filter(drug_concept_id %in% input$concepts_%widget_id%)
+                    if (nrow(data) > 0) data <- data %>% dplyr::filter(drug_concept_id %in% input$concepts_%widget_id%)
                 }
             }
             
@@ -162,10 +161,12 @@ observeEvent(input$run_code_%widget_id%, {
                 
                 shinyjs::hide("error_message_div_%widget_id%")
                 shinyjs::show("drug_exposure_plot_%widget_id%")
-                m$data <- data
+                
                 data <-
                     data %>%
                     join_concepts(d$dataset_concept, c("drug", "drug_type", "route")) %>%
+                    # Replace NA drug_concept_name by their concept_id
+                    dplyr::mutate(drug_concept_name = dplyr::if_else(is.na(drug_concept_name), as.character(drug_concept_id), drug_concept_name)) %>%
                     dplyr::left_join(
                         d$dataset_drug_strength %>%
                             join_concepts(d$dataset_concept, c("ingredient", "amount_unit", "numerator_unit", "denominator_unit")) %>%
@@ -178,7 +179,6 @@ observeEvent(input$run_code_%widget_id%, {
                         by = "drug_concept_id",
                         copy = TRUE
                     ) %>%
-                    dplyr::collect() %>%
                     dplyr::arrange(person_id, drug_exposure_start_datetime) %>%
                     dplyr::mutate(
                         amount = dplyr::case_when(
@@ -224,11 +224,11 @@ observeEvent(input$run_code_%widget_id%, {
                 if (data_source == "person") {
                     data_datetimes_range <- 
                         d$data_person$visit_occurrence %>%
+                        dplyr::collect() %>%
                         dplyr::summarize(
                             min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
                             max_visit_end_datetime = max(visit_end_datetime, na.rm = TRUE)
-                        ) %>%
-                        dplyr::collect()
+                        )
                 }
                 else if (data_source == "visit_detail") {
                     selected_visit_detail <- m$selected_visit_detail
@@ -236,11 +236,11 @@ observeEvent(input$run_code_%widget_id%, {
                     data_datetimes_range <- 
                         d$data_person$visit_detail %>%
                         dplyr::filter(visit_detail_id == selected_visit_detail) %>%
+                        dplyr::collect() %>%
                         dplyr::summarize(
                             min_visit_start_datetime = min(visit_detail_start_datetime, na.rm = TRUE),
                             max_visit_end_datetime = max(visit_detail_end_datetime, na.rm = TRUE)
-                        ) %>%
-                        dplyr::collect()
+                        )
                 }
                 
                 data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)
