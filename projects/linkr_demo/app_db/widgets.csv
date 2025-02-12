@@ -3,3 +3,4 @@ id,category,name,tab_id,plugin_id,display_order,creator_id,datetime,deleted
 2,patient_lvl,Haemodynamics datatable,2,3,NA,NA,2025-02-10 19:15:41,0
 3,patient_lvl,Haemodynamics drugs,2,2,NA,NA,2025-02-10 19:35:58,0
 4,patient_lvl,Haemodynamics timeline,2,1,NA,NA,2025-02-11 08:58:55,0
+5,patient_lvl,Drugs,3,2,NA,NA,2025-02-12 12:35:17,0
