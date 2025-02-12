@@ -27,7 +27,7 @@ for (table in tables) {
         
         # Correct _id cols, with large positive and negative numeric values
         correct_id_columns <- function(data) {
-            id_columns <- colnames(data)[grepl("_id$", colnames(data)) & !grepl("_concept_id$", colnames(data))]
+            id_columns <- colnames(data)[grepl("_id$", colnames(data)) & !grepl("concept_id$", colnames(data))]
             if (nrow(data) > 0) data <- data %>% dplyr::mutate(dplyr::across(dplyr::all_of(id_columns), ~ if (is.numeric(.)) as.integer(. / 10^12 + 10^7) else .))
             
             colnames(data) <- tolower(colnames(data))
