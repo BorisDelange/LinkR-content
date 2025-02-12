@@ -221,6 +221,8 @@ observeEvent(input$run_code_%widget_id%, {
                         dplyr::select(measurement_concept_id = concept_id, measurement_concept_name = concept_name),
                         by = "measurement_concept_id"
                     ) %>%
+                    # Replace NA concept_name by concept_id
+                    dplyr::mutate(measurement_concept_name = dplyr::if_else(is.na(measurement_concept_name), as.character(measurement_concept_id), measurement_concept_name)) %>%
                     dplyr::select(measurement_concept_name, measurement_datetime, value_as_number) %>%
                     dplyr::arrange(measurement_concept_name, measurement_datetime)
                 
