@@ -27,6 +27,9 @@ for (table in tables) {
         csv_file <- file.path(output_dir, paste0(table, ".csv"))
         data <- suppressWarnings(vroom::vroom(file_url, progress = FALSE, show_col_types = FALSE))
         
+        # Make sure visit_detail_id is numeric (default to logical)
+        if ("visit_detail_id" %in% colnames(data)) data <- data %>% dplyr::mutate_at("visit_detail_id", as.integer)
+        
         # Correct _id cols, with large positive and negative numeric values
         correct_id_columns <- function(data) {
             id_columns <- colnames(data)[grepl("_id$", colnames(data)) & !grepl("_concept_id$", colnames(data))]
@@ -65,7 +68,7 @@ import_dataset(
 update_visit_detail_id <- function(con, table_name, id_column, datetime_column, limit) {
     query <- sprintf("SELECT COUNT() FROM %s WHERE visit_detail_id IS NULL", table_name)
     count <- DBI::dbGetQuery(con, query) %>% dplyr::pull()
-
+    
     if (count > limit) {
         create_temp_table_query <- sprintf("
             CREATE TABLE temp_ranked_%s AS
@@ -114,6 +117,6 @@ tables_info <- list(
 for (table in names(tables_info)) {
     id_column <- tables_info[[table]][1]
     datetime_column <- tables_info[[table]][2]
-    limit <- tables_info[[table]][3]
+    limit <- tables_info[[table]][3] %>% as.numeric()
     update_visit_detail_id(d$con, table, id_column, datetime_column, limit)
 }
