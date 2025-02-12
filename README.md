@@ -5,70 +5,42 @@
 ## <i class='fa fa-file-alt' style='color: steelblue; margin-right: 5px;'></i> Projects
 
 <details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
-<summary><span style = 'font-size:13px;'>InterHop 2024 datathon template</summary>
-
-
-
-</details>
-
-<details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
 <summary><span style = 'font-size:13px;'>LinkR demo</summary>
-
-
-
 </details>
-
 
 ## <i class='fa fa-terminal' style='color: steelblue; margin-right: 5px;'></i> Plugins
 
 <details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
 <summary><span style = 'font-size:13px;'>Console</summary>
-
-
-
 </details>
 
 <details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
+<summary><span style = 'font-size:13px;'>Datatable</summary>
+
+NA</details>
+
+<details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
 <summary><span style = 'font-size:13px;'>Development template</summary>
-
-
-
 </details>
 
 <details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
 <summary><span style = 'font-size:13px;'>Hospital stays</summary>
 
-
-
-</details>
+NA</details>
 
 <details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
 <summary><span style = 'font-size:13px;'>Prescriptions</summary>
 
-
-
-</details>
-
-<details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
-<summary><span style = 'font-size:13px;'>Tableau de données</summary>
-
-
-
-</details>
+NA</details>
 
 <details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
 <summary><span style = 'font-size:13px;'>Text reader</summary>
-
-NA
-
 </details>
 
 <details style = 'border: solid 1px #c0c0c0; padding: 5px 10px; margin: 5px 0;'>
 <summary><span style = 'font-size:13px;'>Timeline {dygraphs}</summary>
 
-
-
-</details>
+NA</details>
 
 ## <i class='fa fa-database' style='color: steelblue; margin-right: 5px;'></i> Datasets
 
@@ -122,8 +94,6 @@ Next, you must complete the CITI Course, a required training to access data host
 Once the CITI Course is completed, you can <strong>download the certificate</strong> and <a href="https://physionet.org/settings/training/" target="_blank">upload it here</a> for validation by the Physionet team.
 
 The final step is to sign the <a href="https://physionet.org/login/?next=/sign-dua/mimiciii/1.4/" target="_blank">data use agreement</a>.
-
-
 </details>
 
 ## <i class='fa fa-code' style='color: steelblue; margin-right: 5px;'></i> Data cleaning scripts
