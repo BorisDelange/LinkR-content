@@ -12,28 +12,23 @@ tables <- c(
 )
 
 # Local database files
-output_dir <- "%dataset_folder%"
 
 # Download files
 for (table in tables) {
     
     if (table %in% c("concept", "concept_relationship", "vocabulary")) file_url <- paste0(base_url, "2b_", table, ".csv")
     else file_url <- paste0(base_url, table, ".csv")
-    parquet_file <- file.path(output_dir, paste0(table, ".parquet"))
+    local_file <- file.path("%dataset_folder%", paste0(table, ".csv"))
 
-    if (!file.exists(parquet_file)) {
+    if (!file.exists(local_file)) {
     
         # Download and read the CSV file
-        csv_file <- file.path(output_dir, paste0(table, ".csv"))
         data <- suppressWarnings(vroom::vroom(file_url, progress = FALSE, show_col_types = FALSE))
-        
-        # Make sure visit_detail_id is numeric (default to logical)
-        if ("visit_detail_id" %in% colnames(data)) data <- data %>% dplyr::mutate_at("visit_detail_id", as.integer)
         
         # Correct _id cols, with large positive and negative numeric values
         correct_id_columns <- function(data) {
             id_columns <- colnames(data)[grepl("_id$", colnames(data)) & !grepl("_concept_id$", colnames(data))]
-            if (nrow(data) > 0) data %>% dplyr::mutate(dplyr::across(dplyr::all_of(id_columns), ~ if (is.numeric(.)) as.integer(. / 10^12 + 10^7) else .))
+            if (nrow(data) > 0) data <- data %>% dplyr::mutate(dplyr::across(dplyr::all_of(id_columns), ~ if (is.numeric(.)) as.integer(. / 10^12 + 10^7) else .))
             
             colnames(data) <- tolower(colnames(data))
             return(data)
@@ -48,11 +43,16 @@ for (table in tables) {
                 )
         }
         
-        # Write the data to a Parquet file
-        arrow::write_parquet(data, parquet_file)
+        # Relocate some cols
+        if (table == "condition_occurrence") data <- data %>% dplyr::relocate(condition_status_concept_id, .after = "condition_type_concept_id")
+        else if (table == "visit_detail") data <- data %>%
+            dplyr::relocate(visit_detail_source_value, .after = "care_site_id") %>%
+            dplyr::relocate(visit_detail_source_concept_id, .after = "visit_detail_source_value") %>%
+            dplyr::relocate(admitting_source_value, .after = "visit_detail_source_concept_id") %>%
+            dplyr::relocate(discharge_to_source_value, .after = "admitting_source_concept_id")
         
-        # Erase csv file
-        unlink(csv_file)
+        # Write the data to a CSV file
+        readr::write_csv(data, local_file)
     }
 }
 
@@ -60,7 +60,7 @@ for (table in tables) {
 import_dataset(
     r, m, d, dataset_id = %dataset_id%, omop_version = "5.3",
     data_source = "disk", data_folder = "%dataset_folder%",
-    save_as_duckdb_file = TRUE, rewrite = TRUE
+    save_as_duckdb_file = TRUE, rewrite = FALSE
 )
 
 # Fill empty visit_detail_id cols
