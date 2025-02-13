@@ -1,6 +1,6 @@
 id,category,link_id,name,value,value_num,creator_id,datetime,deleted
 1,plugin,1,users_allowed_read_group,everybody,1,1,2025-02-10 18:07:08,0
-2,plugin,1,version,0.0.1.9008,NA,1,2025-02-10 18:07:08,0
+2,plugin,1,version,0.0.1.9009,NA,1,2025-02-10 18:07:08,0
 3,plugin,1,unique_id,064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e,NA,1,2025-02-10 18:07:08,0
 4,plugin,1,author,Boris Delange,NA,1,2025-02-10 18:07:08,0
 5,plugin,1,downloaded_from,NA,NA,1,2025-02-10 18:07:08,0

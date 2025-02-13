@@ -136,7 +136,10 @@ observeEvent(input$run_code_%widget_id%, {
             
         } else {
             
-            data <- d[[paste0("data_", data_source)]]$drug_exposure %>% dplyr::collect()
+            # data <- d[[paste0("data_", data_source)]]$drug_exposure %>% dplyr::collect()
+            if (data_source == "person") sql <- glue::glue_sql("SELECT * FROM drug_exposure WHERE person_id = {m$selected_person}", .con = d$con)
+            else if (data_source == "visit_detail") sql <- glue::glue_sql("SELECT * FROM drug_exposure WHERE person_id = {m$selected_visit_detail}", .con = d$con)
+            data <- DBI::dbGetQuery(d$con, sql)
             
             if (length(input$concepts_choice_%widget_id%) > 0){
                 if (input$concepts_choice_%widget_id% == "selected_concept_classes"){
@@ -151,7 +154,7 @@ observeEvent(input$run_code_%widget_id%, {
                 }
             }
             
-            if (data %>% dplyr::count() %>% dplyr::pull() == 0){
+            if (nrow(data) == 0){
                 
                 output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("no_data_to_display"), messageBarType = 5), style = "display: inline-block;"))
                 
@@ -222,25 +225,20 @@ observeEvent(input$run_code_%widget_id%, {
                 else datetime_format <- "%Y-%m-%d %H:%M"
                 
                 if (data_source == "person") {
-                    data_datetimes_range <- 
-                        d$data_person$visit_occurrence %>%
-                        dplyr::collect() %>%
-                        dplyr::summarize(
-                            min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
-                            max_visit_end_datetime = max(visit_end_datetime, na.rm = TRUE)
-                        )
+                    sql <- glue::glue_sql("
+                        SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime
+                        FROM visit_occurrence
+                        WHERE person_id = {m$selected_person}
+                    ", .con = d$con)
+                    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
                 }
                 else if (data_source == "visit_detail") {
-                    selected_visit_detail <- m$selected_visit_detail
-                    
-                    data_datetimes_range <- 
-                        d$data_person$visit_detail %>%
-                        dplyr::filter(visit_detail_id == selected_visit_detail) %>%
-                        dplyr::collect() %>%
-                        dplyr::summarize(
-                            min_visit_start_datetime = min(visit_detail_start_datetime, na.rm = TRUE),
-                            max_visit_end_datetime = max(visit_detail_end_datetime, na.rm = TRUE)
-                        )
+                    sql <- glue::glue_sql("
+                        SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime
+                        FROM visit_detail
+                        WHERE visit_detail_id = {m$selected_visit_detail}
+                    ", .con = d$con)
+                    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
                 }
                 
                 data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)

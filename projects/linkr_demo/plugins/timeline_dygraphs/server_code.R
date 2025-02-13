@@ -135,36 +135,33 @@ observeEvent(input$run_code_%widget_id%, {
             shinyjs::show("error_message_div_%widget_id%")
             
         } else {
-        
-            data <- d[[paste0("data_", data_source)]]$measurement
+            
+            if (data_source == "person") sql <- glue::glue_sql("SELECT * FROM measurement WHERE person_id = {m$selected_person}", .con = d$con)
+            else if (data_source == "visit_detail") sql <- glue::glue_sql("SELECT * FROM measurement WHERE visit_detail_id = {m$selected_visit_detail}", .con = d$con)
+            raw_data <- DBI::dbGetQuery(d$con, sql)
             
             concept_ids <- input$concepts_%widget_id%
             
-            if (data %>% dplyr::count() %>% dplyr::pull() > 0) data <- data %>% dplyr::filter(measurement_concept_id %in% concept_ids)
+            if (nrow(raw_data) > 0) raw_data <- raw_data %>% dplyr::filter(measurement_concept_id %in% concept_ids)
                 
             features <- list()
             features_names <- c()
             
             if (data_source == "person") {
-                data_datetimes_range <- 
-                    d$data_person$visit_occurrence %>%
-                    dplyr::summarize(
-                        min_visit_start_datetime = min(visit_start_datetime, na.rm = TRUE),
-                        max_visit_end_datetime = max(visit_end_datetime, na.rm = TRUE)
-                    ) %>%
-                    dplyr::collect()
+                sql <- glue::glue_sql("
+                    SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime
+                    FROM visit_occurrence
+                    WHERE person_id = {m$selected_person}
+                ", .con = d$con)
+                data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
             }
             else if (data_source == "visit_detail") {
-                selected_visit_detail <- m$selected_visit_detail
-                
-                data_datetimes_range <- 
-                    d$data_person$visit_detail %>%
-                    dplyr::filter(visit_detail_id == selected_visit_detail) %>%
-                    dplyr::summarize(
-                        min_visit_start_datetime = min(visit_detail_start_datetime, na.rm = TRUE),
-                        max_visit_end_datetime = max(visit_detail_end_datetime, na.rm = TRUE)
-                    ) %>%
-                    dplyr::collect()
+                sql <- glue::glue_sql("
+                    SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime
+                    FROM visit_detail
+                    WHERE visit_detail_id = {m$selected_visit_detail}
+                ", .con = d$con)
+                data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
             }
             
             data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)
@@ -180,26 +177,24 @@ observeEvent(input$run_code_%widget_id%, {
                 concept <- selected_concepts %>% dplyr::filter(concept_id == !!concept_id)
             
                 if (concept$domain_id == "Measurement"){
-                    
-                    data <- d[[tolower(concept$domain_id)]]
-                    
-                    if (data %>% dplyr::count() %>% dplyr::pull() > 0){
+                
+                    data <- raw_data
+                
+                    if (nrow(data) > 0){
                         data <-
                             data %>%
                             dplyr::filter(
-                                person_id == m$selected_person,
                                 !!rlang::sym(paste0(tolower(concept$domain_id), "_concept_id")) == concept_id
                             ) %>%
                             dplyr::rename(datetime = !!rlang::sym(paste0(tolower(concept$domain_id), "_datetime"))) %>%
-                            dplyr::select(datetime, value_as_number) %>%
-                            dplyr::collect()
+                            dplyr::select(datetime, value_as_number)
                         
                         if (nrow(data) > 0){
                             fake_data <- tibble::tibble(
                                 datetime = c(data_datetimes_range[[1]] - lubridate::seconds(1), data_datetimes_range[[2]] + lubridate::seconds(1)),
                                 value_as_number = c(NA, NA)
                             )
-                                
+                            
                             data <- dplyr::bind_rows(fake_data, data)
                             data <- data %>% dplyr::arrange(datetime)
                         
