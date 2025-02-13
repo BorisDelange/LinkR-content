@@ -90,9 +90,10 @@ observeEvent(input$run_code_%widget_id%, {
         }
         else {
 
-            data <- d$data_person$visit_detail
+            sql <- glue::glue_sql("SELECT * FROM visit_detail WHERE person_id = {m$selected_person}", .con = d$con)
+            data <- DBI::dbGetQuery(d$con, sql)
             
-            if (data %>% dplyr::count() %>% dplyr::pull() == 0){
+            if (nrow(data) == 0){
                     
                 output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("no_data_to_display"), messageBarType = 5), style = "display: inline-block;"))
                 
@@ -104,13 +105,12 @@ observeEvent(input$run_code_%widget_id%, {
                 shinyjs::show("stays_plot_%widget_id%")
                 
                 data <-
-                    d$data_person$visit_detail %>%
+                    data %>%
                     dplyr::select(visit_detail_start_datetime, visit_detail_end_datetime, care_site_id) %>%
                     dplyr::left_join(
-                        d$care_site %>% dplyr::select(care_site_id, care_site_name),
+                        d$care_site %>% dplyr::select(care_site_id, care_site_name) %>% dplyr::collect(),
                         by = "care_site_id"
                     ) %>%
-                    dplyr::collect() %>%
                     dplyr::arrange(visit_detail_start_datetime) %>%
                     dplyr::filter(!is.na(care_site_name)) %>%
                     dplyr::mutate(
