@@ -54,14 +54,11 @@ id,widget_id,person_id,link_id,category,name,value,value_num,creator_id,datetime
 53,5,NA,45,figure_settings,concepts,NA,NA,NA,2025-02-12 12:35:34,0
 54,5,NA,45,figure_settings,synchronize_timelines,NA,0,NA,2025-02-12 12:35:34,0
 55,6,NA,NA,settings_files,file_name,Admissions histogram,NA,NA,2025-02-18 11:21:16,0
-56,4,NA,12,general_settings,selected_file_id,NA,NA,NA,2025-02-18 11:42:24,0
-57,3,NA,6,general_settings,selected_file_id,NA,NA,NA,2025-02-18 11:42:24,0
-58,2,NA,4,general_settings,selected_file_id,NA,NA,NA,2025-02-18 11:42:24,0
-59,5,NA,45,general_settings,selected_file_id,NA,NA,NA,2025-02-18 11:42:25,0
-60,6,NA,NA,widget_position,NA,w=6;h=20;x=0;y=0;,NA,NA,2025-02-18 11:58:30,0
-61,6,NA,55,figure_settings,prog_language,r,NA,NA,2025-02-18 12:06:44,0
-62,6,NA,55,figure_settings,output,figure,NA,NA,2025-02-18 12:06:44,0
-63,6,NA,55,figure_settings,code,"hosp_admissions <- d$data_subset$visit_occurrence %>% dplyr::collect()
+56,5,NA,45,general_settings,selected_file_id,NA,NA,NA,2025-02-18 11:42:25,0
+57,6,NA,NA,widget_position,NA,w=8;h=20;x=4;y=0;,NA,NA,2025-02-18 11:58:30,0
+58,6,NA,55,figure_settings,prog_language,r,NA,NA,2025-02-18 12:06:44,0
+59,6,NA,55,figure_settings,output,figure,NA,NA,2025-02-18 12:06:44,0
+60,6,NA,55,figure_settings,code,"hosp_admissions <- d$data_subset$visit_occurrence %>% dplyr::collect()
 
 if (m$language == ""en""){
     title <- ""Number of hospital admissions over time""
@@ -89,9 +86,95 @@ if (nrow(hosp_admissions) > 0){
             plot.title = ggplot2::element_text(hjust = 0.5)
         )
 }",NA,NA,2025-02-18 12:06:44,0
-64,6,NA,55,general_settings,selected_file_id,NA,NA,NA,2025-02-18 12:06:59,0
-65,6,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-18 12:07:06,0
-66,6,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-18 12:07:06,0
-67,6,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-18 12:07:06,0
-68,6,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-18 12:07:06,0
-69,1,NA,2,general_settings,selected_file_id,NA,NA,NA,2025-02-18 12:07:16,0
+61,6,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-18 12:07:06,0
+62,6,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-18 12:07:06,0
+63,6,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-18 12:07:06,0
+64,6,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-18 12:07:06,0
+65,7,NA,NA,settings_files,file_name,Number of patients,NA,NA,2025-02-18 12:13:07,0
+66,7,NA,NA,widget_position,NA,w=2;h=11;x=0;y=0;,NA,NA,2025-02-18 12:17:45,0
+67,4,NA,12,general_settings,selected_file_id,NA,NA,NA,2025-02-18 12:22:12,0
+68,3,NA,6,general_settings,selected_file_id,NA,NA,NA,2025-02-18 12:22:12,0
+69,2,NA,4,general_settings,selected_file_id,NA,NA,NA,2025-02-18 12:22:12,0
+70,7,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-18 12:27:44,0
+71,7,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-18 12:27:44,0
+72,7,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-18 12:27:44,0
+73,7,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-18 12:27:44,0
+74,8,NA,NA,settings_files,file_name,Number of hospital admissions,NA,NA,2025-02-18 12:29:58,0
+75,8,NA,NA,widget_position,NA,w=2;h=11;x=2;y=0;,NA,NA,2025-02-18 12:30:55,0
+76,8,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-18 12:30:57,0
+77,8,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-18 12:30:57,0
+78,8,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-18 12:30:57,0
+79,8,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-18 12:30:57,0
+80,7,NA,65,figure_settings,prog_language,r,NA,NA,2025-02-18 12:34:04,0
+81,7,NA,65,figure_settings,output,ui,NA,NA,2025-02-18 12:34:04,0
+82,7,NA,65,figure_settings,code,"patients <- d$data_subset$person %>% dplyr::collect()
+
+if (m$language == ""en"") legend <- ""patients"" else if (m$language == ""fr"") legend <- ""patients""
+
+res <- div()
+
+if (nrow(patients) > 0) {
+    res <- 
+    div(
+        style = ""
+            text-align: center; 
+            height: 100%; 
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+        "",
+        div(
+            style = ""color: #428BCA; margin-bottom: 10px;"",
+            tags$i(class = ""fas fa-hospital-user fa-2x"")
+        ),
+        div(
+            style = ""color: #428BCA; font-size: 36px; font-weight: bold; margin: 10px 0;"",
+            nrow(patients)
+        ),
+        div(
+            style = ""color: #666; font-size: 14px; text-transform: uppercase;"",
+            legend
+        )
+    )
+}
+
+res",NA,NA,2025-02-18 12:34:04,0
+83,8,NA,74,figure_settings,prog_language,r,NA,NA,2025-02-18 12:34:55,0
+84,8,NA,74,figure_settings,output,ui,NA,NA,2025-02-18 12:34:55,0
+85,8,NA,74,figure_settings,code,"visits <- d$data_subset$visit_occurrence %>% dplyr::collect()
+
+if (m$language == ""en"") legend <- ""patients"" else if (m$language == ""fr"") legend <- ""patients""
+
+res <- div()
+
+if (nrow(visits) > 0) {
+    res <- 
+    div(
+        style = ""
+            text-align: center; 
+            height: 100%; 
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+        "",
+        div(
+            style = ""color: #428BCA; margin-bottom: 10px;"",
+            tags$i(class = ""fas fa-hospital fa-2x"")
+        ),
+        div(
+            style = ""color: #428BCA; font-size: 36px; font-weight: bold; margin: 10px 0;"",
+            nrow(visits)
+        ),
+        div(
+            style = ""color: #666; font-size: 14px; text-transform: uppercase;"",
+            legend
+        )
+    )
+}
+res",NA,NA,2025-02-18 12:34:55,0
+86,1,NA,2,general_settings,selected_file_id,NA,NA,NA,2025-02-18 12:35:08,0
+87,8,NA,74,general_settings,selected_file_id,NA,NA,NA,2025-02-18 12:35:09,0
+88,7,NA,65,general_settings,selected_file_id,NA,NA,NA,2025-02-18 12:35:09,0
+89,6,NA,55,general_settings,selected_file_id,NA,NA,NA,2025-02-18 12:35:09,0
