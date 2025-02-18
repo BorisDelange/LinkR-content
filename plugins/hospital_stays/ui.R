@@ -2,7 +2,7 @@
 
 ## Hide save buttons if the user does not have access
 
-if ("projects_console_access" %in% user_accesses){
+if ("projects_widgets_console" %in% user_accesses){
     code_button <- shiny.fluent::IconButton.shinyInput(
         ns("code_button_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor"),
         onClick = htmlwidgets::JS(paste0("item => {",
