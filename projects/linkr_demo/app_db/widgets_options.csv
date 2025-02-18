@@ -113,56 +113,9 @@ if (nrow(hosp_admissions) > 0){
 85,10,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-18 13:56:21,0
 86,10,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-18 13:56:21,0
 87,10,NA,NA,widget_position,NA,w=2;h=10;x=2;y=10;,NA,NA,2025-02-18 13:56:26,0
-88,9,NA,76,figure_settings,prog_language,r,NA,NA,2025-02-18 13:57:13,0
-89,9,NA,76,figure_settings,output,ui,NA,NA,2025-02-18 13:57:13,0
-90,9,NA,76,figure_settings,code,"visits <- d$data_subset$visit_occurrence %>% dplyr::collect()
-deaths <- d$data_subset$death %>% dplyr::collect()
-
-death_rate <- if (nrow(visits) > 0 && nrow(deaths) > 0) {
-    deaths_during_stay <- deaths %>%
-        dplyr::inner_join(visits, by = ""person_id"") %>%
-        dplyr::filter(
-            death_datetime >= visit_start_datetime,
-            death_datetime <= visit_end_datetime
-        )
-    
-    round((nrow(deaths_during_stay) / nrow(visits)) * 100, 1)
-} else {
-    0
-}
-
-if (m$language == ""en"") legend <- ""mortality"" else if (m$language == ""fr"") legend <- ""mortalité""
-
-res <- div()
-if (nrow(visits) > 0) {
-    res <- 
-    div(
-        style = ""
-            text-align: center; 
-            height: 100%; 
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-            justify-content: center;
-        "",
-        div(
-            style = ""color: #E35D6A; margin-bottom: 10px;"",
-            tags$i(class = ""fas fa-heart-broken fa-2x"")  # Icône changée pour représenter la mortalité
-        ),
-        div(
-            style = ""color: #E35D6A; font-size: 36px; font-weight: bold; margin: 10px 0;"",
-            paste0(death_rate, ""%"")  # Ajout du symbole pourcentage
-        ),
-        div(
-            style = ""color: #666; font-size: 14px; text-transform: uppercase;"",
-            legend
-        )
-    )
-}
-res",NA,NA,2025-02-18 13:57:13,0
-91,10,NA,82,figure_settings,prog_language,r,NA,NA,2025-02-18 13:57:30,0
-92,10,NA,82,figure_settings,output,ui,NA,NA,2025-02-18 13:57:30,0
-93,10,NA,82,figure_settings,code,"visits <- d$data_subset$visit_occurrence %>% dplyr::collect()
+88,10,NA,82,figure_settings,prog_language,r,NA,NA,2025-02-18 13:57:30,0
+89,10,NA,82,figure_settings,output,ui,NA,NA,2025-02-18 13:57:30,0
+90,10,NA,82,figure_settings,code,"visits <- d$data_subset$visit_occurrence %>% dplyr::collect()
 
 mean_los <- if (nrow(visits) > 0) {
     visits %>%
@@ -220,9 +173,9 @@ if (nrow(visits) > 0) {
     )
 }
 res",NA,NA,2025-02-18 13:57:30,0
-94,7,NA,64,figure_settings,prog_language,r,NA,NA,2025-02-18 13:58:06,0
-95,7,NA,64,figure_settings,output,ui,NA,NA,2025-02-18 13:58:06,0
-96,7,NA,64,figure_settings,code,"patients <- d$data_subset$person %>% dplyr::collect()
+91,7,NA,64,figure_settings,prog_language,r,NA,NA,2025-02-18 13:58:06,0
+92,7,NA,64,figure_settings,output,ui,NA,NA,2025-02-18 13:58:06,0
+93,7,NA,64,figure_settings,code,"patients <- d$data_subset$person %>% dplyr::collect()
 
 if (m$language == ""en"") legend <- ""patients"" else if (m$language == ""fr"") legend <- ""patients""
 
@@ -255,19 +208,19 @@ if (nrow(patients) > 0) {
 }
 
 res",NA,NA,2025-02-18 13:58:06,0
-97,1,NA,2,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:25,0
-98,10,NA,82,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:25,0
-99,9,NA,76,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:25,0
-100,8,NA,70,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:26,0
-101,7,NA,64,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:26,0
-102,6,NA,55,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:26,0
-103,4,NA,12,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:33,0
-104,3,NA,6,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:33,0
-105,2,NA,4,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:34,0
-106,5,NA,45,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:38,0
-107,8,NA,70,figure_settings,prog_language,r,NA,NA,2025-02-18 15:34:47,0
-108,8,NA,70,figure_settings,output,ui,NA,NA,2025-02-18 15:34:47,0
-109,8,NA,70,figure_settings,code,"visits <- d$data_subset$visit_occurrence %>% dplyr::collect()
+94,1,NA,2,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:25,0
+95,10,NA,82,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:25,0
+96,9,NA,76,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:25,0
+97,8,NA,70,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:26,0
+98,7,NA,64,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:26,0
+99,6,NA,55,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:26,0
+100,4,NA,12,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:33,0
+101,3,NA,6,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:33,0
+102,2,NA,4,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:34,0
+103,5,NA,45,general_settings,selected_file_id,NA,NA,NA,2025-02-18 15:33:38,0
+104,8,NA,70,figure_settings,prog_language,r,NA,NA,2025-02-18 15:34:47,0
+105,8,NA,70,figure_settings,output,ui,NA,NA,2025-02-18 15:34:47,0
+106,8,NA,70,figure_settings,code,"visits <- d$data_subset$visit_occurrence %>% dplyr::collect()
 
 if (m$language == ""en"") legend <- ""stays"" else if (m$language == ""fr"") legend <- ""séjours""
 
@@ -299,3 +252,50 @@ if (nrow(visits) > 0) {
     )
 }
 res",NA,NA,2025-02-18 15:34:47,0
+107,9,NA,76,figure_settings,prog_language,r,NA,NA,2025-02-18 15:35:57,0
+108,9,NA,76,figure_settings,output,ui,NA,NA,2025-02-18 15:35:57,0
+109,9,NA,76,figure_settings,code,"visits <- d$data_subset$visit_occurrence %>% dplyr::collect()
+deaths <- d$data_subset$death %>% dplyr::collect()
+
+death_rate <- if (nrow(visits) > 0 && nrow(deaths) > 0) {
+    deaths_during_stay <- deaths %>%
+        dplyr::inner_join(visits, by = ""person_id"") %>%
+        dplyr::filter(
+            death_datetime >= visit_start_datetime,
+            death_datetime <= visit_end_datetime
+        )
+    
+    round((nrow(deaths_during_stay) / nrow(visits)) * 100, 1)
+} else {
+    0
+}
+
+if (m$language == ""en"") legend <- ""mortality"" else if (m$language == ""fr"") legend <- ""mortalité""
+
+res <- div()
+if (nrow(visits) > 0) {
+    res <- 
+    div(
+        style = ""
+            text-align: center; 
+            height: 100%; 
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+        "",
+        div(
+            style = ""color: #E35D6A; margin-bottom: 10px;"",
+            tags$i(class = ""fas fa-heart-broken fa-2x"")
+        ),
+        div(
+            style = ""color: #E35D6A; font-size: 36px; font-weight: bold; margin: 10px 0;"",
+            paste0(death_rate, "" %"")
+        ),
+        div(
+            style = ""color: #666; font-size: 14px; text-transform: uppercase;"",
+            legend
+        )
+    )
+}
+res",NA,NA,2025-02-18 15:35:57,0

@@ -30,11 +30,11 @@ if (nrow(visits) > 0) {
         ",
         div(
             style = "color: #E35D6A; margin-bottom: 10px;",
-            tags$i(class = "fas fa-heart-broken fa-2x")  # Icône changée pour représenter la mortalité
+            tags$i(class = "fas fa-heart-broken fa-2x")
         ),
         div(
             style = "color: #E35D6A; font-size: 36px; font-weight: bold; margin: 10px 0;",
-            paste0(death_rate, "%")  # Ajout du symbole pourcentage
+            paste0(death_rate, " %")
         ),
         div(
             style = "color: #666; font-size: 14px; text-transform: uppercase;",
