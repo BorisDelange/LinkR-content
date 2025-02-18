@@ -16,11 +16,11 @@ if (nrow(visits) > 0) {
             justify-content: center;
         ",
         div(
-            style = "color: #54B4D3; margin-bottom: 10px;",
+            style = "color: #F4A261; margin-bottom: 10px;",
             tags$i(class = "fas fa-hospital fa-2x")
         ),
         div(
-            style = "color: #54B4D3; font-size: 36px; font-weight: bold; margin: 10px 0;",
+            style = "color: #F4A261; font-size: 36px; font-weight: bold; margin: 10px 0;",
             nrow(visits)
         ),
         div(

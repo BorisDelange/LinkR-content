@@ -55,7 +55,7 @@ tagList(
             ns("settings_files_ui_%widget_id%"),
             onclick = paste0("Shiny.setInputValue('", id, "-show_settings_files_tab_%widget_id%', Math.random())")
         ),
-        class = "widget_icon",
+        class = "widget_icon data_widget_top_icons",
         style = "display: flex; color: #808080; border-bottom: solid grey 0.5px; height: 28px; padding: 5px 0 0 5px; font-size: 12px;"
     ),
     div(
@@ -91,7 +91,8 @@ tagList(
                 class = "right-panel"
             )
         ),
-        style = "display: flex; height: calc(100% - 34px);"
+        style = "display: flex; height: calc(100% - 34px);",
+        class = "data_widget_settings_code_panel"
     ),
     shinyjs::hidden(
         div(
