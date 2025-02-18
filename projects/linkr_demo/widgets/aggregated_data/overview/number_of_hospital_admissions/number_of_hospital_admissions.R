@@ -1,6 +1,6 @@
 visits <- d$data_subset$visit_occurrence %>% dplyr::collect()
 
-if (m$language == "en") legend <- "patients" else if (m$language == "fr") legend <- "patients"
+if (m$language == "en") legend <- "stays" else if (m$language == "fr") legend <- "séjours"
 
 res <- div()
 
@@ -16,11 +16,11 @@ if (nrow(visits) > 0) {
             justify-content: center;
         ",
         div(
-            style = "color: #428BCA; margin-bottom: 10px;",
+            style = "color: #54B4D3; margin-bottom: 10px;",
             tags$i(class = "fas fa-hospital fa-2x")
         ),
         div(
-            style = "color: #428BCA; font-size: 36px; font-weight: bold; margin: 10px 0;",
+            style = "color: #54B4D3; font-size: 36px; font-weight: bold; margin: 10px 0;",
             nrow(visits)
         ),
         div(

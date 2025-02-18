@@ -7,3 +7,5 @@ id,category,name,tab_id,plugin_id,display_order,creator_id,datetime,deleted
 6,aggregated,Admissions histogram,4,5,NA,NA,2025-02-18 11:20:52,0
 7,aggregated,Number of patients,4,5,NA,NA,2025-02-18 12:12:37,0
 8,aggregated,Number of hospital admissions,4,5,NA,NA,2025-02-18 12:29:49,0
+9,aggregated,Death count,4,5,NA,NA,2025-02-18 13:51:40,0
+10,aggregated,Length of stay,4,5,NA,NA,2025-02-18 13:54:23,0
