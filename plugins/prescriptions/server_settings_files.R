@@ -79,12 +79,15 @@ observeEvent(input$add_settings_file_%widget_id%, {
                 )
                 DBI::dbAppendTable(m$db, "widgets_options", new_data)
                 
+                # Update filenames var
+                m$settings_filenames_%widget_id% <- m$settings_filenames_%widget_id% %>% dplyr::bind_rows(tibble::tibble(id = new_id, name = file_name))
+                
                 # Reset fields
                 shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", value = "")
                 
                 # Update dropdown
-                shiny.fluent::updateDropdown.shinyInput(session, "settings_file_%widget_id%", value = new_id)
-                shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_dropdown_%widget_id%', Math.random());"))
+                dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = "id", text_col = "name")
+                shiny.fluent::updateDropdown.shinyInput(session, "settings_file_%widget_id%", options = dropdown_options, value = new_id)
                 
                 # Reset ace editor code
                 shinyAce::updateAceEditor(session, "code_%widget_id%", value = "")
@@ -96,21 +99,6 @@ observeEvent(input$add_settings_file_%widget_id%, {
                 show_message_bar(id, output, "new_settings_file_added", "success", i18n = i18np, ns = ns)
             }
         }
-    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
-})
-
-## Update dropdown
-observeEvent(input$reload_dropdown_%widget_id%, {
-    %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$settings_file"))
-    
-    tryCatch({
-        sql <- glue::glue_sql("SELECT id, value AS name FROM widgets_options WHERE widget_id = %widget_id% AND category = 'settings_files' AND name = 'file_name'", .con = m$db)
-        m$settings_filenames_%widget_id% <- DBI::dbGetQuery(m$db, sql)
-        
-        dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = "id", text_col = "name")
-        shiny.fluent::updateDropdown.shinyInput(session, "settings_file_%widget_id%", options = dropdown_options)
-        
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
 
@@ -172,8 +160,15 @@ observeEvent(input$confirm_file_deletion_%widget_id%, {
         # Delete row in db
         sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE id = {file_id}", .con = m$db))
         
+        # Delete selected file in widgets_options
+        sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings' AND name = 'selected_file_id'", .con = m$db))
+        
+        # Update filenames var
+        m$settings_filenames_%widget_id% <- m$settings_filenames_%widget_id% %>% dplyr::filter(id != file_id)
+        
         # Update dropdown
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_dropdown_%widget_id%', Math.random());"))
+        dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = "id", text_col = "name")
+        shiny.fluent::updateDropdown.shinyInput(session, "settings_file_%widget_id%", options = dropdown_options, value = NULL)
         
         # Close modal
         shinyjs::hide("delete_settings_file_modal_%widget_id%")
