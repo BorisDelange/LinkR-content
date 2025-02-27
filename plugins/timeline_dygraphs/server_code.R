@@ -136,13 +136,18 @@ observeEvent(input$run_code_%widget_id%, {
             
         } else {
             
-            if (data_source == "person") sql <- glue::glue_sql("SELECT * FROM measurement WHERE person_id = {m$selected_person}", .con = d$con)
-            else if (data_source == "visit_detail") sql <- glue::glue_sql("SELECT * FROM measurement WHERE visit_detail_id = {m$selected_visit_detail}", .con = d$con)
-            raw_data <- DBI::dbGetQuery(d$con, sql)
-            
             concept_ids <- input$concepts_%widget_id%
             
-            if (nrow(raw_data) > 0) raw_data <- raw_data %>% dplyr::filter(measurement_concept_id %in% concept_ids)
+            sql <- glue::glue_sql("
+                SELECT measurement_concept_id AS concept_id, measurement_source_concept_id AS source_concept_id, measurement_datetime AS datetime, value_as_number
+                FROM measurement 
+                WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (measurement_concept_id IN ({concept_ids*}) OR measurement_source_concept_id IN ({concept_ids*}))
+                UNION
+                SELECT observation_concept_id AS concept_id, observation_source_concept_id AS source_concept_id, observation_datetime AS datetime, value_as_number
+                FROM observation 
+                WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (observation_concept_id IN ({concept_ids*}) OR observation_source_concept_id IN ({concept_ids*}))
+                ", .con = d$con)
+            raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()
                 
             features <- list()
             features_names <- c()
@@ -176,17 +181,14 @@ observeEvent(input$run_code_%widget_id%, {
             
                 concept <- selected_concepts %>% dplyr::filter(concept_id == !!concept_id)
             
-                if (concept$domain_id == "Measurement"){
+                if (concept$domain_id %in% c("Measurement", "Observation")){
                 
                     data <- raw_data
                 
                     if (nrow(data) > 0){
                         data <-
                             data %>%
-                            dplyr::filter(
-                                !!rlang::sym(paste0(tolower(concept$domain_id), "_concept_id")) == concept_id
-                            ) %>%
-                            dplyr::rename(datetime = !!rlang::sym(paste0(tolower(concept$domain_id), "_datetime"))) %>%
+                            dplyr::filter(concept_id == !!concept_id | source_concept_id == !!concept_id) %>%
                             dplyr::select(datetime, value_as_number)
                         
                         if (nrow(data) > 0){
