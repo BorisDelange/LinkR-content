@@ -3,7 +3,7 @@
   <plugin>
     <app_version>0.3.1.9001</app_version>
     <unique_id>064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e</unique_id>
-    <version>0.0.1.9028</version>
+    <version>0.0.1.9029</version>
     <name_en>Timeline {dygraphs}</name_en>
     <name_fr>Timeline {dygraphs}</name_fr>
     <category_en>NA</category_en>
@@ -36,8 +36,10 @@ such as **vital signs** or **laboratory data**.
 Here are the parameters you can adjust:
 
 - **Data to display**: choose whether you want to display patient data or visit data
+
 - **Concepts**: which concepts do you want to see on the figure?
 This list includes the concepts you selected when creating the widget.
+
 - **Synchronize timelines**: several plugins work with a timeline
 (the scroll bar below the timeline where you can choose the period to display).
 This feature allows you to synchronize the timelines of several widgets on the same tab.
@@ -140,8 +142,10 @@ tels que les **param&#xE8;tres vitaux** ou les donn&#xE9;es de **biologie**.
 Voici les param&#xE8;tres que vous pouvez r&#xE9;gler :
 
 - **Donn&#xE9;es &#xE0; afficher** : choisissez si vous voulez afficher les donn&#xE9;es du patient ou de son d&#xE9;jour
+
 - **Concepts** : quels concepts souhaitez-vous voir appara&#xEE;tre sur la figure ?
 Cette liste comprend les concepts que vous avez s&#xE9;lectionn&#xE9;s au moment de cr&#xE9;er le widget.
+
 - **Synchroniser les timelines** : plusieurs plugins fonctionnent avec une timeline
 (la barre de d&#xE9;filement en-dessous de la timeline o&#xF9; vous pouvez choisir la p&#xE9;riode &#xE0; afficher).
 Cette fonctionnalit&#xE9; vous permet de synchroniser les timelines de plusieurs widgets sur un m&#xEA;me onglet. 
@@ -223,7 +227,7 @@ Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-08-28 22:19:16</creation_datetime>
-    <update_datetime>2025-03-07 17:59:46</update_datetime>
+    <update_datetime>2025-03-07 18:02:38</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>

@@ -26,8 +26,10 @@ such as **vital signs** or **laboratory data**.
 Here are the parameters you can adjust:
 
 - **Data to display**: choose whether you want to display patient data or visit data
+
 - **Concepts**: which concepts do you want to see on the figure?
 This list includes the concepts you selected when creating the widget.
+
 - **Synchronize timelines**: several plugins work with a timeline
 (the scroll bar below the timeline where you can choose the period to display).
 This feature allows you to synchronize the timelines of several widgets on the same tab.
