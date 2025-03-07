@@ -81,7 +81,7 @@ Then return to the "Figure settings" or "Code" tabs and save your parameters and
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_general_settings.png"
         alt="General settings"
-        style="width: 100%; max-width: 370px; border: solid 1px #ccc; padding: 5px;"
+        style="width: 100%; max-width: 280px; border: solid 1px #ccc; padding: 5px;"
     />
 </div>
 
