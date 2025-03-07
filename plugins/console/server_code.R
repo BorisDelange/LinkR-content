@@ -5,7 +5,7 @@ m$code_%widget_id% <- ""
 
 # Outputs
 outputs <- list()
-outputs$r <- c("console", "ui", "figure", "table", "datatable", "dygraphs", "rmarkdown")
+outputs$r <- c("console", "ui", "figure", "table", "datatable", "dygraphs", "plotly", "rmarkdown")
 outputs$python <- c("console", "matplotlib")
 
 # Prevent a bug with scroll into ace editor
@@ -122,6 +122,12 @@ observeEvent(input$run_code_%widget_id%, {
             
             else if (code_output == "dygraphs"){
                 output$dygraphs_output_%widget_id% <- dygraphs::renderDygraph(eval(parse(text = code)))
+            }
+            
+            # Output = Plotly
+            
+            else if (code_output == "plotly"){
+                output$plotly_output_%widget_id% <- plotly::renderPlotly(eval(parse(text = code)))
             }
             
             # Output = RMarkdown
