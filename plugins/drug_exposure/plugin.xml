@@ -3,9 +3,9 @@
   <plugin>
     <app_version>0.3.1.9001</app_version>
     <unique_id>b3b98d5fbcc1c9e368614fb8e92c9c022f9ce10a59b8fa995dde3047245f063e</unique_id>
-    <version>0.0.1.9014</version>
+    <version>0.0.1.9015</version>
     <name_en>Drug exposure</name_en>
-    <name_fr>Administrations m&#xE9;dicamenteuses</name_fr>
+    <name_fr>Traitements re&#xE7;us</name_fr>
     <category_en>NA</category_en>
     <category_fr>NA</category_fr>
     <description_en>NA</description_en>
@@ -30,7 +30,7 @@ Le plugin "Prescriptions" permet d'afficher des **donn&#xE9;es d'administrations
     &lt;img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/fr_figure_settings.png"
         alt="Figure settings"
-        style="width: 100%; max-width: 250px; border: solid 1px #ccc; padding: 5px;"
+        style="width: 100%; max-width: 400px; border: solid 1px #ccc; padding: 5px;"
     /&gt;
 &lt;/div&gt;
 
@@ -116,13 +116,13 @@ Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
     param&#xE8;tre "Donn&#xE9;es &#xE0; afficher"
 </description_fr>
     <short_description_en>Displays medication administrations as a timeline</short_description_en>
-    <short_description_fr>Permet d'afficher les administrations m&#xE9;dicamenteuses sous forme de timeline</short_description_fr>
+    <short_description_fr>Affiche les administrations m&#xE9;dicamenteuses sous forme de timeline</short_description_fr>
     <authors>
       <author>Jean Cupe</author>
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-11-13 07:56:14</creation_datetime>
-    <update_datetime>2025-03-07 17:07:07</update_datetime>
+    <update_datetime>2025-03-07 17:13:11</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>
