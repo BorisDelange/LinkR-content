@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<plugins>
+  <plugin>
+    <app_version>0.3.1.9001</app_version>
+    <unique_id>b3b98d5fbcc1c9e368614fb8e92c9c022f9ce10a59b8fa995dde3047245f063e</unique_id>
+    <version>0.0.1.9014</version>
+    <name_en>Drug exposure</name_en>
+    <name_fr>Administrations m&#xE9;dicamenteuses</name_fr>
+    <category_en>NA</category_en>
+    <category_fr>NA</category_fr>
+    <description_en>NA</description_en>
+    <description_fr># 1) Introduction
+
+Le plugin "Prescriptions" permet d'afficher des **donn&#xE9;es d'administrations m&#xE9;dicamenteuses** sous forme de **timeline**.
+
+&lt;br /&gt;
+&lt;div style="text-align: center;"&gt;
+    &lt;img 
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/fr_figure.png"
+        alt="Drug exposure timeline"
+        style="width: 100%; max-width: 800px; border: solid 1px #ccc; padding: 5px;"
+    /&gt;
+&lt;/div&gt;
+
+# 2) Fonctionnalit&#xE9;s
+
+## Param&#xE8;tres de la figure
+
+&lt;div style="text-align: center;"&gt;
+    &lt;img 
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/fr_figure_settings.png"
+        alt="Figure settings"
+        style="width: 100%; max-width: 250px; border: solid 1px #ccc; padding: 5px;"
+    /&gt;
+&lt;/div&gt;
+
+Voici les param&#xE8;tres que vous pouvez r&#xE9;gler :
+
+- **Donn&#xE9;es &#xE0; afficher** : choisissez si vous voulez afficher les donn&#xE9;es du patient ou de son d&#xE9;jour
+- **Concepts &#xE0; afficher** :
+    - *Tous les concepts* : si vous souhaitez afficher toutes les m&#xE9;dicaments re&#xE7;us par le patient durant la p&#xE9;riode
+    - *Classes concepts* : si vous souhaitez n'afficher qu'une classe de concepts. Dans ce cas, un menu d&#xE9;roulant vous permet de choisir quelle(s) classe(s) afficher.
+    - *Concepts s&#xE9;lectionn&#xE9;s* : si vous souhaitez afficher certains m&#xE9;dicaments uniquement, que vous choisirez dans le menu d&#xE9;roulant des concepts
+- **Synchroniser les timelines** : plusieurs plugins fonctionnent avec une timeline (la barre de d&#xE9;filement en-dessous de la timeline o&#xF9; vous pouvez choisir la p&#xE9;riode &#xE0; afficher).
+Cette fonctionnalit&#xE9; vous permet de synchroniser les timelines de plusieurs widgets sur un m&#xEA;me onglet.
+
+## Code
+
+&lt;div style="text-align: center;"&gt;
+    &lt;img 
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/figure_and_code.png"
+        alt="Figure and code"
+        style="width: 100%; max-width: 800px; border: solid 1px #ccc; padding: 5px;"
+    /&gt;
+&lt;/div&gt;
+
+Comme pour **tout plugin** sur LinkR, l'interface **low-code** permet de g&#xE9;n&#xE9;rer du code &#xE0; partir de l'interface graphique.
+
+Pour cela, rendez-vous sur l'onglet "Param&#xE8;tres de la figure", et une fois vos param&#xE8;tres choisis, cliquez sur "Afficher la figure".
+
+Cela va :
+
+- **g&#xE9;n&#xE9;rer le code** correspond aux param&#xE8;tres choisis
+- puis **ex&#xE9;cuter le code** et ainsi afficher la figure correspondant au code
+
+Vous pouvez alors **modifier le code** directementn et sauvegarder.
+
+Si vous cliquez sur "Ex&#xE9;cuter le code" depuis l'onglet avec l'&#xE9;diteur de code, cela va afficher la figure correspondant au code.
+
+En revanche, si vous &#xEA;tes sur l'onglet correspondant aux param&#xE8;tres de la figure, cela effacer le code actuel et le remplacer
+avec le code correspondant aux param&#xE8;tres actuels.
+
+## Fichiers de sauvegarde
+
+&lt;div style="text-align: center;"&gt;
+    &lt;img 
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/fr_settings_files.png"
+        alt="Settings files"
+        style="width: 100%; max-width: 280px; border: solid 1px #ccc; padding: 5px;"
+    /&gt;
+&lt;/div&gt;
+
+Vous pouvez **sauvegarder** les param&#xE8;tres de la figure et le code depuis la page de gestion des fichiers de sauvegarde.
+
+Pour ce faire, cliquez sur le nom du fichier s&#xE9;lectionn&#xE9; en haut du widget ("Fichier de sauvegarde 1" sur la capture d'&#xE9;cran ci-dessus).
+Vous pourrez ensuiter **ajouter** ou **supprimer** des fichiers de sauvegarde.
+
+Retournez ensuite sur les onglets "Param&#xE8;tres de la figure" ou "Code" et sauvegardez vos param&#xE8;tres et votre code.
+
+## Param&#xE8;tres g&#xE9;n&#xE9;raux
+
+&lt;div style="text-align: center;"&gt;
+    &lt;img 
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/fr_general_settings.png"
+        alt="General settings"
+        style="width: 100%; max-width: 370px; border: solid 1px #ccc; padding: 5px;"
+    /&gt;
+&lt;/div&gt;
+
+Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
+
+- **Param&#xE8;tres d'affichage**
+
+    - **Afficher le fichier de sauvegarde** : afficher ou masquer le nom du fichier de sauvegarde s&#xE9;lectionn&#xE9;
+    - **Figure et param&#xE8;tres/&#xE9;diteur c&#xF4;te &#xE0; c&#xF4;te** : souhaitez-vous que la figure apparaisse c&#xF4;te &#xE0; c&#xF4;te
+    avec les param&#xE8;tres de la figure ou le code de la figure ? Cela permet d'&#xE9;viter les allers-retours entre
+    les diff&#xE9;rents onglets durant la phase de param&#xE9;trage du widget.
+
+- **Ex&#xE9;cution du code**
+
+    - **Ex&#xE9;cuter le code au chargement d'un fichier de sauvegarde** : cela permet d'ex&#xE9;cuter le code lorsque
+    le fichier de sauvegarde s&#xE9;lectionn&#xE9; change, ce qui est utile au moment du chargement d'un projet :
+    cela permet de charger tous les widgets ayant cette option
+    - **Ex&#xE9;cuter le code lors de la mise &#xE0; jour des donn&#xE9;es** : dans le cadre de ce widget, cela signifie que
+    les donn&#xE9;es sont mises &#xE0; jour lorsque l'on change de patient ou de s&#xE9;jour, en fonction de la valeur du 
+    param&#xE8;tre "Donn&#xE9;es &#xE0; afficher"
+</description_fr>
+    <short_description_en>Displays medication administrations as a timeline</short_description_en>
+    <short_description_fr>Permet d'afficher les administrations m&#xE9;dicamenteuses sous forme de timeline</short_description_fr>
+    <authors>
+      <author>Jean Cupe</author>
+      <author>Boris Delange</author>
+    </authors>
+    <creation_datetime>2024-11-13 07:56:14</creation_datetime>
+    <update_datetime>2025-03-07 17:07:07</update_datetime>
+    <type>1</type>
+  </plugin>
+</plugins>
