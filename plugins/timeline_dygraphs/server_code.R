@@ -256,7 +256,7 @@ observeEvent(input$display_figure_%widget_id%, {
             
             code <- paste0(code, "\\n\\n", "if (length(combined_features) > 0){\\n    ")
             
-            if (isTRUE(input$synchronize_timelines_%widget_id%)) code <- paste0(code, "fig <- \\n", "        dygraphs::dygraph(combined_features, group = 'tab_%tab_id%')")
+            if (isTRUE(input$synchronize_timelines_%widget_id%)) code <- paste0(code, "fig <- \\n", "        dygraphs::dygraph(combined_features, group = 'tab_%tab_id%') %>%\\n")
             else code <- paste0(code, "fig <- \\n", "        dygraphs::dygraph(combined_features) %>%\\n")
             
             # fig <-
