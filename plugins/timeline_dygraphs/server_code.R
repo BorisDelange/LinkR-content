@@ -190,7 +190,7 @@ observeEvent(input$display_figure_%widget_id%, {
             
             # for (concept_id in concepts$concept_id){
             
-                # concept <- selected_concepts %>% dplyr::filter(concept_id == !!concept_id)
+                # concept <- concepts %>% dplyr::filter(concept_id == !!concept_id)
             
                 # if (concept$domain_id %in% c("Measurement", "Observation")){
                 
@@ -225,7 +225,7 @@ observeEvent(input$display_figure_%widget_id%, {
                 code,
                 "\\n\\n",
                 "for (concept_id in concepts$concept_id) {\\n",
-                "    concept <- selected_concepts %>% dplyr::filter(concept_id == !!concept_id)\\n\\n",
+                "    concept <- concepts %>% dplyr::filter(concept_id == !!concept_id)\\n\\n",
                 "    if (nrow(concept) > 0){\\n",
                 "        if (concept$domain_id %in% c('Measurement', 'Observation')) {\\n",
                 "            data <- raw_data\\n\\n",
