@@ -238,14 +238,6 @@ observeEvent(input$display_figure_%widget_id%, {
                 # data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
             # }
             
-            # data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)
-            # m$data_datetimes_range_%widget_id% <- data_datetimes_range
-            
-            # if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
-            # else datetimes <- data_datetimes_range
-            
-            # m$datetimes_%widget_id% <- datetimes
-            
             code <- paste0(
                 code,
                 "\\n\\n",
@@ -285,17 +277,28 @@ observeEvent(input$display_figure_%widget_id%, {
                 )
             }
             
+            # data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)
+            # m$data_datetimes_range_%widget_id% <- data_datetimes_range
+            
             code <- paste0(
                 code,
-                "\\n\\n", 
-                "data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)\\n",
-                "m$data_datetimes_range_%widget_id% <- data_datetimes_range\\n\\n",
-                
-                "if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0){\\n",
-                "    datetimes <- m$debounced_datetimes_timeline_%tab_id%()\\n",
-                "} else datetimes <- data_datetimes_range\\n\\n",
-                
-                "m$datetimes_%widget_id% <- datetimes"
+                "\\n\\n",
+                "if (length(data_datetimes_range) > 0){\\n",
+                "    data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)\\n",
+                "    m$data_datetimes_range_%widget_id% <- data_datetimes_range\\n",
+                "}"
+            )
+            
+            # if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
+            # else datetimes <- data_datetimes_range
+            
+            if (isTRUE(input$synchronize_timelines_%widget_id%)) code <- paste0(
+                code, "\\n\\nif(length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%() else datetimes <- data_datetimes_range")
+            else code <- paste0(code, "\\n\\ndatetimes <- data_datetimes_range")
+            
+            code <- paste0(
+                code,
+                "\\n\\nif (length(datetimes) > 0) m$datetimes_%widget_id% <- datetimes"
             )
             
             # fig <-
