@@ -33,6 +33,4 @@ data_to_display,Data to display,Données à afficher
 patient_data,Patient data,Données du patient
 stay_data,Stay data,Données du séjour
 concepts,Concepts,Concepts
-select_patient,Select a patient,Sélectionnez un patient
-select_stay,Select a stay,Sélectionnez un séjour
 synchronize_timelines,Synchronize timelines,Synchroniser les timelines

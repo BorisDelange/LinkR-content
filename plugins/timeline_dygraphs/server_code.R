@@ -45,8 +45,177 @@ observeEvent(input$display_figure_%widget_id%, {
             
             # Code to generate code from figure settings
             
-            # ...
             code <- ""
+            
+            data_source <- "visit_detail"
+            if (length(input$data_source_%widget_id%) > 0) data_source <- input$data_source_%widget_id%
+                
+            # concept_ids <- input$concepts_%widget_id%
+            code <- paste0(code, "concept_ids <- c(", toString(input$concepts_%widget_id%), ")")
+            
+            # sql <- glue::glue_sql("
+                # SELECT measurement_concept_id AS concept_id, measurement_source_concept_id AS source_concept_id, measurement_datetime AS datetime, value_as_number
+                # FROM measurement 
+                # WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (measurement_concept_id IN ({concept_ids*}) OR measurement_source_concept_id IN ({concept_ids*}))
+                # UNION
+                # SELECT observation_concept_id AS concept_id, observation_source_concept_id AS source_concept_id, observation_datetime AS datetime, value_as_number
+                # FROM observation 
+                # WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (observation_concept_id IN ({concept_ids*}) OR observation_source_concept_id IN ({concept_ids*}))
+                # ", .con = d$con)
+            # raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()
+            code <- paste0(
+                code,
+                "\\n\\n",
+                "sql <- glue::glue_sql('\\n",
+                "    SELECT \\n",
+                "        measurement_concept_id AS concept_id,\\n",
+                "        measurement_source_concept_id AS source_concept_id,\\n",
+                "        measurement_datetime AS datetime,\\n",
+                "        value_as_number\\n",
+                "    FROM measurement \\n",
+                "    WHERE ", data_source, "_id = {m$selected_", data_source, "} \\n",
+                "    AND (measurement_concept_id IN ({concept_ids*}) OR measurement_source_concept_id IN ({concept_ids*}))\\n",
+                "    UNION\\n",
+                "    SELECT \\n",
+                "        observation_concept_id AS concept_id,\\n",
+                "        observation_source_concept_id AS source_concept_id,\\n",
+                "        observation_datetime AS datetime, value_as_number\\n",
+                "    FROM observation \\n",
+                "    WHERE ", data_source, "_id = {m$selected_", data_source, "} \\n",
+                "    AND (observation_concept_id IN ({concept_ids*}) OR observation_source_concept_id IN ({concept_ids*}))\\n",
+                "', .con = d$con)\\n\\n",
+                "raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()"
+            )
+                
+            # features <- list()
+            # features_names <- c()
+            code <- paste0(
+                code, "\\n\\n",
+                "features <- list()\\n",
+                "features_names <- c()"
+            )
+            
+            if (data_source == "person") {
+                
+                # sql <- glue::glue_sql("
+                    # SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime
+                    # FROM visit_occurrence
+                    # WHERE person_id = {m$selected_person}
+                # ", .con = d$con)
+                # data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
+                
+                code <- paste0(
+                    code,
+                    "\\n\\n",
+                    "sql <- glue::glue_sql('\\n",
+                    "    SELECT \\n",
+                    "        MIN(visit_start_datetime) AS min_visit_start_datetime, \\n",
+                    "        MAX(visit_end_datetime) AS max_visit_end_datetime \\n",
+                    "    FROM visit_occurrence \\n",
+                    "    WHERE person_id = {m$selected_person} \\n",
+                    "', .con = d$con)\\n\\n",
+                    "data_datetimes_range <- DBI::dbGetQuery(d$con, sql)"
+                )
+            }
+            else if (data_source == "visit_detail") {
+                # sql <- glue::glue_sql("
+                    # SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime
+                    # FROM visit_detail
+                    # WHERE visit_detail_id = {m$selected_visit_detail}
+                # ", .con = d$con)
+                # data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
+                
+                code <- paste0(
+                    code,
+                    "\\n\\n",
+                    "sql <- glue::glue_sql('\\n",
+                    "    SELECT \\n",
+                    "        MIN(visit_start_datetime) AS min_visit_start_datetime, \\n",
+                    "        MAX(visit_end_datetime) AS max_visit_end_datetime \\n",
+                    "    FROM visit_detail \\n",
+                    "    WHERE visit_detail_id = {m$selected_visit_detail} \\n",
+                    "', .con = d$con)\\n\\n",
+                    "data_datetimes_range <- DBI::dbGetQuery(d$con, sql)"
+                )
+            }
+            
+            # data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)
+            # m$data_datetimes_range_%widget_id% <- data_datetimes_range
+            
+            code <- paste0(
+                code,
+                "\\n\\n",
+                "data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)\\n",
+                "m$data_datetimes_range_%widget_id% <- data_datetimes_range"
+            )
+            
+            # if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
+            # else datetimes <- data_datetimes_range
+            
+            if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) code <- paste0(
+                code, "\\n\\ndatetimes <- m$debounced_datetimes_timeline_%tab_id%()")
+            else code <- paste0(code, "\\n\\ndatetimes <- data_datetimes_range")
+            
+            # m$datetimes_%widget_id% <- datetimes
+            
+            # for (concept_id in concept_ids){
+            
+                # concept <- selected_concepts %>% dplyr::filter(concept_id == !!concept_id)
+            
+                # if (concept$domain_id %in% c("Measurement", "Observation")){
+                
+                    # data <- raw_data
+                
+                    # if (nrow(data) > 0){
+                        # data <-
+                            # data %>%
+                            # dplyr::filter(concept_id == !!concept_id | source_concept_id == !!concept_id) %>%
+                            # dplyr::select(datetime, value_as_number)
+                        
+                        # if (nrow(data) > 0){
+                            # fake_data <- tibble::tibble(
+                                # datetime = c(data_datetimes_range[[1]] - lubridate::seconds(1), data_datetimes_range[[2]] + lubridate::seconds(1)),
+                                # value_as_number = c(NA, NA)
+                            # )
+                            
+                            # data <- dplyr::bind_rows(fake_data, data)
+                            # data <- data %>% dplyr::arrange(datetime)
+                        
+                            # features[[paste0("concept_", concept_id)]] <- xts::xts(data$value_as_number, data$datetime)
+                            # features_names <- c(features_names, concept$concept_name)
+                        # }
+                    # }
+                # }
+            # }
+            
+            code <- paste0(
+                code,
+                "\\n\\n",
+                "m$datetimes_%widget_id% <- datetimes\\n\\n",
+                "for (concept_id in concept_ids) {\\n",
+                "    concept <- selected_concepts %>% dplyr::filter(concept_id == !!concept_id)\\n\\n",
+                "    if (nrow(concept) > 0){\\n",
+                "        if (concept$domain_id %in% c('Measurement', 'Observation')) {\\n",
+                "            data <- raw_data\\n\\n",
+                "            if (nrow(data) > 0) {\\n",
+                "                data <- data %>%\\n",
+                "                    dplyr::filter(concept_id == !!concept_id | source_concept_id == !!concept_id) %>%\\n",
+                "                    dplyr::select(datetime, value_as_number)\\n\\n",
+                "                if (nrow(data) > 0) {\\n",
+                "                    fake_data <- tibble::tibble(\\n",
+                "                        datetime = c(data_datetimes_range[[1]] - lubridate::seconds(1), data_datetimes_range[[2]] + lubridate::seconds(1)),\\n",
+                "                        value_as_number = c(NA, NA)\\n",
+                "                    )\\n\\n",
+                "                    data <- dplyr::bind_rows(fake_data, data)\\n",
+                "                    data <- data %>% dplyr::arrange(datetime)\\n\\n",
+                "                    features[[paste0('concept_', concept_id)]] <- xts::xts(data$value_as_number, data$datetime)\\n",
+                "                    features_names <- c(features_names, concept$concept_name)\\n",
+                "                }\\n",
+                "            }\\n",
+                "        }\\n",
+                "    }\\n",
+                "}"
+            )
             
             # Update ace editor with generated code
             shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
@@ -119,122 +288,35 @@ observeEvent(input$run_code_%widget_id%, {
     
     tryCatch({
         
-        data_source <- "visit_detail"
-        if (length(input$data_source_%widget_id%) > 0) data_source <- input$data_source_%widget_id%
+        eval(parse(text = m$code_%widget_id%))
         
-        if ((data_source == "person" & is.na(m$selected_person)) | (data_source == "visit_detail" & is.na(m$selected_visit_detail))){
-            
-            if (data_source == "person" & is.na(m$selected_person)) output$error_message_%widget_id% <- renderUI(
-                div(shiny.fluent::MessageBar(i18np$t("select_patient"), messageBarType = 5), style = "display: inline-block;")
-            )
-            else if (data_source == "visit_detail" & is.na(m$selected_visit_detail)) output$error_message_%widget_id% <- renderUI(
-                div(shiny.fluent::MessageBar(i18np$t("select_stay"), messageBarType = 5), style = "display: inline-block;")
-            )
-            
-            shinyjs::hide("dygraph_div_%widget_id%")
+        if (length(features) == 0){
             shinyjs::show("error_message_div_%widget_id%")
+            shinyjs::hide("dygraph_div_%widget_id%")
+            output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("no_data_to_display"), messageBarType = 5), style = "display: inline-block;"))
+        }
+        
+        if (length(features) > 0){
+            combined_features <- do.call(merge, features)
+            colnames(combined_features) <- features_names
             
-        } else {
+            output$dygraph_%widget_id% <- dygraphs::renderDygraph({
             
-            concept_ids <- input$concepts_%widget_id%
+                if (isTRUE(input$synchronize_timelines_%widget_id%)) fig <- dygraphs::dygraph(combined_features, group = "tab_%tab_id%")
+                else fig <- dygraphs::dygraph(combined_features)
             
-            sql <- glue::glue_sql("
-                SELECT measurement_concept_id AS concept_id, measurement_source_concept_id AS source_concept_id, measurement_datetime AS datetime, value_as_number
-                FROM measurement 
-                WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (measurement_concept_id IN ({concept_ids*}) OR measurement_source_concept_id IN ({concept_ids*}))
-                UNION
-                SELECT observation_concept_id AS concept_id, observation_source_concept_id AS source_concept_id, observation_datetime AS datetime, value_as_number
-                FROM observation 
-                WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (observation_concept_id IN ({concept_ids*}) OR observation_source_concept_id IN ({concept_ids*}))
-                ", .con = d$con)
-            raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()
-                
-            features <- list()
-            features_names <- c()
+                fig <-
+                    fig %>%
+                    dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2, useDataTimezone = TRUE) %>%
+                    dygraphs::dyRangeSelector(dateWindow = c(
+                        format(datetimes[[1]], "%Y-%m-%d %H:%M:%S"),
+                        format(datetimes[[2]], "%Y-%m-%d %H:%M:%S")
+                    )) %>%
+                    dygraphs::dyAxis("y", valueRange = c(0, NA))
+            })
             
-            if (data_source == "person") {
-                sql <- glue::glue_sql("
-                    SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime
-                    FROM visit_occurrence
-                    WHERE person_id = {m$selected_person}
-                ", .con = d$con)
-                data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
-            }
-            else if (data_source == "visit_detail") {
-                sql <- glue::glue_sql("
-                    SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime
-                    FROM visit_detail
-                    WHERE visit_detail_id = {m$selected_visit_detail}
-                ", .con = d$con)
-                data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
-            }
-            
-            data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)
-            m$data_datetimes_range_%widget_id% <- data_datetimes_range
-            
-            if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
-            else datetimes <- data_datetimes_range
-            
-            m$datetimes_%widget_id% <- datetimes
-            
-            for (concept_id in concept_ids){
-            
-                concept <- selected_concepts %>% dplyr::filter(concept_id == !!concept_id)
-            
-                if (concept$domain_id %in% c("Measurement", "Observation")){
-                
-                    data <- raw_data
-                
-                    if (nrow(data) > 0){
-                        data <-
-                            data %>%
-                            dplyr::filter(concept_id == !!concept_id | source_concept_id == !!concept_id) %>%
-                            dplyr::select(datetime, value_as_number)
-                        
-                        if (nrow(data) > 0){
-                            fake_data <- tibble::tibble(
-                                datetime = c(data_datetimes_range[[1]] - lubridate::seconds(1), data_datetimes_range[[2]] + lubridate::seconds(1)),
-                                value_as_number = c(NA, NA)
-                            )
-                            
-                            data <- dplyr::bind_rows(fake_data, data)
-                            data <- data %>% dplyr::arrange(datetime)
-                        
-                            features[[paste0("concept_", concept_id)]] <- xts::xts(data$value_as_number, data$datetime)
-                            features_names <- c(features_names, concept$concept_name)
-                        }
-                    }
-                }
-            }
-            
-            if (length(features) == 0){
-                shinyjs::show("error_message_div_%widget_id%")
-                shinyjs::hide("dygraph_div_%widget_id%")
-                output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("no_data_to_display"), messageBarType = 5), style = "display: inline-block;"))
-            }
-            
-            if (length(features) > 0){
-                combined_features <- do.call(merge, features)
-                colnames(combined_features) <- features_names
-                
-                output$dygraph_%widget_id% <- dygraphs::renderDygraph({
-                
-                    if (isTRUE(input$synchronize_timelines_%widget_id%)) fig <- dygraphs::dygraph(combined_features, group = "tab_%tab_id%")
-                    else fig <- dygraphs::dygraph(combined_features)
-                
-                    fig <-
-                        fig %>%
-                        dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2, useDataTimezone = TRUE) %>%
-                        dygraphs::dyRangeSelector(dateWindow = c(
-                            format(datetimes[[1]], "%Y-%m-%d %H:%M:%S"),
-                            format(datetimes[[2]], "%Y-%m-%d %H:%M:%S")
-                        )) %>%
-                        dygraphs::dyAxis("y", valueRange = c(0, NA))
-                })
-                
-                shinyjs::hide("error_message_div_%widget_id%")
-                shinyjs::show("dygraph_div_%widget_id%")
-            }
+            shinyjs::hide("error_message_div_%widget_id%")
+            shinyjs::show("dygraph_div_%widget_id%")
         }
         
         # Go to figure tab
