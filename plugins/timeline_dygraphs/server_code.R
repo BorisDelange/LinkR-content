@@ -179,7 +179,7 @@ observeEvent(input$display_figure_%widget_id%, {
             # if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
             # else datetimes <- data_datetimes_range
             
-            if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) code <- paste0(
+            if (isTRUE(input$synchronize_timelines_%widget_id%)) code <- paste0(
                 code, "\\n\\nif(length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%() else datetimes <- data_datetimes_range")
             else code <- paste0(code, "\\n\\ndatetimes <- data_datetimes_range")
             
