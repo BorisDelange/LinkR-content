@@ -78,6 +78,7 @@ output_dropdown_options$r <- list(
     list(key = "figure", text = i18np$t("figure")),
     list(key = "table", text = i18np$t("table")),
     list(key = "datatable", text = i18np$t("datatable")),
+    list(key = "dygraphs", text = i18np$t("dygraphs")),
     list(key = "rmarkdown", text = i18np$t("rmarkdown"))
 )
 output_dropdown_options$python <- list(
