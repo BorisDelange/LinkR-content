@@ -1,6 +1,6 @@
 # Server - Figure settings
 
-# Load figure settings
+# Load figure settings and code
 
 observeEvent(input$load_figure_settings_%widget_id%, {
     %req%
@@ -11,6 +11,8 @@ observeEvent(input$load_figure_settings_%widget_id%, {
     link_id <- input$settings_file_%widget_id%
     sql <- glue::glue_sql("SELECT name, value, value_num FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db)
     figure_settings <- DBI::dbGetQuery(m$db, sql)
+    
+    code <- ""
     
     if (nrow(figure_settings) > 0){
         sapply(figure_settings$name, function(name){
@@ -27,12 +29,19 @@ observeEvent(input$load_figure_settings_%widget_id%, {
                 value <- as.logical(value_num)
                 shiny.fluent::updateToggle.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
             }
+            else if (name == "code"){
+                code <- value
+                m$code_%widget_id% <- value
+                shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
+            }
         })
     }
     
     # Run code if toggle is activated
-    if (length(input$run_code_at_settings_file_load_%widget_id%) > 0) if (input$run_code_at_settings_file_load_%widget_id%) shinyjs::delay(500, 
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random());")))
+    if (length(input$run_code_at_settings_file_load_%widget_id%) > 0) if (input$run_code_at_settings_file_load_%widget_id%) shinyjs::delay(500, {
+        # m$code_%widget_id% <- code
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))  
+    })
 })
 
 # Save current settings
@@ -58,7 +67,8 @@ observeEvent(input$save_params_and_code_%widget_id%, {
                 ~name, ~value, ~value_num,
                 "data_source", input$data_source_%widget_id%, NA_real_,
                 "concepts", input$concepts_%widget_id% %>% toString(), NA_real_,
-                "synchronize_timelines", NA_character_, as.integer(input$synchronize_timelines_%widget_id%)
+                "synchronize_timelines", NA_character_, as.integer(input$synchronize_timelines_%widget_id%),
+                "code", input$code_%widget_id%, NA_real_
             )
             
             new_data <-
