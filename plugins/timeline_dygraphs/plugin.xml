@@ -3,20 +3,135 @@
   <plugin>
     <app_version>0.3.1.9001</app_version>
     <unique_id>064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e</unique_id>
-    <version>0.0.1.9015</version>
+    <version>0.0.1.9016</version>
     <name_en>Timeline {dygraphs}</name_en>
     <name_fr>Timeline {dygraphs}</name_fr>
     <category_en>NA</category_en>
     <category_fr>NA</category_fr>
-    <description_en>NA</description_en>
-    <description_fr>NA</description_fr>
+    <description_en># Introduction
+
+The "Timeline {dygraphs}" plugin allows you to display **continuous data** in the form of a **timeline**,
+such as **vital signs** or **biology** data.
+&lt;div style="text-align: center;"&gt;
+    &lt;img 
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.png"
+        alt="Dygraphs timeline"
+        style="width: 100%; max-width: 800px;"
+    /&gt;
+&lt;/div&gt;
+
+# Features
+
+## Figure settings
+&lt;div style="text-align: center;"&gt;
+    &lt;img 
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure_settings.png"
+        alt="Dygraphs timeline"
+        style="width: 100%; max-width: 250px; border: solid 1px #ccc; padding: 5px;"
+    /&gt;
+&lt;/div&gt;
+
+Here are the parameters you can adjust:
+- **Data to display**: choose whether you want to display patient data or stay data
+- **Concepts**: which concepts do you want to see on the figure?
+This list includes the concepts you selected when creating the widget.
+- **Synchronize timelines**: several plugins work with a timeline
+(the scroll bar below the timeline where you can choose the period to display).
+This feature allows you to synchronize timelines of multiple widgets on the same tab.
+
+## Code
+## Backup Files
+## General Settings</description_en>
+    <description_fr># 1) Introduction
+
+Le plugin "Timeline {dygraphs}" permet d'afficher des **donn&#xE9;es continues** sous forme de **timeline**,
+tels que les **param&#xE8;tres vitaux** ou les donn&#xE9;es de **biologie**.
+
+&lt;div style="text-align: center;"&gt;
+    &lt;img 
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.png"
+        alt="Dygraphs timeline"
+        style="width: 100%; max-width: 800px;"
+    /&gt;
+&lt;/div&gt;
+
+# 2) Fonctionnalit&#xE9;s
+
+## Param&#xE8;tres de la figure
+
+&lt;div style="text-align: center;"&gt;
+    &lt;img 
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/fr_figure_settings.png"
+        alt="Figure settings"
+        style="width: 100%; max-width: 250px; border: solid 1px #ccc; padding: 5px;"
+    /&gt;
+&lt;/div&gt;
+
+Voici les param&#xE8;tres que vous pouvez r&#xE9;gler :
+
+- **Donn&#xE9;es &#xE0; afficher** : choisissez si vous voulez afficher les donn&#xE9;es du patient ou de son d&#xE9;jour
+- **Concepts** : quels concepts souhaitez-vous voir appara&#xEE;tre sur la figure ?
+Cette liste comprend les concepts que vous avez s&#xE9;lectionn&#xE9;s au moment de cr&#xE9;er le widget.
+- **Synchroniser les timelines** : plusieurs plugins fonctionnent avec une timeline
+(la barre de d&#xE9;filement en-dessous de la timeline o&#xF9; vous pouvez choisir la p&#xE9;riode &#xE0; afficher).
+Cette fonctionnalit&#xE9; vous permet de synchroniser les timelines de plusieurs widgets sur un m&#xEA;me onglet. 
+
+## Code
+
+
+
+## Fichiers de sauvegarde
+
+&lt;div style="text-align: center;"&gt;
+    &lt;img 
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/fr_settings_files.png"
+        alt="Settings files"
+        style="width: 100%; max-width: 280px; border: solid 1px #ccc; padding: 5px;"
+    /&gt;
+&lt;/div&gt;
+
+Vous pouvez **sauvegarder** les param&#xE8;tres de la figure et le code depuis la page de gestion des fichiers de sauvegarde.
+
+Pour ce faire, cliquez sur le nom du fichier s&#xE9;lectionn&#xE9; en haut du widget ("Fichier de sauvegarde 1" sur la capture d'&#xE9;cran ci-dessus).
+Vous pourrez ensuiter **ajouter** ou **supprimer** des fichiers de sauvegarde.
+
+Retournez ensuite sur les onglets "Param&#xE8;tres de la figure" ou "Code" et sauvegardez vos param&#xE8;tres et votre code.
+
+## Param&#xE8;tres g&#xE9;n&#xE9;raux
+
+&lt;div style="text-align: center;"&gt;
+    &lt;img 
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/fr_general_settings.png"
+        alt="General settings"
+        style="width: 100%; max-width: 370px; border: solid 1px #ccc; padding: 5px;"
+    /&gt;
+&lt;/div&gt;
+
+Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
+
+- **Param&#xE8;tres d'affichage**
+
+    - **Afficher le fichier de sauvegarde** : afficher ou masquer le nom du fichier de sauvegarde s&#xE9;lectionn&#xE9;
+    - **Figure et param&#xE8;tres/&#xE9;diteur c&#xF4;te &#xE0; c&#xF4;te** : souhaitez-vous que la figure apparaisse c&#xF4;te &#xE0; c&#xF4;te
+    avec les param&#xE8;tres de la figure ou le code de la figure ? Cela permet d'&#xE9;viter les allers-retours entre
+    les diff&#xE9;rents onglets durant la phase de param&#xE9;trage du widget.
+
+- **Ex&#xE9;cution du code**
+
+    - **Ex&#xE9;cuter le code au chargement d'un fichier de sauvegarde** : cela permet d'ex&#xE9;cuter le code lorsque
+    le fichier de sauvegarde s&#xE9;lectionn&#xE9; change, ce qui est utile au moment du chargement d'un projet :
+    cela permet de charger tous les widgets ayant cette option
+    - **Ex&#xE9;cuter le code lors de la mise &#xE0; jour des donn&#xE9;es** : dans le cadre de ce widget, cela signifie que
+    les donn&#xE9;es sont mises &#xE0; jour lorsque l'on change de patient ou de s&#xE9;jour, en fonction de la valeur du 
+    param&#xE8;tre "Donn&#xE9;es &#xE0; afficher"
+</description_fr>
     <short_description_en>Allows displaying data as a timeline using the {dygraphs} library.</short_description_en>
     <short_description_fr>Permet d'afficher des donn&#xE9;es sous forme de timeline avec la librairie {dygraphs}</short_description_fr>
     <authors>
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-08-28 22:19:16</creation_datetime>
-    <update_datetime>2025-02-27 21:07:59</update_datetime>
+    <update_datetime>2025-03-07 11:03:05</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>
