@@ -140,7 +140,7 @@ observeEvent(input$display_figure_%widget_id%, {
             }
             else if (data_source == "visit_detail") {
                 # sql <- glue::glue_sql("
-                    # SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime
+                    # SELECT MIN(visit_detail_start_datetime) AS min_visit_start_datetime, MAX(visit_detail_end_datetime) AS max_visit_end_datetime
                     # FROM visit_detail
                     # WHERE visit_detail_id = {m$selected_visit_detail}
                 # ", .con = d$con)
@@ -152,8 +152,8 @@ observeEvent(input$display_figure_%widget_id%, {
                     "if (!is.na(m$selected_visit_detail)){\\n",
                     "    sql <- glue::glue_sql('\\n",
                     "        SELECT \\n",
-                    "            MIN(visit_start_datetime) AS min_visit_start_datetime, \\n",
-                    "            MAX(visit_end_datetime) AS max_visit_end_datetime \\n",
+                    "            MIN(visit_detail_start_datetime) AS min_visit_start_datetime, \\n",
+                    "            MAX(visit_detail_end_datetime) AS max_visit_end_datetime \\n",
                     "        FROM visit_detail \\n",
                     "        WHERE visit_detail_id = {m$selected_visit_detail} \\n",
                     "    ', .con = d$con)\\n\\n",
