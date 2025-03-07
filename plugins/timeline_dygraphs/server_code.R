@@ -276,7 +276,8 @@ observeEvent(input$display_figure_%widget_id%, {
                 "            format(datetimes[[2]], '%Y-%m-%d %H:%M:%S')\\n",
                 "        )) %>%\\n",
                 "        dygraphs::dyAxis('y', valueRange = c(0, NA))\\n",
-                "}"
+                "}\\n\\n",
+                "fig"
             )
             
             # Update ace editor with generated code
