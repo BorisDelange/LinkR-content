@@ -56,14 +56,14 @@ observeEvent(input$display_figure_%widget_id%, {
             concepts <- selected_concepts %>% dplyr::filter(concept_id %in% input$concepts_%widget_id%)
             
             if (nrow(concepts) > 0){
-            for (i in 1:nrow(concepts)){
-                    row <- concepts[i, ]
-                    code <- paste0(
-                        code,
-                        ",\\n",
-                        "    ", row$concept_id, ", '", row$concept_name, "', '", row$domain_id, "', '", row$vocabulary_id, "'"
-                    )
-                }
+                for (i in 1:nrow(concepts)){
+                        row <- concepts[i, ]
+                        code <- paste0(
+                            code,
+                            ",\\n",
+                            "    ", row$concept_id, ", '", row$concept_name, "', '", row$domain_id, "', '", row$vocabulary_id, "'"
+                        )
+                    }
             }
             
             code <- paste0(code, "\\n", ")")
@@ -90,6 +90,7 @@ observeEvent(input$display_figure_%widget_id%, {
                 # WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))
                 # ", .con = d$con)
             # raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()
+            
             code <- paste0(
                 code,
                 "\\n\\n",
@@ -139,6 +140,7 @@ observeEvent(input$display_figure_%widget_id%, {
                 )
             }
             else if (data_source == "visit_detail") {
+            
                 # sql <- glue::glue_sql("
                     # SELECT MIN(visit_detail_start_datetime) AS min_visit_start_datetime, MAX(visit_detail_end_datetime) AS max_visit_end_datetime
                     # FROM visit_detail

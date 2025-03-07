@@ -7,7 +7,7 @@ such as **vital signs** or **laboratory data**.
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.png"
         alt="Dygraphs timeline"
-        style="width: 100%; max-width: 800px;"
+        style="width: 100%; max-width: 750px;"
     />
 </div>
 
@@ -38,7 +38,7 @@ This feature allows you to synchronize the timelines of several widgets on the s
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure_and_code.png"
         alt="Figure and code"
-        style="width: 100%; max-width: 800px; border: solid 1px #ccc; padding: 5px;"
+        style="width: 100%; max-width: 750px; border: solid 1px #ccc; padding: 5px;"
     />
 </div>
 
