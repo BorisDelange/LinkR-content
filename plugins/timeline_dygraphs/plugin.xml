@@ -3,7 +3,7 @@
   <plugin>
     <app_version>0.3.1.9001</app_version>
     <unique_id>064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e</unique_id>
-    <version>0.0.1.9018</version>
+    <version>0.0.1.9019</version>
     <name_en>Timeline {dygraphs}</name_en>
     <name_fr>Timeline {dygraphs}</name_fr>
     <category_en>NA</category_en>
@@ -78,7 +78,29 @@ Cette fonctionnalit&#xE9; vous permet de synchroniser les timelines de plusieurs
 
 ## Code
 
+&lt;div style="text-align: center;"&gt;
+    &lt;img 
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure_and_code.png"
+        alt="Figure and code"
+        style="width: 100%; max-width: 800px; border: solid 1px #ccc; padding: 5px;"
+    /&gt;
+&lt;/div&gt;
 
+Comme pour **tout plugin** sur LinkR, l'interface **low-code** permet de g&#xE9;n&#xE9;rer du code &#xE0; partir de l'interface graphique.
+
+Pour cela, rendez-vous sur l'onglet "Param&#xE8;tres de la figure", et une fois vos param&#xE8;tres choisis, cliquez sur "Afficher la figure".
+
+Cela va :
+
+- **g&#xE9;n&#xE9;rer le code** correspond aux param&#xE8;tres choisis
+- puis **ex&#xE9;cuter le code** et ainsi afficher la figure correspondant au code
+
+Vous pouvez alors **modifier le code** directementn et sauvegarder.
+
+Si vous cliquez sur "Ex&#xE9;cuter le code" depuis l'onglet avec l'&#xE9;diteur de code, cela va afficher la figure correspondant au code.
+
+En revanche, si vous &#xEA;tes sur l'onglet correspondant aux param&#xE8;tres de la figure, cela effacer le code actuel et le remplacer
+avec le code correspondant aux param&#xE8;tres actuels.
 
 ## Fichiers de sauvegarde
 
@@ -131,7 +153,7 @@ Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-08-28 22:19:16</creation_datetime>
-    <update_datetime>2025-03-07 12:24:07</update_datetime>
+    <update_datetime>2025-03-07 12:29:23</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>
