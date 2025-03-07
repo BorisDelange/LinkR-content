@@ -3,7 +3,7 @@
   <plugin>
     <app_version>0.3.1.9001</app_version>
     <unique_id>b3b98d5fbcc1c9e368614fb8e92c9c022f9ce10a59b8fa995dde3047245f063e</unique_id>
-    <version>0.0.1.9016</version>
+    <version>0.0.1.9017</version>
     <name_en>Drug exposure</name_en>
     <name_fr>Traitements re&#xE7;us</name_fr>
     <category_en>NA</category_en>
@@ -18,7 +18,7 @@ Le plugin "Prescriptions" permet d'afficher des **donn&#xE9;es d'administrations
     &lt;img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/fr_figure.png"
         alt="Drug exposure timeline"
-        style="width: 100%; max-width: 800px; border: solid 1px #ccc; padding: 5px;"
+        style="width: 100%; max-width: 750px; border: solid 1px #ccc; padding: 5px;"
     /&gt;
 &lt;/div&gt;
 
@@ -50,7 +50,7 @@ Cette fonctionnalit&#xE9; vous permet de synchroniser les timelines de plusieurs
     &lt;img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/figure_and_code.png"
         alt="Figure and code"
-        style="width: 100%; max-width: 800px; border: solid 1px #ccc; padding: 5px;"
+        style="width: 100%; max-width: 750px; border: solid 1px #ccc; padding: 5px;"
     /&gt;
 &lt;/div&gt;
 
@@ -122,7 +122,7 @@ Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-11-13 07:56:14</creation_datetime>
-    <update_datetime>2025-03-07 17:45:20</update_datetime>
+    <update_datetime>2025-03-07 17:51:22</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>
