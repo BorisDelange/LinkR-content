@@ -45,32 +45,49 @@ observeEvent(input$display_figure_%widget_id%, {
             
             # Code to generate code from figure settings
             
-            code <- ""
-            
             data_source <- "visit_detail"
             if (length(input$data_source_%widget_id%) > 0) data_source <- input$data_source_%widget_id%
-                
-            # concept_ids <- input$concepts_%widget_id%
-            code <- paste0(code, "concept_ids <- c(", toString(input$concepts_%widget_id%), ")")
+            
+            code <- paste0(
+                "concepts <- tibble::tribble(\\n",
+                "    ~concept_id, ~concept_name, ~domain_id, ~vocabulary_id"
+            )
+            
+            concepts <- selected_concepts %>% dplyr::filter(concept_id %in% input$concepts_%widget_id%)
+            
+            if (nrow(concepts) > 0){
+            for (i in 1:nrow(concepts)){
+                    row <- concepts[i, ]
+                    code <- paste0(
+                        code,
+                        ",\\n",
+                        "    ", row$concept_id, ", '", row$concept_name, "', '", row$domain_id, "', '", row$vocabulary_id, "'"
+                    )
+                }
+            }
+            
+            code <- paste0(code, "\\n", ")")
             
             # features <- list()
             # features_names <- c()
+            
             code <- paste0(
                 code, "\\n\\n",
                 "features <- list()\\n",
                 "features_names <- c()\\n",
                 "raw_data <- tibble::tibble()\\n",
-                "data_datetimes_range <- c()"
+                "data_datetimes_range <- c()\\n",
+                "combined_features <- c()"
             )
             
             # sql <- glue::glue_sql("
                 # SELECT measurement_concept_id AS concept_id, measurement_source_concept_id AS source_concept_id, measurement_datetime AS datetime, value_as_number
                 # FROM measurement 
-                # WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (measurement_concept_id IN ({concept_ids*}) OR measurement_source_concept_id IN ({concept_ids*}))
+                # WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (measurement_concept_id IN ({concepts$concept_id*}) OR measurement_source_concept_id IN ({concepts$concept_id*}))
                 # UNION
                 # SELECT observation_concept_id AS concept_id, observation_source_concept_id AS source_concept_id, observation_datetime AS datetime, value_as_number
                 # FROM observation 
-                # WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (observation_concept_id IN ({concept_ids*}) OR observation_source_concept_id IN ({concept_ids*}))
+                # WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))
                 # ", .con = d$con)
             # raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()
             code <- paste0(
@@ -84,7 +101,7 @@ observeEvent(input$display_figure_%widget_id%, {
                 "        value_as_number\\n",
                 "    FROM measurement \\n",
                 "    WHERE ", data_source, "_id = {m$selected_", data_source, "} \\n",
-                "    AND (measurement_concept_id IN ({concept_ids*}) OR measurement_source_concept_id IN ({concept_ids*}))\\n",
+                "    AND (measurement_concept_id IN ({concepts$concept_id*}) OR measurement_source_concept_id IN ({concepts$concept_id*}))\\n",
                 "    UNION\\n",
                 "    SELECT \\n",
                 "        observation_concept_id AS concept_id,\\n",
@@ -92,7 +109,7 @@ observeEvent(input$display_figure_%widget_id%, {
                 "        observation_datetime AS datetime, value_as_number\\n",
                 "    FROM observation \\n",
                 "    WHERE ", data_source, "_id = {m$selected_", data_source, "} \\n",
-                "    AND (observation_concept_id IN ({concept_ids*}) OR observation_source_concept_id IN ({concept_ids*}))\\n",
+                "    AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))\\n",
                 "', .con = d$con)\\n\\n",
                 "raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()"
             )
@@ -171,7 +188,7 @@ observeEvent(input$display_figure_%widget_id%, {
             
             # m$datetimes_%widget_id% <- datetimes
             
-            # for (concept_id in concept_ids){
+            # for (concept_id in concepts$concept_id){
             
                 # concept <- selected_concepts %>% dplyr::filter(concept_id == !!concept_id)
             
@@ -201,10 +218,13 @@ observeEvent(input$display_figure_%widget_id%, {
                 # }
             # }
             
+            # combined_features <- do.call(merge, features)
+            # colnames(combined_features) <- features_names
+            
             code <- paste0(
                 code,
                 "\\n\\n",
-                "for (concept_id in concept_ids) {\\n",
+                "for (concept_id in concepts$concept_id) {\\n",
                 "    concept <- selected_concepts %>% dplyr::filter(concept_id == !!concept_id)\\n\\n",
                 "    if (nrow(concept) > 0){\\n",
                 "        if (concept$domain_id %in% c('Measurement', 'Observation')) {\\n",
@@ -226,6 +246,36 @@ observeEvent(input$display_figure_%widget_id%, {
                 "            }\\n",
                 "        }\\n",
                 "    }\\n",
+                "}\\n\\n",
+                "if (length(features) > 0) combined_features <- do.call(merge, features)\\n",
+                "if (length(features_names) > 0) colnames(combined_features) <- features_names"
+            )
+            
+            # if (isTRUE(input$synchronize_timelines_%widget_id%)) fig <- dygraphs::dygraph(combined_features, group = "tab_%tab_id%")
+            # else fig <- dygraphs::dygraph(combined_features)
+            
+            code <- paste0(code, "\\n\\n", "if (length(combined_features) > 0){\\n    ")
+            
+            if (isTRUE(input$synchronize_timelines_%widget_id%)) code <- paste0(code, "fig <- \\n", "        dygraphs::dygraph(combined_features, group = 'tab_%tab_id%')")
+            else code <- paste0(code, "fig <- \\n", "        dygraphs::dygraph(combined_features) %>%\\n")
+            
+            # fig <-
+                # fig %>%
+                # dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2, useDataTimezone = TRUE) %>%
+                # dygraphs::dyRangeSelector(dateWindow = c(
+                    # format(datetimes[[1]], "%Y-%m-%d %H:%M:%S"),
+                    # format(datetimes[[2]], "%Y-%m-%d %H:%M:%S")
+                # )) %>%
+                # dygraphs::dyAxis("y", valueRange = c(0, NA))
+                
+            code <- paste0(
+                code,
+                "        dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2, useDataTimezone = TRUE) %>%\\n",
+                "        dygraphs::dyRangeSelector(dateWindow = c(\\n",
+                "            format(datetimes[[1]], '%Y-%m-%d %H:%M:%S'),\\n",
+                "            format(datetimes[[2]], '%Y-%m-%d %H:%M:%S')\\n",
+                "        )) %>%\\n",
+                "        dygraphs::dyAxis('y', valueRange = c(0, NA))\\n",
                 "}"
             )
             
@@ -299,35 +349,19 @@ observeEvent(input$run_code_%widget_id%, {
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_code"))
     
     tryCatch({
-        
-        features <- list()
-        
+    
+        fig <- character()
         eval(parse(text = m$code_%widget_id%))
         
-        if (length(features) == 0){
+        if (length(fig) == 0){
+            output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("no_data_to_display"), messageBarType = 5), style = "display: inline-block;"))
+        
             shinyjs::show("error_message_div_%widget_id%")
             shinyjs::hide("dygraph_div_%widget_id%")
-            output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("no_data_to_display"), messageBarType = 5), style = "display: inline-block;"))
         }
         
-        if (length(features) > 0){
-            combined_features <- do.call(merge, features)
-            colnames(combined_features) <- features_names
-            
-            output$dygraph_%widget_id% <- dygraphs::renderDygraph({
-            
-                if (isTRUE(input$synchronize_timelines_%widget_id%)) fig <- dygraphs::dygraph(combined_features, group = "tab_%tab_id%")
-                else fig <- dygraphs::dygraph(combined_features)
-            
-                fig <-
-                    fig %>%
-                    dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2, useDataTimezone = TRUE) %>%
-                    dygraphs::dyRangeSelector(dateWindow = c(
-                        format(datetimes[[1]], "%Y-%m-%d %H:%M:%S"),
-                        format(datetimes[[2]], "%Y-%m-%d %H:%M:%S")
-                    )) %>%
-                    dygraphs::dyAxis("y", valueRange = c(0, NA))
-            })
+        if (length(fig) > 0){
+            output$dygraph_%widget_id% <- dygraphs::renderDygraph(fig)
             
             shinyjs::hide("error_message_div_%widget_id%")
             shinyjs::show("dygraph_div_%widget_id%")
