@@ -53,6 +53,16 @@ observeEvent(input$display_figure_%widget_id%, {
             # concept_ids <- input$concepts_%widget_id%
             code <- paste0(code, "concept_ids <- c(", toString(input$concepts_%widget_id%), ")")
             
+            # features <- list()
+            # features_names <- c()
+            code <- paste0(
+                code, "\\n\\n",
+                "features <- list()\\n",
+                "features_names <- c()\\n",
+                "raw_data <- tibble::tibble()\\n",
+                "data_datetimes_range <- c()"
+            )
+            
             # sql <- glue::glue_sql("
                 # SELECT measurement_concept_id AS concept_id, measurement_source_concept_id AS source_concept_id, measurement_datetime AS datetime, value_as_number
                 # FROM measurement 
@@ -86,14 +96,6 @@ observeEvent(input$display_figure_%widget_id%, {
                 "', .con = d$con)\\n\\n",
                 "raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()"
             )
-                
-            # features <- list()
-            # features_names <- c()
-            code <- paste0(
-                code, "\\n\\n",
-                "features <- list()\\n",
-                "features_names <- c()"
-            )
             
             if (data_source == "person") {
                 
@@ -107,14 +109,16 @@ observeEvent(input$display_figure_%widget_id%, {
                 code <- paste0(
                     code,
                     "\\n\\n",
-                    "sql <- glue::glue_sql('\\n",
-                    "    SELECT \\n",
-                    "        MIN(visit_start_datetime) AS min_visit_start_datetime, \\n",
-                    "        MAX(visit_end_datetime) AS max_visit_end_datetime \\n",
-                    "    FROM visit_occurrence \\n",
-                    "    WHERE person_id = {m$selected_person} \\n",
-                    "', .con = d$con)\\n\\n",
-                    "data_datetimes_range <- DBI::dbGetQuery(d$con, sql)"
+                    "if (!is.na(m$selected_person)){\\n",
+                    "    sql <- glue::glue_sql('\\n",
+                    "        SELECT \\n",
+                    "            MIN(visit_start_datetime) AS min_visit_start_datetime, \\n",
+                    "            MAX(visit_end_datetime) AS max_visit_end_datetime \\n",
+                    "        FROM visit_occurrence \\n",
+                    "        WHERE person_id = {m$selected_person} \\n",
+                    "    ', .con = d$con)\\n\\n",
+                    "    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)\\n",
+                    "}"
                 )
             }
             else if (data_source == "visit_detail") {
@@ -128,14 +132,16 @@ observeEvent(input$display_figure_%widget_id%, {
                 code <- paste0(
                     code,
                     "\\n\\n",
-                    "sql <- glue::glue_sql('\\n",
-                    "    SELECT \\n",
-                    "        MIN(visit_start_datetime) AS min_visit_start_datetime, \\n",
-                    "        MAX(visit_end_datetime) AS max_visit_end_datetime \\n",
-                    "    FROM visit_detail \\n",
-                    "    WHERE visit_detail_id = {m$selected_visit_detail} \\n",
-                    "', .con = d$con)\\n\\n",
-                    "data_datetimes_range <- DBI::dbGetQuery(d$con, sql)"
+                    "if (!is.na(m$selected_visit_detail)){\\n",
+                    "    sql <- glue::glue_sql('\\n",
+                    "        SELECT \\n",
+                    "            MIN(visit_start_datetime) AS min_visit_start_datetime, \\n",
+                    "            MAX(visit_end_datetime) AS max_visit_end_datetime \\n",
+                    "        FROM visit_detail \\n",
+                    "        WHERE visit_detail_id = {m$selected_visit_detail} \\n",
+                    "    ', .con = d$con)\\n\\n",
+                    "    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)\\n",
+                    "}"
                 )
             }
             
@@ -145,8 +151,10 @@ observeEvent(input$display_figure_%widget_id%, {
             code <- paste0(
                 code,
                 "\\n\\n",
-                "data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)\\n",
-                "m$data_datetimes_range_%widget_id% <- data_datetimes_range"
+                "if (length(data_datetimes_range) > 0){\\n",
+                "    data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)\\n",
+                "    m$data_datetimes_range_%widget_id% <- data_datetimes_range\\n",
+                "}"
             )
             
             # if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
@@ -155,6 +163,11 @@ observeEvent(input$display_figure_%widget_id%, {
             if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) code <- paste0(
                 code, "\\n\\nif(length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%() else datetimes <- data_datetimes_range")
             else code <- paste0(code, "\\n\\ndatetimes <- data_datetimes_range")
+            
+            code <- paste0(
+                code,
+                "\\n\\nif (length(datetimes) > 0) m$datetimes_%widget_id% <- datetimes"
+            )
             
             # m$datetimes_%widget_id% <- datetimes
             
@@ -191,7 +204,6 @@ observeEvent(input$display_figure_%widget_id%, {
             code <- paste0(
                 code,
                 "\\n\\n",
-                "m$datetimes_%widget_id% <- datetimes\\n\\n",
                 "for (concept_id in concept_ids) {\\n",
                 "    concept <- selected_concepts %>% dplyr::filter(concept_id == !!concept_id)\\n\\n",
                 "    if (nrow(concept) > 0){\\n",
@@ -287,6 +299,8 @@ observeEvent(input$run_code_%widget_id%, {
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$run_code"))
     
     tryCatch({
+        
+        features <- list()
         
         eval(parse(text = m$code_%widget_id%))
         
