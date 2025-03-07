@@ -231,7 +231,7 @@ observeEvent(input$display_figure_%widget_id%, {
             # }
             # else if (data_source == "visit_detail") {
                 # sql <- glue::glue_sql("
-                    # SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime
+                    # SELECT MIN(visit_detail_start_datetime) AS min_visit_start_datetime, MAX(visit_detail_end_datetime) AS max_visit_end_datetime
                     # FROM visit_detail
                     # WHERE visit_detail_id = {m$selected_visit_detail}
                 # ", .con = d$con)
@@ -277,7 +277,7 @@ observeEvent(input$display_figure_%widget_id%, {
                     code,
                     "\\n\\n",
                     "sql <- glue::glue_sql('\\n",
-                    "    SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime\\n",
+                    "    SELECT MIN(visit_detail_start_datetime) AS min_visit_start_datetime, MAX(visit_detail_end_datetime) AS max_visit_end_datetime\\n",
                     "    FROM visit_detail\\n",
                     "    WHERE visit_detail_id = {m$selected_visit_detail}\\n",
                     "', .con = d$con)\\n",
@@ -344,48 +344,50 @@ observeEvent(input$display_figure_%widget_id%, {
             code <- paste0(
                 code,
                 "\\n\\n",
-                "fig <-\\n",
-                "    plotly::plot_ly(data = data, source = 'drug_exposure_plot_%widget_id%') %>%\\n",
-                "    plotly::add_segments(\\n",
-                "        x = ~drug_exposure_start_datetime,\\n",
-                "        xend = ~drug_exposure_end_datetime,\\n",
-                "        y = ~as.numeric(drug_concept_name),\\n",
-                "        yend = ~as.numeric(drug_concept_name),\\n",
-                "        line = list(color = 'coral', width = 5),\\n",
-                "        text = ~paste0(\\n",
-                "            i18np$t('drug'), ' : ', drug_concept_name, '<br>',\\n",
-                "            i18np$t('start'), ' : ', format(drug_exposure_start_datetime, datetime_format), '<br>',\\n",
-                "            i18np$t('end'), ' : ', format(drug_exposure_end_datetime, datetime_format), '<br>',\\n",
-                "            i18np$t('amount'), ' : ', ifelse(is.na(amount), '/', amount), ' ', ifelse(is.na(amount_unit), '', amount_unit), '<br>',\\n",
-                "            i18np$t('rate'), ' : ', ifelse(is.na(rate), '/', rate), ' ', ifelse(is.na(rate_unit), '', rate_unit)\\n",
-                "        ),\\n",
-                "        hoverinfo = 'text'\\n",
-                "    ) %>%\\n",
-                "    plotly::layout(\\n",
-                "        xaxis = list(\\n",
-                "            type = 'date',\\n",
-                "            tickmode = 'auto',\\n",
-                "            title = '',\\n",
-                "            nticks = 10,\\n",
-                "            tickfont = list(size = 10),\\n",
-                "            tickformat = datetime_format,\\n",
-                "            range = c(\\n",
-                "                format(datetimes[[1]], '%Y-%m-%d %H:%M:%S'),\\n",
-                "                format(datetimes[[2]], '%Y-%m-%d %H:%M:%S')\\n",
-                "            )\\n",
-                "        ),\\n",
-                "        yaxis = list(\\n",
-                "            tickvals = seq_along(unique_levels),\\n",
-                "            ticktext = unique_labels,\\n",
-                "            title = '',\\n",
-                "            tickfont = list(family = 'Courier New', size = 11),\\n",
-                "            automargin = FALSE\\n",
-                "        ),\\n",
-                "        hoverlabel = list(align = 'left'),\\n",
-                "        margin = list(l = 145, r = 0, t = 0, b = 0)\\n",
-                "    ) %>%\\n",
-                "    plotly::config(displayModeBar = FALSE) %>%\\n",
-                "    plotly::event_register('plotly_relayout')"
+                "if (nrow(data) > 0){\\n",
+                "    fig <-\\n",
+                "        plotly::plot_ly(data = data, source = 'drug_exposure_plot_%widget_id%') %>%\\n",
+                "        plotly::add_segments(\\n",
+                "            x = ~drug_exposure_start_datetime,\\n",
+                "            xend = ~drug_exposure_end_datetime,\\n",
+                "            y = ~as.numeric(drug_concept_name),\\n",
+                "            yend = ~as.numeric(drug_concept_name),\\n",
+                "            line = list(color = 'coral', width = 5),\\n",
+                "            text = ~paste0(\\n",
+                "                i18np$t('drug'), ' : ', drug_concept_name, '<br>',\\n",
+                "                i18np$t('start'), ' : ', format(drug_exposure_start_datetime, datetime_format), '<br>',\\n",
+                "                i18np$t('end'), ' : ', format(drug_exposure_end_datetime, datetime_format), '<br>',\\n",
+                "                i18np$t('amount'), ' : ', ifelse(is.na(amount), '/', amount), ' ', ifelse(is.na(amount_unit), '', amount_unit), '<br>',\\n",
+                "                i18np$t('rate'), ' : ', ifelse(is.na(rate), '/', rate), ' ', ifelse(is.na(rate_unit), '', rate_unit)\\n",
+                "            ),\\n",
+                "            hoverinfo = 'text'\\n",
+                "        ) %>%\\n",
+                "        plotly::layout(\\n",
+                "            xaxis = list(\\n",
+                "                type = 'date',\\n",
+                "                tickmode = 'auto',\\n",
+                "                title = '',\\n",
+                "                nticks = 10,\\n",
+                "                tickfont = list(size = 10),\\n",
+                "                tickformat = datetime_format,\\n",
+                "                range = c(\\n",
+                "                    format(datetimes[[1]], '%Y-%m-%d %H:%M:%S'),\\n",
+                "                    format(datetimes[[2]], '%Y-%m-%d %H:%M:%S')\\n",
+                "                )\\n",
+                "            ),\\n",
+                "            yaxis = list(\\n",
+                "                tickvals = seq_along(unique_levels),\\n",
+                "                ticktext = unique_labels,\\n",
+                "                title = '',\\n",
+                "                tickfont = list(family = 'Courier New', size = 11),\\n",
+                "                automargin = FALSE\\n",
+                "            ),\\n",
+                "            hoverlabel = list(align = 'left'),\\n",
+                "            margin = list(l = 145, r = 0, t = 0, b = 0)\\n",
+                "        ) %>%\\n",
+                "        plotly::config(displayModeBar = FALSE) %>%\\n",
+                "        plotly::event_register('plotly_relayout')\\n",
+                "}"
             )
             
             # Update ace editor with generated code
@@ -466,14 +468,14 @@ observeEvent(input$run_code_%widget_id%, {
             output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("no_data_to_display"), messageBarType = 5), style = "display: inline-block;"))
         
             shinyjs::show("error_message_div_%widget_id%")
-            shinyjs::hide("dygraph_div_%widget_id%")
+            shinyjs::hide("drug_exposure_plot_%widget_id%")
         }
         
         if (length(fig) > 0){
             output$drug_exposure_plot_%widget_id% <- plotly::renderPlotly(fig)
             
             shinyjs::hide("error_message_div_%widget_id%")
-            shinyjs::show("dygraph_div_%widget_id%")
+            shinyjs::show("drug_exposure_plot_%widget_id%")
         }
         
         # Go to figure tab
