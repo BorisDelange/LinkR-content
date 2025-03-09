@@ -3,13 +3,15 @@
 The "Timeline {dygraphs}" plugin allows you to display **continuous data** in the form of a **timeline**,
 such as **vital signs** or **laboratory data**.
 
+<br />
 <div style="text-align: center;">
     <img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.gif"
         alt="Dygraphs timeline"
         style="width: 100%; max-width: 750px;"
     />
 </div>
+<br />
 
 # 2) Features
 
@@ -36,6 +38,7 @@ This feature allows you to synchronize the timelines of several widgets on the s
 
 ## Code
 
+<br />
 <div style="text-align: center;">
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure_and_code.png"
@@ -43,6 +46,7 @@ This feature allows you to synchronize the timelines of several widgets on the s
         style="width: 100%; max-width: 750px; border: solid 1px #ccc; padding: 5px;"
     />
 </div>
+<br />
 
 As with **all plugins** on LinkR, the **low-code** interface allows you to generate code from the graphical interface.
 
