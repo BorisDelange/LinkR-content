@@ -3,7 +3,7 @@
   <plugin>
     <app_version>0.3.1.9001</app_version>
     <unique_id>064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e</unique_id>
-    <version>0.0.1.9035</version>
+    <version>0.0.1.9036</version>
     <name_en>Timeline {dygraphs}</name_en>
     <name_fr>Timeline {dygraphs}</name_fr>
     <category_en>NA</category_en>
@@ -124,27 +124,27 @@ The general settings are divided into:
 Le plugin "Timeline {dygraphs}" permet d'afficher des **donn&#xE9;es continues** sous forme de **timeline**,
 tels que les **param&#xE8;tres vitaux** ou les donn&#xE9;es de **biologie**.
 
-&lt;br /&gt;
-&lt;div style="text-align: center;"&gt;
+&lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.gif"
-        alt="Dygraphs timeline"
-        style="width: 100%; max-width: 750px;"
+        alt="Dygraphs timeline",
+        width="750",
+        style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
-&lt;/div&gt;
-&lt;br /&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 # 2) Fonctionnalit&#xE9;s
 
 ## Param&#xE8;tres de la figure
 
-&lt;div style="text-align: center;"&gt;
+&lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/fr_figure_settings.png"
-        alt="Figure settings"
-        style="width: 100%; max-width: 250px; border: solid 1px #ccc; padding: 5px;"
+        alt="Figure settings",
+        width="250",
+        style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
-&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 Voici les param&#xE8;tres que vous pouvez r&#xE9;gler :
 
@@ -159,15 +159,14 @@ Cette fonctionnalit&#xE9; vous permet de synchroniser les timelines de plusieurs
 
 ## Code
 
-&lt;br /&gt;
-&lt;div style="text-align: center;"&gt;
+&lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure_and_code.png"
-        alt="Figure and code"
-        style="width: 100%; max-width: 750px; border: solid 1px #ccc; padding: 5px;"
+        alt="Figure and code",
+        width="750",
+        style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
-&lt;/div&gt;
-&lt;br /&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 Comme pour **tout plugin** sur LinkR, l'interface **low-code** permet de g&#xE9;n&#xE9;rer du code &#xE0; partir de l'interface graphique.
 
@@ -187,13 +186,14 @@ avec le code correspondant aux param&#xE8;tres actuels.
 
 ## Fichiers de sauvegarde
 
-&lt;div style="text-align: center;"&gt;
+&lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/fr_settings_files.png"
-        alt="Settings files"
-        style="width: 100%; max-width: 280px; border: solid 1px #ccc; padding: 5px;"
+        alt="Settings files",
+        width="280",
+        style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
-&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 Vous pouvez **sauvegarder** les param&#xE8;tres de la figure et le code depuis la page de gestion des fichiers de sauvegarde.
 
@@ -204,13 +204,14 @@ Retournez ensuite sur les onglets "Param&#xE8;tres de la figure" ou "Code" et sa
 
 ## Param&#xE8;tres g&#xE9;n&#xE9;raux
 
-&lt;div style="text-align: center;"&gt;
+&lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/fr_general_settings.png"
-        alt="General settings"
-        style="width: 100%; max-width: 370px; border: solid 1px #ccc; padding: 5px;"
+        alt="General settings",
+        width="370",
+        style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
-&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
 
@@ -236,7 +237,7 @@ Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-08-28 22:19:16</creation_datetime>
-    <update_datetime>2025-03-09 23:09:31</update_datetime>
+    <update_datetime>2025-03-09 23:11:45</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>
