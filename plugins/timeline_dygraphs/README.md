@@ -18,14 +18,14 @@ such as **vital signs** or **laboratory data**.
 
 ## Figure settings
 
-<div style="text-align: center;">
+<table align="center"><tr><td>
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_figure_settings.png"
         alt="Figure settings",
         width="250",
         style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
+</td></tr></table>
 
 Here are the parameters you can adjust:
 
