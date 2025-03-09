@@ -3,16 +3,14 @@
 The "Timeline {dygraphs}" plugin allows you to display **continuous data** in the form of a **timeline**,
 such as **vital signs** or **laboratory data**.
 
-<br />
-<p align="center">
+<table align="center"><tr><td>
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.gif"
         alt="Dygraphs timeline",
         width="750",
         style="border: solid 1px #ccc; padding: 5px;"
     />
-</p>
-<br />
+</td></tr></table>
 
 # 2) Features
 
@@ -40,16 +38,14 @@ This feature allows you to synchronize the timelines of several widgets on the s
 
 ## Code
 
-<br />
-<div style="text-align: center;">
+<table align="center"><tr><td>
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure_and_code.png"
         alt="Figure and code",
         width="750",
         style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
-<br />
+</td></tr></table>
 
 As with **all plugins** on LinkR, the **low-code** interface allows you to generate code from the graphical interface.
 
@@ -69,14 +65,14 @@ with the code corresponding to the current parameters.
 
 ## Save files
 
-<div style="text-align: center;">
+<table align="center"><tr><td>
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_settings_files.png"
         alt="Settings files",
         width="280",
         style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
+</td></tr></table>
 
 You can **save** the figure parameters and code from the save files management page.
 
@@ -87,14 +83,14 @@ Then return to the "Figure settings" or "Code" tabs and save your parameters and
 
 ## General settings
 
-<div style="text-align: center;">
+<table align="center"><tr><td>
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_general_settings.png"
         alt="General settings",
         width="280",
         style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
+</td></tr></table>
 
 The general settings are divided into:
 
