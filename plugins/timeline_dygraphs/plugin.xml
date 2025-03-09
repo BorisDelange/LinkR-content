@@ -3,7 +3,7 @@
   <plugin>
     <app_version>0.3.1.9001</app_version>
     <unique_id>064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e</unique_id>
-    <version>0.0.1.9031</version>
+    <version>0.0.1.9032</version>
     <name_en>Timeline {dygraphs}</name_en>
     <name_fr>Timeline {dygraphs}</name_fr>
     <category_en>NA</category_en>
@@ -17,8 +17,9 @@ such as **vital signs** or **laboratory data**.
 &lt;div style="text-align: center;"&gt;
     &lt;img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.gif"
-        alt="Dygraphs timeline"
-        style="width: 100%; max-width: 750px;"
+        alt="Dygraphs timeline",
+        width="750",
+        style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
 &lt;/div&gt;
 &lt;br /&gt;
@@ -30,8 +31,9 @@ such as **vital signs** or **laboratory data**.
 &lt;div style="text-align: center;"&gt;
     &lt;img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_figure_settings.png"
-        alt="Figure settings"
-        style="width: 100%; max-width: 250px; border: solid 1px #ccc; padding: 5px;"
+        alt="Figure settings",
+        width="250",
+        style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
 &lt;/div&gt;
 
@@ -52,8 +54,9 @@ This feature allows you to synchronize the timelines of several widgets on the s
 &lt;div style="text-align: center;"&gt;
     &lt;img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure_and_code.png"
-        alt="Figure and code"
-        style="width: 100%; max-width: 750px; border: solid 1px #ccc; padding: 5px;"
+        alt="Figure and code",
+        width="750",
+        style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
 &lt;/div&gt;
 &lt;br /&gt;
@@ -79,8 +82,9 @@ with the code corresponding to the current parameters.
 &lt;div style="text-align: center;"&gt;
     &lt;img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_settings_files.png"
-        alt="Settings files"
-        style="width: 100%; max-width: 280px; border: solid 1px #ccc; padding: 5px;"
+        alt="Settings files",
+        width="280",
+        style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
 &lt;/div&gt;
 
@@ -96,8 +100,9 @@ Then return to the "Figure settings" or "Code" tabs and save your parameters and
 &lt;div style="text-align: center;"&gt;
     &lt;img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_general_settings.png"
-        alt="General settings"
-        style="width: 100%; max-width: 280px; border: solid 1px #ccc; padding: 5px;"
+        alt="General settings",
+        width="280",
+        style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
 &lt;/div&gt;
 
@@ -235,7 +240,7 @@ Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-08-28 22:19:16</creation_datetime>
-    <update_datetime>2025-03-09 22:39:01</update_datetime>
+    <update_datetime>2025-03-09 22:58:47</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>

@@ -7,8 +7,9 @@ such as **vital signs** or **laboratory data**.
 <div style="text-align: center;">
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.gif"
-        alt="Dygraphs timeline"
-        style="width: 100%; max-width: 750px;"
+        alt="Dygraphs timeline",
+        width="750",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
 </div>
 <br />
@@ -20,8 +21,9 @@ such as **vital signs** or **laboratory data**.
 <div style="text-align: center;">
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_figure_settings.png"
-        alt="Figure settings"
-        style="width: 100%; max-width: 250px; border: solid 1px #ccc; padding: 5px;"
+        alt="Figure settings",
+        width="250",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
 </div>
 
@@ -42,8 +44,9 @@ This feature allows you to synchronize the timelines of several widgets on the s
 <div style="text-align: center;">
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure_and_code.png"
-        alt="Figure and code"
-        style="width: 100%; max-width: 750px; border: solid 1px #ccc; padding: 5px;"
+        alt="Figure and code",
+        width="750",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
 </div>
 <br />
@@ -69,8 +72,9 @@ with the code corresponding to the current parameters.
 <div style="text-align: center;">
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_settings_files.png"
-        alt="Settings files"
-        style="width: 100%; max-width: 280px; border: solid 1px #ccc; padding: 5px;"
+        alt="Settings files",
+        width="280",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
 </div>
 
@@ -86,8 +90,9 @@ Then return to the "Figure settings" or "Code" tabs and save your parameters and
 <div style="text-align: center;">
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_general_settings.png"
-        alt="General settings"
-        style="width: 100%; max-width: 280px; border: solid 1px #ccc; padding: 5px;"
+        alt="General settings",
+        width="280",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
 </div>
 
