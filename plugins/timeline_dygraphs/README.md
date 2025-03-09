@@ -4,14 +4,14 @@ The "Timeline {dygraphs}" plugin allows you to display **continuous data** in th
 such as **vital signs** or **laboratory data**.
 
 <br />
-<div style="text-align: center;">
+<p align="center">
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.gif"
         alt="Dygraphs timeline",
         width="750",
         style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
+</p>
 <br />
 
 # 2) Features
