@@ -4,7 +4,7 @@ The "Drug exposure" plugin allows you to display **medication administration dat
 
 <table align="center"><tr><td>
     <img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_figure.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_figure.gif"
         alt="Dygraphs timeline",
         width="750",
         style="border: solid 1px #ccc; padding: 5px;"

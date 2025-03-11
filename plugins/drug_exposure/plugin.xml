@@ -3,7 +3,7 @@
   <plugin>
     <app_version>0.3.1.9001</app_version>
     <unique_id>b3b98d5fbcc1c9e368614fb8e92c9c022f9ce10a59b8fa995dde3047245f063e</unique_id>
-    <version>0.0.1.9021</version>
+    <version>0.0.1.9022</version>
     <name_en>Drug exposure</name_en>
     <name_fr>Traitements re&#xE7;us</name_fr>
     <category_en>NA</category_en>
@@ -14,7 +14,7 @@ The "Drug exposure" plugin allows you to display **medication administration dat
 
 &lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_figure.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_figure.gif"
         alt="Dygraphs timeline",
         width="750",
         style="border: solid 1px #ccc; padding: 5px;"
@@ -125,7 +125,7 @@ Le plugin "Prescriptions" permet d'afficher des **donn&#xE9;es d'administrations
 
 &lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/fr_figure.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/fr_figure.gif"
         alt="Drug exposure timeline",
         width="750",
         style="border: solid 1px #ccc; padding: 5px;"
@@ -238,7 +238,7 @@ Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-11-13 07:56:14</creation_datetime>
-    <update_datetime>2025-03-09 23:32:41</update_datetime>
+    <update_datetime>2025-03-11 08:04:48</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>
