@@ -15,6 +15,8 @@ console,Console,Console
 table,Table,Table
 datatable,DataTable,DataTable
 rmarkdown,RMarkdown,RMarkdown
+dygraphs,Dygraphs,Dygraphs
+plotly,Plotly,Plotly
 matplotlib,Matplotlib,Matplotlib
 parameters_not_saved,Parameters not saved,Paramètres non sauvegardés
 show_settings_file,Show settings file,Afficher le fichier de sauvegarde

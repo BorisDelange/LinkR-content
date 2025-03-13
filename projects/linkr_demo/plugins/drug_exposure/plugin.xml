@@ -2,20 +2,19 @@
 <plugins>
   <plugin>
     <app_version>0.3.1.9001</app_version>
-    <unique_id>064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e</unique_id>
-    <version>0.0.1.9036</version>
-    <name_en>Timeline {dygraphs}</name_en>
-    <name_fr>Timeline {dygraphs}</name_fr>
+    <unique_id>b3b98d5fbcc1c9e368614fb8e92c9c022f9ce10a59b8fa995dde3047245f063e</unique_id>
+    <version>0.0.1.9022</version>
+    <name_en>Drug exposure</name_en>
+    <name_fr>Traitements re&#xE7;us</name_fr>
     <category_en>NA</category_en>
     <category_fr>NA</category_fr>
     <description_en># 1) Introduction
 
-The "Timeline {dygraphs}" plugin allows you to display **continuous data** in the form of a **timeline**,
-such as **vital signs** or **laboratory data**.
+The "Drug exposure" plugin allows you to display **medication administration data** in the form of a **timeline**.
 
 &lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.gif"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_figure.gif"
         alt="Dygraphs timeline",
         width="750",
         style="border: solid 1px #ccc; padding: 5px;"
@@ -28,29 +27,30 @@ such as **vital signs** or **laboratory data**.
 
 &lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_figure_settings.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_figure_settings.png"
         alt="Figure settings",
-        width="250",
+        width="400",
         style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 Here are the parameters you can adjust:
 
-- **Data to display**: choose whether you want to display patient data or visit data
+- **Data to display**: choose whether you want to display patient data or stay data
 
-- **Concepts**: which concepts do you want to see on the figure?
-This list includes the concepts you selected when creating the widget.
+- **Concepts to display**:
+    - *All concepts*: if you want to display all medications received by the patient during the period
+    - *Concept classes*: if you want to display only one class of concepts. In this case, a dropdown menu allows you to choose which class(es) to display.
+    - *Selected concepts*: if you want to display only certain medications, which you will choose from the concepts dropdown menu
 
-- **Synchronize timelines**: several plugins work with a timeline
-(the scroll bar below the timeline where you can choose the period to display).
+- **Synchronize timelines**: several plugins work with a timeline (the scroll bar below the timeline where you can choose the period to display).
 This feature allows you to synchronize the timelines of several widgets on the same tab.
 
 ## Code
 
 &lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure_and_code.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/figure_and_code.png"
         alt="Figure and code",
         width="750",
         style="border: solid 1px #ccc; padding: 5px;"
@@ -77,7 +77,7 @@ with the code corresponding to the current parameters.
 
 &lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_settings_files.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_settings_files.png"
         alt="Settings files",
         width="280",
         style="border: solid 1px #ccc; padding: 5px;"
@@ -95,9 +95,9 @@ Then return to the "Figure settings" or "Code" tabs and save your parameters and
 
 &lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_general_settings.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_general_settings.png"
         alt="General settings",
-        width="280",
+        width="260",
         style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
@@ -121,13 +121,12 @@ The general settings are divided into:
     "Data to display" parameter</description_en>
     <description_fr># 1) Introduction
 
-Le plugin "Timeline {dygraphs}" permet d'afficher des **donn&#xE9;es continues** sous forme de **timeline**,
-tels que les **param&#xE8;tres vitaux** ou les donn&#xE9;es de **biologie**.
+Le plugin "Prescriptions" permet d'afficher des **donn&#xE9;es d'administrations m&#xE9;dicamenteuses** sous forme de **timeline**.
 
 &lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.gif"
-        alt="Dygraphs timeline",
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/fr_figure.gif"
+        alt="Drug exposure timeline",
         width="750",
         style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
@@ -139,9 +138,9 @@ tels que les **param&#xE8;tres vitaux** ou les donn&#xE9;es de **biologie**.
 
 &lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/fr_figure_settings.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/fr_figure_settings.png"
         alt="Figure settings",
-        width="250",
+        width="400",
         style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
@@ -150,18 +149,19 @@ Voici les param&#xE8;tres que vous pouvez r&#xE9;gler :
 
 - **Donn&#xE9;es &#xE0; afficher** : choisissez si vous voulez afficher les donn&#xE9;es du patient ou de son d&#xE9;jour
 
-- **Concepts** : quels concepts souhaitez-vous voir appara&#xEE;tre sur la figure ?
-Cette liste comprend les concepts que vous avez s&#xE9;lectionn&#xE9;s au moment de cr&#xE9;er le widget.
+- **Concepts &#xE0; afficher** :
+    - *Tous les concepts* : si vous souhaitez afficher toutes les m&#xE9;dicaments re&#xE7;us par le patient durant la p&#xE9;riode
+    - *Classes concepts* : si vous souhaitez n'afficher qu'une classe de concepts. Dans ce cas, un menu d&#xE9;roulant vous permet de choisir quelle(s) classe(s) afficher.
+    - *Concepts s&#xE9;lectionn&#xE9;s* : si vous souhaitez afficher certains m&#xE9;dicaments uniquement, que vous choisirez dans le menu d&#xE9;roulant des concepts
 
-- **Synchroniser les timelines** : plusieurs plugins fonctionnent avec une timeline
-(la barre de d&#xE9;filement en-dessous de la timeline o&#xF9; vous pouvez choisir la p&#xE9;riode &#xE0; afficher).
-Cette fonctionnalit&#xE9; vous permet de synchroniser les timelines de plusieurs widgets sur un m&#xEA;me onglet. 
+- **Synchroniser les timelines** : plusieurs plugins fonctionnent avec une timeline (la barre de d&#xE9;filement en-dessous de la timeline o&#xF9; vous pouvez choisir la p&#xE9;riode &#xE0; afficher).
+Cette fonctionnalit&#xE9; vous permet de synchroniser les timelines de plusieurs widgets sur un m&#xEA;me onglet.
 
 ## Code
 
 &lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure_and_code.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/figure_and_code.png"
         alt="Figure and code",
         width="750",
         style="border: solid 1px #ccc; padding: 5px;"
@@ -188,9 +188,9 @@ avec le code correspondant aux param&#xE8;tres actuels.
 
 &lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/fr_settings_files.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/fr_settings_files.png"
         alt="Settings files",
-        width="280",
+        width="250",
         style="border: solid 1px #ccc; padding: 5px;"
     /&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
@@ -206,7 +206,7 @@ Retournez ensuite sur les onglets "Param&#xE8;tres de la figure" ou "Code" et sa
 
 &lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/fr_general_settings.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/fr_general_settings.png"
         alt="General settings",
         width="370",
         style="border: solid 1px #ccc; padding: 5px;"
@@ -231,13 +231,14 @@ Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
     les donn&#xE9;es sont mises &#xE0; jour lorsque l'on change de patient ou de s&#xE9;jour, en fonction de la valeur du 
     param&#xE8;tre "Donn&#xE9;es &#xE0; afficher"
 </description_fr>
-    <short_description_en>Allows displaying data as a timeline using the {dygraphs} library.</short_description_en>
-    <short_description_fr>Permet d'afficher des donn&#xE9;es sous forme de timeline avec la librairie {dygraphs}</short_description_fr>
+    <short_description_en>Displays medication administrations as a timeline</short_description_en>
+    <short_description_fr>Affiche les administrations m&#xE9;dicamenteuses sous forme de timeline</short_description_fr>
     <authors>
+      <author>Jean Cupe</author>
       <author>Boris Delange</author>
     </authors>
-    <creation_datetime>2024-08-28 22:19:16</creation_datetime>
-    <update_datetime>2025-03-09 23:11:45</update_datetime>
+    <creation_datetime>2024-11-13 07:56:14</creation_datetime>
+    <update_datetime>2025-03-11 08:04:48</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>

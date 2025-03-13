@@ -1,11 +1,10 @@
 # 1) Introduction
 
-The "Timeline {dygraphs}" plugin allows you to display **continuous data** in the form of a **timeline**,
-such as **vital signs** or **laboratory data**.
+The "Drug exposure" plugin allows you to display **medication administration data** in the form of a **timeline**.
 
 <table align="center"><tr><td>
     <img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.gif"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_figure.gif"
         alt="Dygraphs timeline",
         width="750",
         style="border: solid 1px #ccc; padding: 5px;"
@@ -18,29 +17,30 @@ such as **vital signs** or **laboratory data**.
 
 <table align="center"><tr><td>
     <img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_figure_settings.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_figure_settings.png"
         alt="Figure settings",
-        width="250",
+        width="400",
         style="border: solid 1px #ccc; padding: 5px;"
     />
 </td></tr></table>
 
 Here are the parameters you can adjust:
 
-- **Data to display**: choose whether you want to display patient data or visit data
+- **Data to display**: choose whether you want to display patient data or stay data
 
-- **Concepts**: which concepts do you want to see on the figure?
-This list includes the concepts you selected when creating the widget.
+- **Concepts to display**:
+    - *All concepts*: if you want to display all medications received by the patient during the period
+    - *Concept classes*: if you want to display only one class of concepts. In this case, a dropdown menu allows you to choose which class(es) to display.
+    - *Selected concepts*: if you want to display only certain medications, which you will choose from the concepts dropdown menu
 
-- **Synchronize timelines**: several plugins work with a timeline
-(the scroll bar below the timeline where you can choose the period to display).
+- **Synchronize timelines**: several plugins work with a timeline (the scroll bar below the timeline where you can choose the period to display).
 This feature allows you to synchronize the timelines of several widgets on the same tab.
 
 ## Code
 
 <table align="center"><tr><td>
     <img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure_and_code.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/figure_and_code.png"
         alt="Figure and code",
         width="750",
         style="border: solid 1px #ccc; padding: 5px;"
@@ -67,7 +67,7 @@ with the code corresponding to the current parameters.
 
 <table align="center"><tr><td>
     <img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_settings_files.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_settings_files.png"
         alt="Settings files",
         width="280",
         style="border: solid 1px #ccc; padding: 5px;"
@@ -85,9 +85,9 @@ Then return to the "Figure settings" or "Code" tabs and save your parameters and
 
 <table align="center"><tr><td>
     <img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_general_settings.png"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_general_settings.png"
         alt="General settings",
-        width="280",
+        width="260",
         style="border: solid 1px #ccc; padding: 5px;"
     />
 </td></tr></table>
