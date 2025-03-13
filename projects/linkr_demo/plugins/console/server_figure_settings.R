@@ -18,14 +18,17 @@ observeEvent(input$load_figure_settings_%widget_id%, {
             value <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value)
             
             if (name %in% c("prog_language", "output")) shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
-            if (name == "code") shinyAce::updateAceEditor(session, "code_%widget_id%", value = value)
+            if (name == "code"){
+                m$code_%widget_id% <- value
+                shinyAce::updateAceEditor(session, "code_%widget_id%", value = value)
+            }
         })
     }
     
     # Run code if toggle is activated
     if (length(input$run_code_at_settings_file_load_%widget_id%) > 0){
         if (input$run_code_at_settings_file_load_%widget_id%){
-            shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random());")))
+            shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());")))
         }
     }
 })

@@ -498,7 +498,7 @@ Les paramètres généraux sont divisés en :
 55,plugin,4,short_description_en,Displays a patient's hospital stays,NA,1,2025-02-10 18:07:18,0
 56,plugin,4,short_description_fr,Affiche les différents séjours hospitaliers d'un patient,NA,1,2025-02-10 18:07:18,0
 57,plugin,5,users_allowed_read_group,everybody,1,1,2025-02-18 11:19:37,0
-58,plugin,5,version,0.0.1.9013,NA,1,2025-02-18 11:19:37,0
+58,plugin,5,version,0.0.1.9014,NA,1,2025-02-18 11:19:37,0
 59,plugin,5,unique_id,d7662fb4dde4f229baff062dd673177ced4375168b5c9ef0782717d89769efb6,NA,1,2025-02-18 11:19:37,0
 60,plugin,5,author,Boris Delange,NA,1,2025-02-18 11:19:37,0
 61,plugin,5,downloaded_from,NA,NA,1,2025-02-18 11:19:37,0
