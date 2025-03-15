@@ -98,7 +98,7 @@ observeEvent(input$display_figure_%widget_id%, {
                 "    WHERE ", data_source, "_id = {m$selected_", data_source, "} \\n",
                 "    AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))\\n",
                 "', .con = d$con)\\n\\n",
-                "raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()"
+                "raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble() %>% dplyr::mutate_at('datetime', as.POSIXct)"
             )
             
             if (data_source == "person") {
@@ -306,7 +306,7 @@ observeEvent(input$run_code_%widget_id%, {
             # FROM observation 
             # WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))
             # ", .con = d$con)
-        # raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()
+        # raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble() %>% dplyr::mutate_at("datetime", as.POSIXct)
         
         # if (data_source == "person") {
             
