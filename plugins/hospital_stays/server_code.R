@@ -91,7 +91,9 @@ observeEvent(input$run_code_%widget_id%, {
         else {
 
             sql <- glue::glue_sql("SELECT * FROM visit_detail WHERE person_id = {m$selected_person}", .con = d$con)
-            data <- DBI::dbGetQuery(d$con, sql)
+            data <-
+                DBI::dbGetQuery(d$con, sql) %>%
+                dplyr::mutate_at(c("visit_detail_start_datetime", "visit_detail_end_datetime"), as.POSIXct)
             
             if (nrow(data) == 0){
                     
