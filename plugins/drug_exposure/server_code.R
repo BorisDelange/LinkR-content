@@ -68,8 +68,38 @@ observeEvent(input$display_figure_%widget_id%, {
             
             code <- paste0(code, "\\n", ")")
             
-            if (data_source == "person") code <- paste0(code, "\\n\\n", "sql <- glue::glue_sql('SELECT * FROM drug_exposure WHERE person_id = {m$selected_person}', .con = d$con)")
-            else if (data_source == "visit_detail") code <- paste0(code, "\\n\\n", "sql <- glue::glue_sql('SELECT * FROM drug_exposure WHERE visit_detail_id = {m$selected_visit_detail}', .con = d$con)")
+            if (data_source == "person") code <- paste0(
+                code, 
+                "\\n\\n",
+                "sql <- glue::glue_sql('\\n",
+                "SELECT\\n",
+                "    drug_exposure_id,\\n",
+                "    person_id,\\n",
+                "    visit_detail_id,\\n",
+                "    drug_concept_id,\\n",
+                "    CAST(drug_exposure_start_datetime AS TIMESTAMP) AS drug_exposure_start_datetime,\\n",
+                "    CAST(drug_exposure_end_datetime AS TIMESTAMP) AS drug_exposure_end_datetime,\\n",
+                "    drug_type_concept_id,\\n",
+                "    quantity,\\n",
+                "    route_concept_id\\n",
+                "FROM drug_exposure WHERE person_id = {m$selected_person}', .con = d$con)"
+            )
+            else if (data_source == "visit_detail") code <- paste0(
+                code,
+                "\\n\\n",
+                "sql <- glue::glue_sql('\\n",
+                "SELECT\\n",
+                "    drug_exposure_id,\\n",
+                "    person_id,\\n",
+                "    visit_detail_id,\\n",
+                "    drug_concept_id,\\n",
+                "    CAST(drug_exposure_start_datetime AS TIMESTAMP) AS drug_exposure_start_datetime,\\n",
+                "    CAST(drug_exposure_end_datetime AS TIMESTAMP) AS drug_exposure_end_datetime,\\n",
+                "    drug_type_concept_id,\\n",
+                "    quantity,\\n",
+                "    route_concept_id\\n",
+                "FROM drug_exposure WHERE visit_detail_id = {m$selected_visit_detail}', .con = d$con)"
+            )
             
             code <- paste0(
                 code, 
@@ -347,8 +377,33 @@ observeEvent(input$run_code_%widget_id%, {
         
         # concepts <- selected_concepts %>% dplyr::filter(concept_id %in% input$concepts_%widget_id%)
         
-        # if (data_source == "person") sql <- glue::glue_sql("SELECT * FROM drug_exposure WHERE person_id = {m$selected_person}", .con = d$con)
-        # else if (data_source == "visit_detail") sql <- glue::glue_sql("SELECT * FROM drug_exposure WHERE visit_detail_id = {m$selected_visit_detail}", .con = d$con)
+        # if (data_source == "person") sql <- glue::glue_sql("
+            # SELECT
+                # drug_exposure_id,
+                # person_id,
+                # visit_detail_id,
+                # drug_concept_id,
+                # CAST(drug_exposure_start_datetime AS TIMESTAMP) AS drug_exposure_start_datetime,
+                # CAST(drug_exposure_end_datetime AS TIMESTAMP) AS drug_exposure_end_datetime,
+                # drug_type_concept_id,
+                # quantity,
+                # route_concept_id
+            # FROM drug_exposure WHERE person_id = {m$selected_person}
+        # ", .con = d$con)
+        # else if (data_source == "visit_detail") sql <- glue::glue_sql("
+            # SELECT
+                # drug_exposure_id,
+                # person_id,
+                # visit_detail_id,
+                # drug_concept_id,
+                # CAST(drug_exposure_start_datetime AS TIMESTAMP) AS drug_exposure_start_datetime,
+                # CAST(drug_exposure_end_datetime AS TIMESTAMP) AS drug_exposure_end_datetime,
+                # drug_type_concept_id,
+                # quantity,
+                # route_concept_id
+            # FROM drug_exposure WHERE visit_detail_id = {m$selected_visit_detail}
+        # ", .con = d$con)
+        
         # data <-
             # DBI::dbGetQuery(d$con, sql) %>%
             # dplyr::mutate_at(c("drug_exposure_start_datetime", "drug_exposure_end_datetime"), as.POSIXct)
