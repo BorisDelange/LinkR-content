@@ -55,7 +55,8 @@ if (length(data_datetimes_range) > 0){
     m$data_datetimes_range_26 <- data_datetimes_range
 }
 
-if(!is.null(m$debounced_datetimes_timeline_10)) if (length(m$debounced_datetimes_timeline_10()) > 0) datetimes <- m$debounced_datetimes_timeline_10() else datetimes <- data_datetimes_range
+datetimes <- data_datetimes_range
+if(!is.null(m$debounced_datetimes_timeline_10)) if (length(m$debounced_datetimes_timeline_10()) > 0) datetimes <- m$debounced_datetimes_timeline_10()
 
 if (length(datetimes) > 0) m$datetimes_26 <- datetimes
 

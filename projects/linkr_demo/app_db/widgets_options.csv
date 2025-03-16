@@ -286,20 +286,11 @@ res",NA,NA,2025-02-18 15:35:57,0
 94,2,NA,4,figure_settings,num_cols,NA,8,NA,2025-03-16 20:49:55,0
 95,2,NA,4,figure_settings,aggregate_fct,mean,NA,NA,2025-03-16 20:49:55,0
 96,2,NA,4,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 20:49:55,0
-97,3,NA,6,figure_settings,data_source,person,NA,NA,2025-03-16 20:50:01,0
-98,3,NA,6,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-03-16 20:50:01,0
-99,3,NA,6,figure_settings,concept_classes,,NA,NA,2025-03-16 20:50:01,0
-100,3,NA,6,figure_settings,concepts,"957136, 19077546, 35603227, 35603224, 956874, 35603226, 40166830, 40167218, 40166825, 40167196, 40167213, 1307046",NA,NA,2025-03-16 20:50:01,0
-101,3,NA,6,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 20:50:01,0
-102,5,NA,30,general_settings,selected_file_id,NA,NA,NA,2025-03-16 20:57:02,0
-103,1,NA,2,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:01:11,0
-104,4,NA,12,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:01:12,0
-105,3,NA,6,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:01:12,0
-106,2,NA,4,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:01:12,0
-107,4,NA,12,figure_settings,data_source,person,NA,NA,2025-03-16 21:01:23,0
-108,4,NA,12,figure_settings,concepts,"3027018, 3027598, 3004249, 3012888, 21492240, 21492239, 21492241",NA,NA,2025-03-16 21:01:23,0
-109,4,NA,12,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 21:01:23,0
-110,4,NA,12,figure_settings,code,"concepts <- tibble::tribble(
+97,5,NA,30,general_settings,selected_file_id,NA,NA,NA,2025-03-16 20:57:02,0
+98,4,NA,12,figure_settings,data_source,person,NA,NA,2025-03-16 21:08:51,0
+99,4,NA,12,figure_settings,concepts,"3027018, 3027598, 3004249, 3012888, 21492240, 21492239, 21492241",NA,NA,2025-03-16 21:08:51,0
+100,4,NA,12,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 21:08:51,0
+101,4,NA,12,figure_settings,code,"concepts <- tibble::tribble(
     ~concept_id, ~concept_name, ~domain_id, ~vocabulary_id,
     3027018, 'Heart rate', 'Measurement', '',
     3027598, 'Mean blood pressure', 'Measurement', '',
@@ -356,7 +347,8 @@ if (length(data_datetimes_range) > 0){
     m$data_datetimes_range_26 <- data_datetimes_range
 }
 
-if(!is.null(m$debounced_datetimes_timeline_10)) if (length(m$debounced_datetimes_timeline_10()) > 0) datetimes <- m$debounced_datetimes_timeline_10() else datetimes <- data_datetimes_range
+datetimes <- data_datetimes_range
+if(!is.null(m$debounced_datetimes_timeline_10)) if (length(m$debounced_datetimes_timeline_10()) > 0) datetimes <- m$debounced_datetimes_timeline_10()
 
 if (length(datetimes) > 0) m$datetimes_26 <- datetimes
 
@@ -403,4 +395,13 @@ if (length(combined_features) > 0){
         dygraphs::dyAxis('y', valueRange = c(0, NA))
 }
 
-fig",NA,NA,2025-03-16 21:01:23,0
+fig",NA,NA,2025-03-16 21:08:51,0
+102,3,NA,6,figure_settings,data_source,person,NA,NA,2025-03-16 21:12:00,0
+103,3,NA,6,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-03-16 21:12:00,0
+104,3,NA,6,figure_settings,concept_classes,,NA,NA,2025-03-16 21:12:00,0
+105,3,NA,6,figure_settings,concepts,"957136, 19077546, 35603227, 35603224, 956874, 35603226, 40166830, 40167218, 40166825, 40167196, 40167213, 1307046",NA,NA,2025-03-16 21:12:00,0
+106,3,NA,6,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 21:12:00,0
+107,1,NA,2,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:15:56,0
+108,4,NA,12,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:15:58,0
+109,3,NA,6,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:15:58,0
+110,2,NA,4,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:15:58,0

@@ -1,6 +1,6 @@
 id,category,link_id,name,value,value_num,creator_id,datetime,deleted
 1,plugin,2,users_allowed_read_group,everybody,1,1,2025-02-10 18:07:12,0
-2,plugin,2,version,0.0.1.9025,NA,1,2025-02-10 18:07:12,0
+2,plugin,2,version,0.0.1.9026,NA,1,2025-02-10 18:07:12,0
 3,plugin,2,unique_id,b3b98d5fbcc1c9e368614fb8e92c9c022f9ce10a59b8fa995dde3047245f063e,NA,1,2025-02-10 18:07:12,0
 4,plugin,2,author,Jean Cupe; Boris Delange,NA,1,2025-02-10 18:07:12,0
 5,plugin,2,downloaded_from,NA,NA,1,2025-02-10 18:07:12,0
@@ -235,7 +235,7 @@ Les paramètres généraux sont divisés en :
 13,plugin,2,short_description_en,Displays medication administrations as a timeline,NA,1,2025-02-10 18:07:12,0
 14,plugin,2,short_description_fr,Affiche les administrations médicamenteuses sous forme de timeline,NA,1,2025-02-10 18:07:12,0
 15,plugin,3,users_allowed_read_group,everybody,1,1,2025-02-10 18:07:14,0
-16,plugin,3,version,0.0.1.9020,NA,1,2025-02-10 18:07:14,0
+16,plugin,3,version,0.0.1.9021,NA,1,2025-02-10 18:07:14,0
 17,plugin,3,unique_id,4ff3e282d486ffdbe7c5e652dc0bcaebd645f5857d55542b195183c269c4a919,NA,1,2025-02-10 18:07:14,0
 18,plugin,3,author,Zeynep Erdem; Boris Delange,NA,1,2025-02-10 18:07:14,0
 19,plugin,3,downloaded_from,NA,NA,1,2025-02-10 18:07:14,0
@@ -263,7 +263,7 @@ Les paramètres généraux sont divisés en :
 41,plugin,4,short_description_en,Displays a patient's hospital stays,NA,1,2025-02-10 18:07:18,0
 42,plugin,4,short_description_fr,Affiche les différents séjours hospitaliers d'un patient,NA,1,2025-02-10 18:07:18,0
 43,plugin,1,users_allowed_read_group,everybody,1,1,2025-03-15 12:38:34,0
-44,plugin,1,version,0.0.1.9041,NA,1,2025-03-15 12:38:34,0
+44,plugin,1,version,0.0.1.9042,NA,1,2025-03-15 12:38:34,0
 45,plugin,1,unique_id,064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e,NA,1,2025-03-15 12:38:34,0
 46,plugin,1,author,Boris Delange,NA,1,2025-03-15 12:38:34,0
 47,plugin,1,downloaded_from,,NA,1,2025-03-15 12:38:34,0
