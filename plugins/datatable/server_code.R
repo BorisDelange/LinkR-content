@@ -212,17 +212,22 @@ observeEvent(input$run_code_%widget_id%, {
                 data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)
                 m$data_datetimes_range_%widget_id% <- data_datetimes_range
                 
-                if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
+                datetimes <- data_datetimes_range
+                
+                if (isTRUE(input$synchronize_timelines_%widget_id%)){
+                    if(!is.null(m$debounced_datetimes_timeline_%tab_id%)) if (length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
+                }
                 else {
-                    datetimes <- data_datetimes_range
-                    if (length(m$debounced_datetime_slider_%widget_id%()) > 0) {
-                        if (m$debounced_datetime_slider_%widget_id%()[[1]] >= data_datetimes_range[[1]] & m$debounced_datetime_slider_%widget_id%()[[2]] <= data_datetimes_range[[2]]){
-                            datetimes <- m$debounced_datetime_slider_%widget_id%()
+                    if (!is.null(m$debounced_datetime_slider_%widget_id%)){
+                        if (length(m$debounced_datetime_slider_%widget_id%()) > 0) {
+                            if (m$debounced_datetime_slider_%widget_id%()[[1]] >= data_datetimes_range[[1]] & m$debounced_datetime_slider_%widget_id%()[[2]] <= data_datetimes_range[[2]]){
+                                datetimes <- m$debounced_datetime_slider_%widget_id%()
+                            }
                         }
                     }
                 }
                 
-                m$datetimes_%widget_id% <- datetimes
+                if (length(datetimes) > 0) m$datetimes_%widget_id% <- datetimes
                 
                 updateSliderInput(
                     session, "datetime_slider_%widget_id%", min = data_datetimes_range[[1]], max = data_datetimes_range[[2]],
