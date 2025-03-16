@@ -77,8 +77,8 @@ observeEvent(input$display_figure_%widget_id%, {
                 "    person_id,\\n",
                 "    visit_detail_id,\\n",
                 "    drug_concept_id,\\n",
-                "    CAST(drug_exposure_start_datetime AS TIMESTAMP) AS drug_exposure_start_datetime,\\n",
-                "    CAST(drug_exposure_end_datetime AS TIMESTAMP) AS drug_exposure_end_datetime,\\n",
+                "    drug_exposure_start_datetime,\\n",
+                "    drug_exposure_end_datetime,\\n",
                 "    drug_type_concept_id,\\n",
                 "    quantity,\\n",
                 "    route_concept_id\\n",
@@ -93,8 +93,8 @@ observeEvent(input$display_figure_%widget_id%, {
                 "    person_id,\\n",
                 "    visit_detail_id,\\n",
                 "    drug_concept_id,\\n",
-                "    CAST(drug_exposure_start_datetime AS TIMESTAMP) AS drug_exposure_start_datetime,\\n",
-                "    CAST(drug_exposure_end_datetime AS TIMESTAMP) AS drug_exposure_end_datetime,\\n",
+                "    drug_exposure_start_datetime,\\n",
+                "    drug_exposure_end_datetime,\\n",
                 "    drug_type_concept_id,\\n",
                 "    quantity,\\n",
                 "    route_concept_id\\n",
@@ -104,9 +104,7 @@ observeEvent(input$display_figure_%widget_id%, {
             code <- paste0(
                 code, 
                 "\\n",
-                "data <-\\n",
-                "    DBI::dbGetQuery(d$con, sql) %>%\\n",
-                "    dplyr::mutate_at(c('drug_exposure_start_datetime', 'drug_exposure_end_datetime'), as.POSIXct)"
+                "data <- DBI::dbGetQuery(d$con, sql)"
             )
             
             if (length(input$concepts_choice_%widget_id%) > 0){
@@ -205,9 +203,7 @@ observeEvent(input$display_figure_%widget_id%, {
                     "    FROM visit_occurrence\\n",
                     "    WHERE person_id = {m$selected_person}\\n",
                     "', .con = d$con)\\n",
-                    "data_datetimes_range <-\\n",
-                    "    DBI::dbGetQuery(d$con, sql) %>%\\n",
-                    "    dplyr::mutate_at(c('min_visit_start_datetime', 'max_visit_end_datetime'), as.POSIXct)"
+                    "data_datetimes_range <- DBI::dbGetQuery(d$con, sql)"
                 )
             } else if (data_source == 'visit_detail') {
                 code <- paste0(
@@ -218,9 +214,7 @@ observeEvent(input$display_figure_%widget_id%, {
                     "    FROM visit_detail\\n",
                     "    WHERE visit_detail_id = {m$selected_visit_detail}\\n",
                     "', .con = d$con)\\n",
-                    "data_datetimes_range <-\\n",
-                    "    DBI::dbGetQuery(d$con, sql) %>%\\n",
-                    "    dplyr::mutate_at(c('min_visit_start_datetime', 'max_visit_end_datetime'), as.POSIXct)"
+                    "data_datetimes_range <- DBI::dbGetQuery(d$con, sql)"
                 )
             }
             
@@ -386,8 +380,8 @@ observeEvent(input$run_code_%widget_id%, {
                 # person_id,
                 # visit_detail_id,
                 # drug_concept_id,
-                # CAST(drug_exposure_start_datetime AS TIMESTAMP) AS drug_exposure_start_datetime,
-                # CAST(drug_exposure_end_datetime AS TIMESTAMP) AS drug_exposure_end_datetime,
+                # drug_exposure_start_datetime,
+                # drug_exposure_end_datetime,
                 # drug_type_concept_id,
                 # quantity,
                 # route_concept_id
@@ -399,17 +393,15 @@ observeEvent(input$run_code_%widget_id%, {
                 # person_id,
                 # visit_detail_id,
                 # drug_concept_id,
-                # CAST(drug_exposure_start_datetime AS TIMESTAMP) AS drug_exposure_start_datetime,
-                # CAST(drug_exposure_end_datetime AS TIMESTAMP) AS drug_exposure_end_datetime,
+                # drug_exposure_start_datetime,
+                # drug_exposure_end_datetime,
                 # drug_type_concept_id,
                 # quantity,
                 # route_concept_id
             # FROM drug_exposure WHERE visit_detail_id = {m$selected_visit_detail}
         # ", .con = d$con)
         
-        # data <-
-            # DBI::dbGetQuery(d$con, sql) %>%
-            # dplyr::mutate_at(c("drug_exposure_start_datetime", "drug_exposure_end_datetime"), as.POSIXct)
+        # data <- DBI::dbGetQuery(d$con, sql)
         
         # if (length(input$concepts_choice_%widget_id%) > 0){
             # if (input$concepts_choice_%widget_id% == "selected_concept_classes"){
@@ -489,9 +481,7 @@ observeEvent(input$run_code_%widget_id%, {
                 # FROM visit_occurrence
                 # WHERE person_id = {m$selected_person}
             # ", .con = d$con)
-            # data_datetimes_range <-
-                # DBI::dbGetQuery(d$con, sql) %>%
-                # dplyr::mutate_at(c("min_visit_start_datetime", "max_visit_end_datetime"), as.POSIXct)
+            # data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
         # }
         # else if (data_source == "visit_detail") {
             # sql <- glue::glue_sql("
@@ -499,9 +489,7 @@ observeEvent(input$run_code_%widget_id%, {
                 # FROM visit_detail
                 # WHERE visit_detail_id = {m$selected_visit_detail}
             # ", .con = d$con)
-            # data_datetimes_range <-
-                # DBI::dbGetQuery(d$con, sql) %>%
-                # dplyr::mutate_at(c("min_visit_start_datetime", "max_visit_end_datetime"), as.POSIXct)
+            # data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
         # }
         
         # data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)
