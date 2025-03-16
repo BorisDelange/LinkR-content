@@ -497,16 +497,31 @@ Les paramètres généraux sont divisés en :
 ",NA,1,2025-03-15 12:38:34,0
 55,plugin,1,short_description_en,Allows displaying data as a timeline using the {dygraphs} library.,NA,1,2025-03-15 12:38:34,0
 56,plugin,1,short_description_fr,Permet d'afficher des données sous forme de timeline avec la librairie {dygraphs},NA,1,2025-03-15 12:38:34,0
-57,subset,1,users_allowed_read_group,people_picker,1,1,2025-02-10 18:02:39,0
-58,subset,1,user_allowed_read,NA,1,1,2025-02-10 18:02:39,0
-59,subset,1,version,0.0.1.9000,NA,1,2025-02-10 18:02:39,0
-60,subset,1,unique_id,7902efc34aac8b638b7fa9bff39666a282b7a651a37ad911ecb64ce880ee4e29,NA,1,2025-02-10 18:02:39,0
-61,subset,1,author,Jane Doe,NA,1,2025-02-10 18:02:39,0
-62,subset,1,downloaded_from,NA,NA,1,2025-02-10 18:02:39,0
-63,subset,1,downloaded_from_url,NA,NA,1,2025-02-10 18:02:39,0
-64,subset,1,category_en,NA,NA,1,2025-02-10 18:02:39,0
-65,subset,1,description_en,NA,NA,1,2025-02-10 18:02:39,0
-66,subset,1,name_en,All patients,NA,1,2025-02-10 18:02:39,0
-67,subset,1,category_fr,NA,NA,1,2025-02-10 18:02:39,0
-68,subset,1,description_fr,NA,NA,1,2025-02-10 18:02:39,0
-69,subset,1,name_fr,All patients,NA,1,2025-02-10 18:02:39,0
+57,plugin,5,users_allowed_read_group,everybody,1,1,2025-03-16 21:18:24,0
+58,plugin,5,user_allowed_read,,1,1,2025-03-16 21:18:24,0
+59,plugin,5,version,0.0.1.9014,NA,1,2025-03-16 21:18:24,0
+60,plugin,5,unique_id,d7662fb4dde4f229baff062dd673177ced4375168b5c9ef0782717d89769efb6,NA,1,2025-03-16 21:18:24,0
+61,plugin,5,author,Boris Delange,NA,1,2025-03-16 21:18:24,0
+62,plugin,5,downloaded_from,,NA,1,2025-03-16 21:18:24,0
+63,plugin,5,downloaded_from_url,,NA,1,2025-03-16 21:18:24,0
+64,plugin,5,category_en,NA,NA,1,2025-03-16 21:18:24,0
+65,plugin,5,category_fr,NA,NA,1,2025-03-16 21:18:24,0
+66,plugin,5,name_en,Console,NA,1,2025-03-16 21:18:24,0
+67,plugin,5,name_fr,Console,NA,1,2025-03-16 21:18:24,0
+68,plugin,5,description_en,NA,NA,1,2025-03-16 21:18:24,0
+69,plugin,5,description_fr,NA,NA,1,2025-03-16 21:18:24,0
+70,plugin,5,short_description_en,"R and Python console, with choice of output (console, figure, datatable etc)",NA,1,2025-03-16 21:18:24,0
+71,plugin,5,short_description_fr,"Une console R et Python, avec choix de l'output (console, figure, datatable etc)",NA,1,2025-03-16 21:18:24,0
+72,subset,1,users_allowed_read_group,people_picker,1,1,2025-02-10 18:02:39,0
+73,subset,1,user_allowed_read,NA,1,1,2025-02-10 18:02:39,0
+74,subset,1,version,0.0.1.9000,NA,1,2025-02-10 18:02:39,0
+75,subset,1,unique_id,7902efc34aac8b638b7fa9bff39666a282b7a651a37ad911ecb64ce880ee4e29,NA,1,2025-02-10 18:02:39,0
+76,subset,1,author,Jane Doe,NA,1,2025-02-10 18:02:39,0
+77,subset,1,downloaded_from,NA,NA,1,2025-02-10 18:02:39,0
+78,subset,1,downloaded_from_url,NA,NA,1,2025-02-10 18:02:39,0
+79,subset,1,category_en,NA,NA,1,2025-02-10 18:02:39,0
+80,subset,1,description_en,NA,NA,1,2025-02-10 18:02:39,0
+81,subset,1,name_en,All patients,NA,1,2025-02-10 18:02:39,0
+82,subset,1,category_fr,NA,NA,1,2025-02-10 18:02:39,0
+83,subset,1,description_fr,NA,NA,1,2025-02-10 18:02:39,0
+84,subset,1,name_fr,All patients,NA,1,2025-02-10 18:02:39,0
