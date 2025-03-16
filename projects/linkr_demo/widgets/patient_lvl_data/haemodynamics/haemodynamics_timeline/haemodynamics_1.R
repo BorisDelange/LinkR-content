@@ -19,7 +19,7 @@ sql <- glue::glue_sql('
     SELECT 
         measurement_concept_id AS concept_id,
         measurement_source_concept_id AS source_concept_id,
-        measurement_datetime AS datetime,
+        CAST(measurement_datetime AS TIMESTAMP) AS datetime,
         value_as_number
     FROM measurement 
     WHERE person_id = {m$selected_person} 
@@ -34,28 +34,30 @@ sql <- glue::glue_sql('
     AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))
 ', .con = d$con)
 
-raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()
+raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble() %>% dplyr::mutate_at('datetime', as.POSIXct)
 
 if (!is.na(m$selected_person)){
     sql <- glue::glue_sql('
         SELECT 
-            MIN(visit_start_datetime) AS min_visit_start_datetime, 
-            MAX(visit_end_datetime) AS max_visit_end_datetime 
+            CAST(MIN(visit_start_datetime) AS TIMESTAMP) AS min_visit_start_datetime, 
+            CAST(MAX(visit_end_datetime) AS TIMESTAMP) AS max_visit_end_datetime 
         FROM visit_occurrence 
         WHERE person_id = {m$selected_person} 
     ', .con = d$con)
 
-    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
+    data_datetimes_range <-
+        DBI::dbGetQuery(d$con, sql) %>%
+        dplyr::mutate_at(c('min_visit_start_datetime', 'max_visit_end_datetime'), as.POSIXct)
 }
 
 if (length(data_datetimes_range) > 0){
     data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)
-    m$data_datetimes_range_4 <- data_datetimes_range
+    m$data_datetimes_range_26 <- data_datetimes_range
 }
 
-if(length(m$debounced_datetimes_timeline_2()) > 0) datetimes <- m$debounced_datetimes_timeline_2() else datetimes <- data_datetimes_range
+if(!is.null(m$debounced_datetimes_timeline_10)) if (length(m$debounced_datetimes_timeline_10()) > 0) datetimes <- m$debounced_datetimes_timeline_10() else datetimes <- data_datetimes_range
 
-if (length(datetimes) > 0) m$datetimes_4 <- datetimes
+if (length(datetimes) > 0) m$datetimes_26 <- datetimes
 
 for (concept_id in concepts$concept_id) {
     concept <- concepts %>% dplyr::filter(concept_id == !!concept_id)
@@ -91,7 +93,7 @@ if (length(features_names) > 0) colnames(combined_features) <- features_names
 
 if (length(combined_features) > 0){
     fig <- 
-        dygraphs::dygraph(combined_features, group = 'tab_2') %>%
+        dygraphs::dygraph(combined_features, group = 'tab_10') %>%
         dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2, useDataTimezone = TRUE) %>%
         dygraphs::dyRangeSelector(dateWindow = c(
             format(datetimes[[1]], '%Y-%m-%d %H:%M:%S'),

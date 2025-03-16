@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <plugins>
   <plugin>
-    <app_version>0.3.1.9001</app_version>
+    <app_version>0.3.1.9003</app_version>
     <unique_id>2419f5d6196aa95e69518bb96a8ffe49390352b4bee773263cbba34b84364253</unique_id>
-    <version>0.0.1.9009</version>
+    <version>0.0.1.9010</version>
     <name_en>Hospital stays</name_en>
     <name_fr>S&#xE9;jours hospitaliers</name_fr>
     <category_en>NA</category_en>
@@ -16,7 +16,7 @@
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-10-30 08:00:05</creation_datetime>
-    <update_datetime>2025-03-11 08:12:01</update_datetime>
+    <update_datetime>2025-03-15 10:53:02</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>

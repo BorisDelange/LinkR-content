@@ -23,33 +23,26 @@ id,widget_id,person_id,link_id,category,name,value,value_num,creator_id,datetime
 22,2,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-11 13:56:54,0
 23,2,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-11 13:56:54,0
 24,2,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-11 13:56:54,0
-25,2,NA,4,figure_settings,data_source,person,NA,NA,2025-02-11 13:56:58,0
-26,2,NA,4,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-02-11 13:56:58,0
-27,2,NA,4,figure_settings,concept_classes,NA,NA,NA,2025-02-11 13:56:58,0
-28,2,NA,4,figure_settings,concepts,"3027598, 3027018, 3004249, 3012888, 21492239, 21492240, 21492241",NA,NA,2025-02-11 13:56:58,0
-29,2,NA,4,figure_settings,num_cols,NA,8,NA,2025-02-11 13:56:58,0
-30,2,NA,4,figure_settings,aggregate_fct,mean,NA,NA,2025-02-11 13:56:58,0
-31,2,NA,4,figure_settings,synchronize_timelines,NA,1,NA,2025-02-11 13:56:58,0
-32,3,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-11 13:58:59,0
-33,3,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-11 13:58:59,0
-34,3,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-11 13:58:59,0
-35,3,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-11 13:58:59,0
-36,5,NA,NA,widget_position,NA,w=12;h=39;x=0;y=0;,NA,NA,2025-02-12 12:35:22,0
-37,5,NA,NA,settings_files,file_name,All drugs,NA,NA,2025-02-12 12:35:26,0
-38,5,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-12 12:35:30,0
-39,5,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-12 12:35:30,0
-40,5,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-12 12:35:30,0
-41,5,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-12 12:35:30,0
-42,5,NA,37,figure_settings,data_source,person,NA,NA,2025-02-12 12:35:34,0
-43,5,NA,37,figure_settings,concepts_choice,all_concepts,NA,NA,2025-02-12 12:35:34,0
-44,5,NA,37,figure_settings,concept_classes,NA,NA,NA,2025-02-12 12:35:34,0
-45,5,NA,37,figure_settings,concepts,NA,NA,NA,2025-02-12 12:35:34,0
-46,5,NA,37,figure_settings,synchronize_timelines,NA,0,NA,2025-02-12 12:35:34,0
-47,6,NA,NA,settings_files,file_name,Admissions histogram,NA,NA,2025-02-18 11:21:16,0
-48,6,NA,NA,widget_position,NA,w=8;h=20;x=4;y=0;,NA,NA,2025-02-18 11:58:30,0
-49,6,NA,47,figure_settings,prog_language,r,NA,NA,2025-02-18 12:06:44,0
-50,6,NA,47,figure_settings,output,figure,NA,NA,2025-02-18 12:06:44,0
-51,6,NA,47,figure_settings,code,"hosp_admissions <- d$data_subset$visit_occurrence %>% dplyr::collect()
+25,3,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-11 13:58:59,0
+26,3,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-11 13:58:59,0
+27,3,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-11 13:58:59,0
+28,3,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-11 13:58:59,0
+29,5,NA,NA,widget_position,NA,w=12;h=39;x=0;y=0;,NA,NA,2025-02-12 12:35:22,0
+30,5,NA,NA,settings_files,file_name,All drugs,NA,NA,2025-02-12 12:35:26,0
+31,5,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-12 12:35:30,0
+32,5,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-12 12:35:30,0
+33,5,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-12 12:35:30,0
+34,5,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-12 12:35:30,0
+35,5,NA,30,figure_settings,data_source,person,NA,NA,2025-02-12 12:35:34,0
+36,5,NA,30,figure_settings,concepts_choice,all_concepts,NA,NA,2025-02-12 12:35:34,0
+37,5,NA,30,figure_settings,concept_classes,NA,NA,NA,2025-02-12 12:35:34,0
+38,5,NA,30,figure_settings,concepts,NA,NA,NA,2025-02-12 12:35:34,0
+39,5,NA,30,figure_settings,synchronize_timelines,NA,0,NA,2025-02-12 12:35:34,0
+40,6,NA,NA,settings_files,file_name,Admissions histogram,NA,NA,2025-02-18 11:21:16,0
+41,6,NA,NA,widget_position,NA,w=8;h=20;x=4;y=0;,NA,NA,2025-02-18 11:58:30,0
+42,6,NA,40,figure_settings,prog_language,r,NA,NA,2025-02-18 12:06:44,0
+43,6,NA,40,figure_settings,output,figure,NA,NA,2025-02-18 12:06:44,0
+44,6,NA,40,figure_settings,code,"hosp_admissions <- d$data_subset$visit_occurrence %>% dplyr::collect()
 
 if (m$language == ""en""){
     title <- ""Number of hospital admissions over time""
@@ -77,33 +70,33 @@ if (nrow(hosp_admissions) > 0){
             plot.title = ggplot2::element_text(hjust = 0.5)
         )
 }",NA,NA,2025-02-18 12:06:44,0
-52,7,NA,NA,settings_files,file_name,Number of patients,NA,NA,2025-02-18 12:13:07,0
-53,7,NA,NA,widget_position,NA,w=2;h=10;x=0;y=0;,NA,NA,2025-02-18 12:17:45,0
-54,7,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-18 12:27:44,0
-55,7,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-18 12:27:44,0
-56,7,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-18 12:27:44,0
-57,7,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-18 12:27:44,0
-58,8,NA,NA,settings_files,file_name,Number of hospital admissions,NA,NA,2025-02-18 12:29:58,0
-59,8,NA,NA,widget_position,NA,w=2;h=10;x=2;y=0;,NA,NA,2025-02-18 12:30:55,0
-60,8,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-18 12:30:57,0
-61,8,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-18 12:30:57,0
-62,8,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-18 12:30:57,0
-63,8,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-18 12:30:57,0
-64,9,NA,NA,settings_files,file_name,Death count,NA,NA,2025-02-18 13:51:57,0
-65,9,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-18 13:53:17,0
-66,9,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-18 13:53:17,0
-67,9,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-18 13:53:17,0
-68,9,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-18 13:53:17,0
-69,9,NA,NA,widget_position,NA,w=2;h=10;x=0;y=10;,NA,NA,2025-02-18 13:53:20,0
-70,10,NA,NA,settings_files,file_name,Length of stay,NA,NA,2025-02-18 13:54:39,0
-71,10,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-18 13:56:21,0
-72,10,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-18 13:56:21,0
-73,10,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-18 13:56:21,0
-74,10,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-18 13:56:21,0
-75,10,NA,NA,widget_position,NA,w=2;h=10;x=2;y=10;,NA,NA,2025-02-18 13:56:26,0
-76,10,NA,70,figure_settings,prog_language,r,NA,NA,2025-02-18 13:57:30,0
-77,10,NA,70,figure_settings,output,ui,NA,NA,2025-02-18 13:57:30,0
-78,10,NA,70,figure_settings,code,"visits <- d$data_subset$visit_occurrence %>% dplyr::collect()
+45,7,NA,NA,settings_files,file_name,Number of patients,NA,NA,2025-02-18 12:13:07,0
+46,7,NA,NA,widget_position,NA,w=2;h=10;x=0;y=0;,NA,NA,2025-02-18 12:17:45,0
+47,7,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-18 12:27:44,0
+48,7,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-18 12:27:44,0
+49,7,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-18 12:27:44,0
+50,7,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-18 12:27:44,0
+51,8,NA,NA,settings_files,file_name,Number of hospital admissions,NA,NA,2025-02-18 12:29:58,0
+52,8,NA,NA,widget_position,NA,w=2;h=10;x=2;y=0;,NA,NA,2025-02-18 12:30:55,0
+53,8,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-18 12:30:57,0
+54,8,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-18 12:30:57,0
+55,8,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-18 12:30:57,0
+56,8,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-18 12:30:57,0
+57,9,NA,NA,settings_files,file_name,Death count,NA,NA,2025-02-18 13:51:57,0
+58,9,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-18 13:53:17,0
+59,9,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-18 13:53:17,0
+60,9,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-18 13:53:17,0
+61,9,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-18 13:53:17,0
+62,9,NA,NA,widget_position,NA,w=2;h=10;x=0;y=10;,NA,NA,2025-02-18 13:53:20,0
+63,10,NA,NA,settings_files,file_name,Length of stay,NA,NA,2025-02-18 13:54:39,0
+64,10,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-18 13:56:21,0
+65,10,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-18 13:56:21,0
+66,10,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-18 13:56:21,0
+67,10,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-18 13:56:21,0
+68,10,NA,NA,widget_position,NA,w=2;h=10;x=2;y=10;,NA,NA,2025-02-18 13:56:26,0
+69,10,NA,63,figure_settings,prog_language,r,NA,NA,2025-02-18 13:57:30,0
+70,10,NA,63,figure_settings,output,ui,NA,NA,2025-02-18 13:57:30,0
+71,10,NA,63,figure_settings,code,"visits <- d$data_subset$visit_occurrence %>% dplyr::collect()
 
 mean_los <- if (nrow(visits) > 0) {
     visits %>%
@@ -161,9 +154,9 @@ if (nrow(visits) > 0) {
     )
 }
 res",NA,NA,2025-02-18 13:57:30,0
-79,7,NA,52,figure_settings,prog_language,r,NA,NA,2025-02-18 13:58:06,0
-80,7,NA,52,figure_settings,output,ui,NA,NA,2025-02-18 13:58:06,0
-81,7,NA,52,figure_settings,code,"patients <- d$data_subset$person %>% dplyr::collect()
+72,7,NA,45,figure_settings,prog_language,r,NA,NA,2025-02-18 13:58:06,0
+73,7,NA,45,figure_settings,output,ui,NA,NA,2025-02-18 13:58:06,0
+74,7,NA,45,figure_settings,code,"patients <- d$data_subset$person %>% dplyr::collect()
 
 if (m$language == ""en"") legend <- ""patients"" else if (m$language == ""fr"") legend <- ""patients""
 
@@ -196,9 +189,9 @@ if (nrow(patients) > 0) {
 }
 
 res",NA,NA,2025-02-18 13:58:06,0
-82,8,NA,58,figure_settings,prog_language,r,NA,NA,2025-02-18 15:34:47,0
-83,8,NA,58,figure_settings,output,ui,NA,NA,2025-02-18 15:34:47,0
-84,8,NA,58,figure_settings,code,"visits <- d$data_subset$visit_occurrence %>% dplyr::collect()
+75,8,NA,51,figure_settings,prog_language,r,NA,NA,2025-02-18 15:34:47,0
+76,8,NA,51,figure_settings,output,ui,NA,NA,2025-02-18 15:34:47,0
+77,8,NA,51,figure_settings,code,"visits <- d$data_subset$visit_occurrence %>% dplyr::collect()
 
 if (m$language == ""en"") legend <- ""stays"" else if (m$language == ""fr"") legend <- ""séjours""
 
@@ -230,9 +223,9 @@ if (nrow(visits) > 0) {
     )
 }
 res",NA,NA,2025-02-18 15:34:47,0
-85,9,NA,64,figure_settings,prog_language,r,NA,NA,2025-02-18 15:35:57,0
-86,9,NA,64,figure_settings,output,ui,NA,NA,2025-02-18 15:35:57,0
-87,9,NA,64,figure_settings,code,"visits <- d$data_subset$visit_occurrence %>% dplyr::collect()
+78,9,NA,57,figure_settings,prog_language,r,NA,NA,2025-02-18 15:35:57,0
+79,9,NA,57,figure_settings,output,ui,NA,NA,2025-02-18 15:35:57,0
+80,9,NA,57,figure_settings,code,"visits <- d$data_subset$visit_occurrence %>% dplyr::collect()
 deaths <- d$data_subset$death %>% dplyr::collect()
 
 death_rate <- if (nrow(visits) > 0 && nrow(deaths) > 0) {
@@ -277,14 +270,19 @@ if (nrow(visits) > 0) {
     )
 }
 res",NA,NA,2025-02-18 15:35:57,0
-88,6,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-20 19:16:43,0
-89,6,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-20 19:16:43,0
-90,6,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-20 19:16:43,0
-91,6,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-20 19:16:43,0
-92,4,NA,12,figure_settings,data_source,person,NA,NA,2025-03-09 22:29:43,0
-93,4,NA,12,figure_settings,concepts,"3027018, 3027598, 3004249, 3012888, 21492240, 21492239, 21492241",NA,NA,2025-03-09 22:29:43,0
-94,4,NA,12,figure_settings,synchronize_timelines,NA,1,NA,2025-03-09 22:29:43,0
-95,4,NA,12,figure_settings,code,"concepts <- tibble::tribble(
+81,6,NA,NA,general_settings,show_settings_file,NA,0,NA,2025-02-20 19:16:43,0
+82,6,NA,NA,general_settings,figure_and_settings_side_by_side,NA,0,NA,2025-02-20 19:16:43,0
+83,6,NA,NA,general_settings,run_code_on_data_update,NA,1,NA,2025-02-20 19:16:43,0
+84,6,NA,NA,general_settings,run_code_at_settings_file_load,NA,1,NA,2025-02-20 19:16:43,0
+85,10,NA,63,general_settings,selected_file_id,NA,NA,NA,2025-03-15 12:38:44,0
+86,9,NA,57,general_settings,selected_file_id,NA,NA,NA,2025-03-15 12:38:44,0
+87,8,NA,51,general_settings,selected_file_id,NA,NA,NA,2025-03-15 12:38:44,0
+88,7,NA,45,general_settings,selected_file_id,NA,NA,NA,2025-03-15 12:38:44,0
+89,6,NA,40,general_settings,selected_file_id,NA,NA,NA,2025-03-15 12:38:44,0
+90,4,NA,12,figure_settings,data_source,person,NA,NA,2025-03-16 20:47:47,0
+91,4,NA,12,figure_settings,concepts,"3027018, 3027598, 3004249, 3012888, 21492240, 21492239, 21492241",NA,NA,2025-03-16 20:47:47,0
+92,4,NA,12,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 20:47:47,0
+93,4,NA,12,figure_settings,code,"concepts <- tibble::tribble(
     ~concept_id, ~concept_name, ~domain_id, ~vocabulary_id,
     3027018, 'Heart rate', 'Measurement', '',
     3027598, 'Mean blood pressure', 'Measurement', '',
@@ -305,7 +303,7 @@ sql <- glue::glue_sql('
     SELECT 
         measurement_concept_id AS concept_id,
         measurement_source_concept_id AS source_concept_id,
-        measurement_datetime AS datetime,
+        CAST(measurement_datetime AS TIMESTAMP) AS datetime,
         value_as_number
     FROM measurement 
     WHERE person_id = {m$selected_person} 
@@ -320,28 +318,30 @@ sql <- glue::glue_sql('
     AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))
 ', .con = d$con)
 
-raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()
+raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble() %>% dplyr::mutate_at('datetime', as.POSIXct)
 
 if (!is.na(m$selected_person)){
     sql <- glue::glue_sql('
         SELECT 
-            MIN(visit_start_datetime) AS min_visit_start_datetime, 
-            MAX(visit_end_datetime) AS max_visit_end_datetime 
+            CAST(MIN(visit_start_datetime) AS TIMESTAMP) AS min_visit_start_datetime, 
+            CAST(MAX(visit_end_datetime) AS TIMESTAMP) AS max_visit_end_datetime 
         FROM visit_occurrence 
         WHERE person_id = {m$selected_person} 
     ', .con = d$con)
 
-    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
+    data_datetimes_range <-
+        DBI::dbGetQuery(d$con, sql) %>%
+        dplyr::mutate_at(c('min_visit_start_datetime', 'max_visit_end_datetime'), as.POSIXct)
 }
 
 if (length(data_datetimes_range) > 0){
     data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)
-    m$data_datetimes_range_4 <- data_datetimes_range
+    m$data_datetimes_range_26 <- data_datetimes_range
 }
 
-if(length(m$debounced_datetimes_timeline_2()) > 0) datetimes <- m$debounced_datetimes_timeline_2() else datetimes <- data_datetimes_range
+if(!is.null(m$debounced_datetimes_timeline_10)) if (length(m$debounced_datetimes_timeline_10()) > 0) datetimes <- m$debounced_datetimes_timeline_10() else datetimes <- data_datetimes_range
 
-if (length(datetimes) > 0) m$datetimes_4 <- datetimes
+if (length(datetimes) > 0) m$datetimes_26 <- datetimes
 
 for (concept_id in concepts$concept_id) {
     concept <- concepts %>% dplyr::filter(concept_id == !!concept_id)
@@ -377,7 +377,7 @@ if (length(features_names) > 0) colnames(combined_features) <- features_names
 
 if (length(combined_features) > 0){
     fig <- 
-        dygraphs::dygraph(combined_features, group = 'tab_2') %>%
+        dygraphs::dygraph(combined_features, group = 'tab_10') %>%
         dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2, useDataTimezone = TRUE) %>%
         dygraphs::dyRangeSelector(dateWindow = c(
             format(datetimes[[1]], '%Y-%m-%d %H:%M:%S'),
@@ -386,19 +386,21 @@ if (length(combined_features) > 0){
         dygraphs::dyAxis('y', valueRange = c(0, NA))
 }
 
-fig",NA,NA,2025-03-09 22:29:43,0
-96,3,NA,6,figure_settings,data_source,person,NA,NA,2025-03-11 08:06:31,0
-97,3,NA,6,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-03-11 08:06:31,0
-98,3,NA,6,figure_settings,concept_classes,,NA,NA,2025-03-11 08:06:31,0
-99,3,NA,6,figure_settings,concepts,"957136, 19077546, 35603227, 35603224, 956874, 35603226, 40166830, 40167218, 40166825, 40167196, 40167213, 1307046",NA,NA,2025-03-11 08:06:31,0
-100,3,NA,6,figure_settings,synchronize_timelines,NA,1,NA,2025-03-11 08:06:31,0
-101,4,NA,12,general_settings,selected_file_id,NA,NA,NA,2025-03-13 20:55:15,0
-102,3,NA,6,general_settings,selected_file_id,NA,NA,NA,2025-03-13 20:55:15,0
-103,2,NA,4,general_settings,selected_file_id,NA,NA,NA,2025-03-13 20:55:15,0
-104,5,NA,37,general_settings,selected_file_id,NA,NA,NA,2025-03-13 20:55:18,0
-105,1,NA,2,general_settings,selected_file_id,NA,NA,NA,2025-03-13 20:55:37,0
-106,10,NA,70,general_settings,selected_file_id,NA,NA,NA,2025-03-13 20:55:41,0
-107,9,NA,64,general_settings,selected_file_id,NA,NA,NA,2025-03-13 20:55:41,0
-108,8,NA,58,general_settings,selected_file_id,NA,NA,NA,2025-03-13 20:55:41,0
-109,7,NA,52,general_settings,selected_file_id,NA,NA,NA,2025-03-13 20:55:41,0
-110,6,NA,47,general_settings,selected_file_id,NA,NA,NA,2025-03-13 20:55:41,0
+fig",NA,NA,2025-03-16 20:47:47,0
+94,2,NA,4,figure_settings,data_source,person,NA,NA,2025-03-16 20:49:55,0
+95,2,NA,4,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-03-16 20:49:55,0
+96,2,NA,4,figure_settings,concept_classes,,NA,NA,2025-03-16 20:49:55,0
+97,2,NA,4,figure_settings,concepts,"3027598, 3027018, 3004249, 3012888, 21492239, 21492240, 21492241",NA,NA,2025-03-16 20:49:55,0
+98,2,NA,4,figure_settings,num_cols,NA,8,NA,2025-03-16 20:49:55,0
+99,2,NA,4,figure_settings,aggregate_fct,mean,NA,NA,2025-03-16 20:49:55,0
+100,2,NA,4,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 20:49:55,0
+101,3,NA,6,figure_settings,data_source,person,NA,NA,2025-03-16 20:50:01,0
+102,3,NA,6,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-03-16 20:50:01,0
+103,3,NA,6,figure_settings,concept_classes,,NA,NA,2025-03-16 20:50:01,0
+104,3,NA,6,figure_settings,concepts,"957136, 19077546, 35603227, 35603224, 956874, 35603226, 40166830, 40167218, 40166825, 40167196, 40167213, 1307046",NA,NA,2025-03-16 20:50:01,0
+105,3,NA,6,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 20:50:01,0
+106,1,NA,2,general_settings,selected_file_id,NA,NA,NA,2025-03-16 20:56:37,0
+107,4,NA,12,general_settings,selected_file_id,NA,NA,NA,2025-03-16 20:56:40,0
+108,3,NA,6,general_settings,selected_file_id,NA,NA,NA,2025-03-16 20:56:40,0
+109,2,NA,4,general_settings,selected_file_id,NA,NA,NA,2025-03-16 20:56:40,0
+110,5,NA,30,general_settings,selected_file_id,NA,NA,NA,2025-03-16 20:57:02,0

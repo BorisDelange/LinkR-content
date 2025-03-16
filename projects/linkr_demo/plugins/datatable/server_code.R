@@ -136,8 +136,24 @@ observeEvent(input$run_code_%widget_id%, {
             
         } else {
         
-            if (data_source == "person") sql <- glue::glue_sql("SELECT * FROM measurement WHERE person_id = {m$selected_person}", .con = d$con)
-            else if (data_source == "visit_detail") sql <- glue::glue_sql("SELECT * FROM measurement WHERE visit_detail_id = {m$selected_visit_detail}", .con = d$con)
+            if (data_source == "person") sql <- glue::glue_sql("
+                SELECT
+                    person_id,
+                    visit_detail_id,
+                    measurement_concept_id,
+                    CAST(measurement_datetime AS TIMESTAMP) AS measurement_datetime,
+                    value_as_number
+                FROM measurement
+                WHERE person_id = {m$selected_person}", .con = d$con)
+            else if (data_source == "visit_detail") sql <- glue::glue_sql("
+                SELECT
+                    person_id,
+                    visit_detail_id,
+                    measurement_concept_id,
+                    CAST(measurement_datetime AS TIMESTAMP) AS measurement_datetime,
+                    value_as_number
+                FROM measurement
+                WHERE visit_detail_id = {m$selected_visit_detail}", .con = d$con)
             data <- DBI::dbGetQuery(d$con, sql)
             
             if (length(input$concepts_choice_%widget_id%) > 0){
@@ -174,19 +190,23 @@ observeEvent(input$run_code_%widget_id%, {
                 
                 if (data_source == "person") {
                 sql <- glue::glue_sql("
-                        SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime
+                        SELECT 
+                            CAST(MIN(visit_start_datetime) AS TIMESTAMP) AS min_visit_start_datetime,
+                            CAST(MAX(visit_end_datetime) AS TIMESTAMP) AS max_visit_end_datetime
                         FROM visit_occurrence
                         WHERE person_id = {m$selected_person}
                     ", .con = d$con)
-                    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
+                    data_datetimes_range <- DBI::dbGetQuery(d$con, sql) %>% dplyr::mutate_at(c('min_visit_start_datetime', 'max_visit_end_datetime'), as.POSIXct)
                 }
                 else if (data_source == "visit_detail") {
                     sql <- glue::glue_sql("
-                        SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime
+                        SELECT
+                            CAST(MIN(visit_detail_start_datetime) AS TIMESTAMP) AS min_visit_start_datetime,
+                            CAST(MAX(visit_detail_end_datetime) AS TIMESTAMP) AS max_visit_end_datetime
                         FROM visit_detail
                         WHERE visit_detail_id = {m$selected_visit_detail}
                     ", .con = d$con)
-                    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
+                    data_datetimes_range <- DBI::dbGetQuery(d$con, sql) %>% dplyr::mutate_at(c('min_visit_start_datetime', 'max_visit_end_datetime'), as.POSIXct)
                 }
                 
                 data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)
