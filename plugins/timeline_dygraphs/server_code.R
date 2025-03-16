@@ -150,7 +150,7 @@ observeEvent(input$display_figure_%widget_id%, {
             )
             
             if (isTRUE(input$synchronize_timelines_%widget_id%)) code <- paste0(
-                code, "\\n\\nif(length(m$debounced_datetimes_timeline_%tab_id%) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%() else datetimes <- data_datetimes_range")
+                code, "\\n\\nif(!is.null(m$debounced_datetimes_timeline_%tab_id%)) if (length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%() else datetimes <- data_datetimes_range")
             else code <- paste0(code, "\\n\\ndatetimes <- data_datetimes_range")
             
             code <- paste0(
@@ -336,7 +336,7 @@ observeEvent(input$run_code_%widget_id%, {
             # m$data_datetimes_range_%widget_id% <- data_datetimes_range
         # }
         
-        # if (isTRUE(input$synchronize_timelines_%widget_id%) && length(m$debounced_datetimes_timeline_%tab_id%) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
+        # if (isTRUE(input$synchronize_timelines_%widget_id%)) if(!is.null(m$debounced_datetimes_timeline_%tab_id%)) if (length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
         # else datetimes <- data_datetimes_range
         
         # if (length(datetimes) > 0) m$datetimes_%widget_id% <- datetimes
