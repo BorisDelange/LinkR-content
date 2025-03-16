@@ -281,11 +281,15 @@ res",NA,NA,2025-02-18 15:35:57,0
 89,2,NA,4,figure_settings,num_cols,NA,8,NA,2025-03-16 20:49:55,0
 90,2,NA,4,figure_settings,aggregate_fct,mean,NA,NA,2025-03-16 20:49:55,0
 91,2,NA,4,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 20:49:55,0
-92,5,NA,30,general_settings,selected_file_id,NA,NA,NA,2025-03-16 20:57:02,0
-93,4,NA,12,figure_settings,data_source,person,NA,NA,2025-03-16 21:08:51,0
-94,4,NA,12,figure_settings,concepts,"3027018, 3027598, 3004249, 3012888, 21492240, 21492239, 21492241",NA,NA,2025-03-16 21:08:51,0
-95,4,NA,12,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 21:08:51,0
-96,4,NA,12,figure_settings,code,"concepts <- tibble::tribble(
+92,7,NA,45,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:18:34,0
+93,8,NA,51,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:18:34,0
+94,9,NA,57,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:18:34,0
+95,10,NA,63,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:18:34,0
+96,6,NA,40,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:18:34,0
+97,4,NA,12,figure_settings,data_source,person,NA,NA,2025-03-16 21:45:36,0
+98,4,NA,12,figure_settings,concepts,"3027018, 3027598, 3004249, 3012888, 21492240, 21492239, 21492241",NA,NA,2025-03-16 21:45:36,0
+99,4,NA,12,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 21:45:36,0
+100,4,NA,12,figure_settings,code,"concepts <- tibble::tribble(
     ~concept_id, ~concept_name, ~domain_id, ~vocabulary_id,
     3027018, 'Heart rate', 'Measurement', '',
     3027598, 'Mean blood pressure', 'Measurement', '',
@@ -306,7 +310,7 @@ sql <- glue::glue_sql('
     SELECT 
         measurement_concept_id AS concept_id,
         measurement_source_concept_id AS source_concept_id,
-        CAST(measurement_datetime AS TIMESTAMP) AS datetime,
+        measurement_datetime AS datetime,
         value_as_number
     FROM measurement 
     WHERE person_id = {m$selected_person} 
@@ -321,20 +325,18 @@ sql <- glue::glue_sql('
     AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))
 ', .con = d$con)
 
-raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble() %>% dplyr::mutate_at('datetime', as.POSIXct)
+raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()
 
 if (!is.na(m$selected_person)){
     sql <- glue::glue_sql('
         SELECT 
-            CAST(MIN(visit_start_datetime) AS TIMESTAMP) AS min_visit_start_datetime, 
-            CAST(MAX(visit_end_datetime) AS TIMESTAMP) AS max_visit_end_datetime 
+            MIN(visit_start_datetime) AS min_visit_start_datetime, 
+            MAX(visit_end_datetime) AS max_visit_end_datetime 
         FROM visit_occurrence 
         WHERE person_id = {m$selected_person} 
     ', .con = d$con)
 
-    data_datetimes_range <-
-        DBI::dbGetQuery(d$con, sql) %>%
-        dplyr::mutate_at(c('min_visit_start_datetime', 'max_visit_end_datetime'), as.POSIXct)
+    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
 }
 
 if (length(data_datetimes_range) > 0){
@@ -390,18 +392,14 @@ if (length(combined_features) > 0){
         dygraphs::dyAxis('y', valueRange = c(0, NA))
 }
 
-fig",NA,NA,2025-03-16 21:08:51,0
-97,3,NA,6,figure_settings,data_source,person,NA,NA,2025-03-16 21:12:00,0
-98,3,NA,6,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-03-16 21:12:00,0
-99,3,NA,6,figure_settings,concept_classes,,NA,NA,2025-03-16 21:12:00,0
-100,3,NA,6,figure_settings,concepts,"957136, 19077546, 35603227, 35603224, 956874, 35603226, 40166830, 40167218, 40166825, 40167196, 40167213, 1307046",NA,NA,2025-03-16 21:12:00,0
-101,3,NA,6,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 21:12:00,0
-102,1,NA,2,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:18:34,0
-103,7,NA,45,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:18:34,0
-104,8,NA,51,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:18:34,0
-105,9,NA,57,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:18:34,0
-106,10,NA,63,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:18:34,0
-107,6,NA,40,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:18:34,0
-108,4,NA,12,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:18:44,0
-109,3,NA,6,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:18:44,0
-110,2,NA,4,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:18:44,0
+fig",NA,NA,2025-03-16 21:45:36,0
+101,3,NA,6,figure_settings,data_source,person,NA,NA,2025-03-16 21:49:54,0
+102,3,NA,6,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-03-16 21:49:54,0
+103,3,NA,6,figure_settings,concept_classes,,NA,NA,2025-03-16 21:49:54,0
+104,3,NA,6,figure_settings,concepts,"957136, 19077546, 35603227, 35603224, 956874, 35603226, 40166830, 40167218, 40166825, 40167196, 40167213, 1307046",NA,NA,2025-03-16 21:49:54,0
+105,3,NA,6,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 21:49:54,0
+106,4,NA,12,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:51:35,0
+107,3,NA,6,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:51:35,0
+108,2,NA,4,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:51:35,0
+109,1,NA,2,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:52:37,0
+110,5,NA,30,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:52:48,0

@@ -19,7 +19,7 @@ sql <- glue::glue_sql('
     SELECT 
         measurement_concept_id AS concept_id,
         measurement_source_concept_id AS source_concept_id,
-        CAST(measurement_datetime AS TIMESTAMP) AS datetime,
+        measurement_datetime AS datetime,
         value_as_number
     FROM measurement 
     WHERE person_id = {m$selected_person} 
@@ -34,20 +34,18 @@ sql <- glue::glue_sql('
     AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))
 ', .con = d$con)
 
-raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble() %>% dplyr::mutate_at('datetime', as.POSIXct)
+raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()
 
 if (!is.na(m$selected_person)){
     sql <- glue::glue_sql('
         SELECT 
-            CAST(MIN(visit_start_datetime) AS TIMESTAMP) AS min_visit_start_datetime, 
-            CAST(MAX(visit_end_datetime) AS TIMESTAMP) AS max_visit_end_datetime 
+            MIN(visit_start_datetime) AS min_visit_start_datetime, 
+            MAX(visit_end_datetime) AS max_visit_end_datetime 
         FROM visit_occurrence 
         WHERE person_id = {m$selected_person} 
     ', .con = d$con)
 
-    data_datetimes_range <-
-        DBI::dbGetQuery(d$con, sql) %>%
-        dplyr::mutate_at(c('min_visit_start_datetime', 'max_visit_end_datetime'), as.POSIXct)
+    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
 }
 
 if (length(data_datetimes_range) > 0){

@@ -84,7 +84,7 @@ observeEvent(input$display_figure_%widget_id%, {
                 "    SELECT \\n",
                 "        measurement_concept_id AS concept_id,\\n",
                 "        measurement_source_concept_id AS source_concept_id,\\n",
-                "        CAST(measurement_datetime AS TIMESTAMP) AS datetime,\\n",
+                "        measurement_datetime AS datetime,\\n",
                 "        value_as_number\\n",
                 "    FROM measurement \\n",
                 "    WHERE ", data_source, "_id = {m$selected_", data_source, "} \\n",
@@ -98,7 +98,7 @@ observeEvent(input$display_figure_%widget_id%, {
                 "    WHERE ", data_source, "_id = {m$selected_", data_source, "} \\n",
                 "    AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))\\n",
                 "', .con = d$con)\\n\\n",
-                "raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble() %>% dplyr::mutate_at('datetime', as.POSIXct)"
+                "raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()"
             )
             
             if (data_source == "person") {
@@ -109,14 +109,12 @@ observeEvent(input$display_figure_%widget_id%, {
                     "if (!is.na(m$selected_person)){\\n",
                     "    sql <- glue::glue_sql('\\n",
                     "        SELECT \\n",
-                    "            CAST(MIN(visit_start_datetime) AS TIMESTAMP) AS min_visit_start_datetime, \\n",
-                    "            CAST(MAX(visit_end_datetime) AS TIMESTAMP) AS max_visit_end_datetime \\n",
+                    "            MIN(visit_start_datetime) AS min_visit_start_datetime, \\n",
+                    "            MAX(visit_end_datetime) AS max_visit_end_datetime \\n",
                     "        FROM visit_occurrence \\n",
                     "        WHERE person_id = {m$selected_person} \\n",
                     "    ', .con = d$con)\\n\\n",
-                    "    data_datetimes_range <-\\n",
-                    "        DBI::dbGetQuery(d$con, sql) %>%\\n",
-                    "        dplyr::mutate_at(c('min_visit_start_datetime', 'max_visit_end_datetime'), as.POSIXct)\\n",
+                    "    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)\\n",
                     "}"
                 )
             }
@@ -128,14 +126,12 @@ observeEvent(input$display_figure_%widget_id%, {
                     "if (!is.na(m$selected_visit_detail)){\\n",
                     "    sql <- glue::glue_sql('\\n",
                     "        SELECT \\n",
-                    "            CAST(MIN(visit_detail_start_datetime) AS TIMESTAMP) AS min_visit_start_datetime, \\n",
-                    "            CAST(MAX(visit_detail_end_datetime) AS TIMESTAMP) AS max_visit_end_datetime \\n",
+                    "            MIN(visit_detail_start_datetime) AS min_visit_start_datetime, \\n",
+                    "            MAX(visit_detail_end_datetime) AS max_visit_end_datetime \\n",
                     "        FROM visit_detail \\n",
                     "        WHERE visit_detail_id = {m$selected_visit_detail} \\n",
                     "    ', .con = d$con)\\n\\n",
-                    "    data_datetimes_range <-\\n",
-                    "        DBI::dbGetQuery(d$con, sql) %>%\\n",
-                    "        dplyr::mutate_at(c('min_visit_start_datetime', 'max_visit_end_datetime'), as.POSIXct)\\n",
+                    "    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)\\n",
                     "}"
                 )
             }
@@ -301,7 +297,7 @@ observeEvent(input$run_code_%widget_id%, {
         # combined_features <- c()
         
         # sql <- glue::glue_sql("
-            # SELECT measurement_concept_id AS concept_id, measurement_source_concept_id AS source_concept_id, CAST(measurement_datetime AS TIMESTAMP) AS datetime, value_as_number
+            # SELECT measurement_concept_id AS concept_id, measurement_source_concept_id AS source_concept_id, measurement_datetime AS datetime, value_as_number
             # FROM measurement 
             # WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (measurement_concept_id IN ({concepts$concept_id*}) OR measurement_source_concept_id IN ({concepts$concept_id*}))
             # UNION
@@ -309,28 +305,28 @@ observeEvent(input$run_code_%widget_id%, {
             # FROM observation 
             # WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))
             # ", .con = d$con)
-        # raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble() %>% dplyr::mutate_at("datetime", as.POSIXct)
+        # raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()
         
         # if (data_source == "person") {
             
             # if (!is.na(m$selected_person)){
                 # sql <- glue::glue_sql("
-                    # SELECT CAST(MIN(visit_start_datetime) AS TIMESTAMP) AS min_visit_start_datetime, CAST(MAX(visit_end_datetime) AS TIMESTAMP) AS max_visit_end_datetime
+                    # SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime
                     # FROM visit_occurrence
                     # WHERE person_id = {m$selected_person}
                 # ", .con = d$con)
-                # data_datetimes_range <- DBI::dbGetQuery(d$con, sql) %>% dplyr::mutate_at(c("min_visit_start_datetime", "max_visit_end_datetime"), as.POSIXct)
+                # data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
             # }
         # }
         # else if (data_source == "visit_detail") {
         
             # if (!is.na(m$selected_visit_detail)){
                 # sql <- glue::glue_sql("
-                    # SELECT CAST(MIN(visit_detail_start_datetime) AS TIMESTAMP) AS min_visit_start_datetime, CAST(MAX(visit_detail_end_datetime) AS TIMESTAMP) AS max_visit_end_datetime
+                    # SELECT MIN(visit_detail_start_datetime) AS min_visit_start_datetime, MAX(visit_detail_end_datetime) AS max_visit_end_datetime
                     # FROM visit_detail
                     # WHERE visit_detail_id = {m$selected_visit_detail}
                 # ", .con = d$con)
-                # data_datetimes_range <- DBI::dbGetQuery(d$con, sql) %>% dplyr::mutate_at(c("min_visit_start_datetime", "max_visit_end_datetime"), as.POSIXct)
+                # data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
             # }
         # }
         
