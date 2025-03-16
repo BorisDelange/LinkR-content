@@ -279,10 +279,27 @@ res",NA,NA,2025-02-18 15:35:57,0
 87,8,NA,51,general_settings,selected_file_id,NA,NA,NA,2025-03-15 12:38:44,0
 88,7,NA,45,general_settings,selected_file_id,NA,NA,NA,2025-03-15 12:38:44,0
 89,6,NA,40,general_settings,selected_file_id,NA,NA,NA,2025-03-15 12:38:44,0
-90,4,NA,12,figure_settings,data_source,person,NA,NA,2025-03-16 20:47:47,0
-91,4,NA,12,figure_settings,concepts,"3027018, 3027598, 3004249, 3012888, 21492240, 21492239, 21492241",NA,NA,2025-03-16 20:47:47,0
-92,4,NA,12,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 20:47:47,0
-93,4,NA,12,figure_settings,code,"concepts <- tibble::tribble(
+90,2,NA,4,figure_settings,data_source,person,NA,NA,2025-03-16 20:49:55,0
+91,2,NA,4,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-03-16 20:49:55,0
+92,2,NA,4,figure_settings,concept_classes,,NA,NA,2025-03-16 20:49:55,0
+93,2,NA,4,figure_settings,concepts,"3027598, 3027018, 3004249, 3012888, 21492239, 21492240, 21492241",NA,NA,2025-03-16 20:49:55,0
+94,2,NA,4,figure_settings,num_cols,NA,8,NA,2025-03-16 20:49:55,0
+95,2,NA,4,figure_settings,aggregate_fct,mean,NA,NA,2025-03-16 20:49:55,0
+96,2,NA,4,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 20:49:55,0
+97,3,NA,6,figure_settings,data_source,person,NA,NA,2025-03-16 20:50:01,0
+98,3,NA,6,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-03-16 20:50:01,0
+99,3,NA,6,figure_settings,concept_classes,,NA,NA,2025-03-16 20:50:01,0
+100,3,NA,6,figure_settings,concepts,"957136, 19077546, 35603227, 35603224, 956874, 35603226, 40166830, 40167218, 40166825, 40167196, 40167213, 1307046",NA,NA,2025-03-16 20:50:01,0
+101,3,NA,6,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 20:50:01,0
+102,5,NA,30,general_settings,selected_file_id,NA,NA,NA,2025-03-16 20:57:02,0
+103,1,NA,2,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:01:11,0
+104,4,NA,12,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:01:12,0
+105,3,NA,6,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:01:12,0
+106,2,NA,4,general_settings,selected_file_id,NA,NA,NA,2025-03-16 21:01:12,0
+107,4,NA,12,figure_settings,data_source,person,NA,NA,2025-03-16 21:01:23,0
+108,4,NA,12,figure_settings,concepts,"3027018, 3027598, 3004249, 3012888, 21492240, 21492239, 21492241",NA,NA,2025-03-16 21:01:23,0
+109,4,NA,12,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 21:01:23,0
+110,4,NA,12,figure_settings,code,"concepts <- tibble::tribble(
     ~concept_id, ~concept_name, ~domain_id, ~vocabulary_id,
     3027018, 'Heart rate', 'Measurement', '',
     3027598, 'Mean blood pressure', 'Measurement', '',
@@ -386,21 +403,4 @@ if (length(combined_features) > 0){
         dygraphs::dyAxis('y', valueRange = c(0, NA))
 }
 
-fig",NA,NA,2025-03-16 20:47:47,0
-94,2,NA,4,figure_settings,data_source,person,NA,NA,2025-03-16 20:49:55,0
-95,2,NA,4,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-03-16 20:49:55,0
-96,2,NA,4,figure_settings,concept_classes,,NA,NA,2025-03-16 20:49:55,0
-97,2,NA,4,figure_settings,concepts,"3027598, 3027018, 3004249, 3012888, 21492239, 21492240, 21492241",NA,NA,2025-03-16 20:49:55,0
-98,2,NA,4,figure_settings,num_cols,NA,8,NA,2025-03-16 20:49:55,0
-99,2,NA,4,figure_settings,aggregate_fct,mean,NA,NA,2025-03-16 20:49:55,0
-100,2,NA,4,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 20:49:55,0
-101,3,NA,6,figure_settings,data_source,person,NA,NA,2025-03-16 20:50:01,0
-102,3,NA,6,figure_settings,concepts_choice,selected_concepts,NA,NA,2025-03-16 20:50:01,0
-103,3,NA,6,figure_settings,concept_classes,,NA,NA,2025-03-16 20:50:01,0
-104,3,NA,6,figure_settings,concepts,"957136, 19077546, 35603227, 35603224, 956874, 35603226, 40166830, 40167218, 40166825, 40167196, 40167213, 1307046",NA,NA,2025-03-16 20:50:01,0
-105,3,NA,6,figure_settings,synchronize_timelines,NA,1,NA,2025-03-16 20:50:01,0
-106,1,NA,2,general_settings,selected_file_id,NA,NA,NA,2025-03-16 20:56:37,0
-107,4,NA,12,general_settings,selected_file_id,NA,NA,NA,2025-03-16 20:56:40,0
-108,3,NA,6,general_settings,selected_file_id,NA,NA,NA,2025-03-16 20:56:40,0
-109,2,NA,4,general_settings,selected_file_id,NA,NA,NA,2025-03-16 20:56:40,0
-110,5,NA,30,general_settings,selected_file_id,NA,NA,NA,2025-03-16 20:57:02,0
+fig",NA,NA,2025-03-16 21:01:23,0
