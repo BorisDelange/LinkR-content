@@ -21,8 +21,7 @@ if (nrow(general_settings) == 0){
 
     # Toggles values
     
-    # general_settings_vec <- c("show_settings_file", "figure_and_settings_side_by_side", "run_code_on_data_update", "run_code_at_settings_file_load")
-    general_settings_vec <- c("show_settings_file", "figure_and_settings_side_by_side")
+    general_settings_vec <- c("show_settings_file", "figure_and_settings_side_by_side", "run_code_on_data_update", "run_code_at_settings_file_load")
     
     sapply(general_settings_vec, function(name){
         

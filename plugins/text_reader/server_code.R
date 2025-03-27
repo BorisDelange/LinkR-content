@@ -11,54 +11,16 @@ observeEvent(input$display_figure_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$display_figure"))
     
-    tryCatch({
-    
-        # If current selected tab is figure settings when run code button is clicked, generate code from these settings
-        if (length(input$current_tab_%widget_id%) == 0) current_tab <- "figure_settings"
-        else current_tab <- input$current_tab_%widget_id%
-        
-        if (current_tab == "figure_settings"){
-            
-            # Code to generate code from figure settings
-            
-            # ...
-            code <- ""
-            
-            # Update ace editor with generated code
-            shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
-            
-            m$code_%widget_id% <- code
-            
-            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-        }
-        
-        # Check if user has access
-        else if ("projects_console_access" %in% user_accesses){
-            m$code_%widget_id% <- input$code_%widget_id%
-            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-        }
-        
-    }, error = function(e){
-        show_message_bar(id, output, "error_displaying_figure", "severeWarning", i18n = i18np, ns = ns)
-        cat(paste0("\\n", now(), " - widget %widget_id% - input$display_figure - error = ", toString(e)))
-    })
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
 })
 
 # Run code at patient update
-# observeEvent(m$selected_person, {
-    # %req%
-    # if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
+observeEvent(m$selected_person, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
     
-    # if (isTRUE(input$run_code_on_data_update_%widget_id%)) shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-# })
-
-# Run code at visit_detail update
-# observeEvent(m$selected_visit_detail, {
-    # %req%
-    # if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$selected_person"))
-    
-    # if (isTRUE(input$run_code_on_data_update_%widget_id%)) shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-# })
+    if (isTRUE(input$run_code_on_data_update_%widget_id%)) shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+})
 
 # Run code
 observeEvent(input$run_code_%widget_id%, {
@@ -67,10 +29,16 @@ observeEvent(input$run_code_%widget_id%, {
     
     tryCatch({
         
+        # Reset UI
+        output$notes_%widget_id% <- renderUI(div())
+        
         # Get notes
+        
+        notes <- tibble::tibble(note_type_concept_name = character(), note_title = character(), note_datetime = character())
         
         sql <- glue::glue_sql("
             SELECT
+                n.note_id,
                 c.concept_name AS note_type_concept_name,
                 n.note_title,
                 n.note_text,
@@ -85,7 +53,7 @@ observeEvent(input$run_code_%widget_id%, {
             tibble::as_tibble() %>% 
             dplyr::mutate_at("note_datetime", format_datetime, language = language, sec = FALSE)
         
-        notes <- m$notes_%widget_id% %>% dplyr::select(note_type_concept_name, note_title, note_datetime)
+        if (nrow(m$notes_%widget_id%) > 0) notes <- m$notes_%widget_id% %>% dplyr::select(note_type_concept_name, note_title, note_datetime)
         
         # If DT proxy doesn't exist, create it
         if (length(m$notes_datatable_proxy_%widget_id%) == 0){
@@ -150,7 +118,7 @@ observeEvent(input$reload_note_%widget_id%, {
             
             output$notes_%widget_id% <- renderUI({
                 div(
-                    div(strong(note$note_title), " - ", note$note_datetime, language = language, style="margin-left: 8px;"),
+                    div(strong(note$note_title), " - ", note$note_datetime, language = language, style="margin-left: 8px;", title = paste0("note_id = ", note$note_id)),
                     note_text_div,
                     style = "height: 100%;"
                 )

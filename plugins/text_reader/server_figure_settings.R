@@ -23,11 +23,11 @@ observeEvent(input$load_figure_settings_%widget_id%, {
     }
     
     # Run code if toggle is activated
-    # if (length(input$run_code_at_settings_file_load_%widget_id%) > 0){
-    #     if (input$run_code_at_settings_file_load_%widget_id%){
-    #        shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random());")))
-    #    }
-    # }
+    if (length(input$run_code_at_settings_file_load_%widget_id%) > 0){
+        if (input$run_code_at_settings_file_load_%widget_id%){
+            shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());")))
+        }
+    }
 })
 
 # Save current settings

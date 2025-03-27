@@ -11,7 +11,6 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
             shinyjs::runjs(paste0("
                 $('#", id, "-figure_div_%widget_id%').css('flex-basis', '50%');
                 $('#", id, "-figure_settings_div_%widget_id%').css('flex-basis', '50%');
-                $('#", id, "-code_div_%widget_id%').css('flex-basis', '50%');
                 
                 if (!window.resizingInitialized_%widget_id%) {
                     var container = document.getElementById('", id, "-figure_settings_code_div_%widget_id%');
@@ -21,7 +20,6 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
                     
                     var leftPanel = container.querySelector('.left-panel');
                     var figureSettingsPanel = document.getElementById('", id, "-figure_settings_div_%widget_id%');
-                    var codePanel = document.getElementById('", id, "-code_div_%widget_id%');
                     var resizer = container.querySelector('.resizer');
                     
                     function triggerResizeEvent() {
@@ -32,7 +30,21 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
                     resizer.addEventListener('mousedown', function(e) {
                         isResizing = true;
                         lastDownX = e.clientX;
-                
+                        
+                        var overlay = document.createElement('div');
+                        overlay.id = 'iframe-overlay-%widget_id%';
+                        overlay.style.position = 'absolute';
+                        overlay.style.top = '0';
+                        overlay.style.left = '0';
+                        overlay.style.width = '100%';
+                        overlay.style.height = '100%';
+                        overlay.style.zIndex = '9999';
+                        overlay.style.cursor = 'col-resize';
+                        
+                        var iframeContainer = document.getElementById('", id, "-figure_div_' + '%widget_id%');
+                        iframeContainer.style.position = 'relative';
+                        iframeContainer.appendChild(overlay);
+                        
                         document.addEventListener('mousemove', resizePanels);
                         document.addEventListener('mouseup', stopResizing);
                     });
@@ -42,13 +54,11 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
                         
                         var offsetLeftPanel = leftPanel.offsetWidth;
                         var offsetFigureSettingsPanel = figureSettingsPanel.offsetWidth;
-                        var offsetCodePanel = codePanel.offsetWidth;
                         var deltaX = e.clientX - lastDownX;
                         
                         leftPanel.style.flexBasis = (offsetLeftPanel + deltaX) + 'px';
                         
                         figureSettingsPanel.style.flexBasis = (offsetFigureSettingsPanel - deltaX) + 'px';
-                        codePanel.style.flexBasis = (offsetCodePanel - deltaX) + 'px';
                 
                         lastDownX = e.clientX;
                         triggerResizeEvent();
@@ -58,6 +68,10 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
                         isResizing = false;
                         document.removeEventListener('mousemove', resizePanels);
                         document.removeEventListener('mouseup', stopResizing);
+                        var overlay = document.getElementById('iframe-overlay-%widget_id%');
+                        if (overlay) {
+                            overlay.parentNode.removeChild(overlay);
+                        }
                         triggerResizeEvent();
                     }
                 }
@@ -71,7 +85,6 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, {
             shinyjs::runjs(paste0("
                 $('#", id, "-figure_div_%widget_id%').css('flex-basis', '100%');
                 $('#", id, "-figure_settings_div_%widget_id%').css('flex-basis', '100%');
-                $('#", id, "-code_div_%widget_id%').css('flex-basis', '100%');
             "))
             
             shinyjs::show("figure_button_div_%widget_id%");
@@ -95,8 +108,7 @@ observeEvent(input$save_general_settings_%widget_id%, {
         file_id <- input$settings_file_%widget_id%
         new_data <- tibble::tibble(name = character(), value = character(), value_num = integer())
         
-        # general_settings_vec <- c("show_settings_file", "figure_and_settings_side_by_side", "run_code_on_data_update", "run_code_at_settings_file_load")
-        general_settings_vec <- c("show_settings_file", "figure_and_settings_side_by_side")
+        general_settings_vec <- c("show_settings_file", "figure_and_settings_side_by_side", "run_code_on_data_update", "run_code_at_settings_file_load")
         
         sapply(general_settings_vec, function(name){
             toggle_value <- 0L
