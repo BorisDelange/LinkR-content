@@ -88,14 +88,6 @@ tagList(
             %import_script('ui_figure_settings.R')%,
             style = paste0("height: 100%; flex-basis: ", div_width, "%; padding: 0 8px; overflow: auto; flex: 1; box-sizing: border-box;")
         ),
-        shinyjs::hidden(
-            div(
-                id = ns("code_div_%widget_id%"),
-                %import_script('ui_code.R')%,
-                style = paste0("height: 100%; flex-basis: ", div_width, "%; overflow: auto; flex: 1; box-sizing: border-box;"),
-                class = "right-panel"
-            )
-        ),
         style = "display: flex; height: calc(100% - 34px);",
         class = "data_widget_settings_code_panel"
     ),
