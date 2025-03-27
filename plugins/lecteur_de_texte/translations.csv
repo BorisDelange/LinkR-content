@@ -1,0 +1,35 @@
+base,en,fr
+add,Add,Ajouter
+code_execution,Code execution,Exécution du code
+create_settings_file,Create a settings file,Créer un fichier de sauvegarde
+delete,Delete,Supprimer
+delete_settings_file_text,Confirm deletion of the settings file?,Confirmer la suppression du fichier de sauvegarde ?
+delete_settings_file_title,Delete a settings file,Supprimer un fichier de sauvegarde
+display,Display,Affichage
+display_figure,Display figure,Afficher la figure
+dont_delete,Cancel,Annuler
+error_displaying_figure,Error displaying figure,Erreur lors de l'affichage de la figure
+figure_and_settings_side_by_side,Figure and settings/editor side by side,Figure et paramètres/éditeur côte à côte
+file,File,Fichier
+file_name,File name,Nom du fichier
+name_already_used,This name is already used,Ce nom est déjà utilisé
+new_settings_file_added,New settings file added,Nouveau fichier de sauvegarde des paramètres ajouté
+no_settings_file_selected,No settings file selected,Pas de fichier de sauvegarde sélectionné
+provide_valid_name,Provide valid name,Nom valide requis
+run_code_at_settings_file_load,Run code when a settings file is loaded,Exécuter le code au chargement d'un fichier de sauvegarde
+run_code_on_data_update,Run code on data update,Exécuter le code lors de la mise à jour des données
+save_figure_settings_and_code,Save,Sauvegarder
+save_general_settings,Save general settings,Sauvegarder les paramètres généraux
+settings_file_deleted,Settings file deleted,Fichier de sauvegarde des paramètres supprimé
+show_code_editor,Edit figure code,Editer le code de la figure
+show_figure,Figure,Figure
+show_figure_settings,Set up the figure,Paramétrer la figure
+show_general_settings,General settings,Paramètres généraux
+show_settings_file,Show settings file,Afficher le fichier de sauvegarde
+notes,Notes,Notes
+filters,Filters,Filtres
+layout,Layout,Mise en page
+category,Category,Catégorie
+title,Title,Titre
+datetime,Datetime,Date & heure
+display_raw_text,Display raw text,Afficher le texte brut
