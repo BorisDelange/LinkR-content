@@ -31,25 +31,27 @@ NA</details>
 
 The "Drug exposure" plugin allows you to display **medication administration data** in the form of a **timeline**.
 
-<div style="text-align: center;">
+<table align="center"><tr><td>
     <img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_figure.png"
-        alt="Dygraphs timeline"
-        style="width: 100%; max-width: 750px;"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_figure.gif"
+        alt="Dygraphs timeline",
+        width="750",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
+</td></tr></table>
 
 # 2) Features
 
 ## Figure settings
 
-<div style="text-align: center;">
+<table align="center"><tr><td>
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_figure_settings.png"
-        alt="Figure settings"
-        style="width: 100%; max-width: 400px; border: solid 1px #ccc; padding: 5px;"
+        alt="Figure settings",
+        width="400",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
+</td></tr></table>
 
 Here are the parameters you can adjust:
 
@@ -65,13 +67,14 @@ This feature allows you to synchronize the timelines of several widgets on the s
 
 ## Code
 
-<div style="text-align: center;">
+<table align="center"><tr><td>
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/figure_and_code.png"
-        alt="Figure and code"
-        style="width: 100%; max-width: 750px; border: solid 1px #ccc; padding: 5px;"
+        alt="Figure and code",
+        width="750",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
+</td></tr></table>
 
 As with **all plugins** on LinkR, the **low-code** interface allows you to generate code from the graphical interface.
 
@@ -91,13 +94,14 @@ with the code corresponding to the current parameters.
 
 ## Save files
 
-<div style="text-align: center;">
+<table align="center"><tr><td>
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_settings_files.png"
-        alt="Settings files"
-        style="width: 100%; max-width: 280px; border: solid 1px #ccc; padding: 5px;"
+        alt="Settings files",
+        width="280",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
+</td></tr></table>
 
 You can **save** the figure parameters and code from the save files management page.
 
@@ -108,13 +112,14 @@ Then return to the "Figure settings" or "Code" tabs and save your parameters and
 
 ## General settings
 
-<div style="text-align: center;">
+<table align="center"><tr><td>
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/drug_exposure/en_general_settings.png"
-        alt="General settings"
-        style="width: 100%; max-width: 260px; border: solid 1px #ccc; padding: 5px;"
+        alt="General settings",
+        width="260",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
+</td></tr></table>
 
 The general settings are divided into:
 
@@ -151,25 +156,27 @@ NA</details>
 The "Timeline {dygraphs}" plugin allows you to display **continuous data** in the form of a **timeline**,
 such as **vital signs** or **laboratory data**.
 
-<div style="text-align: center;">
+<table align="center"><tr><td>
     <img 
-        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.png"
-        alt="Dygraphs timeline"
-        style="width: 100%; max-width: 750px;"
+        src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure.gif"
+        alt="Dygraphs timeline",
+        width="750",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
+</td></tr></table>
 
 # 2) Features
 
 ## Figure settings
 
-<div style="text-align: center;">
+<table align="center"><tr><td>
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_figure_settings.png"
-        alt="Figure settings"
-        style="width: 100%; max-width: 250px; border: solid 1px #ccc; padding: 5px;"
+        alt="Figure settings",
+        width="250",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
+</td></tr></table>
 
 Here are the parameters you can adjust:
 
@@ -184,13 +191,14 @@ This feature allows you to synchronize the timelines of several widgets on the s
 
 ## Code
 
-<div style="text-align: center;">
+<table align="center"><tr><td>
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/figure_and_code.png"
-        alt="Figure and code"
-        style="width: 100%; max-width: 750px; border: solid 1px #ccc; padding: 5px;"
+        alt="Figure and code",
+        width="750",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
+</td></tr></table>
 
 As with **all plugins** on LinkR, the **low-code** interface allows you to generate code from the graphical interface.
 
@@ -210,13 +218,14 @@ with the code corresponding to the current parameters.
 
 ## Save files
 
-<div style="text-align: center;">
+<table align="center"><tr><td>
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_settings_files.png"
-        alt="Settings files"
-        style="width: 100%; max-width: 280px; border: solid 1px #ccc; padding: 5px;"
+        alt="Settings files",
+        width="280",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
+</td></tr></table>
 
 You can **save** the figure parameters and code from the save files management page.
 
@@ -227,13 +236,14 @@ Then return to the "Figure settings" or "Code" tabs and save your parameters and
 
 ## General settings
 
-<div style="text-align: center;">
+<table align="center"><tr><td>
     <img 
         src="https://framagit.org/interhop/linkr/LinkR-content/-/raw/main/img/plugins/timeline_dygraphs/en_general_settings.png"
-        alt="General settings"
-        style="width: 100%; max-width: 280px; border: solid 1px #ccc; padding: 5px;"
+        alt="General settings",
+        width="280",
+        style="border: solid 1px #ccc; padding: 5px;"
     />
-</div>
+</td></tr></table>
 
 The general settings are divided into:
 
