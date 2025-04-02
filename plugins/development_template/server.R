@@ -18,7 +18,7 @@ observeEvent(input$current_tab_trigger_%widget_id%, {
         sapply(paste0(setdiff(c("figure_settings", "code", "general_settings"), tab), "_div_%widget_id%"), shinyjs::hide)
         shinyjs::hide("settings_files_div_%widget_id%")
         
-        if (tab != "code" | (tab == "code" & "projects_console_access" %in% user_accesses)) shinyjs::show(paste0(tab, "_div_%widget_id%"))
+        if (tab != "code" | (tab == "code" & "projects_widgets_console" %in% user_accesses)) shinyjs::show(paste0(tab, "_div_%widget_id%"))
         
         if (tab %in% c("figure_settings", "code")){
             if (length(input$figure_and_settings_side_by_side_%widget_id%) > 0) if (input$figure_and_settings_side_by_side_%widget_id%) shinyjs::show("figure_div_%widget_id%")
