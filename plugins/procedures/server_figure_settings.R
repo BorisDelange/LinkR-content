@@ -18,16 +18,25 @@ observeEvent(input$load_figure_settings_%widget_id%, {
             value <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value)
             value_num <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value_num)
             
-            # Update figure settings UI here with loaded figure settings
+            if (name %in% c("data_source", "concepts_choice")) shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            else if (name %in% c("concepts", "concept_classes")){
+                value <- unlist(strsplit(value, ", "))
+                if (name == "concepts") value <- as.numeric(value)
+                shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            }
+            else if (name == "synchronize_timelines"){
+                value <- as.logical(value_num)
+                shiny.fluent::updateToggle.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            }
         })
     }
     
     # Run code if toggle is activated
-    # if (length(input$run_code_at_settings_file_load_%widget_id%) > 0){
-    #     if (input$run_code_at_settings_file_load_%widget_id%){
-    #        shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random());")))
-    #    }
-    # }
+    if (length(input$run_code_at_settings_file_load_%widget_id%) > 0){
+        if (input$run_code_at_settings_file_load_%widget_id%){
+           shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random());")))
+       }
+    }
 })
 
 # Save current settings
@@ -49,20 +58,23 @@ observeEvent(input$save_params_and_code_%widget_id%, {
             sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db))
             
             # Add new settings in db
+            new_data <- tibble::tribble(
+                ~name, ~value, ~value_num,
+                "data_source", input$data_source_%widget_id%, NA_real_,
+                "concepts_choice", input$concepts_choice_%widget_id%, NA_real_,
+                "concept_classes", input$concept_classes_%widget_id% %>% toString(), NA_real_,
+                "concepts", input$concepts_%widget_id% %>% toString(), NA_real_,
+                "synchronize_timelines", NA_character_, as.integer(input$synchronize_timelines_%widget_id%)
+            )
             
-            # new_data <- tibble::tribble(
-            #     ~name, ~value, ~value_num,
-            #     ...
-            # )
+            new_data <-
+                new_data %>%
+                dplyr::transmute(
+                    id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
+                    category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
+                )
             
-            # new_data <-
-            #     new_data %>%
-            #     dplyr::transmute(
-            #         id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
-            #         category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
-            #     )
-            
-            # DBI::dbAppendTable(m$db, "widgets_options", new_data)
+            DBI::dbAppendTable(m$db, "widgets_options", new_data)
             
             # Notify user
             show_message_bar(id, output, "modif_saved", "success", i18n = i18n, ns = ns)
