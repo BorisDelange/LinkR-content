@@ -56,19 +56,19 @@ observeEvent(input$run_code_%widget_id%, {
         if (nrow(m$notes_%widget_id%) > 0) notes <- m$notes_%widget_id% %>% dplyr::select(note_type_concept_name, note_title, note_datetime)
         
         # If DT proxy doesn't exist, create it
-        if (length(m$notes_datatable_proxy_%widget_id%) == 0){
+        # if (length(m$notes_datatable_proxy_%widget_id%) == 0){
         
-            render_datatable(
-              output = output, ns = ns, i18n = i18n, data = notes,
-              output_name = "notes_datatable_%widget_id%", col_names = c(i18np$t("category"), i18np$t("title"), i18np$t("datetime")),
-              datatable_dom = "<'datatable_length'l><'top't><'bottom'p>", sortable_cols = c("note_type_concept_name", "note_title", "note_datetime"),
-              searchable_cols = c("note_type_concept_name", "note_title", "note_datetime"), factorize_cols = "note_type_concept_name", filter = TRUE
-            )
+        render_datatable(
+          output = output, ns = ns, i18n = i18n, data = notes,
+          output_name = "notes_datatable_%widget_id%", col_names = c(i18np$t("category"), i18np$t("title"), i18np$t("datetime")),
+          datatable_dom = "<'datatable_length'l><'top't><'bottom'p>", sortable_cols = c("note_type_concept_name", "note_title", "note_datetime"),
+          searchable_cols = c("note_type_concept_name", "note_title", "note_datetime"), factorize_cols = "note_type_concept_name", filter = TRUE
+        )
             
             # Create datatable proxy only if notes is not empty (if we create DT with an empty tibble, it freezes search textfields)
-            if (nrow(notes) > 0) m$notes_datatable_proxy_%widget_id% <- DT::dataTableProxy("notes_datatable_%widget_id%", deferUntilFlush = FALSE)
-        }
-        else DT::replaceData(m$notes_datatable_proxy_%widget_id%, notes, resetPaging = FALSE, rownames = FALSE)
+            # if (nrow(notes) > 0) m$notes_datatable_proxy_%widget_id% <- DT::dataTableProxy("notes_datatable_%widget_id%", deferUntilFlush = FALSE)
+        # }
+        # else DT::replaceData(m$notes_datatable_proxy_%widget_id%, notes, resetPaging = FALSE, rownames = FALSE)
         
         # Go to figure tab
         if (!input$figure_and_settings_side_by_side_%widget_id%) shinyjs::click("figure_button_%widget_id%")
