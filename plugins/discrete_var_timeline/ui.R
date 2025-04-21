@@ -22,7 +22,10 @@ if ("projects_widgets_settings" %in% user_accesses){
 
 # Load concept class IDs
 concept_class_ids <- tibble::tibble(concept_class_id = character())
-if (length(d$dataset_concept) > 0) if (nrow(d$dataset_concept) > 0) concept_class_ids <- d$dataset_concept %>% dplyr::filter(domain_id == "Procedure") %>% dplyr::distinct(concept_class_id)
+if (length(d$dataset_concept) > 0) if (nrow(d$dataset_concept) > 0) concept_class_ids <- 
+    d$dataset_concept %>% 
+    dplyr::filter(domain_id %in% c("Condition", "Observation", "Procedure") %>%
+    dplyr::distinct(concept_class_id)
 
 %import_script('ui_load_general_settings.R')%
 

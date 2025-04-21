@@ -3,9 +3,9 @@
   <plugin>
     <app_version>0.3.1.9005</app_version>
     <unique_id>73d0449bf010b42fb8b4db36a957bcdf05882b398d459c221a6973049785a471</unique_id>
-    <version>0.0.1.9004</version>
+    <version>0.0.1.9005</version>
     <name_en>Discrete var. timeline</name_en>
-    <name_fr>Timeline var. disct&#xE8;res</name_fr>
+    <name_fr>Timeline var. discr&#xE8;tes</name_fr>
     <category_en></category_en>
     <category_fr></category_fr>
     <description_en></description_en>
@@ -16,7 +16,7 @@
       <author>Jane Doe</author>
     </authors>
     <creation_datetime>2025-04-02 17:37:51</creation_datetime>
-    <update_datetime>2025-04-21 18:31:53</update_datetime>
+    <update_datetime>2025-04-21 18:36:25</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>
