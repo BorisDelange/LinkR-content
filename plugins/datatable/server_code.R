@@ -140,7 +140,7 @@ observeEvent(input$run_code_%widget_id%, {
                 SELECT
                     person_id,
                     visit_detail_id,
-                    measurement_concept_id,
+                    CASE WHEN measurement_concept_id > 0 THEN measurement_concept_id ELSE measurement_source_concept_id END AS measurement_concept_id,
                     measurement_datetime,
                     value_as_number
                 FROM measurement
@@ -149,7 +149,7 @@ observeEvent(input$run_code_%widget_id%, {
                 SELECT
                     person_id,
                     visit_detail_id,
-                    measurement_concept_id,
+                    CASE WHEN measurement_concept_id > 0 THEN measurement_concept_id ELSE measurement_source_concept_id END AS measurement_concept_id,
                     measurement_datetime,
                     value_as_number
                 FROM measurement
