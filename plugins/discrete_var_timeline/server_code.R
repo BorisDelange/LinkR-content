@@ -331,9 +331,9 @@ observeEvent(input$run_code_%widget_id%, {
                         i18np$t("concept"), " : ", concept_name, "<br>",
                         i18np$t("start"), " : ", format(datetime, datetime_format), "<br>",
                         i18np$t("end"), " : ", format(end_datetime, datetime_format), "<br>",
-                        i18np$t("quantity"), " : ", quantity,
-                        i18np$t("value_as_number"), " : ", value_as_number,
-                        i18np$t("value_as_string"), " : ", value_as_string,
+                        i18np$t("quantity"), " : ", quantity, "<br>",
+                        i18np$t("value_as_number"), " : ", value_as_number, "<br>",
+                        i18np$t("value_as_string"), " : ", value_as_string, "<br>",
                         i18np$t("value_as_concept_id"), " : ", value_as_concept_id
                     ),
                     hoverinfo = "text"
@@ -346,9 +346,9 @@ observeEvent(input$run_code_%widget_id%, {
                     text = ~paste0(
                         i18np$t("concept"), " : ", concept_name, "<br>",
                         i18np$t("start"), " : ", format(datetime, datetime_format), "<br>",
-                        i18np$t("quantity"), " : ", quantity,
-                        i18np$t("value_as_number"), " : ", value_as_number,
-                        i18np$t("value_as_string"), " : ", value_as_string,
+                        i18np$t("quantity"), " : ", quantity, "<br>",
+                        i18np$t("value_as_number"), " : ", value_as_number, "<br>",
+                        i18np$t("value_as_string"), " : ", value_as_string, "<br>",
                         i18np$t("value_as_concept_id"), " : ", value_as_concept_id
                     ),
                     hoverinfo = "text"

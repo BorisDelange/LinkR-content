@@ -43,7 +43,7 @@ div(
                     shiny.fluent::Dropdown.shinyInput(
                         ns("concepts_%widget_id%"), label = i18np$t("concepts"),
                         options = convert_tibble_to_list(
-                            selected_concepts %>% dplyr::filter(domain_id == "Procedure"),
+                            selected_concepts %>% dplyr::filter(domain_id %in% c("Condition", "Observation", "Procedure")),
                             key_col = "concept_id", text_col = "concept_name"
                         ),
                         multiSelect = TRUE
