@@ -114,7 +114,7 @@ observeEvent(input$display_figure_%widget_id%, {
                         "\\n\\n",
                         "if (nrow(data) > 0) data <- \\n",
                         "    dplyr::inner_join(d$dataset_concept %>% dplyr::select(drug_concept_id = concept_id, concept_class_id), by = 'drug_concept_id') %>%\\n",
-                        "    dplyr::filter(concept_class_id %in% c(", toString(input$concept_classes_%widget_id%), ")) %>%\\n",
+                        "    dplyr::filter(concept_class_id %in% c(", toString(paste0("'", input$concept_classes_%widget_id%, "'")), ")) %>%\\n",
                         "    dplyr::select(-concept_class_id)"
                     )
                 }

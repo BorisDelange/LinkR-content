@@ -83,18 +83,24 @@ observeEvent(input$save_params_and_code_%widget_id%, {
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
 
-# Show / hide concepts_div and concept_classes_div_
+# Show / hide concepts_div and concept_classes_div
 
 observeEvent(input$concepts_choice_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$concepts_choice_"))
-    
    
     if (input$concepts_choice_%widget_id% == "selected_concepts"){
         shinyjs::hide("concept_classes_div_%widget_id%")
         shinyjs::show("concepts_div_%widget_id%")
     }
     else if (input$concepts_choice_%widget_id% == "selected_concept_classes"){
+
+        # Update concept class IDs
+        
+        concept_class_ids <- tibble::tibble(concept_class_id = character())
+        if (length(d$dataset_concept) > 0) if (nrow(d$dataset_concept) > 0) concept_class_ids <- d$dataset_concept %>% dplyr::filter(domain_id == "Drug") %>% dplyr::distinct(concept_class_id)
+        shiny.fluent::updateDropdown.shinyInput(session, "concept_classes_%widget_id%", options = convert_tibble_to_list(concept_class_ids, key_col = "concept_class_id", text_col = "concept_class_id"))
+
         shinyjs::hide("concepts_div_%widget_id%")
         shinyjs::show("concept_classes_div_%widget_id%")
     }
