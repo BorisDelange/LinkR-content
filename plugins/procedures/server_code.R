@@ -160,7 +160,7 @@ observeEvent(input$run_code_%widget_id%, {
             procedure_occurrence_id,
             person_id,
             visit_detail_id,
-            procedure_concept_id,
+            CASE WHEN procedure_concept_id > 0 THEN procedure_concept_id ELSE procedure_source_concept_id END AS procedure_concept_id,
             procedure_datetime,
             procedure_type_concept_id,
             quantity
@@ -168,7 +168,7 @@ observeEvent(input$run_code_%widget_id%, {
             procedure_occurrence_id,
             person_id,
             visit_detail_id,
-            procedure_concept_id,
+            CASE WHEN procedure_concept_id > 0 THEN procedure_concept_id ELSE procedure_source_concept_id END AS procedure_concept_id,
             procedure_datetime,
             procedure_end_datetime,
             procedure_type_concept_id,

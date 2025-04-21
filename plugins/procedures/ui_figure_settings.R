@@ -29,10 +29,7 @@ div(
                 div(
                     shiny.fluent::Dropdown.shinyInput(
                         ns("concept_classes_%widget_id%"), label = i18np$t("concept_classes"),
-                        # options = convert_tibble_to_list(
-                            # d$dataset_concept %>% dplyr::filter(domain_id == "Procedure") %>% dplyr::distinct(concept_class_id),
-                            # key_col = "concept_class_id", text_col = "concept_class_id"
-                        # ),
+                        options = convert_tibble_to_list(concept_class_ids, key_col = "concept_class_id", text_col = "concept_class_id"),
                         multiSelect = TRUE
                     ),
                     style = "width: 200px;"
