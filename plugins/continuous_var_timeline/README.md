@@ -1,7 +1,7 @@
 # 1) Introduction
 
-The "Timeline {dygraphs}" plugin allows you to display **continuous data** in the form of a **timeline**,
-such as **vital signs** or **laboratory data**.
+The "Continuous variables timeline" plugin allows you to display **continuous data** in the form of a **timeline**,
+such as **vital signs** or **laboratory data**, using `dygraphs` library.
 
 <table align="center"><tr><td>
     <img 

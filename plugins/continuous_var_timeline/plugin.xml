@@ -3,15 +3,15 @@
   <plugin>
     <app_version>0.3.1.9005</app_version>
     <unique_id>064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e</unique_id>
-    <version>0.0.1.9044</version>
-    <name_en>Timeline {dygraphs}</name_en>
-    <name_fr>Timeline {dygraphs}</name_fr>
+    <version>0.0.1.9045</version>
+    <name_en>Continuous var timeline</name_en>
+    <name_fr>Timeline var continues</name_fr>
     <category_en>NA</category_en>
     <category_fr>NA</category_fr>
     <description_en># 1) Introduction
 
-The "Timeline {dygraphs}" plugin allows you to display **continuous data** in the form of a **timeline**,
-such as **vital signs** or **laboratory data**.
+The "Continuous variables timeline" plugin allows you to display **continuous data** in the form of a **timeline**,
+such as **vital signs** or **laboratory data**, using `dygraphs` library.
 
 &lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
@@ -121,8 +121,8 @@ The general settings are divided into:
     "Data to display" parameter</description_en>
     <description_fr># 1) Introduction
 
-Le plugin "Timeline {dygraphs}" permet d'afficher des **donn&#xE9;es continues** sous forme de **timeline**,
-tels que les **param&#xE8;tres vitaux** ou les donn&#xE9;es de **biologie**.
+Le plugin "Timeline variables continues" permet d'afficher des **donn&#xE9;es continues** sous forme de **timeline**,
+tels que les **param&#xE8;tres vitaux** ou les donn&#xE9;es de **biologie**, &#xE0; l'aide de la librairie `dygraphs`.
 
 &lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
     &lt;img 
@@ -237,7 +237,7 @@ Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-08-28 22:19:16</creation_datetime>
-    <update_datetime>2025-04-21 17:54:46</update_datetime>
+    <update_datetime>2025-04-21 18:29:51</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>
