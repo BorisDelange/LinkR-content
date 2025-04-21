@@ -377,7 +377,8 @@ observeEvent(input$run_code_%widget_id%, {
                         automargin = FALSE
                     ),
                     hoverlabel = list(align = "left"),
-                    margin = list(l = 145, r = 0, t = 0, b = 0)
+                    margin = list(l = 145, r = 0, t = 0, b = 0),
+                    showlegend = FALSE
                 ) %>%
                 plotly::config(displayModeBar = FALSE) %>%
                 plotly::event_register("plotly_relayout")
