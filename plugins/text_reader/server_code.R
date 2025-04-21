@@ -51,7 +51,9 @@ observeEvent(input$run_code_%widget_id%, {
         m$notes_%widget_id% <-
             DBI::dbGetQuery(d$con, sql) %>% 
             tibble::as_tibble() %>% 
-            dplyr::mutate_at("note_datetime", format_datetime, language = language, sec = FALSE)
+            # We keep the EN datetime format for the column sorting to work (does not work with the french format).
+            #dplyr::mutate_at("note_datetime", format_datetime, language = language, sec = FALSE)
+            dplyr::mutate_at("note_datetime", format_datetime, language = "en", sec = FALSE)
         
         if (nrow(m$notes_%widget_id%) > 0) notes <- m$notes_%widget_id% %>% dplyr::select(note_type_concept_name, note_title, note_datetime)
         
