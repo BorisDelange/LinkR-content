@@ -9,6 +9,6 @@ div(
             uiOutput(ns("error_message_%widget_id%"))
         )
     ),
-    plotly::plotlyOutput(ns("procedure_occurrence_plot_%widget_id%"), width = "100%", height = "100%"),
+    plotly::plotlyOutput(ns("plot_%widget_id%"), width = "100%", height = "100%"),
     style = "width: 100%; padding: 5px; box-sizing: border-box; height: 100%; overflow-y: auto;"
 )
