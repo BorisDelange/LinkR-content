@@ -29,7 +29,10 @@ show_settings_file,Show settings file,Afficher le fichier de sauvegarde
 notes,Notes,Notes
 filters,Filters,Filtres
 layout,Layout,Mise en page
+chatbot,Chatbot,Chatbot
 category,Category,Catégorie
 title,Title,Titre
 datetime,Datetime,Date & heure
 display_raw_text,Display raw text,Afficher le texte brut
+llm_provider,Provider,Plateforme
+llm_model,Model,Modèle

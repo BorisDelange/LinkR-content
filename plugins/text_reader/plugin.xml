@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <plugins>
   <plugin>
-    <app_version>0.3.1.9005</app_version>
+    <app_version>0.3.1.9007</app_version>
     <unique_id>04bfcd705217d0002bc9feada4d32d14f330fda4f6cb63ed24dcb81c96f30f6d</unique_id>
-    <version>0.0.1.9006</version>
+    <version>0.0.1.9007</version>
     <name_en>Text reader</name_en>
     <name_fr>Lecteur de texte</name_fr>
     <category_en></category_en>
@@ -16,7 +16,7 @@
       <author>Jane Doe</author>
     </authors>
     <creation_datetime>2025-03-26 19:09:33</creation_datetime>
-    <update_datetime>2025-04-21 17:59:52</update_datetime>
+    <update_datetime>2025-05-09 22:38:58</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>

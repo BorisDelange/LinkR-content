@@ -73,7 +73,7 @@ observeEvent(input$save_params_and_code_%widget_id%, {
 
 # Figure settings tabs
 
-sub_tabs <- c("select_notes", "filters", "layout")
+sub_tabs <- c("select_notes", "filters", "layout", "chatbot")
 
 observeEvent(input$current_figure_settings_tab_trigger_%widget_id%, {
     %req%
@@ -105,4 +105,59 @@ observeEvent(input$display_raw_text_%widget_id%, {
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$display_raw_text_%widget_id%"))
     
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_note_%widget_id%', Math.random());"))
+})
+
+# Chatbot
+
+observeEvent(input$send_message_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$send_message_%widget_id%"))
+    
+    if (length(m$chatbot_messages_%widget_id%) == 0) m$chatbot_messages_%widget_id% <- tagList()
+    
+    if (length(m$chatbot_%widget_id%) == 0) m$chatbot_%widget_id% <- ellmer::chat_ollama(model = "llama3.2:3b")
+    
+    user_message <- input$user_input_%widget_id%
+    
+    message_bubble <- div(
+        class = "user-message-bubble",
+        style = "
+            background-color: #0B93F6; color: white; border-radius: 20px; 
+            padding: 10px 15px; margin: 5px 0; display: inline-block; 
+            max-width: 60%; float: right; clear: both; word-wrap: break-word;
+            font-family: 'Helvetica Neue', Helvetica, sans-serif;",
+        user_message
+    )
+    
+    m$chatbot_messages_%widget_id% <- tagAppendChild(
+        m$chatbot_messages_%widget_id%,
+        div(style = "overflow: hidden; margin-bottom: 10px;", message_bubble)
+    )
+    
+    res <- m$chatbot_%widget_id%$chat(user_message)
+    
+    chatbot_message_bubble <- div(
+        class = "chatbot-message-bubble",
+        style = "
+            background-color: #E5E5EA; color: #000000; border-radius: 20px; 
+            padding: 10px 15px; margin: 5px 0; display: block; 
+            width: 100%; clear: both; word-wrap: break-word;
+            font-family: 'Helvetica Neue', Helvetica, sans-serif;",
+        res
+    )
+    
+    m$chatbot_messages_%widget_id% <- tagAppendChild(
+        m$chatbot_messages_%widget_id%,
+        div(style = "overflow: hidden; margin-bottom: 10px;", chatbot_message_bubble)
+    )
+    
+    output$chat_ui_%widget_id% <- renderUI(
+        div(
+            class = "chat-container",
+            style = "display: flex; flex-direction: column; height: 100%; overflow-y: auto;",
+            m$chatbot_messages_%widget_id%
+        )
+    )
+    
+    updateTextInput(session, paste0("user_input_%widget_id%"), value = "")
 })
