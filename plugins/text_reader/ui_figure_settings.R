@@ -54,13 +54,16 @@ div(
                 ),
                 style = "display: flex; gap: 10px; margin-top: 15px;" 
             ),
-            uiOutput(ns("chat_ui_%widget_id%")),
+            div(
+                uiOutput(ns("chat_ui_%widget_id%")), 
+                style = "height: calc(100% - 150px); overflow-y: auto; margin-top: 10px;"
+            ),
             div(
                 div(textAreaInput(ns("user_input_%widget_id%"), "", width = "calc(100% - 8px)", resize = "vertical")),
                 div(shiny.fluent::PrimaryButton.shinyInput(ns("send_message_%widget_id%"), "Submit"), style = "margin-top: 10px; display: flex; justify-content: flex-end;"),
                 style = "position: absolute; bottom: 10px; width: calc(50% - 35px);"
             ),
-            style = "height: 100%;"
+            style = "display: flex; flex-direction: column; height: 100%;"
         )
     ),
     
