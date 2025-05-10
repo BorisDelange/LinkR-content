@@ -27,7 +27,7 @@ show_figure_settings,Set up the figure,Paramétrer la figure
 show_general_settings,General settings,Paramètres généraux
 show_settings_file,Show settings file,Afficher le fichier de sauvegarde
 notes,Notes,Notes
-filters,Filters,Filtres
+keyword_search,Keyword search,Recherche par mots-clés
 layout,Layout,Mise en page
 chatbot,Chatbot,Chatbot
 category,Category,Catégorie
@@ -40,6 +40,7 @@ packages_ellmer_ollamar_needed,Packages ellmer and ollamar required. Install the
 select_llm_model,Select a model,Sélectionner un modèle
 select_llm_provider,Select a provider,Sélectionner une plateforme
 send,Send,Envoyer
+clear_chat,Clear chat,Effacer le chat
 include_notes,Include notes,Inclure des notes
 none,None,Aucune
 selected_note,Selected note,Note sélectionnée

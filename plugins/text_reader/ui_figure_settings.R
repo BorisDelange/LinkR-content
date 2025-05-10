@@ -5,9 +5,9 @@ div(
     div(
         id = ns("figure_settings_tabs_%widget_id%"),
         tags$button(id = ns("select_notes_%widget_id%"), i18np$t("notes"), class = "widget_pivot_item selected_widget_pivot_item", onclick = figure_settings_tab_item_js),
-        tags$button(id = ns("filters_%widget_id%"), i18np$t("filters"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
-        tags$button(id = ns("layout_%widget_id%"), i18np$t("layout"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
         tags$button(id = ns("chatbot_%widget_id%"), i18np$t("chatbot"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
+        tags$button(id = ns("keyword_search_%widget_id%"), i18np$t("keyword_search"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
+        tags$button(id = ns("layout_%widget_id%"), i18np$t("layout"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
         class = "pivot"
     ),
     
@@ -73,11 +73,28 @@ div(
                         id = ns("chat_input_%widget_id%"),
                         textAreaInput(ns("user_input_%widget_id%"), "", width = "calc(100% - 8px)", resize = "vertical"),
                         div(
+                            shiny.fluent::DefaultButton.shinyInput(ns("clear_chat_%widget_id%"), i18np$t("clear_chat"), iconProps = list(iconName = "Refresh")), 
                             shiny.fluent::PrimaryButton.shinyInput(ns("send_message_%widget_id%"), i18np$t("send"), iconProps = list(iconName = "Play")), 
-                            style = "margin-top: 10px; display: flex; justify-content: flex-end;"
+                            style = "margin-top: 10px; display: flex; justify-content: flex-end; gap: 5px;"
                         ),
                         style = "width: 100%; margin-top: auto; padding-bottom: 2px;"
                     ),
+                    tags$script(HTML(paste0("
+                        $(document).ready(function() {
+                            $('#", ns("user_input_%widget_id%"), "').keydown(function(event) {
+                                if (event.keyCode === 13 && !event.shiftKey) {
+                                    event.preventDefault();
+                                    
+                                    setTimeout(function() {
+                                        $('#", ns("send_message_%widget_id%"), "').click();
+                                    }, 10);
+                                    
+                                    return false;
+                                }
+                                return true;
+                            });
+                        });
+                    "))),
                     style = "display: flex; flex-direction: column; height: calc(100% - 70px); width: 100%;"
                 ),
                 style = "display: flex; flex-direction: column; height: calc(100% - 25px); width: 100%;"

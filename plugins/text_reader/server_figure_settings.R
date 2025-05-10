@@ -75,7 +75,7 @@ observeEvent(input$save_params_and_code_%widget_id%, {
 
 # Figure settings tabs
 
-sub_tabs <- c("select_notes", "filters", "layout", "chatbot")
+sub_tabs <- c("select_notes", "keyword_search", "layout", "chatbot")
 
 observeEvent(input$current_figure_settings_tab_trigger_%widget_id%, {
     %req%
@@ -346,4 +346,23 @@ observeEvent(m$chatbot_response_%widget_id%(), {
             })();
         '))
      }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+})
+
+# Clear chat
+
+observeEvent(input$clear_chat_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$clear_chat_%widget_id%"))
+    
+    tryCatch({
+    
+        if(requireNamespace("ellmer", quietly = TRUE) && requireNamespace("ollamar", quietly = TRUE)){
+            if (length(input$llm_provider_%widget_id%) > 0 && length(input$llm_model_%widget_id%) > 0){
+                m$chatbot_%widget_id% <- ellmer::chat_ollama(model = input$llm_model_%widget_id%)
+                m$chatbot_messages_%widget_id% <- tagList()
+                output$chat_ui_%widget_id% <- renderUI(div())
+            }
+        }
+    
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
