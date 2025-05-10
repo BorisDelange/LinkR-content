@@ -36,3 +36,11 @@ datetime,Datetime,Date & heure
 display_raw_text,Display raw text,Afficher le texte brut
 llm_provider,Provider,Plateforme
 llm_model,Model,Modèle
+packages_ellmer_ollamar_needed,Packages ellmer and ollamar required. Install these packages and restart the application., Packages ellmer et ollamar requis. Installez-les et redémarrez l'application.
+select_llm_model,Select a model,Sélectionner un modèle
+select_llm_provider,Select a provider,Sélectionner une plateforme
+send,Send,Envoyer
+include_notes,Include notes,Inclure des notes
+none,None,Aucune
+selected_note,Selected note,Note sélectionnée
+all_notes,All notes,Toutes les notes

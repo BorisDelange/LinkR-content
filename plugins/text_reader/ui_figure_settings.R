@@ -1,7 +1,6 @@
 # UI - Figure settings
 #
 # Insert the UI components for configuring the figure settings in this section.
-
 div(
     div(
         id = ns("figure_settings_tabs_%widget_id%"),
@@ -37,35 +36,59 @@ div(
     # Chatbot
     
     shinyjs::hidden(
-        div(
-            id = ns("chatbot_div_%widget_id%"),
+        if(requireNamespace("ellmer", quietly = TRUE) && requireNamespace("ollamar", quietly = TRUE)){
             div(
+                id = ns("chatbot_div_%widget_id%"),
                 div(
-                    shiny.fluent::Dropdown.shinyInput(ns("llm_provider_%widget_id%"), options = list(
-                            list(key = "ollama", text = "Ollama")
+                    div(
+                        shiny.fluent::Dropdown.shinyInput(ns("llm_provider_%widget_id%"), options = list(
+                                list(key = "ollama", text = "Ollama")
+                            ),
+                            label = i18np$t("llm_provider")
                         ),
-                        value = "ollama", label = i18np$t("llm_provider")
+                        style = "width: 150px;"
                     ),
-                    style = "width: 150px;"
+                    div(
+                        shiny.fluent::Dropdown.shinyInput(ns("llm_model_%widget_id%"), label = i18np$t("llm_model")),
+                        style = "width: 150px;"
+                    ),
+                    div(
+                        shiny.fluent::Dropdown.shinyInput(ns("include_notes_%widget_id%"), label = i18np$t("include_notes"), options = list(
+                            list(key = "none", text = i18np$t("none")),
+                            list(key = "selected_note", text = i18np$t("selected_note")),
+                            list(key = "all_notes", text = i18np$t("all_notes"))
+                        ), value = "none"),
+                        style = "width: 150px;"
+                    ),
+                    style = "display: flex; gap: 10px; margin-top: 15px;" 
                 ),
                 div(
-                    shiny.fluent::Dropdown.shinyInput(ns("llm_model_%widget_id%"), label = i18np$t("llm_model")),
-                    style = "width: 150px;"
+                    id = ns("chat_container_%widget_id%"),
+                    div(
+                        id = ns("chat_messages_%widget_id%"),
+                        uiOutput(ns("chat_ui_%widget_id%")),
+                        style = "flex-grow: 1; overflow-y: auto;"
+                    ),
+                    div(
+                        id = ns("chat_input_%widget_id%"),
+                        textAreaInput(ns("user_input_%widget_id%"), "", width = "calc(100% - 8px)", resize = "vertical"),
+                        div(
+                            shiny.fluent::PrimaryButton.shinyInput(ns("send_message_%widget_id%"), i18np$t("send"), iconProps = list(iconName = "Play")), 
+                            style = "margin-top: 10px; display: flex; justify-content: flex-end;"
+                        ),
+                        style = "width: 100%; margin-top: auto; padding-bottom: 2px;"
+                    ),
+                    style = "display: flex; flex-direction: column; height: calc(100% - 70px); width: 100%;"
                 ),
-                style = "display: flex; gap: 10px; margin-top: 15px;" 
-            ),
+                style = "display: flex; flex-direction: column; height: calc(100% - 25px); width: 100%;"
+            )
+        } else {
             div(
-                uiOutput(ns("chat_ui_%widget_id%")), 
-                style = "height: calc(100% - 150px); overflow-y: auto; margin-top: 10px;"
-            ),
-            div(
-                div(textAreaInput(ns("user_input_%widget_id%"), "", width = "calc(100% - 8px)", resize = "vertical")),
-                div(shiny.fluent::PrimaryButton.shinyInput(ns("send_message_%widget_id%"), "Submit"), style = "margin-top: 10px; display: flex; justify-content: flex-end;"),
-                style = "position: absolute; bottom: 10px; width: calc(50% - 35px);"
-            ),
-            style = "display: flex; flex-direction: column; height: 100%;"
-        )
+                id = ns("chatbot_div_%widget_id%"),
+                div(shiny.fluent::MessageBar(i18np$t("packages_ellmer_ollamar_needed"), messageBarType = 5), style = "display: inline-block; margin-top: 10px;")
+            )
+        }
     ),
     
-    style = "height: calc(100% - 45px);"
+    style = "height: 100%; display: flex; flex-direction: column;"
 )
