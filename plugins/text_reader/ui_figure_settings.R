@@ -87,7 +87,7 @@ div(
                                     
                                     setTimeout(function() {
                                         $('#", ns("send_message_%widget_id%"), "').click();
-                                    }, 10);
+                                    }, 500);
                                     
                                     return false;
                                 }
