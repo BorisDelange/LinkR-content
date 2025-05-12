@@ -11,8 +11,8 @@ if (nrow(general_settings) == 0){
 
     toggle_values$show_settings_file <- TRUE
     toggle_values$figure_and_settings_side_by_side <- TRUE
-    toggle_values$run_code_on_data_update <- FALSE
-    toggle_values$run_code_at_settings_file_load <- FALSE
+    toggle_values$run_code_on_data_update <- TRUE
+    toggle_values$run_code_at_settings_file_load <- TRUE
     
     dropdown_options <- list()
     selected_file <- NULL
@@ -43,6 +43,12 @@ if (nrow(general_settings) == 0){
     m$settings_filenames_%widget_id% <- DBI::dbGetQuery(m$db, sql)
     dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = "id", text_col = "name")
     selected_file <- general_settings %>% dplyr::filter(name == "selected_file_id") %>% dplyr::pull(link_id)
+}
+
+# Load code, even if no settings file is selected
+if (toggle_values$run_code_on_data_update){
+    m$test <- Sys.time()
+    shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());")))
 }
 
 if (toggle_values$figure_and_settings_side_by_side) div_width <- "50%" else div_width <- "100%"

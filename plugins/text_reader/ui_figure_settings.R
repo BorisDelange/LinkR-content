@@ -15,6 +15,10 @@ div(
     
     div(
         id = ns("select_notes_div_%widget_id%"),
+        div(
+            id = ns("error_message_div_%widget_id%"),
+            div(shiny.fluent::MessageBar(i18np$t("select_a_patient"), messageBarType = 5), style = "display: inline-block;")
+        ),
         DT::DTOutput(ns("notes_datatable_%widget_id%")), 
         style = "margin-top: 15px;"
     ),

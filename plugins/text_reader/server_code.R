@@ -32,44 +32,55 @@ observeEvent(input$run_code_%widget_id%, {
         # Reset UI
         output$notes_%widget_id% <- renderUI(div())
         
-        # Get notes
+        # No patient selected
+        if (is.na(m$selected_person)){
+            output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("select_a_patient"), messageBarType = 5), style = "display: inline-block;"))
+            shinyjs::hide("notes_datatable_%widget_id%")
+            shinyjs::show("error_message_div_%widget_id%")
+        }
         
-        notes <- tibble::tibble(note_type_concept_name = character(), note_title = character(), note_datetime = character())
+        else {
         
-        sql <- glue::glue_sql("
-            SELECT
-                n.note_id,
-                c.concept_name AS note_type_concept_name,
-                n.note_title,
-                n.note_text,
-                n.note_datetime
-            FROM note n
-            LEFT JOIN concept c ON n.note_type_concept_id = c.concept_id
-            WHERE person_id = {m$selected_person}
-        ", .con = d$con)
+            shinyjs::hide("error_message_div_%widget_id%")
+            shinyjs::show("notes_datatable_%widget_id%")
+            output$error_message_%widget_id% <- renderUI(div())
         
-        m$notes_%widget_id% <-
-            DBI::dbGetQuery(d$con, sql) %>% 
-            tibble::as_tibble() %>% 
-            # We keep the EN datetime format for the column sorting to work (does not work with the french format).
-            #dplyr::mutate_at("note_datetime", format_datetime, language = language, sec = FALSE)
-            dplyr::mutate_at("note_datetime", format_datetime, language = "en", sec = FALSE)
-        
-        if (nrow(m$notes_%widget_id%) > 0) notes <- m$notes_%widget_id% %>% dplyr::select(note_type_concept_name, note_title, note_datetime)
-        
-        page_length <- 10
-        if (length(input$notes_datatable_%widget_id%_state$length) > 0) page_length <- input$notes_datatable_%widget_id%_state$length
-        
-        render_datatable(
-          output = output, ns = ns, i18n = i18n, data = notes, page_length = page_length,
-          output_name = "notes_datatable_%widget_id%", col_names = c(i18np$t("category"), i18np$t("title"), i18np$t("datetime")),
-          datatable_dom = "<'datatable_length'l><'top't><'bottom'p>", sortable_cols = c("note_type_concept_name", "note_title", "note_datetime"),
-          searchable_cols = c("note_type_concept_name", "note_title", "note_datetime"), factorize_cols = "note_type_concept_name", filter = TRUE,
-          search_filters = input$notes_datatable_%widget_id%_search_columns
-        )
-        
-        # Go to figure tab
-        if (!input$figure_and_settings_side_by_side_%widget_id%) shinyjs::click("figure_button_%widget_id%")
+            # Get notes
+            
+            notes <- tibble::tibble(note_type_concept_name = character(), note_title = character(), note_datetime = character())
+            
+            sql <- glue::glue_sql("
+                SELECT
+                    n.note_id,
+                    c.concept_name AS note_type_concept_name,
+                    n.note_title,
+                    n.note_text,
+                    n.note_datetime
+                FROM note n
+                LEFT JOIN concept c ON n.note_type_concept_id = c.concept_id
+                WHERE person_id = {m$selected_person}
+            ", .con = d$con)
+            
+            m$notes_%widget_id% <-
+                DBI::dbGetQuery(d$con, sql) %>% 
+                tibble::as_tibble() %>% 
+                # We keep the EN datetime format for the column sorting to work (does not work with the french format).
+                #dplyr::mutate_at("note_datetime", format_datetime, language = language, sec = FALSE)
+                dplyr::mutate_at("note_datetime", format_datetime, language = "en", sec = FALSE)
+            
+            if (nrow(m$notes_%widget_id%) > 0) notes <- m$notes_%widget_id% %>% dplyr::select(note_type_concept_name, note_title, note_datetime)
+            
+            page_length <- 10
+            if (length(input$notes_datatable_%widget_id%_state$length) > 0) page_length <- input$notes_datatable_%widget_id%_state$length
+            
+            render_datatable(
+              output = output, ns = ns, i18n = i18n, data = notes, page_length = page_length,
+              output_name = "notes_datatable_%widget_id%", col_names = c(i18np$t("category"), i18np$t("title"), i18np$t("datetime")),
+              datatable_dom = "<'datatable_length'l><'top't><'bottom'p>", sortable_cols = c("note_type_concept_name", "note_title", "note_datetime"),
+              searchable_cols = c("note_type_concept_name", "note_title", "note_datetime"), factorize_cols = "note_type_concept_name", filter = TRUE,
+              search_filters = input$notes_datatable_%widget_id%_search_columns
+            )
+        }
         
     }, error = function(e){
         show_message_bar(id, output, "error_displaying_figure", "severeWarning", i18n = i18np, ns = ns)
