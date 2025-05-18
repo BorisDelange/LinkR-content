@@ -68,7 +68,34 @@ observeEvent(input$run_code_%widget_id%, {
                 #dplyr::mutate_at("note_datetime", format_datetime, language = language, sec = FALSE)
                 dplyr::mutate_at("note_datetime", format_datetime, language = "en", sec = FALSE)
             
-            if (nrow(m$notes_%widget_id%) > 0) notes <- m$notes_%widget_id% %>% dplyr::select(note_type_concept_name, note_title, note_datetime)
+            # Filter notes if filter_notes_with_matches is activated and search words are selected
+            if (nrow(m$notes_%widget_id%) > 0) {
+                
+                # Check if filtering is enabled and search word sets are selected
+                if (!is.null(input$filter_notes_with_matches_%widget_id%) && 
+                    input$filter_notes_with_matches_%widget_id% && 
+                    length(input$search_word_sets_%widget_id%) > 0) {
+                    
+                    # Get words to search for
+                    word_sets_ids <- input$search_word_sets_%widget_id%
+                    sql <- glue::glue_sql("SELECT DISTINCT(value) FROM widgets_options WHERE widget_id = %widget_id% AND category = 'word_sets' AND link_id IN ({word_sets_ids*}) AND name = 'word_name'", .con = m$db)
+                    words <- DBI::dbGetQuery(m$db, sql)
+                    
+                    if (nrow(words) > 0) {
+                        # Keep only notes that contain at least one of the words
+                        m$notes_%widget_id% <- m$notes_%widget_id% %>%
+                            dplyr::filter(
+                                purrr::map_lgl(note_text, function(text) {
+                                    any(purrr::map_lgl(words$value, function(word) {
+                                        grepl(word, text, ignore.case = TRUE)
+                                    }))
+                                })
+                            )
+                    }
+                }
+                
+                notes <- m$notes_%widget_id% %>% dplyr::select(note_type_concept_name, note_title, note_datetime)
+            }
             
             page_length <- 10
             if (length(input$notes_datatable_%widget_id%_state$length) > 0) page_length <- input$notes_datatable_%widget_id%_state$length
@@ -81,6 +108,12 @@ observeEvent(input$run_code_%widget_id%, {
               search_filters = input$notes_datatable_%widget_id%_search_columns
             )
         }
+        
+        # Go to "select notes" tab
+        shinyjs::runjs(paste0("
+            Shiny.setInputValue('", id, "-current_figure_settings_tab_%widget_id%', 'select_notes_%widget_id%');
+            Shiny.setInputValue('", id, "-current_figure_settings_tab_trigger_%widget_id%', Math.random());"
+        ))
         
     }, error = function(e){
         show_message_bar(id, output, "error_displaying_figure", "severeWarning", i18n = i18np, ns = ns)
@@ -99,6 +132,31 @@ observeEvent(input$notes_datatable_%widget_id%_rows_selected, {
 
 # Display note
 
+## Function to highlight words in the HTML text
+highlight_words <- function(text, words_to_highlight) {
+    # If no words to highlight, return the original text
+    if (nrow(words_to_highlight) == 0) return(text)
+    
+    # Use a simple for loop to replace each word individually
+    highlighted_text <- text
+    for (word in words_to_highlight$value) {
+        # Simple pattern matching for each word individually
+        pattern <- word
+        
+        # Replace the word with its highlighted version
+        highlighted_text <- gsub(
+            pattern,
+            paste0("<span style='background-color: yellow; font-weight: bold;'>", 
+                   word, 
+                   "</span>"),
+            highlighted_text,
+            ignore.case = TRUE # Case-insensitive search
+        )
+    }
+    
+    return(highlighted_text)
+}
+
 observeEvent(input$reload_note_%widget_id%, {
     %req%
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$reload_note_%widget_id%"))
@@ -109,16 +167,30 @@ observeEvent(input$reload_note_%widget_id%, {
             
             note <- m$notes_%widget_id%[input$notes_datatable_%widget_id%_rows_selected, ]
             
+            # Search words
+            
+            word_sets_ids <- input$search_word_sets_%widget_id%
+            words <- tibble::tibble()
+            
+            if (length(input$search_word_sets_%widget_id%) > 0){
+                sql <- glue::glue_sql("SELECT DISTINCT(value) FROM widgets_options WHERE widget_id = %widget_id% AND category = 'word_sets' AND link_id IN ({word_sets_ids*}) AND name = 'word_name'", .con = m$db)
+                words <- DBI::dbGetQuery(m$db, sql)
+            }
+            
             display_raw_note <- FALSE
             if (length(input$display_raw_text_%widget_id%) > 0) if (input$display_raw_text_%widget_id%) display_raw_note <- TRUE
             
             if (display_raw_note){
                 note_text_div <- tags$pre(note$note_text)
             } else {
+            
+                # Apply highlighting to the note text
+                highlighted_text <- highlight_words(note$note_text, words)
+            
                 note_text_div <-
                     div(
                         tags$iframe(
-                                srcdoc = div(HTML(note$note_text), style = "white-space: pre-wrap; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 12px;"),
+                                srcdoc = div(HTML(highlighted_text), style = "white-space: pre-wrap; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 12px;"),
                                 style = "width: 100%; height: 100%; border: none;"
                             ),
                         style = "height: 100%;"

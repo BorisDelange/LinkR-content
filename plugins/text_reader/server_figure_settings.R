@@ -53,16 +53,16 @@ observeEvent(input$save_params_and_code_%widget_id%, {
             # Add new settings in db
             
             # new_data <- tibble::tribble(
-            #     ~name, ~value, ~value_num,
-            #     ...
+                # ~name, ~value, ~value_num,
+                
             # )
             
             # new_data <-
-            #     new_data %>%
-            #     dplyr::transmute(
-            #         id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
-            #         category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
-            #     )
+                # new_data %>%
+                # dplyr::transmute(
+                    # id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
+                    # category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
+                # )
             
             # DBI::dbAppendTable(m$db, "widgets_options", new_data)
             
@@ -107,6 +107,256 @@ observeEvent(input$display_raw_text_%widget_id%, {
     if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$display_raw_text_%widget_id%"))
     
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_note_%widget_id%', Math.random());"))
+})
+
+# Keyword search
+
+## Create a word set
+
+observeEvent(input$create_word_set_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$create_word_set_%widget_id%"))
+    
+    tryCatch({
+    
+        word_set_name <- input$word_set_name_%widget_id%
+    
+        empty_name <- TRUE
+        if (length(word_set_name) > 0) if (!is.na(word_set_name) && word_set_name != "") empty_name <- FALSE
+        
+        if (empty_name) shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", errorMessage = i18np$t("provide_valid_name"))
+        else {
+            shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", errorMessage = NULL)
+            
+            sql <- glue::glue_sql("SELECT value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'word_sets' AND name = 'word_set_name' AND LOWER(value) = {tolower(word_set_name)}", .con = m$db)
+            name_already_used <- nrow(DBI::dbGetQuery(m$db, sql)) > 0
+            
+            if (name_already_used) shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", errorMessage = i18np$t("name_already_used"))
+            else {
+                shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", errorMessage = NULL)
+                
+                # Add new word set in app db
+                
+                new_id <- get_last_row(m$db, "widgets_options") + 1
+                
+                new_data <- tibble::tibble(
+                    id = new_id, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
+                    category = "word_sets", name = "word_set_name", value = word_set_name, value_num = NA_real_, creator_id = m$user_id, datetime = now(), deleted = FALSE
+                )
+                DBI::dbAppendTable(m$db, "widgets_options", new_data)
+                
+                # Reset field & update dropdowns
+                
+                shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", value = "")
+                shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_word_sets_dropdowns_%widget_id%', Math.random());"))
+            }
+        }
+        
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+})
+
+## Update word set dropdowns
+
+observeEvent(input$update_word_sets_dropdowns_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$update_word_sets_dropdowns_%widget_id%"))
+    
+    tryCatch({
+    
+        sql <- glue::glue_sql("SELECT id, value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'word_sets' AND name = 'word_set_name'", .con = m$db)
+        word_sets <- DBI::dbGetQuery(m$db, sql) %>% convert_tibble_to_list(key_col = "id", text_col = "value")
+        shiny.fluent::updateDropdown.shinyInput(session, "search_word_sets_%widget_id%", options = word_sets, value = input$search_word_sets_%widget_id%)
+        shiny.fluent::updateDropdown.shinyInput(session, "edit_word_set_%widget_id%", options = word_sets, value = NULL)
+        
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+})
+
+## Edit a word set
+
+observeEvent(input$edit_word_set_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$edit_word_set_%widget_id%"))
+    
+    tryCatch({
+        
+        sapply(c("edit_word_set_details_div_%widget_id%", "delete_word_set_div_%widget_id%"), shinyjs::show)
+        
+        # Load words of this word set
+         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_words_list_%widget_id%', Math.random());"))
+        
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+})
+
+## Open delete a word set modal
+observeEvent(input$delete_word_set_%widget_id%, {
+    %req%
+    req(length(input$edit_word_set_%widget_id%) > 0)
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$delete_word_set"))
+    
+    shinyjs::show("delete_word_set_modal_%widget_id%")
+})
+
+## Close delete a word set modal
+observeEvent(input$close_word_set_deletion_modal_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$close_word_set_deletion_modal"))
+    
+    shinyjs::hide("delete_word_set_modal_%widget_id%")
+})
+
+## Confirm word set deletion
+observeEvent(input$confirm_word_set_deletion_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$confirm_word_set_deletion"))
+    
+    tryCatch({
+        word_set_id <- input$edit_word_set_%widget_id%
+        
+        # Delete row in db
+        sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE id = {word_set_id}", .con = m$db))
+        
+        # Update dropdown
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_word_sets_dropdowns_%widget_id%', Math.random());"))
+        
+        # Update word set details
+        shinyjs::hide("edit_word_set_details_div_%widget_id%")
+        
+        # Close modal
+        shinyjs::hide("delete_word_set_modal_%widget_id%")
+        
+        # Hide delete button
+        shinyjs::hide("delete_word_set_div_%widget_id%")
+        
+        # Notify user
+        show_message_bar(id, output, "word_set_deleted", "warning", i18n = i18np, ns = ns)
+        
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+})
+
+## Update words list
+
+observeEvent(input$update_words_list_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$update_words_list_%widget_id%"))
+    
+    tryCatch({
+    
+        word_set_id <- input$edit_word_set_%widget_id%
+        sql <- glue::glue_sql("SELECT id, value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'word_sets' AND link_id = {word_set_id} AND name = 'word_name'", .con = m$db)
+        words_list <- DBI::dbGetQuery(m$db, sql)
+        
+        words_list_ui <- tagList()
+        
+        if (nrow(words_list) > 0){
+        
+            for (i in 1:nrow(words_list)){
+            
+                row <- words_list[i, ]
+                
+                words_list_ui <- tagList(
+                    words_list_ui,
+                    div(
+                        div(
+                            shiny.fluent::IconButton.shinyInput(ns(paste0("remove_row_", row$id, "_%widget_id%")), iconProps = list(iconName = "Cancel"), style = "height: 20px; margin: 0; font-size: 10px;"),
+                            onclick = paste0(
+                                "Shiny.setInputValue('", id, "-remove_word_trigger_%widget_id%', Math.random());",
+                                "Shiny.setInputValue('", id, "-remove_word_%widget_id%', ", row$id, ");"
+                            ),
+                            class = "small_icon_button", style = "width: 18px;"
+                        ),
+                        create_hover_card(ui = 
+                            div(
+                                row$value,
+                                style = paste0(
+                                    "display: inline-block; color: white; max-width: 320px; border-radius: 8px; padding: 1px 5px; align-items: center; height: 18px;",
+                                    "font-weight: 600; white-space: nowrap; overflow: hidden; background-color: #FF8C00;"
+                                )
+                            ), 
+                            text = row$value
+                        ),
+                        style = "display: flex; margin-right: 5px;"
+                    )
+                )
+            }
+        }
+        
+        output$words_list_%widget_id% <- renderUI(words_list_ui)
+        
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+})
+
+## Add a new word
+
+observeEvent(input$add_new_word_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$add_new_word_%widget_id%"))
+    
+    tryCatch({
+    
+        word_set_id <- input$edit_word_set_%widget_id%
+        
+        if (length(word_set_id) > 0){
+        
+            word_name <- input$word_name_%widget_id%
+            
+            empty_name <- TRUE
+            if (length(word_name) > 0) if (!is.na(word_name) && word_name != "") empty_name <- FALSE
+            
+            if (empty_name) shiny.fluent::updateTextField.shinyInput(session, "word_name_%widget_id%", errorMessage = i18np$t("provide_valid_name"))
+            else {
+                shiny.fluent::updateTextField.shinyInput(session, "word_name_%widget_id%", errorMessage = NULL)
+                
+                sql <- glue::glue_sql(paste0(
+                    "SELECT value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'word_sets' AND link_id = {word_set_id} ",
+                    "AND name = 'word_name' AND LOWER(value) = {tolower(word_name)}"), .con = m$db)
+                name_already_used <- nrow(DBI::dbGetQuery(m$db, sql)) > 0
+                
+                if (name_already_used) shiny.fluent::updateTextField.shinyInput(session, "word_name_%widget_id%", errorMessage = i18np$t("name_already_used"))
+                else {
+                    shiny.fluent::updateTextField.shinyInput(session, "word_name_%widget_id%", errorMessage = NULL)
+                    
+                    # Add new word in app db
+                    
+                    new_id <- get_last_row(m$db, "widgets_options") + 1
+                    
+                    new_data <- tibble::tibble(
+                        id = new_id, widget_id = %widget_id%, person_id = NA_integer_, link_id = word_set_id,
+                        category = "word_sets", name = "word_name", value = word_name, value_num = NA_real_, creator_id = m$user_id, datetime = now(), deleted = FALSE
+                    )
+                    DBI::dbAppendTable(m$db, "widgets_options", new_data)
+                    
+                    # Reset field & update dropdowns
+                    
+                    shiny.fluent::updateTextField.shinyInput(session, "word_name_%widget_id%", value = "")
+                    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_words_list_%widget_id%', Math.random());"))
+                }
+            }
+        }
+        
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+})
+
+## Remove a word
+
+observeEvent(input$remove_word_trigger_%widget_id%, {
+    %req%
+    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$remove_word_trigger"))
+    
+    tryCatch({
+        
+        word_id <- input$remove_word_%widget_id%
+        
+        if (length(word_id) > 0){
+        
+            # Remove word from database
+            sql <- glue::glue_sql("DELETE FROM widgets_options WHERE id = {word_id}", .con = m$db)
+            DBI::dbExecute(m$db, sql)
+        
+            # Update words list
+            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_words_list_%widget_id%', Math.random());"))
+        }
+            
+    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
 
 # Chatbot
@@ -348,7 +598,7 @@ observeEvent(m$chatbot_response_%widget_id%(), {
      }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
 
-# Clear chat
+## Clear chat
 
 observeEvent(input$clear_chat_%widget_id%, {
     %req%

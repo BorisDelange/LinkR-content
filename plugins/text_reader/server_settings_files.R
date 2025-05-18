@@ -180,7 +180,7 @@ observeEvent(input$confirm_file_deletion_%widget_id%, {
         shinyjs::hide("delete_settings_file_div_%widget_id%")
         
         # Notify user
-        show_message_bar(id, output, "settings_file_delete", "warning", i18n = i18np, ns = ns)
+        show_message_bar(id, output, "settings_file_deleted", "warning", i18n = i18np, ns = ns)
         
     }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
 })
