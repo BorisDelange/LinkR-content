@@ -23,20 +23,6 @@ div(
         style = "margin-top: 15px;"
     ),
     
-    # Layout
-    
-    shinyjs::hidden(
-        div(
-            id = ns("layout_div_%widget_id%"),
-            div(
-                shiny.fluent::Toggle.shinyInput(ns("display_raw_text_%widget_id%"), value = FALSE),
-                tags$label(i18np$t("display_raw_text"), `for` = ns("display_raw_text_%widget_id%"), style = "margin-left: 5px;"),
-                style = "display: flex; margin-top: 15px;" 
-            ),
-            style = "height: 100%;"
-        )
-    ),
-    
     # Keyword search
     
     shinyjs::hidden(
@@ -44,7 +30,7 @@ div(
             id = ns("keyword_search_div_%widget_id%"),
             div(
                 div(
-                    div(shiny.fluent::Dropdown.shinyInput(ns("search_word_sets_%widget_id%"), label = i18np$t("search_word_sets"), multiSelect = TRUE), style = "width: 200px;"),
+                    div(shiny.fluent::Dropdown.shinyInput(ns("search_word_sets_%widget_id%"), label = i18np$t("search_word_sets"), options = word_sets, multiSelect = TRUE), style = "width: 200px;"),
                     div(shiny.fluent::Toggle.shinyInput(ns("filter_notes_with_matches_%widget_id%"), label = i18np$t("filter_notes_with_matches")), style = "margin-top: 29px;"),
                     style = "display: flex; gap: 10px;"
                 ),
@@ -59,7 +45,7 @@ div(
                 ),
                 tags$hr(style = "border: none; border-top: 1px solid #ccc; height: 1px; margin: 20px 0 10px 0;"),
                 div(
-                    div(shiny.fluent::Dropdown.shinyInput(ns("edit_word_set_%widget_id%"), label = i18np$t("edit_word_set")), style = "width: 200px;"),
+                    div(shiny.fluent::Dropdown.shinyInput(ns("edit_word_set_%widget_id%"), label = i18np$t("edit_word_set"), options = word_sets), style = "width: 200px;"),
                     shinyjs::hidden(
                         div(
                             id = ns("delete_word_set_div_%widget_id%"),
@@ -179,6 +165,20 @@ div(
                 div(shiny.fluent::MessageBar(i18np$t("packages_ellmer_ollamar_needed"), messageBarType = 5), style = "display: inline-block; margin-top: 10px;")
             )
         }
+    ),
+    
+    # Layout
+    
+    shinyjs::hidden(
+        div(
+            id = ns("layout_div_%widget_id%"),
+            div(
+                shiny.fluent::Toggle.shinyInput(ns("display_raw_text_%widget_id%"), value = FALSE),
+                tags$label(i18np$t("display_raw_text"), `for` = ns("display_raw_text_%widget_id%"), style = "margin-left: 5px;"),
+                style = "display: flex; margin-top: 15px;" 
+            ),
+            style = "height: 100%;"
+        )
     ),
     
     style = "height: 100%; display: flex; flex-direction: column;"

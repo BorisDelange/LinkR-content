@@ -99,6 +99,7 @@ observeEvent(input$run_code_%widget_id%, {
             
             page_length <- 10
             if (length(input$notes_datatable_%widget_id%_state$length) > 0) page_length <- input$notes_datatable_%widget_id%_state$length
+            else if (length(m$datatable_page_length_%widget_id%) > 0) page_length <- m$datatable_page_length_%widget_id%
             
             render_datatable(
               output = output, ns = ns, i18n = i18n, data = notes, page_length = page_length,

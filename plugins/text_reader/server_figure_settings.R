@@ -20,7 +20,16 @@ observeEvent(input$load_figure_settings_%widget_id%, {
             value <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value)
             value_num <- figure_settings %>% dplyr::filter(name == !!name) %>% dplyr::pull(value_num)
             
-            # Update figure settings UI here with loaded figure settings
+            if (name %in% c("llm_provider", "llm_model", "include_notes")) shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            else if (name == "search_word_sets"){
+                value <- as.numeric(unlist(strsplit(value, ", ")))
+                shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            }
+            else if (name %in% c("filter_notes_with_matches", "display_raw_text")){
+                value <- as.logical(value_num)
+                shiny.fluent::updateToggle.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            }
+            else if (name == "datatable_page_length") m$datatable_page_length_%widget_id% <- value_num
         })
     }
     
@@ -52,19 +61,25 @@ observeEvent(input$save_params_and_code_%widget_id%, {
             
             # Add new settings in db
             
-            # new_data <- tibble::tribble(
-                # ~name, ~value, ~value_num,
-                
-            # )
+            new_data <- tibble::tribble(
+                ~name, ~value, ~value_num,
+                "search_word_sets", ifelse(length(input$search_word_sets_%widget_id%) > 0, input$search_word_sets_%widget_id% %>% toString(), NA_character_), NA_real_,
+                "filter_notes_with_matches", NA_character_, as.integer(input$filter_notes_with_matches_%widget_id%),
+                "llm_provider", ifelse(length(input$llm_provider_%widget_id%) > 0, input$llm_provider_%widget_id%, NA_character_), NA_real_,
+                "llm_model", ifelse(length(input$llm_model_%widget_id%) > 0, input$llm_model_%widget_id%, NA_character_), NA_real_,
+                "include_notes", input$include_notes_%widget_id%, NA_real_,
+                "display_raw_text", NA_character_, as.integer(input$display_raw_text_%widget_id%),
+                "datatable_page_length", NA_character_, input$notes_datatable_%widget_id%_state$length
+            )
             
-            # new_data <-
-                # new_data %>%
-                # dplyr::transmute(
-                    # id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
-                    # category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
-                # )
+            new_data <-
+                new_data %>%
+                dplyr::transmute(
+                    id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
+                    category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
+                )
             
-            # DBI::dbAppendTable(m$db, "widgets_options", new_data)
+            DBI::dbAppendTable(m$db, "widgets_options", new_data)
             
             # Notify user
             show_message_bar(id, output, "modif_saved", "success", i18n = i18n, ns = ns)
