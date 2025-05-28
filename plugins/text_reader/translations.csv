@@ -56,3 +56,4 @@ delete_word_set_text,Confirm deletion of the word set?,Confirmer la suppression 
 delete_word_set_title,Delete a word set,Supprimer un set de mots
 word_set_deleted,Word set deleted,Set de mots supprimé
 filter_notes_with_matches,Filter notes with matches,Filtrer les notes avec des correspondances
+modif_saved,Updates saved,Modifications enregistrées

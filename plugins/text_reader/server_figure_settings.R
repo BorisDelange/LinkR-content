@@ -55,6 +55,8 @@ observeEvent(input$save_params_and_code_%widget_id%, try_catch("input$save_param
         
         # Add new settings in db
         
+        length_value <- if (!is.null(input[[paste0("notes_datatable_", widget_id, "_state")]]$length)) input[[paste0("notes_datatable_", widget_id, "_state")]]$length else NA_integer_
+        
         new_data <- tibble::tribble(
             ~name, ~value, ~value_num,
             "search_word_sets", ifelse(length(input$search_word_sets_%widget_id%) > 0, input$search_word_sets_%widget_id% %>% toString(), NA_character_), NA_real_,
@@ -63,7 +65,7 @@ observeEvent(input$save_params_and_code_%widget_id%, try_catch("input$save_param
             "llm_model", ifelse(length(input$llm_model_%widget_id%) > 0, input$llm_model_%widget_id%, NA_character_), NA_real_,
             "include_notes", input$include_notes_%widget_id%, NA_real_,
             "display_raw_text", NA_character_, as.integer(input$display_raw_text_%widget_id%),
-            "datatable_page_length", NA_character_, input$notes_datatable_%widget_id%_state$length
+            "datatable_page_length", NA_character_, length_value
         )
         
         new_data <-
@@ -72,7 +74,6 @@ observeEvent(input$save_params_and_code_%widget_id%, try_catch("input$save_param
                 id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
                 category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
             )
-        
         DBI::dbAppendTable(m$db, "widgets_options", new_data)
         
         # Notify user
