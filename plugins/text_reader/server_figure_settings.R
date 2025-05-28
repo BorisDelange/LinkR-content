@@ -76,7 +76,7 @@ observeEvent(input$save_params_and_code_%widget_id%, try_catch("input$save_param
         DBI::dbAppendTable(m$db, "widgets_options", new_data)
         
         # Notify user
-        show_message_bar("modif_saved", "success", i18n = i18n)
+        show_message_bar("modif_saved", "success")
     }
         
 }))
@@ -204,7 +204,7 @@ observeEvent(input$confirm_word_set_deletion_%widget_id%, try_catch("input$confi
     shinyjs::hide("delete_word_set_div_%widget_id%")
     
     # Notify user
-    show_message_bar(output, "word_set_deleted", "warning", i18n = i18np)
+    show_message_bar(output, "word_set_deleted", "warning")
 }))
 
 ## Update words list

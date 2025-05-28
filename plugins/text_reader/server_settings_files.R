@@ -78,7 +78,7 @@ observeEvent(input$add_settings_file_%widget_id%, try_catch("input$add_settings_
             shinyjs::hide("add_settings_file_modal_%widget_id%")
             
             # Notify user
-            show_message_bar("new_settings_file_added", "success", i18n = i18np)
+            show_message_bar("new_settings_file_added", "success")
         }
     }
 }))
@@ -148,5 +148,5 @@ observeEvent(input$confirm_file_deletion_%widget_id%, try_catch("input$confirm_f
     shinyjs::hide("delete_settings_file_div_%widget_id%")
     
     # Notify user
-    show_message_bar("settings_file_deleted", "warning", i18n = i18np)
+    show_message_bar("settings_file_deleted", "warning")
 }))
