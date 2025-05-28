@@ -102,7 +102,7 @@ observeEvent(input$run_code_%widget_id%, {
             else if (length(m$datatable_page_length_%widget_id%) > 0) page_length <- m$datatable_page_length_%widget_id%
             
             render_datatable(
-              output = output, ns = ns, i18n = i18n, data = notes, page_length = page_length,
+              data = notes, page_length = page_length,
               output_name = "notes_datatable_%widget_id%", col_names = c(i18np$t("category"), i18np$t("title"), i18np$t("datetime")),
               datatable_dom = "<'datatable_length'l><'top't><'bottom'p>", sortable_cols = c("note_type_concept_name", "note_title", "note_datetime"),
               searchable_cols = c("note_type_concept_name", "note_title", "note_datetime"), factorize_cols = "note_type_concept_name", filter = TRUE,
