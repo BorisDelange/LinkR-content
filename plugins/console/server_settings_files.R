@@ -10,29 +10,25 @@ output$settings_files_ui_%widget_id% <- renderUI({
 })
 
 ## Show / hide settings file
-observeEvent(input$show_settings_file_%widget_id%, try_catch("input$show_settings_file_%widget_id%", {
+observe_event(input$show_settings_file_%widget_id%, {
     if (input$show_settings_file_%widget_id%) shinyjs::show("settings_files_ui_%widget_id%")
     else shinyjs::hide("settings_files_ui_%widget_id%")
-}))
+})
 
 ## Show / hide settings files div
-observeEvent(input$show_settings_files_tab_%widget_id%, try_catch("input$show_settings_files_tab_%widget_id%", {
+observe_event(input$show_settings_files_tab_%widget_id%, {
     sapply(c(paste0(tabs, "_div_%widget_id%"), "figure_settings_code_div_%widget_id%"), shinyjs::hide)
     shinyjs::show("settings_files_div_%widget_id%")
-}))
+})
 
 ## Show add settings file modal
-observeEvent(input$create_settings_file_%widget_id%, try_catch("input$create_settings_file_%widget_id%", {
-    shinyjs::show("add_settings_file_modal_%widget_id%")
-}))
+observe_event(input$create_settings_file_%widget_id%, shinyjs::show("add_settings_file_modal_%widget_id%"))
 
 ## Close add settings file modal
-observeEvent(input$close_add_settings_file_modal_%widget_id%, try_catch("input$close_add_settings_file_modal_%widget_id%", {
-    shinyjs::hide("add_settings_file_modal_%widget_id%")
-}))
+observe_event(input$close_add_settings_file_modal_%widget_id%, shinyjs::hide("add_settings_file_modal_%widget_id%"))
 
 ## Confirm creation of settings file
-observeEvent(input$add_settings_file_%widget_id%, try_catch("input$add_settings_file_%widget_id%", {
+observe_event(input$add_settings_file_%widget_id%, {
     
     file_name <- input$settings_file_name_%widget_id%
     
@@ -82,10 +78,10 @@ observeEvent(input$add_settings_file_%widget_id%, try_catch("input$add_settings_
         # Notify user
         show_message_bar("new_settings_file_added", "success")
     }
-}))
+})
 
 ## A settings file is selected
-observeEvent(input$settings_file_%widget_id%, try_catch("input$settings_file_%widget_id%", {
+observe_event(input$settings_file_%widget_id%, {
     
     # Show delete button
     shinyjs::show("delete_settings_file_div_%widget_id%")
@@ -106,21 +102,19 @@ observeEvent(input$settings_file_%widget_id%, try_catch("input$settings_file_%wi
     
     # Load saved settings
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-load_figure_settings_%widget_id%', Math.random());"))
-}))
+})
 
 ## Open delete a settings file modal
-observeEvent(input$delete_settings_file_%widget_id%, try_catch("input$delete_settings_file_%widget_id%", {
+observe_event(input$delete_settings_file_%widget_id%, {
     if (length(input$settings_file_%widget_id%) == 0) return()
     shinyjs::show("delete_settings_file_modal_%widget_id%")
-}))
+})
 
 ## Close delete a settings file modal
-observeEvent(input$close_file_deletion_modal_%widget_id%, try_catch("input$close_file_deletion_modal_%widget_id%", {
-    shinyjs::hide("delete_settings_file_modal_%widget_id%")
-}))
+observe_event(input$close_file_deletion_modal_%widget_id%, shinyjs::hide("delete_settings_file_modal_%widget_id%"))
 
 ## Confirm settings file deletion
-observeEvent(input$confirm_file_deletion_%widget_id%, try_catch("input$confirm_file_deletion_%widget_id%", {
+observe_event(input$confirm_file_deletion_%widget_id%, {
     
     file_id <- input$settings_file_%widget_id%
     
@@ -148,4 +142,4 @@ observeEvent(input$confirm_file_deletion_%widget_id%, try_catch("input$confirm_f
     
     # Notify user
     show_message_bar("settings_file_delete", "warning")
-}))
+})

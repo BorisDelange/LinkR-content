@@ -2,7 +2,7 @@
 
 # Settings / editor side-by-side with figure
 
-observeEvent(input$figure_and_settings_side_by_side_%widget_id%, try_catch("input$figure_and_settings_side_by_side_%widget_id%", {
+observe_event(input$figure_and_settings_side_by_side_%widget_id%, {
     
     if (input$figure_and_settings_side_by_side_%widget_id%){
         shinyjs::runjs(paste0("
@@ -74,11 +74,11 @@ observeEvent(input$figure_and_settings_side_by_side_%widget_id%, try_catch("inpu
         shinyjs::show("figure_button_div_%widget_id%");
         shinyjs::hide("resizer_%widget_id%");
     }
-}))
+})
 
 # Save general settings in db
 
-observeEvent(input$save_general_settings_%widget_id%, try_catch("input$save_general_settings_%widget_id%", {
+observe_event(input$save_general_settings_%widget_id%, {
     
     # Delete old rows
     sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings' AND name != 'selected_file_id'", .con = m$db))
@@ -103,4 +103,4 @@ observeEvent(input$save_general_settings_%widget_id%, try_catch("input$save_gene
         )
     
     DBI::dbAppendTable(m$db, "widgets_options", new_data)
-}))
+})

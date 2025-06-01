@@ -2,7 +2,7 @@
 
 # Load figure settings
 
-observeEvent(input$load_figure_settings_%widget_id%, try_catch("input$load_figure_settings_%widget_id%", {
+observe_event(input$load_figure_settings_%widget_id%, {
     
     # Update figure settings UI
     
@@ -29,11 +29,11 @@ observeEvent(input$load_figure_settings_%widget_id%, try_catch("input$load_figur
             shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());")))
         }
     }
-}))
+})
 
 # Save current settings
 
-observeEvent(input$save_params_and_code_%widget_id%, try_catch("input$save_params_and_code_%widget_id%", {
+observe_event(input$save_params_and_code_%widget_id%, {
     
     # If no settings file is selected, go to settings files management page
     if (length(input$settings_file_%widget_id%) == 0){
@@ -62,7 +62,7 @@ observeEvent(input$save_params_and_code_%widget_id%, try_catch("input$save_param
     
     # Notify user
     show_message_bar("modif_saved", "success")
-}))
+})
 
 # Change programming language
 
@@ -82,19 +82,19 @@ output_dropdown_options$python <- list(
     list(key = "matplotlib", text = i18n$t("matplotlib"))
 )
 
-observeEvent(input$prog_language_%widget_id%, try_catch("input$prog_language_%widget_id%", {
+observe_event(input$prog_language_%widget_id%, {
     
     # Update ace editor
     shinyAce::updateAceEditor(session, "code_%widget_id%", mode = input$prog_language_%widget_id%)
     
     # Update output dropdown
     shiny.fluent::updateDropdown.shinyInput(session, "output_%widget_id%", options = output_dropdown_options[[input$prog_language_%widget_id%]], value = "console")
-}))
+})
 
-observeEvent(input$output_%widget_id%, try_catch("input$output_%widget_id%", {
+observe_event(input$output_%widget_id%, {
     
     # Update ace editor
     if (input$output_%widget_id% == "rmarkdown") mode <- "markdown"
     else mode <- input$prog_language_%widget_id%
     shinyAce::updateAceEditor(session, "code_%widget_id%", mode = mode)
-}))
+})

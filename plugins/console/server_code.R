@@ -12,34 +12,34 @@ outputs$python <- c("console", "matplotlib")
 shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.dispatchEvent(event);"))
 
 # Comment code
-observeEvent(input$code_%widget_id%_comment, try_catch("input$code_%widget_id%_comment", {
+observe_event(input$code_%widget_id%_comment, {
     
     toggle_comments(
         id = id, input_id = "code_%widget_id%", code = input$code_%widget_id%,
         selection = input$code_%widget_id%_comment$range, session = session
     )
-}))
+})
 
 # Run all code with shortcut
-observeEvent(input$code_%widget_id%_run_all, try_catch("input$code_%widget_id%_run_all", {
+observe_event(input$code_%widget_id%_run_all, {
     
     if ("projects_widgets_console" %in% user_accesses){
         m$code_%widget_id% <- input$code_%widget_id%
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
     }
-}))
+})
 
 # Run code when button is clicked
-observeEvent(input$display_figure_%widget_id%, try_catch("input$display_figure_%widget_id%", {
+observe_event(input$display_figure_%widget_id%, {
     
     if ("projects_widgets_console" %in% user_accesses){
         m$code_%widget_id% <- input$code_%widget_id%
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
     }
-}))
+})
 
 # Run code
-observeEvent(input$run_code_%widget_id%, try_catch("input$run_code_%widget_id%", {
+observe_event(input$run_code_%widget_id%, {
     
     if (length(input$prog_language_%widget_id%) == 0) return()
     
@@ -136,9 +136,7 @@ observeEvent(input$run_code_%widget_id%, try_catch("input$run_code_%widget_id%",
     
     # Go to figure tab
     if (!input$figure_and_settings_side_by_side_%widget_id%) shinyjs::click("figure_button_%widget_id%")
-}))
+})
 
 # Save code with shortcut
-observeEvent(input$code_%widget_id%_save, try_catch("input$code_%widget_id%_save", {
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_params_and_code_%widget_id%', Math.random());"))
-}))
+observe_event(input$code_%widget_id%_save, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_params_and_code_%widget_id%', Math.random());")))
