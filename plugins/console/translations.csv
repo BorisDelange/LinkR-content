@@ -40,3 +40,4 @@ code_execution,Code execution,Exécution du code
 run_code_at_settings_file_load,Run code when a settings file is loaded,Exécuter le code au chargement d'un fichier de sauvegarde
 ui_html,UI (HTML),UI (HTML)
 console_forbidden_access,Unauthorized access to the console,Accès non autorisé à la console
+modif_saved,Updates saved,Modifications enregistrées
