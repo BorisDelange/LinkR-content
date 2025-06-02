@@ -4,7 +4,7 @@ library(promises)
 
 # Load figure settings
 
-observeEvent(input$load_figure_settings_%widget_id%, try_catch("input$load_figure_settings_%widget_id%", {
+observe_event(input$load_figure_settings_%widget_id%, {
     
     # Update figure settings UI
     
@@ -37,11 +37,11 @@ observeEvent(input$load_figure_settings_%widget_id%, try_catch("input$load_figur
             shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());")))
         }
     }
-}))
+})
 
 # Save current settings
 
-observeEvent(input$save_params_and_code_%widget_id%, try_catch("input$save_params_and_code_%widget_id%", {
+observe_event(input$save_params_and_code_%widget_id%, {
     
     # If no settings file is selected, go to settings files management page
     if (length(input$settings_file_%widget_id%) == 0) shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-show_settings_files_tab_%widget_id%', Math.random());"))
@@ -80,13 +80,13 @@ observeEvent(input$save_params_and_code_%widget_id%, try_catch("input$save_param
         show_message_bar("modif_saved", "success")
     }
         
-}))
+})
 
 # Figure settings tabs
 
 sub_tabs <- c("select_notes", "keyword_search", "layout", "chatbot")
 
-observeEvent(input$current_figure_settings_tab_trigger_%widget_id%, try_catch("input$current_figure_settings_tab_trigger_%widget_id%", {
+observe_event(input$current_figure_settings_tab_trigger_%widget_id%, {
     
     current_sub_tab <- 
         input$current_figure_settings_tab_%widget_id% %>%
@@ -103,19 +103,17 @@ observeEvent(input$current_figure_settings_tab_trigger_%widget_id%, try_catch("i
             shinyjs::hide(paste0(sub_tab, "_div_%widget_id%"))
         }
     })
-}))
+})
 
 # Display raw text
 
-observeEvent(input$display_raw_text_%widget_id%, try_catch("input$display_raw_text_%widget_id%", {
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_note_%widget_id%', Math.random());"))
-}))
+observe_event(input$display_raw_text_%widget_id%, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_note_%widget_id%', Math.random());")))
 
 # Keyword search
 
 ## Create a word set
 
-observeEvent(input$create_word_set_%widget_id%, try_catch("input$create_word_set_%widget_id%", {
+observe_event(input$create_word_set_%widget_id%, {
     
     word_set_name <- input$word_set_name_%widget_id%
 
@@ -149,43 +147,40 @@ observeEvent(input$create_word_set_%widget_id%, try_catch("input$create_word_set
             shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_word_sets_dropdowns_%widget_id%', Math.random());"))
         }
     }
-}))
+})
 
 ## Update word set dropdowns
 
-observeEvent(input$update_word_sets_dropdowns_%widget_id%, try_catch("input$update_word_sets_dropdowns_%widget_id%", {
+observe_event(input$update_word_sets_dropdowns_%widget_id%, {
 
     sql <- glue::glue_sql("SELECT id, value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'word_sets' AND name = 'word_set_name'", .con = m$db)
     word_sets <- DBI::dbGetQuery(m$db, sql) %>% convert_tibble_to_list(key_col = "id", text_col = "value")
     shiny.fluent::updateDropdown.shinyInput(session, "search_word_sets_%widget_id%", options = word_sets, value = input$search_word_sets_%widget_id%)
     shiny.fluent::updateDropdown.shinyInput(session, "edit_word_set_%widget_id%", options = word_sets, value = NULL)
-}))
+})
 
 ## Edit a word set
 
-observeEvent(input$edit_word_set_%widget_id%, try_catch("input$edit_word_set_%widget_id%", {
+observe_event(input$edit_word_set_%widget_id%, {
     
     sapply(c("edit_word_set_details_div_%widget_id%", "delete_word_set_div_%widget_id%"), shinyjs::show)
     
     # Load words of this word set
-     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_words_list_%widget_id%', Math.random());"))
-}))
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_words_list_%widget_id%', Math.random());"))
+})
 
 ## Open delete a word set modal
-observeEvent(input$delete_word_set_%widget_id%, try_catch("input$delete_word_set_%widget_id%", {
+observe_event(input$delete_word_set_%widget_id%, {
     
     if (length(input$edit_word_set_%widget_id%) == 0) return()
-    
     shinyjs::show("delete_word_set_modal_%widget_id%")
-}))
+})
 
 ## Close delete a word set modal
-observeEvent(input$close_word_set_deletion_modal_%widget_id%, try_catch("input$close_word_set_deletion_modal_%widget_id%", {
-    shinyjs::hide("delete_word_set_modal_%widget_id%")
-}))
+observe_event(input$close_word_set_deletion_modal_%widget_id%, shinyjs::hide("delete_word_set_modal_%widget_id%"))
 
 ## Confirm word set deletion
-observeEvent(input$confirm_word_set_deletion_%widget_id%, try_catch("input$confirm_word_set_deletion_%widget_id%", {
+observe_event(input$confirm_word_set_deletion_%widget_id%, {
 
     word_set_id <- input$edit_word_set_%widget_id%
     
@@ -206,11 +201,11 @@ observeEvent(input$confirm_word_set_deletion_%widget_id%, try_catch("input$confi
     
     # Notify user
     show_message_bar(output, "word_set_deleted", "warning")
-}))
+})
 
 ## Update words list
 
-observeEvent(input$update_words_list_%widget_id%, try_catch("input$update_words_list_%widget_id%", {
+observe_event(input$update_words_list_%widget_id%, {
     
     word_set_id <- input$edit_word_set_%widget_id%
     sql <- glue::glue_sql("SELECT id, value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'word_sets' AND link_id = {word_set_id} AND name = 'word_name'", .con = m$db)
@@ -252,11 +247,11 @@ observeEvent(input$update_words_list_%widget_id%, try_catch("input$update_words_
     }
     
     output$words_list_%widget_id% <- renderUI(words_list_ui)
-}))
+})
 
 ## Add a new word
 
-observeEvent(input$add_new_word_%widget_id%, try_catch("input$add_new_word_%widget_id%", {
+observe_event(input$add_new_word_%widget_id%, {
     
     word_set_id <- input$edit_word_set_%widget_id%
     
@@ -297,11 +292,11 @@ observeEvent(input$add_new_word_%widget_id%, try_catch("input$add_new_word_%widg
             }
         }
     }
-}))
+})
 
 ## Remove a word
 
-observeEvent(input$remove_word_trigger_%widget_id%, try_catch("input$remove_word_trigger_%widget_id%", {
+observe_event(input$remove_word_trigger_%widget_id%, {
         
     word_id <- input$remove_word_%widget_id%
     
@@ -314,11 +309,11 @@ observeEvent(input$remove_word_trigger_%widget_id%, try_catch("input$remove_word
         # Update words list
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_words_list_%widget_id%', Math.random());"))
     }
-}))
+})
 
 # Chatbot
 
-observeEvent(input$llm_provider_%widget_id%, try_catch("input$llm_provider_%widget_id%", {
+observe_event(input$llm_provider_%widget_id%, {
     
     if (input$llm_provider_%widget_id% == "ollama"){
         if (ollamar::test_connection(logical = TRUE)){
@@ -326,12 +321,12 @@ observeEvent(input$llm_provider_%widget_id%, try_catch("input$llm_provider_%widg
             shiny.fluent::updateDropdown.shinyInput(session, "llm_model_%widget_id%", options = models)
         }
     }
-}))
+})
 
 m$chatbot_response_%widget_id% <- reactiveVal("")  # Initialize with empty string
 # m$debounced_chatbot_response_%widget_id% <- reactive(m$chatbot_response_%widget_id%()) %>% debounce(1000)
 
-observeEvent(input$send_message_%widget_id%, try_catch("input$send_message_%widget_id%", {
+observe_event(input$send_message_%widget_id%, {
     
     if(requireNamespace("ellmer", quietly = TRUE) && requireNamespace("ollamar", quietly = TRUE)){
             
@@ -461,9 +456,9 @@ observeEvent(input$send_message_%widget_id%, try_catch("input$send_message_%widg
             updateTextInput(session, paste0("user_input_%widget_id%"), value = "")
         }
     }
-}))
+})
 
-observeEvent(m$chatbot_response_%widget_id%(), try_catch("m$chatbot_response_%widget_id%()", {
+observe_event(m$chatbot_response_%widget_id%(), {
 
     # Get the current response text
     current_text <- m$chatbot_response_%widget_id%()
@@ -541,11 +536,11 @@ observeEvent(m$chatbot_response_%widget_id%(), try_catch("m$chatbot_response_%wi
           }
         })();
     '))
-}))
+})
 
 ## Clear chat
 
-observeEvent(input$clear_chat_%widget_id%, try_catch("input$clear_chat_%widget_id%", {
+observe_event(input$clear_chat_%widget_id%, {
     
     if(requireNamespace("ellmer", quietly = TRUE) && requireNamespace("ollamar", quietly = TRUE)){
         if (length(input$llm_provider_%widget_id%) > 0 && length(input$llm_model_%widget_id%) > 0){
@@ -554,4 +549,4 @@ observeEvent(input$clear_chat_%widget_id%, try_catch("input$clear_chat_%widget_i
             output$chat_ui_%widget_id% <- renderUI(div())
         }
     }
-}))
+})

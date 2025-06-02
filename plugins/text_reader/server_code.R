@@ -7,17 +7,15 @@ m$code_%widget_id% <- ""
 shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.dispatchEvent(event);"))
 
 # Run code when button is clicked
-observeEvent(input$display_figure_%widget_id%, try_catch("input$display_figure_%widget_id%", {
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-}))
+observe_event(input$display_figure_%widget_id%, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());")))
 
 # Run code at patient update
-observeEvent(m$selected_person, try_catch("m$selected_person", {
+observe_event(m$selected_person, {
     if (isTRUE(input$run_code_on_data_update_%widget_id%)) shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-}))
+})
 
 # Run code
-observeEvent(input$run_code_%widget_id%, try_catch("input$run_code_%widget_id%", {
+observe_event(input$run_code_%widget_id%, {
         
     # Reset UI
     output$notes_%widget_id% <- renderUI(div())
@@ -105,13 +103,11 @@ observeEvent(input$run_code_%widget_id%, try_catch("input$run_code_%widget_id%",
         Shiny.setInputValue('", id, "-current_figure_settings_tab_%widget_id%', 'select_notes_%widget_id%');
         Shiny.setInputValue('", id, "-current_figure_settings_tab_trigger_%widget_id%', Math.random());"
     ))
-}))
+})
 
 # A row (a note) is selected
 
-observeEvent(input$notes_datatable_%widget_id%_rows_selected, try_catch("input$notes_datatable_%widget_id%_rows_selected", {
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_note_%widget_id%', Math.random());"))
-}))
+observe_event(input$notes_datatable_%widget_id%_rows_selected, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-reload_note_%widget_id%', Math.random());")))
 
 # Display note
 
@@ -140,7 +136,7 @@ highlight_words <- function(text, words_to_highlight) {
     return(highlighted_text)
 }
 
-observeEvent(input$reload_note_%widget_id%, try_catch("input$reload_note_%widget_id%", {
+observe_event(input$reload_note_%widget_id%, {
     
     if (length(input$notes_datatable_%widget_id%_rows_selected) > 0){
         
@@ -184,4 +180,4 @@ observeEvent(input$reload_note_%widget_id%, try_catch("input$reload_note_%widget
             )
         })
     }
-}))
+})

@@ -5,7 +5,7 @@
 ## All tabs
 tabs <- c("figure", "figure_settings", "code", "general_settings")
 
-observeEvent(input$current_tab_trigger_%widget_id%, try_catch("input$current_tab_trigger_%widget_id%", {
+observe_event(input$current_tab_trigger_%widget_id%, {
     
     tab <- input$current_tab_%widget_id%
     
@@ -44,7 +44,7 @@ observeEvent(input$current_tab_trigger_%widget_id%, try_catch("input$current_tab
     
     # Prevent a bug with scroll into ace editor
     shinyjs::runjs("var event = new Event('resize'); window.dispatchEvent(event);")
-}))
+})
 
 # Figure settings
 %import_script('server_figure_settings.R')%
