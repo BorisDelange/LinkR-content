@@ -3,7 +3,7 @@
   <plugin>
     <app_version>0.3.1.9009</app_version>
     <unique_id>04bfcd705217d0002bc9feada4d32d14f330fda4f6cb63ed24dcb81c96f30f6d</unique_id>
-    <version>0.0.1.9020</version>
+    <version>0.0.1.9021</version>
     <name_en>Text reader</name_en>
     <name_fr>Lecteur de texte</name_fr>
     <category_en></category_en>
@@ -16,7 +16,7 @@
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2025-03-26 19:09:33</creation_datetime>
-    <update_datetime>2025-06-02 08:01:22</update_datetime>
+    <update_datetime>2025-06-03 08:53:58</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>

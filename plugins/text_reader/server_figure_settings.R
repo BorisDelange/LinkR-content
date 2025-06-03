@@ -120,33 +120,37 @@ observe_event(input$create_word_set_%widget_id%, {
     empty_name <- TRUE
     if (length(word_set_name) > 0) if (!is.na(word_set_name) && word_set_name != "") empty_name <- FALSE
     
-    if (empty_name) shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", errorMessage = i18np$t("provide_valid_name"))
-    else {
-        shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", errorMessage = NULL)
-        
-        sql <- glue::glue_sql("SELECT value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'word_sets' AND name = 'word_set_name' AND LOWER(value) = {tolower(word_set_name)}", .con = m$db)
-        name_already_used <- nrow(DBI::dbGetQuery(m$db, sql)) > 0
-        
-        if (name_already_used) shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", errorMessage = i18np$t("name_already_used"))
-        else {
-            shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", errorMessage = NULL)
-            
-            # Add new word set in app db
-            
-            new_id <- get_last_row(m$db, "widgets_options") + 1
-            
-            new_data <- tibble::tibble(
-                id = new_id, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
-                category = "word_sets", name = "word_set_name", value = word_set_name, value_num = NA_real_, creator_id = m$user_id, datetime = now(), deleted = FALSE
-            )
-            DBI::dbAppendTable(m$db, "widgets_options", new_data)
-            
-            # Reset field & update dropdowns
-            
-            shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", value = "")
-            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_word_sets_dropdowns_%widget_id%', Math.random());"))
-        }
+    if (empty_name){
+        shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", errorMessage = i18np$t("provide_valid_name"))
+        return()
     }
+    
+    shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", errorMessage = NULL)
+    
+    sql <- glue::glue_sql("SELECT value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'word_sets' AND name = 'word_set_name' AND LOWER(value) = {tolower(word_set_name)}", .con = m$db)
+    name_already_used <- nrow(DBI::dbGetQuery(m$db, sql)) > 0
+    
+    if (name_already_used){
+        shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", errorMessage = i18np$t("name_already_used"))
+        return()
+    }
+        
+    shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", errorMessage = NULL)
+    
+    # Add new word set in app db
+    
+    new_id <- get_last_row(m$db, "widgets_options") + 1
+    
+    new_data <- tibble::tibble(
+        id = new_id, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
+        category = "word_sets", name = "word_set_name", value = word_set_name, value_num = NA_real_, creator_id = m$user_id, datetime = now(), deleted = FALSE
+    )
+    DBI::dbAppendTable(m$db, "widgets_options", new_data)
+    
+    # Reset field & update dropdowns
+    
+    shiny.fluent::updateTextField.shinyInput(session, "word_set_name_%widget_id%", value = "")
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_word_sets_dropdowns_%widget_id%', Math.random());"))
 })
 
 ## Update word set dropdowns
