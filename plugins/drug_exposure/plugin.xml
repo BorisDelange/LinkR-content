@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <plugins>
   <plugin>
-    <app_version>0.3.1.9005</app_version>
+    <app_version>0.3.1.9009</app_version>
     <unique_id>b3b98d5fbcc1c9e368614fb8e92c9c022f9ce10a59b8fa995dde3047245f063e</unique_id>
-    <version>0.0.1.9029</version>
+    <version>0.0.1.9030</version>
     <name_en>Drug exposure</name_en>
     <name_fr>Traitements re&#xE7;us</name_fr>
     <category_en>NA</category_en>
@@ -238,7 +238,7 @@ Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-11-13 07:56:14</creation_datetime>
-    <update_datetime>2025-04-21 17:15:37</update_datetime>
+    <update_datetime>2025-06-03 07:56:19</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>

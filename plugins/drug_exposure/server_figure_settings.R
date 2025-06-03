@@ -2,9 +2,7 @@
 
 # Load figure settings
 
-observeEvent(input$load_figure_settings_%widget_id%, {
-    %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$load_figure_settings"))
+observe_event(input$load_figure_settings_%widget_id%, {
     
     # Update figure settings UI
     
@@ -41,54 +39,45 @@ observeEvent(input$load_figure_settings_%widget_id%, {
 
 # Save current settings
 
-observeEvent(input$save_params_and_code_%widget_id%, {
-    %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$save_params_and_code"))
+observe_event(input$save_params_and_code_%widget_id%, {
     
-    tryCatch({
+    # If no settings file is selected, go to settings files management page
+    if (length(input$settings_file_%widget_id%) == 0) shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-show_settings_files_tab_%widget_id%', Math.random());"))
     
-        # If no settings file is selected, go to settings files management page
-        if (length(input$settings_file_%widget_id%) == 0) shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-show_settings_files_tab_%widget_id%', Math.random());"))
+    if (length(input$settings_file_%widget_id%) > 0){
         
-        if (length(input$settings_file_%widget_id%) > 0){
-            
-            link_id <- input$settings_file_%widget_id%
+        link_id <- input$settings_file_%widget_id%
+    
+        # Delete old settings
+        sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db))
         
-            # Delete old settings
-            sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db))
-            
-            # Add new settings in db
-            new_data <- tibble::tribble(
-                ~name, ~value, ~value_num,
-                "data_source", input$data_source_%widget_id%, NA_real_,
-                "concepts_choice", input$concepts_choice_%widget_id%, NA_real_,
-                "concept_classes", input$concept_classes_%widget_id% %>% toString(), NA_real_,
-                "concepts", input$concepts_%widget_id% %>% toString(), NA_real_,
-                "synchronize_timelines", NA_character_, as.integer(input$synchronize_timelines_%widget_id%)
+        # Add new settings in db
+        new_data <- tibble::tribble(
+            ~name, ~value, ~value_num,
+            "data_source", input$data_source_%widget_id%, NA_real_,
+            "concepts_choice", input$concepts_choice_%widget_id%, NA_real_,
+            "concept_classes", input$concept_classes_%widget_id% %>% toString(), NA_real_,
+            "concepts", input$concepts_%widget_id% %>% toString(), NA_real_,
+            "synchronize_timelines", NA_character_, as.integer(input$synchronize_timelines_%widget_id%)
+        )
+        
+        new_data <-
+            new_data %>%
+            dplyr::transmute(
+                id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
+                category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
             )
-            
-            new_data <-
-                new_data %>%
-                dplyr::transmute(
-                    id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
-                    category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
-                )
-            
-            DBI::dbAppendTable(m$db, "widgets_options", new_data)
-            
-            # Notify user
-            show_message_bar(id, output, "modif_saved", "success", i18n = i18n, ns = ns)
-        }
         
-    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+        DBI::dbAppendTable(m$db, "widgets_options", new_data)
+        
+        # Notify user
+        show_message_bar("modif_saved", "success")
+    }
 })
 
 # Show / hide concepts_div and concept_classes_div
 
-observeEvent(input$concepts_choice_%widget_id%, {
-    %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$concepts_choice_"))
-   
+observe_event(input$concepts_choice_%widget_id%, {
     if (input$concepts_choice_%widget_id% == "selected_concepts"){
         shinyjs::hide("concept_classes_div_%widget_id%")
         shinyjs::show("concepts_div_%widget_id%")
@@ -116,41 +105,30 @@ if (length(m$datetimes_timeline_%tab_id%) == 0){
     m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
 }
 
-observeEvent(m$debounced_datetimes_timeline_%tab_id%(), {
-    %req%
-    req(input$synchronize_timelines_%widget_id%)
-    req(length(m$debounced_datetimes_timeline_%tab_id%()) > 0)
-    req(length(m$datetimes_%widget_id%) > 0)
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer m$debounced_datetimes_timeline"))
+observe_event(m$debounced_datetimes_timeline_%tab_id%(), {
     
-    tryCatch({
-        
-        if (
-            abs(as.numeric(m$debounced_datetimes_timeline_%tab_id%()[[1]]) - as.numeric(m$datetimes_%widget_id%[[1]])) > 5 |
-            abs(as.numeric(m$debounced_datetimes_timeline_%tab_id%()[[2]]) - as.numeric (m$datetimes_%widget_id%[[2]])) > 5){
-            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-        }
-        
-    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+    if (!input$synchronize_timelines_%widget_id% || length(m$debounced_datetimes_timeline_%tab_id%()) == 0 || length(m$datetimes_%widget_id%) == 0) return()
+   
+    if (
+        abs(as.numeric(m$debounced_datetimes_timeline_%tab_id%()[[1]]) - as.numeric(m$datetimes_%widget_id%[[1]])) > 5 |
+        abs(as.numeric(m$debounced_datetimes_timeline_%tab_id%()[[2]]) - as.numeric (m$datetimes_%widget_id%[[2]])) > 5){
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    }
 }, ignoreInit = TRUE)
 
-observeEvent(plotly::event_data("plotly_relayout", source = "drug_exposure_plot_%widget_id%"), {
-    %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer plotly::event_date"))
+observe_event(plotly::event_data("plotly_relayout", source = "drug_exposure_plot_%widget_id%"), {
+   
+    relayout_data <- plotly::event_data("plotly_relayout", source = "drug_exposure_plot_%widget_id%")
     
-    tryCatch({
-        relayout_data <- plotly::event_data("plotly_relayout", source = "drug_exposure_plot_%widget_id%")
-        
-        if (!is.null(relayout_data) && is.list(relayout_data)) {
-        
-            if ("xaxis.autorange" %in% names(relayout_data) && relayout_data[["xaxis.autorange"]]) {
-                m$datetimes_timeline_%tab_id%(m$data_datetimes_range_%widget_id%)
-            } else if ("xaxis.range[0]" %in% names(relayout_data) && "xaxis.range[1]" %in% names(relayout_data)) {
-                
-                selected_min <- lubridate::force_tz(as.POSIXct(relayout_data[["xaxis.range[0]"]], origin = "1970-01-01"), tzone = "UTC")
-                selected_max <- lubridate::force_tz(as.POSIXct(relayout_data[["xaxis.range[1]"]], origin = "1970-01-01"), tzone = "UTC")
-                m$datetimes_timeline_%tab_id%(c(selected_min, selected_max))
-            }
+    if (!is.null(relayout_data) && is.list(relayout_data)) {
+    
+        if ("xaxis.autorange" %in% names(relayout_data) && relayout_data[["xaxis.autorange"]]) {
+            m$datetimes_timeline_%tab_id%(m$data_datetimes_range_%widget_id%)
+        } else if ("xaxis.range[0]" %in% names(relayout_data) && "xaxis.range[1]" %in% names(relayout_data)) {
+            
+            selected_min <- lubridate::force_tz(as.POSIXct(relayout_data[["xaxis.range[0]"]], origin = "1970-01-01"), tzone = "UTC")
+            selected_max <- lubridate::force_tz(as.POSIXct(relayout_data[["xaxis.range[1]"]], origin = "1970-01-01"), tzone = "UTC")
+            m$datetimes_timeline_%tab_id%(c(selected_min, selected_max))
         }
-    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+    }
 })
