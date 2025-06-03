@@ -43,3 +43,4 @@ concept_classes,Concept classes,Classes de concepts
 value_as_number,Numeric value,Valeur numérique
 value_as_string,Value,Valeur
 value_as_concept_id,Value as concept_id,Valeur en tant que concept
+modif_saved,Updates saved,Modifications enregistrées
