@@ -2,9 +2,7 @@
 
 # Load figure settings
 
-observeEvent(input$load_figure_settings_%widget_id%, {
-    %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$load_figure_settings"))
+observe_event(input$load_figure_settings_%widget_id%, {
     
     # Update figure settings UI
     
@@ -35,41 +33,35 @@ observeEvent(input$load_figure_settings_%widget_id%, {
 
 # Save current settings
 
-observeEvent(input$save_params_and_code_%widget_id%, {
-    %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$save_params_and_code"))
+observe_event(input$save_params_and_code_%widget_id%, {
     
-    tryCatch({
+    # If no settings file is selected, go to settings files management page
+    if (length(input$settings_file_%widget_id%) == 0){
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-show_settings_files_tab_%widget_id%', Math.random());"))
+        return()
+    }
+        
+    link_id <- input$settings_file_%widget_id%
+
+    # Delete old settings
+    sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db))
     
-        # If no settings file is selected, go to settings files management page
-        if (length(input$settings_file_%widget_id%) == 0) shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-show_settings_files_tab_%widget_id%', Math.random());"))
-        
-        if (length(input$settings_file_%widget_id%) > 0){
-            
-            link_id <- input$settings_file_%widget_id%
-        
-            # Delete old settings
-            sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", .con = m$db))
-            
-            # Add new settings in db
-            new_data <- tibble::tribble(
-                ~name, ~value, ~value_num,
-                "prog_language", input$prog_language_%widget_id%, NA_real_,
-                "output", input$output_%widget_id%, NA_real_,
-                "code", input$code_%widget_id%, NA_real_
-            ) %>%
-            dplyr::transmute(
-                id = get_last_row(m$db, "widgets_options") + 1:3, widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
-                category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
-            )
-            
-            DBI::dbAppendTable(m$db, "widgets_options", new_data)
-            
-            # Notify user
-            show_message_bar(id, output, "modif_saved", "success", i18n = i18n, ns = ns)
-        }
-        
-    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - error = ", toString(e))))
+    # Add new settings in db
+    new_data <- tibble::tribble(
+        ~name, ~value, ~value_num,
+        "prog_language", input$prog_language_%widget_id%, NA_real_,
+        "output", input$output_%widget_id%, NA_real_,
+        "code", input$code_%widget_id%, NA_real_
+    ) %>%
+    dplyr::transmute(
+        id = get_last_row(m$db, "widgets_options") + 1:3, widget_id = %widget_id%, person_id = NA_integer_, link_id = link_id,
+        category = "figure_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
+    )
+    
+    DBI::dbAppendTable(m$db, "widgets_options", new_data)
+    
+    # Notify user
+    show_message_bar("modif_saved", "success")
 })
 
 # Change programming language
@@ -90,31 +82,19 @@ output_dropdown_options$python <- list(
     list(key = "matplotlib", text = i18n$t("matplotlib"))
 )
 
-observeEvent(input$prog_language_%widget_id%, {
-    %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$prog_language"))
+observe_event(input$prog_language_%widget_id%, {
     
-    tryCatch({
+    # Update ace editor
+    shinyAce::updateAceEditor(session, "code_%widget_id%", mode = input$prog_language_%widget_id%)
     
-        # Update ace editor
-        shinyAce::updateAceEditor(session, "code_%widget_id%", mode = input$prog_language_%widget_id%)
-        
-        # Update output dropdown
-        shiny.fluent::updateDropdown.shinyInput(session, "output_%widget_id%", options = output_dropdown_options[[input$prog_language_%widget_id%]], value = "console")
-        
-    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - input$prog_language - error = ", toString(e))))
+    # Update output dropdown
+    shiny.fluent::updateDropdown.shinyInput(session, "output_%widget_id%", options = output_dropdown_options[[input$prog_language_%widget_id%]], value = "console")
 })
 
-observeEvent(input$output_%widget_id%, {
-    %req%
-    if (debug) cat(paste0("\\n", now(), " - mod_", id, " - widget_id = %widget_id% - observer input$output"))
+observe_event(input$output_%widget_id%, {
     
-    tryCatch({
-    
-        # Update ace editor
-        if (input$output_%widget_id% == "rmarkdown") mode <- "markdown"
-        else mode <- input$prog_language_%widget_id%
-        shinyAce::updateAceEditor(session, "code_%widget_id%", mode = mode)
-        
-    }, error = function(e) cat(paste0("\\n", now(), " - widget %widget_id% - input$prog_language - error = ", toString(e))))
+    # Update ace editor
+    if (input$output_%widget_id% == "rmarkdown") mode <- "markdown"
+    else mode <- input$prog_language_%widget_id%
+    shinyAce::updateAceEditor(session, "code_%widget_id%", mode = mode)
 })

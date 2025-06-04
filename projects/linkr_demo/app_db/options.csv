@@ -1,15 +1,43 @@
 id,category,link_id,name,value,value_num,creator_id,datetime,deleted
-1,plugin,2,users_allowed_read_group,everybody,1,1,2025-02-10 18:07:12,0
-2,plugin,2,version,0.0.1.9027,NA,1,2025-02-10 18:07:12,0
-3,plugin,2,unique_id,b3b98d5fbcc1c9e368614fb8e92c9c022f9ce10a59b8fa995dde3047245f063e,NA,1,2025-02-10 18:07:12,0
-4,plugin,2,author,Jean Cupe; Boris Delange,NA,1,2025-02-10 18:07:12,0
-5,plugin,2,downloaded_from,NA,NA,1,2025-02-10 18:07:12,0
-6,plugin,2,downloaded_from_url,NA,NA,1,2025-02-10 18:07:12,0
-7,plugin,2,category_en,NA,NA,1,2025-02-10 18:07:12,0
-8,plugin,2,category_fr,NA,NA,1,2025-02-10 18:07:12,0
-9,plugin,2,name_en,Drug exposure,NA,1,2025-02-10 18:07:12,0
-10,plugin,2,name_fr,Traitements reçus,NA,1,2025-02-10 18:07:12,0
-11,plugin,2,description_en,"# 1) Introduction
+1,plugin,4,users_allowed_read_group,everybody,1,1,2025-02-10 18:07:18,0
+2,plugin,4,version,0.0.1.9013,NA,1,2025-02-10 18:07:18,0
+3,plugin,4,unique_id,2419f5d6196aa95e69518bb96a8ffe49390352b4bee773263cbba34b84364253,NA,1,2025-02-10 18:07:18,0
+4,plugin,4,author,Boris Delange,NA,1,2025-02-10 18:07:18,0
+5,plugin,4,downloaded_from,NA,NA,1,2025-02-10 18:07:18,0
+6,plugin,4,downloaded_from_url,NA,NA,1,2025-02-10 18:07:18,0
+7,plugin,4,category_en,NA,NA,1,2025-02-10 18:07:18,0
+8,plugin,4,category_fr,NA,NA,1,2025-02-10 18:07:18,0
+9,plugin,4,name_en,Hospital stays,NA,1,2025-02-10 18:07:18,0
+10,plugin,4,name_fr,Séjours hospitaliers,NA,1,2025-02-10 18:07:18,0
+11,plugin,4,description_en,NA,NA,1,2025-02-10 18:07:18,0
+12,plugin,4,description_fr,NA,NA,1,2025-02-10 18:07:18,0
+13,plugin,4,short_description_en,Displays a patient's hospital stays,NA,1,2025-02-10 18:07:18,0
+14,plugin,4,short_description_fr,Affiche les différents séjours hospitaliers d'un patient,NA,1,2025-02-10 18:07:18,0
+15,plugin,5,users_allowed_read_group,everybody,1,1,2025-05-28 08:06:05,0
+16,plugin,5,version,0.0.1.9016,NA,1,2025-05-28 08:06:05,0
+17,plugin,5,unique_id,d7662fb4dde4f229baff062dd673177ced4375168b5c9ef0782717d89769efb6,NA,1,2025-05-28 08:06:05,0
+18,plugin,5,author,Boris Delange,NA,1,2025-05-28 08:06:05,0
+19,plugin,5,downloaded_from,,NA,1,2025-05-28 08:06:05,0
+20,plugin,5,downloaded_from_url,,NA,1,2025-05-28 08:06:05,0
+21,plugin,5,category_en,NA,NA,1,2025-05-28 08:06:05,0
+22,plugin,5,category_fr,NA,NA,1,2025-05-28 08:06:05,0
+23,plugin,5,name_en,Console,NA,1,2025-05-28 08:06:05,0
+24,plugin,5,name_fr,Console,NA,1,2025-05-28 08:06:05,0
+25,plugin,5,description_en,NA,NA,1,2025-05-28 08:06:05,0
+26,plugin,5,description_fr,NA,NA,1,2025-05-28 08:06:05,0
+27,plugin,5,short_description_en,"R and Python console, with choice of output (console, figure, datatable etc)",NA,1,2025-05-28 08:06:05,0
+28,plugin,5,short_description_fr,"Une console R et Python, avec choix de l'output (console, figure, datatable etc)",NA,1,2025-05-28 08:06:05,0
+29,plugin,2,users_allowed_read_group,everybody,1,1,2025-05-28 08:06:13,0
+30,plugin,2,version,0.0.1.9030,NA,1,2025-05-28 08:06:13,0
+31,plugin,2,unique_id,b3b98d5fbcc1c9e368614fb8e92c9c022f9ce10a59b8fa995dde3047245f063e,NA,1,2025-05-28 08:06:13,0
+32,plugin,2,author,Jean Cupe; Boris Delange,NA,1,2025-05-28 08:06:13,0
+33,plugin,2,downloaded_from,,NA,1,2025-05-28 08:06:13,0
+34,plugin,2,downloaded_from_url,,NA,1,2025-05-28 08:06:13,0
+35,plugin,2,category_en,NA,NA,1,2025-05-28 08:06:13,0
+36,plugin,2,category_fr,NA,NA,1,2025-05-28 08:06:13,0
+37,plugin,2,name_en,Drug exposure,NA,1,2025-05-28 08:06:13,0
+38,plugin,2,name_fr,Traitements reçus,NA,1,2025-05-28 08:06:13,0
+39,plugin,2,description_en,"# 1) Introduction
 
 The ""Drug exposure"" plugin allows you to display **medication administration data** in the form of a **timeline**.
 
@@ -119,8 +147,8 @@ The general settings are divided into:
     this allows all widgets with this option to be loaded
     - **Run code when data is updated**: for this widget, this means that
     the data is updated when you change patient or visit, depending on the value of the 
-    ""Data to display"" parameter",NA,1,2025-02-10 18:07:12,0
-12,plugin,2,description_fr,"# 1) Introduction
+    ""Data to display"" parameter",NA,1,2025-05-28 08:06:13,0
+40,plugin,2,description_fr,"# 1) Introduction
 
 Le plugin ""Prescriptions"" permet d'afficher des **données d'administrations médicamenteuses** sous forme de **timeline**.
 
@@ -231,51 +259,37 @@ Les paramètres généraux sont divisés en :
     - **Exécuter le code lors de la mise à jour des données** : dans le cadre de ce widget, cela signifie que
     les données sont mises à jour lorsque l'on change de patient ou de séjour, en fonction de la valeur du 
     paramètre ""Données à afficher""
-",NA,1,2025-02-10 18:07:12,0
-13,plugin,2,short_description_en,Displays medication administrations as a timeline,NA,1,2025-02-10 18:07:12,0
-14,plugin,2,short_description_fr,Affiche les administrations médicamenteuses sous forme de timeline,NA,1,2025-02-10 18:07:12,0
-15,plugin,3,users_allowed_read_group,everybody,1,1,2025-02-10 18:07:14,0
-16,plugin,3,version,0.0.1.9022,NA,1,2025-02-10 18:07:14,0
-17,plugin,3,unique_id,4ff3e282d486ffdbe7c5e652dc0bcaebd645f5857d55542b195183c269c4a919,NA,1,2025-02-10 18:07:14,0
-18,plugin,3,author,Zeynep Erdem; Boris Delange,NA,1,2025-02-10 18:07:14,0
-19,plugin,3,downloaded_from,NA,NA,1,2025-02-10 18:07:14,0
-20,plugin,3,downloaded_from_url,NA,NA,1,2025-02-10 18:07:14,0
-21,plugin,3,category_en,NA,NA,1,2025-02-10 18:07:14,0
-22,plugin,3,category_fr,NA,NA,1,2025-02-10 18:07:14,0
-23,plugin,3,name_en,Datatable,NA,1,2025-02-10 18:07:14,0
-24,plugin,3,name_fr,Tableau de données,NA,1,2025-02-10 18:07:14,0
-25,plugin,3,description_en,NA,NA,1,2025-02-10 18:07:14,0
-26,plugin,3,description_fr,NA,NA,1,2025-02-10 18:07:14,0
-27,plugin,3,short_description_en,Allows displaying data in table format,NA,1,2025-02-10 18:07:14,0
-28,plugin,3,short_description_fr,Permet d'afficher des donneés sous forme de tableau,NA,1,2025-02-10 18:07:14,0
-29,plugin,4,users_allowed_read_group,everybody,1,1,2025-02-10 18:07:18,0
-30,plugin,4,version,0.0.1.9011,NA,1,2025-02-10 18:07:18,0
-31,plugin,4,unique_id,2419f5d6196aa95e69518bb96a8ffe49390352b4bee773263cbba34b84364253,NA,1,2025-02-10 18:07:18,0
-32,plugin,4,author,Boris Delange,NA,1,2025-02-10 18:07:18,0
-33,plugin,4,downloaded_from,NA,NA,1,2025-02-10 18:07:18,0
-34,plugin,4,downloaded_from_url,NA,NA,1,2025-02-10 18:07:18,0
-35,plugin,4,category_en,NA,NA,1,2025-02-10 18:07:18,0
-36,plugin,4,category_fr,NA,NA,1,2025-02-10 18:07:18,0
-37,plugin,4,name_en,Hospital stays,NA,1,2025-02-10 18:07:18,0
-38,plugin,4,name_fr,Séjours hospitaliers,NA,1,2025-02-10 18:07:18,0
-39,plugin,4,description_en,NA,NA,1,2025-02-10 18:07:18,0
-40,plugin,4,description_fr,NA,NA,1,2025-02-10 18:07:18,0
-41,plugin,4,short_description_en,Displays a patient's hospital stays,NA,1,2025-02-10 18:07:18,0
-42,plugin,4,short_description_fr,Affiche les différents séjours hospitaliers d'un patient,NA,1,2025-02-10 18:07:18,0
-43,plugin,1,users_allowed_read_group,everybody,1,1,2025-03-15 12:38:34,0
-44,plugin,1,version,0.0.1.9043,NA,1,2025-03-15 12:38:34,0
-45,plugin,1,unique_id,064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e,NA,1,2025-03-15 12:38:34,0
-46,plugin,1,author,Boris Delange,NA,1,2025-03-15 12:38:34,0
-47,plugin,1,downloaded_from,,NA,1,2025-03-15 12:38:34,0
-48,plugin,1,downloaded_from_url,,NA,1,2025-03-15 12:38:34,0
-49,plugin,1,category_en,NA,NA,1,2025-03-15 12:38:34,0
-50,plugin,1,category_fr,NA,NA,1,2025-03-15 12:38:34,0
-51,plugin,1,name_en,Timeline {dygraphs},NA,1,2025-03-15 12:38:34,0
-52,plugin,1,name_fr,Timeline {dygraphs},NA,1,2025-03-15 12:38:34,0
-53,plugin,1,description_en,"# 1) Introduction
+",NA,1,2025-05-28 08:06:13,0
+41,plugin,2,short_description_en,Displays medication administrations as a timeline,NA,1,2025-05-28 08:06:13,0
+42,plugin,2,short_description_fr,Affiche les administrations médicamenteuses sous forme de timeline,NA,1,2025-05-28 08:06:13,0
+43,plugin,3,users_allowed_read_group,everybody,1,1,2025-05-28 08:06:22,0
+44,plugin,3,version,0.0.1.9025,NA,1,2025-05-28 08:06:22,0
+45,plugin,3,unique_id,4ff3e282d486ffdbe7c5e652dc0bcaebd645f5857d55542b195183c269c4a919,NA,1,2025-05-28 08:06:22,0
+46,plugin,3,author,Zeynep Erdem; Boris Delange,NA,1,2025-05-28 08:06:22,0
+47,plugin,3,downloaded_from,,NA,1,2025-05-28 08:06:22,0
+48,plugin,3,downloaded_from_url,,NA,1,2025-05-28 08:06:22,0
+49,plugin,3,category_en,NA,NA,1,2025-05-28 08:06:22,0
+50,plugin,3,category_fr,NA,NA,1,2025-05-28 08:06:22,0
+51,plugin,3,name_en,Datatable,NA,1,2025-05-28 08:06:22,0
+52,plugin,3,name_fr,Tableau de données,NA,1,2025-05-28 08:06:22,0
+53,plugin,3,description_en,NA,NA,1,2025-05-28 08:06:22,0
+54,plugin,3,description_fr,NA,NA,1,2025-05-28 08:06:22,0
+55,plugin,3,short_description_en,Allows displaying data in table format,NA,1,2025-05-28 08:06:22,0
+56,plugin,3,short_description_fr,Permet d'afficher des donneés sous forme de tableau,NA,1,2025-05-28 08:06:22,0
+57,plugin,1,users_allowed_read_group,everybody,1,1,2025-05-28 08:06:25,0
+58,plugin,1,version,0.0.1.9048,NA,1,2025-05-28 08:06:25,0
+59,plugin,1,unique_id,064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e,NA,1,2025-05-28 08:06:25,0
+60,plugin,1,author,Boris Delange,NA,1,2025-05-28 08:06:25,0
+61,plugin,1,downloaded_from,,NA,1,2025-05-28 08:06:25,0
+62,plugin,1,downloaded_from_url,,NA,1,2025-05-28 08:06:25,0
+63,plugin,1,category_en,NA,NA,1,2025-05-28 08:06:25,0
+64,plugin,1,category_fr,NA,NA,1,2025-05-28 08:06:25,0
+65,plugin,1,name_en,Continuous var. timeline,NA,1,2025-05-28 08:06:25,0
+66,plugin,1,name_fr,Timeline var. continues,NA,1,2025-05-28 08:06:25,0
+67,plugin,1,description_en,"# 1) Introduction
 
-The ""Timeline {dygraphs}"" plugin allows you to display **continuous data** in the form of a **timeline**,
-such as **vital signs** or **laboratory data**.
+The ""Continuous variables timeline"" plugin allows you to display **continuous data** in the form of a **timeline**,
+such as **vital signs** or **laboratory data**, using `dygraphs` library.
 
 <table align=""center""><tr><td>
     <img 
@@ -382,11 +396,11 @@ The general settings are divided into:
     this allows all widgets with this option to be loaded
     - **Run code when data is updated**: for this widget, this means that
     the data is updated when you change patient or visit, depending on the value of the 
-    ""Data to display"" parameter",NA,1,2025-03-15 12:38:34,0
-54,plugin,1,description_fr,"# 1) Introduction
+    ""Data to display"" parameter",NA,1,2025-05-28 08:06:25,0
+68,plugin,1,description_fr,"# 1) Introduction
 
-Le plugin ""Timeline {dygraphs}"" permet d'afficher des **données continues** sous forme de **timeline**,
-tels que les **paramètres vitaux** ou les données de **biologie**.
+Le plugin ""Timeline variables continues"" permet d'afficher des **données continues** sous forme de **timeline**,
+tels que les **paramètres vitaux** ou les données de **biologie**, à l'aide de la librairie `dygraphs`.
 
 <table align=""center""><tr><td>
     <img 
@@ -494,34 +508,20 @@ Les paramètres généraux sont divisés en :
     - **Exécuter le code lors de la mise à jour des données** : dans le cadre de ce widget, cela signifie que
     les données sont mises à jour lorsque l'on change de patient ou de séjour, en fonction de la valeur du 
     paramètre ""Données à afficher""
-",NA,1,2025-03-15 12:38:34,0
-55,plugin,1,short_description_en,Allows displaying data as a timeline using the {dygraphs} library.,NA,1,2025-03-15 12:38:34,0
-56,plugin,1,short_description_fr,Permet d'afficher des données sous forme de timeline avec la librairie {dygraphs},NA,1,2025-03-15 12:38:34,0
-57,plugin,5,users_allowed_read_group,everybody,1,1,2025-03-16 21:18:24,0
-58,plugin,5,user_allowed_read,,1,1,2025-03-16 21:18:24,0
-59,plugin,5,version,0.0.1.9014,NA,1,2025-03-16 21:18:24,0
-60,plugin,5,unique_id,d7662fb4dde4f229baff062dd673177ced4375168b5c9ef0782717d89769efb6,NA,1,2025-03-16 21:18:24,0
-61,plugin,5,author,Boris Delange,NA,1,2025-03-16 21:18:24,0
-62,plugin,5,downloaded_from,,NA,1,2025-03-16 21:18:24,0
-63,plugin,5,downloaded_from_url,,NA,1,2025-03-16 21:18:24,0
-64,plugin,5,category_en,NA,NA,1,2025-03-16 21:18:24,0
-65,plugin,5,category_fr,NA,NA,1,2025-03-16 21:18:24,0
-66,plugin,5,name_en,Console,NA,1,2025-03-16 21:18:24,0
-67,plugin,5,name_fr,Console,NA,1,2025-03-16 21:18:24,0
-68,plugin,5,description_en,NA,NA,1,2025-03-16 21:18:24,0
-69,plugin,5,description_fr,NA,NA,1,2025-03-16 21:18:24,0
-70,plugin,5,short_description_en,"R and Python console, with choice of output (console, figure, datatable etc)",NA,1,2025-03-16 21:18:24,0
-71,plugin,5,short_description_fr,"Une console R et Python, avec choix de l'output (console, figure, datatable etc)",NA,1,2025-03-16 21:18:24,0
-72,subset,1,users_allowed_read_group,people_picker,1,1,2025-02-10 18:02:39,0
-73,subset,1,user_allowed_read,NA,1,1,2025-02-10 18:02:39,0
-74,subset,1,version,0.0.1.9000,NA,1,2025-02-10 18:02:39,0
-75,subset,1,unique_id,7902efc34aac8b638b7fa9bff39666a282b7a651a37ad911ecb64ce880ee4e29,NA,1,2025-02-10 18:02:39,0
-76,subset,1,author,Jane Doe,NA,1,2025-02-10 18:02:39,0
-77,subset,1,downloaded_from,NA,NA,1,2025-02-10 18:02:39,0
-78,subset,1,downloaded_from_url,NA,NA,1,2025-02-10 18:02:39,0
-79,subset,1,category_en,NA,NA,1,2025-02-10 18:02:39,0
-80,subset,1,description_en,NA,NA,1,2025-02-10 18:02:39,0
-81,subset,1,name_en,All patients,NA,1,2025-02-10 18:02:39,0
-82,subset,1,category_fr,NA,NA,1,2025-02-10 18:02:39,0
-83,subset,1,description_fr,NA,NA,1,2025-02-10 18:02:39,0
-84,subset,1,name_fr,All patients,NA,1,2025-02-10 18:02:39,0
+",NA,1,2025-05-28 08:06:25,0
+69,plugin,1,short_description_en,Allows displaying data as a timeline using the {dygraphs} library.,NA,1,2025-05-28 08:06:25,0
+70,plugin,1,short_description_fr,Permet d'afficher des données sous forme de timeline avec la librairie {dygraphs},NA,1,2025-05-28 08:06:25,0
+71,subset,1,users_allowed_read_group,people_picker,1,1,2025-02-10 18:02:39,0
+72,subset,1,version,0.0.1.9000,NA,1,2025-02-10 18:02:39,0
+73,subset,1,unique_id,7902efc34aac8b638b7fa9bff39666a282b7a651a37ad911ecb64ce880ee4e29,NA,1,2025-02-10 18:02:39,0
+74,subset,1,author,Jane Doe,NA,1,2025-02-10 18:02:39,0
+75,subset,1,downloaded_from,NA,NA,1,2025-02-10 18:02:39,0
+76,subset,1,downloaded_from_url,NA,NA,1,2025-02-10 18:02:39,0
+77,subset,1,category_en,NA,NA,1,2025-02-10 18:02:39,0
+78,subset,1,description_en,NA,NA,1,2025-02-10 18:02:39,0
+79,subset,1,name_en,All patients,NA,1,2025-02-10 18:02:39,0
+80,subset,1,category_fr,NA,NA,1,2025-02-10 18:02:39,0
+81,subset,1,description_fr,NA,NA,1,2025-02-10 18:02:39,0
+82,subset,1,name_fr,Tous les patients,NA,1,2025-02-10 18:02:39,0
+83,subset,1,short_description_en,,NA,1,2025-06-04 19:14:14,0
+84,subset,1,short_description_fr,,NA,1,2025-06-04 19:14:14,0

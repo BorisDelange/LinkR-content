@@ -33,53 +33,55 @@ observe_event(input$add_settings_file_%widget_id%, {
     # Check if name if empty
     empty_name <- TRUE
     if (length(file_name) > 0) if (!is.na(file_name) & file_name != "") empty_name <- FALSE
-    if (empty_name) shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", errorMessage = i18np$t("provide_valid_name"))
-    else {
-    
-        shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", errorMessage = NULL)
-        
-        # Check if name is already used
-        sql <- glue::glue_sql("SELECT value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'settings_files' AND name = 'file_name'", .con = m$db)
-        files_names <- DBI::dbGetQuery(m$db, sql) %>% dplyr::pull()
-        name_already_used <- remove_special_chars(file_name) %in% remove_special_chars(files_names)
-        
-        if (name_already_used) shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", errorMessage = i18np$t("name_already_used"))
-        else {
-            
-            new_id <- get_last_row(m$db, "widgets_options") + 1
-            
-            # Add settings file in database
-            new_data <- tibble::tibble(
-                id = new_id, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
-                category = "settings_files", name = "file_name", value = file_name, value_num = NA_real_, creator_id = m$user_id, datetime = now(), deleted = FALSE
-            )
-            DBI::dbAppendTable(m$db, "widgets_options", new_data)
-            
-            # Update filenames var
-            m$settings_filenames_%widget_id% <- m$settings_filenames_%widget_id% %>% dplyr::bind_rows(tibble::tibble(id = new_id, name = file_name))
-            
-            # Reset fields
-            shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", value = "")
-            
-            # Update dropdown
-            dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = "id", text_col = "name")
-            shiny.fluent::updateDropdown.shinyInput(session, "settings_file_%widget_id%", options = dropdown_options, value = new_id)
-            
-            # Reset ace editor code
-            shinyAce::updateAceEditor(session, "code_%widget_id%", value = "")
-            
-            # Close modal
-            shinyjs::hide("add_settings_file_modal_%widget_id%")
-            
-            # Notify user
-            show_message_bar("new_settings_file_added", "success")
-        }
+    if (empty_name){
+        shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", errorMessage = i18np$t("provide_valid_name"))
+        return()   
     }
+    
+    shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", errorMessage = NULL)
+    
+    # Check if name is already used
+    sql <- glue::glue_sql("SELECT value FROM widgets_options WHERE widget_id = %widget_id% AND category = 'settings_files' AND name = 'file_name'", .con = m$db)
+    files_names <- DBI::dbGetQuery(m$db, sql) %>% dplyr::pull()
+    name_already_used <- remove_special_chars(file_name) %in% remove_special_chars(files_names)
+    
+    if (name_already_used){
+        shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", errorMessage = i18np$t("name_already_used"))
+        return()
+    }
+        
+    new_id <- get_last_row(m$db, "widgets_options") + 1
+    
+    # Add settings file in database
+    new_data <- tibble::tibble(
+        id = new_id, widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
+        category = "settings_files", name = "file_name", value = file_name, value_num = NA_real_, creator_id = m$user_id, datetime = now(), deleted = FALSE
+    )
+    DBI::dbAppendTable(m$db, "widgets_options", new_data)
+    
+    # Update filenames var
+    m$settings_filenames_%widget_id% <- m$settings_filenames_%widget_id% %>% dplyr::bind_rows(tibble::tibble(id = new_id, name = file_name))
+    
+    # Reset fields
+    shiny.fluent::updateTextField.shinyInput(session, "settings_file_name_%widget_id%", value = "")
+    
+    # Update dropdown
+    dropdown_options <- convert_tibble_to_list(m$settings_filenames_%widget_id%, key_col = "id", text_col = "name")
+    shiny.fluent::updateDropdown.shinyInput(session, "settings_file_%widget_id%", options = dropdown_options, value = new_id)
+    
+    # Reset ace editor code
+    shinyAce::updateAceEditor(session, "code_%widget_id%", value = "")
+    
+    # Close modal
+    shinyjs::hide("add_settings_file_modal_%widget_id%")
+    
+    # Notify user
+    show_message_bar("new_settings_file_added", "success")
 })
 
 ## A settings file is selected
 observe_event(input$settings_file_%widget_id%, {
-   
+    
     # Show delete button
     shinyjs::show("delete_settings_file_div_%widget_id%")
 
@@ -103,6 +105,7 @@ observe_event(input$settings_file_%widget_id%, {
 
 ## Open delete a settings file modal
 observe_event(input$delete_settings_file_%widget_id%, {
+    
     if (length(input$settings_file_%widget_id%) == 0) return()
     shinyjs::show("delete_settings_file_modal_%widget_id%")
 })

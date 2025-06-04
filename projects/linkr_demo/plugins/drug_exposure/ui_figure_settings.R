@@ -8,7 +8,7 @@ div(
             ns("data_source_%widget_id%"), options = list(
                 list(key = "person", text = i18np$t("patient_data")),
                 list(key = "visit_detail", text = i18np$t("stay_data"))
-            ), value = "visit_detail", label = i18np$t("data_to_display")
+            ), value = "person", label = i18np$t("data_to_display")
         ),
         style = "width: 200px;"
     ),
@@ -19,7 +19,7 @@ div(
                     list(key = "all_concepts", text = i18np$t("all_concepts")),
                     list(key = "selected_concept_classes", text = i18np$t("selected_concept_classes")),
                     list(key = "selected_concepts", text = i18np$t("selected_concepts"))
-                ), value = "selected_concepts", label = i18np$t("concepts_to_display")
+                ), value = "all_concepts", label = i18np$t("concepts_to_display")
             ),
             style = "width: 200px;"
         ),
@@ -29,10 +29,7 @@ div(
                 div(
                     shiny.fluent::Dropdown.shinyInput(
                         ns("concept_classes_%widget_id%"), label = i18np$t("concept_classes"),
-                        # options = convert_tibble_to_list(
-                            # d$dataset_concept %>% dplyr::filter(domain_id == "Drug") %>% dplyr::distinct(concept_class_id),
-                            # key_col = "concept_class_id", text_col = "concept_class_id"
-                        # ),
+                        options = convert_tibble_to_list(concept_class_ids, key_col = "concept_class_id", text_col = "concept_class_id"),
                         multiSelect = TRUE
                     ),
                     style = "width: 200px;"
