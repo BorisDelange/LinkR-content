@@ -17,8 +17,8 @@ id,category,link_id,name,value,value_num,creator_id,datetime,deleted
 16,plugin,5,version,0.0.1.9016,NA,1,2025-05-28 08:06:05,0
 17,plugin,5,unique_id,d7662fb4dde4f229baff062dd673177ced4375168b5c9ef0782717d89769efb6,NA,1,2025-05-28 08:06:05,0
 18,plugin,5,author,Boris Delange,NA,1,2025-05-28 08:06:05,0
-19,plugin,5,downloaded_from,,NA,1,2025-05-28 08:06:05,0
-20,plugin,5,downloaded_from_url,,NA,1,2025-05-28 08:06:05,0
+19,plugin,5,downloaded_from,NA,NA,1,2025-05-28 08:06:05,0
+20,plugin,5,downloaded_from_url,NA,NA,1,2025-05-28 08:06:05,0
 21,plugin,5,category_en,NA,NA,1,2025-05-28 08:06:05,0
 22,plugin,5,category_fr,NA,NA,1,2025-05-28 08:06:05,0
 23,plugin,5,name_en,Console,NA,1,2025-05-28 08:06:05,0
@@ -31,8 +31,8 @@ id,category,link_id,name,value,value_num,creator_id,datetime,deleted
 30,plugin,2,version,0.0.1.9030,NA,1,2025-05-28 08:06:13,0
 31,plugin,2,unique_id,b3b98d5fbcc1c9e368614fb8e92c9c022f9ce10a59b8fa995dde3047245f063e,NA,1,2025-05-28 08:06:13,0
 32,plugin,2,author,Jean Cupe; Boris Delange,NA,1,2025-05-28 08:06:13,0
-33,plugin,2,downloaded_from,,NA,1,2025-05-28 08:06:13,0
-34,plugin,2,downloaded_from_url,,NA,1,2025-05-28 08:06:13,0
+33,plugin,2,downloaded_from,NA,NA,1,2025-05-28 08:06:13,0
+34,plugin,2,downloaded_from_url,NA,NA,1,2025-05-28 08:06:13,0
 35,plugin,2,category_en,NA,NA,1,2025-05-28 08:06:13,0
 36,plugin,2,category_fr,NA,NA,1,2025-05-28 08:06:13,0
 37,plugin,2,name_en,Drug exposure,NA,1,2025-05-28 08:06:13,0
@@ -266,8 +266,8 @@ Les paramètres généraux sont divisés en :
 44,plugin,3,version,0.0.1.9025,NA,1,2025-05-28 08:06:22,0
 45,plugin,3,unique_id,4ff3e282d486ffdbe7c5e652dc0bcaebd645f5857d55542b195183c269c4a919,NA,1,2025-05-28 08:06:22,0
 46,plugin,3,author,Zeynep Erdem; Boris Delange,NA,1,2025-05-28 08:06:22,0
-47,plugin,3,downloaded_from,,NA,1,2025-05-28 08:06:22,0
-48,plugin,3,downloaded_from_url,,NA,1,2025-05-28 08:06:22,0
+47,plugin,3,downloaded_from,NA,NA,1,2025-05-28 08:06:22,0
+48,plugin,3,downloaded_from_url,NA,NA,1,2025-05-28 08:06:22,0
 49,plugin,3,category_en,NA,NA,1,2025-05-28 08:06:22,0
 50,plugin,3,category_fr,NA,NA,1,2025-05-28 08:06:22,0
 51,plugin,3,name_en,Datatable,NA,1,2025-05-28 08:06:22,0
@@ -280,8 +280,8 @@ Les paramètres généraux sont divisés en :
 58,plugin,1,version,0.0.1.9048,NA,1,2025-05-28 08:06:25,0
 59,plugin,1,unique_id,064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e,NA,1,2025-05-28 08:06:25,0
 60,plugin,1,author,Boris Delange,NA,1,2025-05-28 08:06:25,0
-61,plugin,1,downloaded_from,,NA,1,2025-05-28 08:06:25,0
-62,plugin,1,downloaded_from_url,,NA,1,2025-05-28 08:06:25,0
+61,plugin,1,downloaded_from,NA,NA,1,2025-05-28 08:06:25,0
+62,plugin,1,downloaded_from_url,NA,NA,1,2025-05-28 08:06:25,0
 63,plugin,1,category_en,NA,NA,1,2025-05-28 08:06:25,0
 64,plugin,1,category_fr,NA,NA,1,2025-05-28 08:06:25,0
 65,plugin,1,name_en,Continuous var. timeline,NA,1,2025-05-28 08:06:25,0
@@ -523,5 +523,5 @@ Les paramètres généraux sont divisés en :
 80,subset,1,category_fr,NA,NA,1,2025-02-10 18:02:39,0
 81,subset,1,description_fr,NA,NA,1,2025-02-10 18:02:39,0
 82,subset,1,name_fr,Tous les patients,NA,1,2025-02-10 18:02:39,0
-83,subset,1,short_description_en,,NA,1,2025-06-04 19:14:14,0
-84,subset,1,short_description_fr,,NA,1,2025-06-04 19:14:14,0
+83,subset,1,short_description_en,All patients,NA,1,2025-06-04 19:14:14,0
+84,subset,1,short_description_fr,Tous les patients,NA,1,2025-06-04 19:14:14,0
