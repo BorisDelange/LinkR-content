@@ -1,7 +1,8 @@
+# ==========================================
 # UI - main file
+# ==========================================
 
-## Hide save buttons if the user does not have access
-
+# Hide save buttons if the user does not have access
 if ("projects_widgets_console" %in% user_accesses){
     code_button <- shiny.fluent::IconButton.shinyInput(
         ns("code_button_%widget_id%"), iconProps = list(iconName = "Code"), title = i18np$t("show_code_editor"),
@@ -70,24 +71,24 @@ tagList(
         div(
             id = ns("figure_div_%widget_id%"),
             %import_script('ui_figure.R')%,
-            style = paste0("height: 100%; flex-basis: ", div_width, "; flex: 1; box-sizing: border-box; min-width: 50px;"),
+            style = paste0("height: 100%; flex: 1; box-sizing: border-box; min-width: 50px;"),
             class = "left-panel"
         ),
         div(
             id = ns("resizer_%widget_id%"),
-            style = "width: 5px; cursor: col-resize; background-color: #ccc;",
+            style = "width: 5px; cursor: col-resize; background-color: #ccc; flex: 0 0 5px;",
             class = "resizer"
         ),
         div(
             id = ns("figure_settings_div_%widget_id%"),
             %import_script('ui_figure_settings.R')%,
-            style = paste0("height: 100%; flex-basis: ", div_width, "%; padding: 0 8px; overflow: auto; flex: 1; box-sizing: border-box;")
+            style = paste0("height: 100%; padding: 0 8px; overflow: auto; flex: 0 0 20%; box-sizing: border-box;")
         ),
         shinyjs::hidden(
             div(
                 id = ns("code_div_%widget_id%"),
                 %import_script('ui_code.R')%,
-                style = paste0("height: 100%; flex-basis: ", div_width, "%; overflow: auto; flex: 1; box-sizing: border-box;"),
+                style = paste0("height: 100%; overflow: auto; flex: 0 0 50%; box-sizing: border-box;"),
                 class = "right-panel"
             )
         ),

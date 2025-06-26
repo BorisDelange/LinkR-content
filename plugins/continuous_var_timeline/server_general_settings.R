@@ -2,17 +2,53 @@
 
 # Settings / editor side-by-side with figure
 
+# Side-by-side mode management
 observe_event(input$figure_and_settings_side_by_side_%widget_id%, {
     
     if (input$figure_and_settings_side_by_side_%widget_id%){
+        # Enable side-by-side mode with width memorization
         shinyjs::runjs(paste0("
-            $('#", id, "-figure_div_%widget_id%').css('flex-basis', '50%');
-            $('#", id, "-figure_settings_div_%widget_id%').css('flex-basis', '50%');
-            $('#", id, "-code_div_%widget_id%').css('flex-basis', '50%');
+            // Initialize width memory for each tab
+            if (!window.panelMemory_%widget_id%) {
+                window.panelMemory_%widget_id% = {
+                    code: '50%',        // Default width for code panel
+                    settings: '20%'     // Default width for settings panel
+                };
+            }
             
+            // Function to set panel widths based on active tab
+            function setPanelWidths_%widget_id%() {
+                var currentTab = Shiny.shinyapp.$inputValues['", id, "-current_tab_%widget_id%'];
+                var figureDiv = $('#", id, "-figure_div_%widget_id%');
+                var figureSettingsDiv = $('#", id, "-figure_settings_div_%widget_id%');
+                var codeDiv = $('#", id, "-code_div_%widget_id%');
+                
+                if (currentTab === 'code') {
+                    // Code mode: Apply memorized width for code panel
+                    figureDiv.css('flex', '1');
+                    codeDiv.css('flex', '0 0 ' + window.panelMemory_%widget_id%.code);
+                    figureSettingsDiv.css('flex', '0 0 ' + window.panelMemory_%widget_id%.settings);
+                } else if (currentTab === 'figure_settings') {
+                    // Settings mode: Apply memorized width for settings panel
+                    figureDiv.css('flex', '1');
+                    figureSettingsDiv.css('flex', '0 0 ' + window.panelMemory_%widget_id%.settings);
+                    codeDiv.css('flex', '0 0 ' + window.panelMemory_%widget_id%.code);
+                }
+            }
+            
+            // Apply initial widths
+            setPanelWidths_%widget_id%();
+            
+            // Listen for tab changes
+            $(document).off('shiny:inputchanged.widths_%widget_id%').on('shiny:inputchanged.widths_%widget_id%', function(event) {
+                if (event.name === '", id, "-current_tab_%widget_id%') {
+                    setPanelWidths_%widget_id%();
+                }
+            });
+            
+            // Initialize resizing functionality
             if (!window.resizingInitialized_%widget_id%) {
                 var container = document.getElementById('", id, "-figure_settings_code_div_%widget_id%');
-                
                 var isResizing = false;
                 var lastDownX = 0;
                 
@@ -29,7 +65,6 @@ observe_event(input$figure_and_settings_side_by_side_%widget_id%, {
                 resizer.addEventListener('mousedown', function(e) {
                     isResizing = true;
                     lastDownX = e.clientX;
-            
                     document.addEventListener('mousemove', resizePanels);
                     document.addEventListener('mouseup', stopResizing);
                 });
@@ -37,16 +72,28 @@ observe_event(input$figure_and_settings_side_by_side_%widget_id%, {
                 function resizePanels(e) {
                     if (!isResizing) return;
                     
-                    var offsetLeftPanel = leftPanel.offsetWidth;
-                    var offsetFigureSettingsPanel = figureSettingsPanel.offsetWidth;
-                    var offsetCodePanel = codePanel.offsetWidth;
+                    var containerWidth = container.offsetWidth;
                     var deltaX = e.clientX - lastDownX;
+                    var currentTab = Shiny.shinyapp.$inputValues['", id, "-current_tab_%widget_id%'];
                     
-                    leftPanel.style.flexBasis = (offsetLeftPanel + deltaX) + 'px';
+                    var leftWidth = leftPanel.offsetWidth + deltaX;
+                    var leftPercent = (leftWidth / containerWidth) * 100;
+                    var rightPercent = 100 - leftPercent - 0.5; // 0.5% for resizer
                     
-                    figureSettingsPanel.style.flexBasis = (offsetFigureSettingsPanel - deltaX) + 'px';
-                    codePanel.style.flexBasis = (offsetCodePanel - deltaX) + 'px';
-            
+                    if (leftPercent > 10 && rightPercent > 10) {
+                        leftPanel.style.flex = '0 0 ' + leftPercent + '%';
+                        
+                        if (currentTab === 'code') {
+                            codePanel.style.flex = '0 0 ' + rightPercent + '%';
+                            // Store the new width in memory for code panel
+                            window.panelMemory_%widget_id%.code = rightPercent + '%';
+                        } else {
+                            figureSettingsPanel.style.flex = '0 0 ' + rightPercent + '%';
+                            // Store the new width in memory for settings panel
+                            window.panelMemory_%widget_id%.settings = rightPercent + '%';
+                        }
+                    }
+                    
                     lastDownX = e.clientX;
                     triggerResizeEvent();
                 }
@@ -57,22 +104,24 @@ observe_event(input$figure_and_settings_side_by_side_%widget_id%, {
                     document.removeEventListener('mouseup', stopResizing);
                     triggerResizeEvent();
                 }
+                
+                window.resizingInitialized_%widget_id% = true;
             }
-            
-            window.resizingInitialized_%widget_id% = true;
         "))
+        
         shinyjs::hide("figure_button_div_%widget_id%")
         shinyjs::show("resizer_%widget_id%")
     }
     else {
+        # Disable side-by-side mode
         shinyjs::runjs(paste0("
-            $('#", id, "-figure_div_%widget_id%').css('flex-basis', '100%');
-            $('#", id, "-figure_settings_div_%widget_id%').css('flex-basis', '100%');
-            $('#", id, "-code_div_%widget_id%').css('flex-basis', '100%');
+            $('#", id, "-figure_div_%widget_id%').css('flex', '1');
+            $('#", id, "-figure_settings_div_%widget_id%').css('flex', '0 0 20%');
+            $('#", id, "-code_div_%widget_id%').css('flex', '0 0 50%');
         "))
         
-        shinyjs::show("figure_button_div_%widget_id%");
-        shinyjs::hide("resizer_%widget_id%");
+        shinyjs::show("figure_button_div_%widget_id%")
+        shinyjs::hide("resizer_%widget_id%")
     }
 })
 
