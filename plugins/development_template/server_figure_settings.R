@@ -2,7 +2,7 @@
 
 # Load figure settings
 
-observeEvent(input$load_figure_settings_%widget_id%, try_catch("input$load_figure_settings_%widget_id%", {
+observe_event(input$load_figure_settings_%widget_id%, {
     
     # Update figure settings UI
     
@@ -26,11 +26,11 @@ observeEvent(input$load_figure_settings_%widget_id%, try_catch("input$load_figur
     #        shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random());")))
     #    }
     # }
-}))
+})
 
 # Save current settings
 
-observeEvent(input$save_params_and_code_%widget_id%, try_catch("input$save_params_and_code_%widget_id%", {
+observe_event(input$save_params_and_code_%widget_id%, {
     
     # If no settings file is selected, go to settings files management page
     if (length(input$settings_file_%widget_id%) == 0) shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-show_settings_files_tab_%widget_id%', Math.random());"))
@@ -61,4 +61,4 @@ observeEvent(input$save_params_and_code_%widget_id%, try_catch("input$save_param
         # Notify user
         show_message_bar("modif_saved", "success")
     }
-}))
+})
