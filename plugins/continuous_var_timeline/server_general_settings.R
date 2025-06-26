@@ -1,14 +1,25 @@
-# Server - General settings
+# ==========================================
+# Server - General Settings Logic
+# ==========================================
 
-# Settings / editor side-by-side with figure
+# ======================================
+# SIDE-BY-SIDE LAYOUT MANAGEMENT
+# ======================================
 
-# Side-by-side mode management
+# Handler for toggling between side-by-side and full-width modes
 observe_event(input$figure_and_settings_side_by_side_%widget_id%, {
     
-    if (input$figure_and_settings_side_by_side_%widget_id%){
-        # Enable side-by-side mode with width memorization
+    # ====================
+    # ENABLE SIDE-BY-SIDE MODE
+    # ====================
+    if (input$figure_and_settings_side_by_side_%widget_id%) {
+        
+        # Complex JavaScript for advanced panel management with width memory
         shinyjs::runjs(paste0("
-            // Initialize width memory for each tab
+            // ====================
+            // INITIALIZE WIDTH MEMORY SYSTEM
+            // ====================
+            // Store panel widths to maintain user preferences when switching tabs
             if (!window.panelMemory_%widget_id%) {
                 window.panelMemory_%widget_id% = {
                     code: '50%',        // Default width for code panel
@@ -16,7 +27,10 @@ observe_event(input$figure_and_settings_side_by_side_%widget_id%, {
                 };
             }
             
-            // Function to set panel widths based on active tab
+            // ====================
+            // DYNAMIC PANEL WIDTH MANAGEMENT
+            // ====================
+            // Function to apply appropriate panel widths based on active tab
             function setPanelWidths_%widget_id%() {
                 var currentTab = Shiny.shinyapp.$inputValues['", id, "-current_tab_%widget_id%'];
                 var figureDiv = $('#", id, "-figure_div_%widget_id%');
@@ -24,44 +38,57 @@ observe_event(input$figure_and_settings_side_by_side_%widget_id%, {
                 var codeDiv = $('#", id, "-code_div_%widget_id%');
                 
                 if (currentTab === 'code') {
-                    // Code mode: Apply memorized width for code panel
-                    figureDiv.css('flex', '1');
+                    // Code mode: Figure + Code editor side by side
+                    figureDiv.css('flex', '1');  // Figure takes remaining space
                     codeDiv.css('flex', '0 0 ' + window.panelMemory_%widget_id%.code);
                     figureSettingsDiv.css('flex', '0 0 ' + window.panelMemory_%widget_id%.settings);
                 } else if (currentTab === 'figure_settings') {
-                    // Settings mode: Apply memorized width for settings panel
-                    figureDiv.css('flex', '1');
+                    // Settings mode: Figure + Settings panel side by side
+                    figureDiv.css('flex', '1');  // Figure takes remaining space
                     figureSettingsDiv.css('flex', '0 0 ' + window.panelMemory_%widget_id%.settings);
                     codeDiv.css('flex', '0 0 ' + window.panelMemory_%widget_id%.code);
                 }
             }
             
-            // Apply initial widths
+            // Apply initial panel widths
             setPanelWidths_%widget_id%();
             
-            // Listen for tab changes
+            // ====================
+            // TAB CHANGE LISTENER
+            // ====================
+            // Automatically adjust panel widths when user switches tabs
             $(document).off('shiny:inputchanged.widths_%widget_id%').on('shiny:inputchanged.widths_%widget_id%', function(event) {
                 if (event.name === '", id, "-current_tab_%widget_id%') {
                     setPanelWidths_%widget_id%();
                 }
             });
             
-            // Initialize resizing functionality
+            // ====================
+            // INTERACTIVE PANEL RESIZING
+            // ====================
+            // Enable drag-to-resize functionality between figure and side panels
             if (!window.resizingInitialized_%widget_id%) {
                 var container = document.getElementById('", id, "-figure_settings_code_div_%widget_id%');
                 var isResizing = false;
                 var lastDownX = 0;
                 
-                var leftPanel = container.querySelector('.left-panel');
+                // Get references to all panels and resizer
+                var leftPanel = container.querySelector('.left-panel');  // Figure panel
                 var figureSettingsPanel = document.getElementById('", id, "-figure_settings_div_%widget_id%');
                 var codePanel = document.getElementById('", id, "-code_div_%widget_id%');
-                var resizer = container.querySelector('.resizer');
+                var resizer = container.querySelector('.resizer');  // Drag handle
                 
+                // Utility function to trigger resize events for proper chart rendering
                 function triggerResizeEvent() {
                     var event = new Event('resize');
                     window.dispatchEvent(event);
                 }
                 
+                // ====================
+                // MOUSE RESIZE HANDLERS
+                // ====================
+                
+                // Start resizing on mouse down
                 resizer.addEventListener('mousedown', function(e) {
                     isResizing = true;
                     lastDownX = e.clientX;
@@ -69,6 +96,7 @@ observe_event(input$figure_and_settings_side_by_side_%widget_id%, {
                     document.addEventListener('mouseup', stopResizing);
                 });
                 
+                // Handle panel resizing during mouse drag
                 function resizePanels(e) {
                     if (!isResizing) return;
                     
@@ -76,80 +104,160 @@ observe_event(input$figure_and_settings_side_by_side_%widget_id%, {
                     var deltaX = e.clientX - lastDownX;
                     var currentTab = Shiny.shinyapp.$inputValues['", id, "-current_tab_%widget_id%'];
                     
+                    // Calculate new panel sizes
                     var leftWidth = leftPanel.offsetWidth + deltaX;
                     var leftPercent = (leftWidth / containerWidth) * 100;
-                    var rightPercent = 100 - leftPercent - 0.5; // 0.5% for resizer
+                    var rightPercent = 100 - leftPercent - 0.5; // 0.5% reserved for resizer
                     
+                    // Enforce minimum panel sizes (10% each)
                     if (leftPercent > 10 && rightPercent > 10) {
                         leftPanel.style.flex = '0 0 ' + leftPercent + '%';
                         
+                        // Apply resize to appropriate right panel based on current tab
                         if (currentTab === 'code') {
                             codePanel.style.flex = '0 0 ' + rightPercent + '%';
-                            // Store the new width in memory for code panel
+                            // Remember code panel width for future tab switches
                             window.panelMemory_%widget_id%.code = rightPercent + '%';
                         } else {
                             figureSettingsPanel.style.flex = '0 0 ' + rightPercent + '%';
-                            // Store the new width in memory for settings panel
+                            // Remember settings panel width for future tab switches
                             window.panelMemory_%widget_id%.settings = rightPercent + '%';
                         }
                     }
                     
                     lastDownX = e.clientX;
-                    triggerResizeEvent();
+                    triggerResizeEvent();  // Ensure charts re-render properly
                 }
                 
+                // Stop resizing on mouse up
                 function stopResizing(e) {
                     isResizing = false;
                     document.removeEventListener('mousemove', resizePanels);
                     document.removeEventListener('mouseup', stopResizing);
-                    triggerResizeEvent();
+                    triggerResizeEvent();  // Final resize event
                 }
                 
+                // Mark resizing as initialized to prevent duplicate event listeners
                 window.resizingInitialized_%widget_id% = true;
             }
         "))
         
+        # ====================
+        # UI ELEMENT VISIBILITY CHANGES
+        # ====================
+        # Hide figure button (not needed in side-by-side mode)
         shinyjs::hide("figure_button_div_%widget_id%")
+        # Show resizer handle for drag-to-resize functionality
         shinyjs::show("resizer_%widget_id%")
     }
+    
+    # ====================
+    # DISABLE SIDE-BY-SIDE MODE (FULL-WIDTH)
+    # ====================
     else {
-        # Disable side-by-side mode
+        # Reset all panels to default flex values
         shinyjs::runjs(paste0("
-            $('#", id, "-figure_div_%widget_id%').css('flex', '1');
-            $('#", id, "-figure_settings_div_%widget_id%').css('flex', '0 0 20%');
-            $('#", id, "-code_div_%widget_id%').css('flex', '0 0 50%');
+            $('#", id, "-figure_div_%widget_id%').css('flex', '1');           // Figure: flexible
+            $('#", id, "-figure_settings_div_%widget_id%').css('flex', '0 0 20%');  // Settings: 20% fixed
+            $('#", id, "-code_div_%widget_id%').css('flex', '0 0 50%');       // Code: 50% fixed
         "))
         
+        # ====================
+        # UI ELEMENT VISIBILITY CHANGES
+        # ====================
+        # Show figure button (needed for navigation in full-width mode)
         shinyjs::show("figure_button_div_%widget_id%")
+        # Hide resizer handle (not needed in full-width mode)
         shinyjs::hide("resizer_%widget_id%")
     }
 })
 
-# Save general settings in db
+# ======================================
+# GENERAL SETTINGS PERSISTENCE
+# ======================================
 
+# Handler for saving general application settings to database
 observe_event(input$save_general_settings_%widget_id%, {
     
-    # Delete old rows
-    sql_send_statement(m$db, glue::glue_sql("DELETE FROM widgets_options WHERE widget_id = %widget_id% AND category = 'general_settings' AND name != 'selected_file_id'", .con = m$db))
+    # ====================
+    # CLEAR EXISTING SETTINGS
+    # ====================
+    # Remove old general settings but preserve selected file ID
+    sql_send_statement(
+        m$db, 
+        glue::glue_sql(
+            "DELETE FROM widgets_options 
+             WHERE widget_id = %widget_id% AND category = 'general_settings' AND name != 'selected_file_id'", 
+            .con = m$db
+        )
+    )
+    
+    # ====================
+    # PREPARE NEW SETTINGS DATA
+    # ====================
     
     file_id <- input$settings_file_%widget_id%
     new_data <- tibble::tibble(name = character(), value = character(), value_num = integer())
     
-    general_settings_vec <- c("show_settings_file", "figure_and_settings_side_by_side", "run_code_on_data_update", "run_code_at_settings_file_load")
+    # Define all general settings that need to be saved
+    general_settings_vec <- c(
+        "show_settings_file", 
+        "figure_and_settings_side_by_side", 
+        "run_code_on_data_update", 
+        "run_code_at_settings_file_load"
+    )
     
-    sapply(general_settings_vec, function(name){
+    # ====================
+    # PROCESS EACH TOGGLE SETTING
+    # ====================
+    
+    sapply(general_settings_vec, function(name) {
+        # Default to FALSE (0) if toggle not found or unchecked
         toggle_value <- 0L
         input_name <- paste0(name, "_%widget_id%")
-        if (length(input[[input_name]]) > 0) if (input[[input_name]]) toggle_value <- 1L
-        new_data <<- new_data %>% dplyr::bind_rows(tibble::tibble(name = name, value = NA_character_, value_num = toggle_value))
+        
+        # Check if input exists and is TRUE
+        if (length(input[[input_name]]) > 0) {
+            if (input[[input_name]]) {
+                toggle_value <- 1L
+            }
+        }
+        
+        # Add this setting to the data collection
+        new_data <<- new_data %>% 
+            dplyr::bind_rows(
+                tibble::tibble(
+                    name = name, 
+                    value = NA_character_, 
+                    value_num = toggle_value
+                )
+            )
     })
     
-    new_data <-
-        new_data %>%
+    # ====================
+    # ADD DATABASE METADATA
+    # ====================
+    
+    # Transform data with required database fields
+    new_data <- new_data %>%
         dplyr::transmute(
-            id = get_last_row(m$db, "widgets_options") + 1:(length(general_settings_vec)), widget_id = %widget_id%, person_id = NA_integer_, link_id = NA_integer_,
-            category = "general_settings", name, value, value_num, creator_id = m$user_id, datetime = now(), deleted = FALSE
+            id = get_last_row(m$db, "widgets_options") + 1:length(general_settings_vec), 
+            widget_id = %widget_id%, 
+            person_id = NA_integer_, 
+            link_id = NA_integer_,  # General settings not linked to specific files
+            category = "general_settings", 
+            name, 
+            value, 
+            value_num, 
+            creator_id = m$user_id, 
+            datetime = now(), 
+            deleted = FALSE
         )
     
+    # ====================
+    # SAVE TO DATABASE
+    # ====================
+    
+    # Insert new settings into database
     DBI::dbAppendTable(m$db, "widgets_options", new_data)
 })

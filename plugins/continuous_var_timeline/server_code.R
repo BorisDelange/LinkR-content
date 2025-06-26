@@ -1,63 +1,101 @@
-# Server - Code
+# ==========================================
+# Server - Code Editor Logic
+# ==========================================
 
-# Init code var
+# ======================================
+# INITIALIZATION
+# ======================================
+
+# Initialize code storage variable
 m$code_%widget_id% <- ""
 
-# Prevent a bug with scroll into ace editor
+# Fix ACE editor rendering issues on startup
 shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.dispatchEvent(event);"))
 
-# Execute code when the plugin is launched
+# Auto-execute code when widget first loads
 shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random());")))
 
-# Comment code
+# ======================================
+# CODE EDITOR INTERACTIONS
+# ======================================
+
+# Handle comment/uncomment keyboard shortcut (Ctrl+Shift+C)
 observe_event(input$code_%widget_id%_comment, {
     toggle_comments(
-        id = id, input_id = "code_%widget_id%", code = input$code_%widget_id%,
-        selection = input$code_%widget_id%_comment$range, session = session
+        id = id, 
+        input_id = "code_%widget_id%", 
+        code = input$code_%widget_id%,
+        selection = input$code_%widget_id%_comment$range, 
+        session = session
     )
 })
 
-# Run all code with shortcut
+# Handle run all code keyboard shortcut (Ctrl+Shift+Enter)
 observe_event(input$code_%widget_id%_run_all, {
-    if ("projects_widgets_console" %in% user_accesses){
+    # Only allow code execution if user has console access
+    if ("projects_widgets_console" %in% user_accesses) {
         m$code_%widget_id% <- input$code_%widget_id%
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
     }
 })
 
-# Run code when button is clicked
+# ======================================
+# FIGURE DISPLAY LOGIC
+# ======================================
+
+# Main code execution handler - triggered by display button or shortcuts
 observe_event(input$display_figure_%widget_id%, {
-   
-    # If current selected tab is figure settings when run code button is clicked, generate code from these settings
-    if (length(input$current_tab_%widget_id%) == 0) current_tab <- "figure_settings"
-    else current_tab <- input$current_tab_%widget_id%
     
-    if (current_tab == "figure_settings"){
+    # Determine current tab (default to figure_settings if not set)
+    if (length(input$current_tab_%widget_id%) == 0) {
+        current_tab <- "figure_settings"
+    } else {
+        current_tab <- input$current_tab_%widget_id%
+    }
+    
+    # ====================
+    # AUTO-GENERATE CODE FROM FIGURE SETTINGS
+    # ====================
+    if (current_tab == "figure_settings") {
         
-        # Code to generate code from figure settings
-        
+        # Get data source selection (default to visit_detail)
         data_source <- "visit_detail"
-        if (length(input$data_source_%widget_id%) > 0) data_source <- input$data_source_%widget_id%
+        if (length(input$data_source_%widget_id%) > 0) {
+            data_source <- input$data_source_%widget_id%
+        }
         
+        # ====================
+        # BUILD CONCEPTS TABLE
+        # ====================
+        
+        # Start building R code as string - create concepts tibble
         code <- paste0(
             "concepts <- tibble::tribble(\\n",
             "    ~concept_id, ~concept_name, ~domain_id, ~vocabulary_id"
         )
         
-        concepts <- selected_concepts %>% dplyr::filter(concept_id %in% input$concepts_%widget_id%)
+        # Filter selected concepts to only those chosen by user
+        concepts <- selected_concepts %>% 
+            dplyr::filter(concept_id %in% input$concepts_%widget_id%)
         
-        if (nrow(concepts) > 0){
-            for (i in 1:nrow(concepts)){
-                    row <- concepts[i, ]
-                    code <- paste0(
-                        code,
-                        ",\\n",
-                        "    ", row$concept_id, ", '", row$concept_name, "', '", row$domain_id, "', '", row$vocabulary_id, "'"
-                    )
-                }
+        # Add each concept as a row in the tibble
+        if (nrow(concepts) > 0) {
+            for (i in 1:nrow(concepts)) {
+                row <- concepts[i, ]
+                code <- paste0(
+                    code,
+                    ",\\n",
+                    "    ", row$concept_id, ", '", row$concept_name, "', '", 
+                    row$domain_id, "', '", row$vocabulary_id, "'"
+                )
+            }
         }
         
         code <- paste0(code, "\\n", ")")
+        
+        # ====================
+        # INITIALIZE DATA STRUCTURES
+        # ====================
         
         code <- paste0(
             code, "\\n\\n",
@@ -68,6 +106,11 @@ observe_event(input$display_figure_%widget_id%, {
             "combined_features <- c()"
         )
         
+        # ====================
+        # BUILD SQL QUERY
+        # ====================
+        
+        # Generate SQL to fetch measurement and observation data
         code <- paste0(
             code,
             "\\n\\n",
@@ -92,8 +135,12 @@ observe_event(input$display_figure_%widget_id%, {
             "raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()"
         )
         
+        # ====================
+        # DATE RANGE QUERIES (DATA SOURCE SPECIFIC)
+        # ====================
+        
+        # Generate appropriate date range query based on data source
         if (data_source == "person") {
-            
             code <- paste0(
                 code,
                 "\\n\\n",
@@ -108,9 +155,7 @@ observe_event(input$display_figure_%widget_id%, {
                 "    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)\\n",
                 "}"
             )
-        }
-        else if (data_source == "visit_detail") {
-            
+        } else if (data_source == "visit_detail") {
             code <- paste0(
                 code,
                 "\\n\\n",
@@ -127,6 +172,11 @@ observe_event(input$display_figure_%widget_id%, {
             )
         }
         
+        # ====================
+        # TIMELINE SYNCHRONIZATION
+        # ====================
+        
+        # Process date ranges and handle timeline synchronization
         code <- paste0(
             code,
             "\\n\\n",
@@ -137,17 +187,22 @@ observe_event(input$display_figure_%widget_id%, {
             "datetimes <- data_datetimes_range"
         )
         
-        if (isTRUE(input$synchronize_timelines_%widget_id%)) code <- paste0(
-            code,
-            "\\n",
-            "if(!is.null(m$debounced_datetimes_timeline_%tab_id%)) if (length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()"
-        )
+        # Add timeline synchronization logic if enabled
+        if (isTRUE(input$synchronize_timelines_%widget_id%)) {
+            code <- paste0(
+                code,
+                "\\n",
+                "if(!is.null(m$debounced_datetimes_timeline_%tab_id%)) if (length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()"
+            )
+        }
         
-        code <- paste0(
-            code,
-            "\\n\\nif (length(datetimes) > 0) m$datetimes_%widget_id% <- datetimes"
-        )
+        code <- paste0(code, "\\n\\nif (length(datetimes) > 0) m$datetimes_%widget_id% <- datetimes")
         
+        # ====================
+        # DATA PROCESSING LOOP
+        # ====================
+        
+        # Generate code to process each selected concept
         code <- paste0(
             code,
             "\\n\\n",
@@ -178,11 +233,21 @@ observe_event(input$display_figure_%widget_id%, {
             "if (length(features_names) > 0) colnames(combined_features) <- features_names"
         )
         
+        # ====================
+        # CHART GENERATION
+        # ====================
+        
+        # Generate dygraph visualization code
         code <- paste0(code, "\\n\\n", "if (length(combined_features) > 0){\\n    ")
         
-        if (isTRUE(input$synchronize_timelines_%widget_id%)) code <- paste0(code, "fig <- \\n", "        dygraphs::dygraph(combined_features, group = 'tab_%tab_id%') %>%\\n")
-        else code <- paste0(code, "fig <- \\n", "        dygraphs::dygraph(combined_features) %>%\\n")
-            
+        # Handle timeline synchronization in chart
+        if (isTRUE(input$synchronize_timelines_%widget_id%)) {
+            code <- paste0(code, "fig <- \\n", "        dygraphs::dygraph(combined_features, group = 'tab_%tab_id%') %>%\\n")
+        } else {
+            code <- paste0(code, "fig <- \\n", "        dygraphs::dygraph(combined_features) %>%\\n")
+        }
+        
+        # Add chart configuration options
         code <- paste0(
             code,
             "        dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2, useDataTimezone = TRUE) %>%\\n",
@@ -195,187 +260,132 @@ observe_event(input$display_figure_%widget_id%, {
             "fig"
         )
         
-        # Update ace editor with generated code
+        # ====================
+        # UPDATE EDITOR AND EXECUTE
+        # ====================
+        
+        # Update ACE editor with generated code
         shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
         
+        # Store code and trigger execution
         m$code_%widget_id% <- code
-        
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
     }
     
-    # Check if user has access
-    else if ("projects_widgets_console" %in% user_accesses){
+    # ====================
+    # MANUAL CODE EXECUTION
+    # ====================
+    # If on code tab, run whatever is currently in the editor
+    else if ("projects_widgets_console" %in% user_accesses) {
         m$code_%widget_id% <- input$code_%widget_id%
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
     }
 })
 
-# Run code at patient update
+# ======================================
+# AUTO-EXECUTION ON DATA UPDATES
+# ======================================
+
+# Auto-run code when patient selection changes
 observe_event(m$selected_person, {
-    if (!isTRUE(input$run_code_on_data_update_%widget_id%) || length(input$data_source_%widget_id%) == 0 || input$data_source_%widget_id% != "person") return()
-        
-    # Reset synchronized datetimes
+    # Check if auto-run is enabled and data source matches
+    if (!isTRUE(input$run_code_on_data_update_%widget_id%) || 
+        length(input$data_source_%widget_id%) == 0 || 
+        input$data_source_%widget_id% != "person") {
+        return()
+    }
+    
+    # Reset timeline synchronization variables
     m$debounced_datetimes_timeline_%tab_id% <- reactiveVal()
     m$datetimes_timeline_%tab_id% <- reactiveVal()
     m$debounced_datetimes_timeline_%tab_id% <- reactiveVal()
     m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
     
-    # Run code
+    # Execute code
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
 })
 
-# Run code at visit_detail update
+# Auto-run code when visit detail selection changes
 observe_event(m$selected_visit_detail, {
+    # Check if auto-run is enabled and data source matches
+    if (!isTRUE(input$run_code_on_data_update_%widget_id%) || 
+        length(input$data_source_%widget_id%) == 0 || 
+        input$data_source_%widget_id% != "visit_detail") {
+        return()
+    }
     
-    if (!isTRUE(input$run_code_on_data_update_%widget_id%) || length(input$data_source_%widget_id%) == 0 || input$data_source_%widget_id% != "visit_detail") return()
-        
-    # Reset synchronized datetimes
+    # Reset timeline synchronization variables
     m$debounced_datetimes_timeline_%tab_id% <- reactiveVal()
     m$datetimes_timeline_%tab_id% <- reactiveVal()
     m$debounced_datetimes_timeline_%tab_id% <- reactiveVal()
     m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
     
-    # Run code
+    # Execute code
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
 })
 
-# Run code
+# ======================================
+# CODE EXECUTION ENGINE
+# ======================================
+
+# Main code execution handler
 observe_event(input$run_code_%widget_id%, {
     
     fig <- character()
     
-    # To test code without plugin aceEditor, comment Part 1 and uncomment Part 2
+    # ====================
+    # EXECUTE USER CODE
+    # ====================
+    # Note: For development, there's a commented "Part 2" that runs 
+    # hardcoded logic instead of the ACE editor content
     
-    ## Part 1 - run code from aceEditor
-    
+    # Execute the code stored in m$code_%widget_id%
     eval(parse(text = m$code_%widget_id%))
     
-    ## Part 2 - run code directly without aceEditor (dev mode)
+    # ====================
+    # HANDLE EXECUTION RESULTS
+    # ====================
     
-    # data_source <- "visit_detail"
-    # if (length(input$data_source_%widget_id%) > 0) data_source <- input$data_source_%widget_id%
-    
-    # concepts <- selected_concepts %>% dplyr::filter(concept_id %in% input$concepts_%widget_id%)
-    
-    # features <- list()
-    # features_names <- c()
-    # raw_data <- tibble::tibble()
-    # data_datetimes_range <- c()
-    # combined_features <- c()
-    
-    # sql <- glue::glue_sql("
-        # SELECT measurement_concept_id AS concept_id, measurement_source_concept_id AS source_concept_id, measurement_datetime AS datetime, value_as_number
-        # FROM measurement 
-        # WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (measurement_concept_id IN ({concepts$concept_id*}) OR measurement_source_concept_id IN ({concepts$concept_id*}))
-        # UNION
-        # SELECT observation_concept_id AS concept_id, observation_source_concept_id AS source_concept_id, observation_datetime AS datetime, value_as_number
-        # FROM observation 
-        # WHERE {DBI::SQL(paste0(data_source, '_id'))} = {m[[paste0('selected_', data_source)]]} AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))
-        # ", .con = d$con)
-    # raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()
-    
-    # if (data_source == "person") {
+    # Show error message if no chart was generated
+    if (length(fig) == 0) {
+        output$error_message_%widget_id% <- renderUI(
+            div(
+                shiny.fluent::MessageBar(
+                    i18np$t("no_data_to_display"), 
+                    messageBarType = 5
+                ), 
+                style = "display: inline-block;"
+            )
+        )
         
-        # if (!is.na(m$selected_person)){
-            # sql <- glue::glue_sql("
-                # SELECT MIN(visit_start_datetime) AS min_visit_start_datetime, MAX(visit_end_datetime) AS max_visit_end_datetime
-                # FROM visit_occurrence
-                # WHERE person_id = {m$selected_person}
-            # ", .con = d$con)
-            # data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
-        # }
-    # }
-    # else if (data_source == "visit_detail") {
-    
-        # if (!is.na(m$selected_visit_detail)){
-            # sql <- glue::glue_sql("
-                # SELECT MIN(visit_detail_start_datetime) AS min_visit_start_datetime, MAX(visit_detail_end_datetime) AS max_visit_end_datetime
-                # FROM visit_detail
-                # WHERE visit_detail_id = {m$selected_visit_detail}
-            # ", .con = d$con)
-            # data_datetimes_range <- DBI::dbGetQuery(d$con, sql)
-        # }
-    # }
-    
-    # if (length(data_datetimes_range) > 0){
-        # data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)
-        # m$data_datetimes_range_%widget_id% <- data_datetimes_range
-    # }
-    
-    # datetimes <- data_datetimes_range
-    
-    # if (isTRUE(input$synchronize_timelines_%widget_id%)){
-        # if(!is.null(m$debounced_datetimes_timeline_%tab_id%)) if (length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()
-    # }
-    
-    # if (length(datetimes) > 0) m$datetimes_%widget_id% <- datetimes
-    
-    # for (concept_id in concepts$concept_id){
-    
-        # concept <- concepts %>% dplyr::filter(concept_id == !!concept_id)
-    
-        # if (concept$domain_id %in% c("Measurement", "Observation")){
-        
-            # data <- raw_data
-        
-            # if (nrow(data) > 0){
-                # data <-
-                    # data %>%
-                    # dplyr::filter(concept_id == !!concept_id | source_concept_id == !!concept_id) %>%
-                    # dplyr::select(datetime, value_as_number)
-                
-                # if (nrow(data) > 0){
-                    # fake_data <- tibble::tibble(
-                        # datetime = c(data_datetimes_range[[1]] - lubridate::seconds(1), data_datetimes_range[[2]] + lubridate::seconds(1)),
-                        # value_as_number = c(NA, NA)
-                    # )
-                    
-                    # data <- dplyr::bind_rows(fake_data, data)
-                    # data <- data %>% dplyr::arrange(datetime)
-                
-                    # features[[paste0("concept_", concept_id)]] <- xts::xts(data$value_as_number, data$datetime)
-                    # features_names <- c(features_names, concept$concept_name)
-                # }
-            # }
-        # }
-    # }
-    
-    # if (length(features) > 0) combined_features <- do.call(merge, features)
-    # if (length(features_names) > 0) colnames(combined_features) <- features_names
-    
-    # if (length(combined_features) > 0){
-        # if (isTRUE(input$synchronize_timelines_%widget_id%)) fig <- dygraphs::dygraph(combined_features, group = "tab_%tab_id%")
-        # else fig <- dygraphs::dygraph(combined_features)
-        
-        # fig <-
-            # fig %>%
-            # dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2, useDataTimezone = TRUE) %>%
-            # dygraphs::dyRangeSelector(dateWindow = c(
-                # format(datetimes[[1]], "%Y-%m-%d %H:%M:%S"),
-                # format(datetimes[[2]], "%Y-%m-%d %H:%M:%S")
-            # )) %>%
-            # dygraphs::dyAxis("y", valueRange = c(0, NA))
-    # }
-    
-    ## End of part 2
-    
-    if (length(fig) == 0){
-        output$error_message_%widget_id% <- renderUI(div(shiny.fluent::MessageBar(i18np$t("no_data_to_display"), messageBarType = 5), style = "display: inline-block;"))
-    
         shinyjs::show("error_message_div_%widget_id%")
         shinyjs::hide("dygraph_div_%widget_id%")
     }
     
-    if (length(fig) > 0){
+    # Display chart if generation was successful
+    if (length(fig) > 0) {
         output$dygraph_%widget_id% <- dygraphs::renderDygraph(fig)
         
         shinyjs::hide("error_message_div_%widget_id%")
         shinyjs::show("dygraph_div_%widget_id%")
     }
     
-    # Go to figure tab
-    if (length(input$figure_and_settings_side_by_side_%widget_id%) > 0) if (!input$figure_and_settings_side_by_side_%widget_id%) shinyjs::click("figure_button_%widget_id%")
+    # ====================
+    # AUTO-NAVIGATION
+    # ====================
+    # If not in side-by-side mode, automatically switch to figure tab
+    if (length(input$figure_and_settings_side_by_side_%widget_id%) > 0) {
+        if (!input$figure_and_settings_side_by_side_%widget_id%) {
+            shinyjs::click("figure_button_%widget_id%")
+        }
+    }
 })
 
-# Save code with shortcut
-observe_event(input$code_%widget_id%_save, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_params_and_code_%widget_id%', Math.random());")))
+# ======================================
+# KEYBOARD SHORTCUTS
+# ======================================
+
+# Handle save keyboard shortcut (Ctrl+S) - triggers save settings action
+observe_event(input$code_%widget_id%_save, {
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_params_and_code_%widget_id%', Math.random());"))
+})
