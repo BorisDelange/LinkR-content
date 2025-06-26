@@ -6,6 +6,9 @@ m$code_%widget_id% <- ""
 # Prevent a bug with scroll into ace editor
 shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.dispatchEvent(event);"))
 
+# Execute code when the plugin is launched
+shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random());")))
+
 # Comment code
 observe_event(input$code_%widget_id%_comment, {
     toggle_comments(

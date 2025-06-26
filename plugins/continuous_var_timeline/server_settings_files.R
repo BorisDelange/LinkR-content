@@ -25,10 +25,9 @@ observe_event(input$create_settings_file_%widget_id%, shinyjs::show("add_setting
 ## Close add settings file modal
 observe_event(input$close_add_settings_file_modal_%widget_id%, shinyjs::hide("add_settings_file_modal_%widget_id%"))
 
-## Confirm creation of settings file
-observe_event(input$add_settings_file_%widget_id%, {
-    
-    file_name <- input$settings_file_name_%widget_id%
+## Add settings file function
+
+add_settings_file_%widget_id% <- function(file_name, notification = TRUE){
     
     # Check if name if empty
     empty_name <- TRUE
@@ -76,8 +75,14 @@ observe_event(input$add_settings_file_%widget_id%, {
     shinyjs::hide("add_settings_file_modal_%widget_id%")
     
     # Notify user
-    show_message_bar("new_settings_file_added", "success")
-})
+    if (notification) show_message_bar("new_settings_file_added", "success")
+}
+
+## Add default setting files when plugin is launched
+shinyjs::delay(300, add_settings_file_%widget_id%(i18np$t("settings_1"), notification = FALSE))
+
+## Confirm creation of settings file
+observe_event(input$add_settings_file_%widget_id%, add_settings_file_%widget_id%(input$settings_file_name_%widget_id%))
 
 ## A settings file is selected
 observe_event(input$settings_file_%widget_id%, {

@@ -21,6 +21,7 @@ div(
                     selected_concepts %>% dplyr::filter(domain_id %in% c("Measurement", "Observation")),
                     key_col = "concept_id", text_col = "concept_name"
                 ),
+                value = selected_concepts$concept_id,
                 multiSelect = TRUE
             ),
             style = "width: 200px;"
@@ -30,5 +31,16 @@ div(
     div(
         shiny.fluent::Toggle.shinyInput(ns("synchronize_timelines_%widget_id%"), label = i18np$t("synchronize_timelines")),
         style = "margin-top: 15px;"
+    ),
+    div(
+        shiny.fluent::PrimaryButton.shinyInput(
+            ns("settings_display_figure_%widget_id%"), i18np$t("display_figure"),
+            onClick = htmlwidgets::JS(paste0("item => { Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random()); }"))
+        ),
+        shiny.fluent::DefaultButton.shinyInput(
+            ns("save_settings_%widget_id%"), i18np$t("save_figure_settings_and_code"),
+            onClick = htmlwidgets::JS(paste0("item => { Shiny.setInputValue('", id, "-save_params_and_code_%widget_id%', Math.random()); }"))
+        ),
+        style = "margin-top: 15px; display: flex; gap: 5px;"
     )
 )

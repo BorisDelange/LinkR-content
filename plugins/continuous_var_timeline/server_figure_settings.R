@@ -44,7 +44,7 @@ observe_event(input$load_figure_settings_%widget_id%, {
 
 # Save current settings
 
-observe_event(input$save_params_and_code_%widget_id%, {
+save_params_and_code_%widget_id% <- function(notification = TRUE){
     
     # If no settings file is selected, go to settings files management page
     if (length(input$settings_file_%widget_id%) == 0) shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-show_settings_files_tab_%widget_id%', Math.random());"))
@@ -75,9 +75,15 @@ observe_event(input$save_params_and_code_%widget_id%, {
         DBI::dbAppendTable(m$db, "widgets_options", new_data)
         
         # Notify user
-        show_message_bar("modif_saved", "success")
+        if (notification) show_message_bar("modif_saved", "success")
     }
-})
+}
+
+## Save default settings when plugin is launched
+shinyjs::delay(1000, save_params_and_code_%widget_id%(notification = FALSE))
+
+## When button is clicked
+observe_event(input$save_params_and_code_%widget_id%, save_params_and_code_%widget_id%())
 
 # Synchronize timelines
 

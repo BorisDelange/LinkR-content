@@ -11,8 +11,8 @@ if (nrow(general_settings) == 0){
 
     toggle_values$show_settings_file <- TRUE
     toggle_values$figure_and_settings_side_by_side <- TRUE
-    toggle_values$run_code_on_data_update <- FALSE
-    toggle_values$run_code_at_settings_file_load <- FALSE
+    toggle_values$run_code_on_data_update <- TRUE
+    toggle_values$run_code_at_settings_file_load <- TRUE
     
     dropdown_options <- list()
     selected_file <- NULL
@@ -25,8 +25,7 @@ if (nrow(general_settings) == 0){
     
     sapply(general_settings_vec, function(name){
         
-        if (name %in% c("show_settings_file", "figure_and_settings_side_by_side")) toggle_value <- TRUE
-        else toggle_value <- FALSE
+        toggle_value <- TRUE
         
         row <- general_settings %>% dplyr::filter(name == !!name)
         if (nrow(row) > 0){
