@@ -116,26 +116,6 @@ tagList(
     div(
         id = ns("figure_settings_code_div_%widget_id%"),
         
-        # Left sidebar with action buttons
-        div(
-            id = ns("figure_settings_code_sidenav_%widget_id%"),
-            
-            # Display figure button
-            shiny.fluent::IconButton.shinyInput(
-                ns("display_figure_%widget_id%"), 
-                iconProps = list(iconName = "Play"), 
-                title = i18np$t("display_figure"), 
-                style = "margin: 0"
-            ),
-            
-            # Save figure settings button (conditional)
-            save_figure_settings_buttons,
-            
-            # Sidebar styling
-            class = "widget_icon",
-            style = "border-right: solid grey 0.5px; width: 25px; padding-left: 5px;"
-        ),
-        
         # Figure display area (left panel)
         div(
             id = ns("figure_div_%widget_id%"),
@@ -166,6 +146,27 @@ tagList(
                 style = "height: 100%; overflow: auto; flex: 0 0 50%; box-sizing: border-box;",
                 class = "right-panel"
             )
+        ),
+        
+        
+        # Right sidebar with action buttons
+        div(
+            id = ns("figure_settings_code_sidenav_%widget_id%"),
+            
+            # Display figure button
+            shiny.fluent::IconButton.shinyInput(
+                ns("display_figure_%widget_id%"), 
+                iconProps = list(iconName = "Play"), 
+                title = i18np$t("display_figure"), 
+                style = "margin: 0"
+            ),
+            
+            # Save figure settings button (conditional)
+            save_figure_settings_buttons,
+            
+            # Sidebar styling
+            class = "widget_icon",
+            style = "border-left: solid grey 0.5px; width: 25px;"
         ),
         
         # Main content area styling

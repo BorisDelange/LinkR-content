@@ -157,9 +157,34 @@ observe_event(input$figure_and_settings_side_by_side_%widget_id%, {
     else {
         # Reset all panels to default flex values
         shinyjs::runjs(paste0("
-            $('#", id, "-figure_div_%widget_id%').css('flex', '1');           // Figure: flexible
-            $('#", id, "-figure_settings_div_%widget_id%').css('flex', '0 0 20%');  // Settings: 20% fixed
-            $('#", id, "-code_div_%widget_id%').css('flex', '0 0 50%');       // Code: 50% fixed
+            // Get current active tab
+            var currentTab = Shiny.shinyapp.$inputValues['", id, "-current_tab_%widget_id%'];
+            var figureDiv = $('#", id, "-figure_div_%widget_id%');
+            var figureSettingsDiv = $('#", id, "-figure_settings_div_%widget_id%');
+            var codeDiv = $('#", id, "-code_div_%widget_id%');
+            
+            // Smart reset based on active tab
+            if (currentTab === 'code') {
+                // Full-width code mode
+                figureDiv.css('flex', '0');              // Hide figure
+                codeDiv.css('flex', '1');                // Code takes full width
+                figureSettingsDiv.css('flex', '0');      // Hide settings
+            } else if (currentTab === 'figure_settings') {
+                // Full-width settings mode  
+                figureDiv.css('flex', '0');              // Hide figure
+                figureSettingsDiv.css('flex', '1');      // Settings takes full width
+                codeDiv.css('flex', '0');                // Hide code
+            } else if (currentTab === 'figure') {
+                // Full-width figure mode
+                figureDiv.css('flex', '1');              // Figure takes full width
+                figureSettingsDiv.css('flex', '0');      // Hide settings
+                codeDiv.css('flex', '0');                // Hide code
+            } else {
+                // Default values for other tabs
+                figureDiv.css('flex', '1');
+                figureSettingsDiv.css('flex', '0 0 20%');
+                codeDiv.css('flex', '0 0 50%');
+            }
         "))
         
         # ====================

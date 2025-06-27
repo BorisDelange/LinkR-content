@@ -64,6 +64,25 @@ observe_event(input$current_tab_trigger_%widget_id%, {
         } else {
             # Full-width mode: hide figure panel
             shinyjs::hide("figure_div_%widget_id%")
+            
+            # Adjust widths in full-width mode
+            shinyjs::runjs(paste0("
+                var figureDiv = $('#", id, "-figure_div_%widget_id%');
+                var figureSettingsDiv = $('#", id, "-figure_settings_div_%widget_id%');
+                var codeDiv = $('#", id, "-code_div_%widget_id%');
+                
+                if ('", tab, "' === 'code') {
+                    // Full-width code
+                    figureDiv.css('flex', '0');
+                    codeDiv.css('flex', '1');
+                    figureSettingsDiv.css('flex', '0');
+                } else if ('", tab, "' === 'figure_settings') {
+                    // Full-width settings
+                    figureDiv.css('flex', '0');
+                    figureSettingsDiv.css('flex', '1');
+                    codeDiv.css('flex', '0');
+                }
+            "))
         }
         
         # Show the action buttons sidebar for these tabs
