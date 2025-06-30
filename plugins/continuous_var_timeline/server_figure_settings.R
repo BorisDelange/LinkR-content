@@ -1,18 +1,23 @@
 # ==========================================
-# Server - Figure Settings Logic
+# server_figure_settings.R - Figure Settings Logic
+# ==========================================
+# 
+# Manages figure settings including loading/saving from user configurations,
+# timeline synchronization, and settings persistence
+#
 # ==========================================
 
 # ======================================
 # LOAD FIGURE SETTINGS FROM DATABASE
 # ======================================
 
-# Handler for loading saved figure settings and code
+# Handler for loading saved figure settings and code from selected user configuration
 observe_event(input$load_figure_settings_%widget_id%, {
     
-    # Get the selected settings file ID
-    link_id <- input$settings_file_%widget_id%
+    # Get the selected user configuration ID
+    link_id <- input$user_configuration_%widget_id%
     
-    # Query database for all figure settings associated with this file
+    # Query database for all figure settings associated with this configuration
     sql <- glue::glue_sql(
         "SELECT name, value, value_num 
          FROM widgets_options 
@@ -23,10 +28,7 @@ observe_event(input$load_figure_settings_%widget_id%, {
     
     code <- ""
     
-    # ====================
-    # UPDATE UI COMPONENTS WITH SAVED VALUES
-    # ====================
-    
+    # Update UI components with saved values
     if (nrow(figure_settings) > 0) {
         # Process each saved setting and update corresponding UI element
         sapply(figure_settings$name, function(name) {
@@ -41,7 +43,7 @@ observe_event(input$load_figure_settings_%widget_id%, {
             
             # Update UI elements based on setting type
             if (name == "data_source") {
-                # Update data source dropdown (person/visit_detail)
+                # Update data source dropdown
                 shiny.fluent::updateDropdown.shinyInput(
                     session, 
                     paste0(name, "_%widget_id%"), 
@@ -58,8 +60,8 @@ observe_event(input$load_figure_settings_%widget_id%, {
                     value = value
                 )
             }
-            else if (name == "synchronize_timelines") {
-                # Update timeline synchronization toggle
+            else if (name %in% c("synchronize_timelines", "automatically_update_figure")) {
+                # Update toggle switches
                 # Convert numeric value back to logical
                 value <- as.logical(value_num)
                 shiny.fluent::updateToggle.shinyInput(
@@ -70,20 +72,16 @@ observe_event(input$load_figure_settings_%widget_id%, {
             }
             else if (name == "code") {
                 # Update code editor content
-                code <<- value  # Use <<- to assign to parent scope
+                code <<- value
                 m$code_%widget_id% <- value
                 shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
             }
         })
     }
     
-    # ====================
-    # AUTO-EXECUTE CODE IF ENABLED
-    # ====================
-    
-    # Check if auto-run setting is enabled and execute code after loading
-    if (length(input$run_code_at_settings_file_load_%widget_id%) > 0) {
-        if (input$run_code_at_settings_file_load_%widget_id%) {
+    # Auto-execute code if enabled
+    if (length(input$run_code_at_user_configuration_load_%widget_id%) > 0) {
+        if (input$run_code_at_user_configuration_load_%widget_id%) {
             shinyjs::delay(500, {
                 shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))  
             })
@@ -95,115 +93,87 @@ observe_event(input$load_figure_settings_%widget_id%, {
 # SAVE FIGURE SETTINGS TO DATABASE
 # ======================================
 
-# Function to save current figure settings and code
-save_params_and_code_%widget_id% <- function(notification = TRUE) {
+# Observer for saving current figure settings and code to selected user configuration
+observe_event(input$save_params_and_code_trigger_%widget_id%, {
     
-    # ====================
-    # VALIDATE SETTINGS FILE SELECTION
-    # ====================
-    
-    # If no settings file is selected, redirect to file management
-    if (length(input$settings_file_%widget_id%) == 0) {
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-show_settings_files_tab_%widget_id%', Math.random());"))
+    # Validate user configuration selection
+    if (length(input$user_configuration_%widget_id%) == 0) {
+        # If no configuration is selected, redirect to configuration management
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-show_user_configurations_tab_%widget_id%', Math.random());"))
+        return()
     }
     
-    # ====================
-    # SAVE SETTINGS TO DATABASE
-    # ====================
-    
-    if (length(input$settings_file_%widget_id%) > 0) {
-        
-        link_id <- input$settings_file_%widget_id%
-    
-        # Remove existing settings for this file to avoid duplicates
-        sql_send_statement(
-            m$db, 
-            glue::glue_sql(
-                "DELETE FROM widgets_options 
-                 WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", 
-                .con = m$db
-            )
+    link_id <- input$user_configuration_%widget_id%
+
+    # Remove existing settings for this configuration to avoid duplicates
+    sql_send_statement(
+        m$db, 
+        glue::glue_sql(
+            "DELETE FROM widgets_options 
+             WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", 
+            .con = m$db
         )
-        
-        # ====================
-        # PREPARE NEW SETTINGS DATA
-        # ====================
-        
-        # Create tibble with all current settings values
-        new_data <- tibble::tribble(
-            ~name, ~value, ~value_num,
-            "data_source", input$data_source_%widget_id%, NA_real_,
-            "concepts", input$concepts_%widget_id% %>% toString(), NA_real_,  # Convert vector to comma-separated string
-            "synchronize_timelines", NA_character_, as.integer(input$synchronize_timelines_%widget_id%),
-            "code", input$code_%widget_id%, NA_real_
+    )
+    
+    # Prepare new settings data
+    new_data <- tibble::tribble(
+        ~name, ~value, ~value_num,
+        "data_source", input$data_source_%widget_id%, NA_real_,
+        "concepts", input$concepts_%widget_id% %>% toString(), NA_real_,
+        "synchronize_timelines", NA_character_, as.integer(input$synchronize_timelines_%widget_id%),
+        "automatically_update_figure", NA_character_, as.integer(input$automatically_update_figure_%widget_id%),
+        "code", input$code_%widget_id%, NA_real_
+    )
+    
+    # Add database metadata
+    new_data <- new_data %>%
+        dplyr::transmute(
+            id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), 
+            widget_id = %widget_id%, 
+            person_id = NA_integer_, 
+            link_id = link_id,
+            category = "figure_settings", 
+            name, 
+            value, 
+            value_num, 
+            creator_id = m$user_id, 
+            datetime = now(), 
+            deleted = FALSE
         )
-        
-        # Add database metadata (IDs, timestamps, etc.)
-        new_data <- new_data %>%
-            dplyr::transmute(
-                id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), 
-                widget_id = %widget_id%, 
-                person_id = NA_integer_, 
-                link_id = link_id,
-                category = "figure_settings", 
-                name, 
-                value, 
-                value_num, 
-                creator_id = m$user_id, 
-                datetime = now(), 
-                deleted = FALSE
-            )
-        
-        # Insert new settings into database
-        DBI::dbAppendTable(m$db, "widgets_options", new_data)
-        
-        # ====================
-        # USER NOTIFICATION
-        # ====================
-        
-        # Show success message if notifications are enabled
-        if (notification) {
-            show_message_bar("modif_saved", "success")
-        }
-    }
-}
+    
+    # Insert new settings into database
+    DBI::dbAppendTable(m$db, "widgets_options", new_data)
+    
+    # Show success message
+    show_message_bar("modif_saved", "success")
+})
 
-# ====================
-# AUTO-SAVE ON STARTUP
-# ====================
+# ======================================
+# SAVE TRIGGERS
+# ======================================
 
-# Save default settings when widget first loads (without notification)
-shinyjs::delay(1000, save_params_and_code_%widget_id%(notification = FALSE))
-
-# ====================
-# SAVE BUTTON HANDLER
-# ====================
+# Auto-save on startup (without notification)
+shinyjs::delay(1000, {
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_params_and_code_trigger_%widget_id%', Math.random());"))
+})
 
 # Handle manual save button clicks
 observe_event(input$save_params_and_code_%widget_id%, {
-    save_params_and_code_%widget_id%()
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_params_and_code_trigger_%widget_id%', Math.random());"))
 })
 
 # ======================================
 # TIMELINE SYNCHRONIZATION SYSTEM
 # ======================================
 
-# ====================
-# INITIALIZE TIMELINE VARIABLES
-# ====================
-
-# Create reactive timeline variables if they don't exist
+# Initialize timeline variables if they don't exist
 if (length(m$datetimes_timeline_%tab_id%) == 0) {
     # Main timeline reactive value
     m$datetimes_timeline_%tab_id% <- reactiveVal()
     
-    # Debounced version to prevent excessive updates (500ms delay)
+    # Debounced version to prevent excessive updates
     m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
 }
-
-# ====================
-# HANDLE TIMELINE SYNC TOGGLE
-# ====================
 
 # Adjust chart padding when timeline synchronization is toggled
 observe_event(input$synchronize_timelines_%widget_id%, {
@@ -223,10 +193,6 @@ observe_event(input$synchronize_timelines_%widget_id%, {
     }
 })
 
-# ====================
-# CAPTURE TIMELINE CHANGES
-# ====================
-
 # Monitor chart date window changes and broadcast to other widgets
 observe_event(input$dygraph_%widget_id%_date_window, {
     
@@ -244,10 +210,6 @@ observe_event(input$dygraph_%widget_id%_date_window, {
     m$datetimes_timeline_%tab_id%(datetime_values)
 })
 
-# ====================
-# RESPOND TO EXTERNAL TIMELINE CHANGES
-# ====================
-
 # Listen for timeline changes from other synchronized widgets
 observe_event(m$debounced_datetimes_timeline_%tab_id%(), {
     
@@ -258,12 +220,8 @@ observe_event(m$debounced_datetimes_timeline_%tab_id%(), {
         return()
     }
     
-    # ====================
-    # CHECK FOR SIGNIFICANT TIMELINE CHANGES
-    # ====================
-    
+    # Check for significant timeline changes
     # Calculate time difference between current and synchronized timelines
-    # Only trigger update if difference is greater than 5 seconds
     time_diff_start <- abs(
         as.numeric(m$debounced_datetimes_timeline_%tab_id%()[[1]]) - 
         as.numeric(m$datetimes_%widget_id%[[1]])
@@ -273,9 +231,9 @@ observe_event(m$debounced_datetimes_timeline_%tab_id%(), {
         as.numeric(m$datetimes_%widget_id%[[2]])
     )
     
-    # Trigger code re-execution if timeline has changed significantly
+    # Trigger code re-execution if timeline has changed significantly (>5 seconds)
     if (time_diff_start > 5 || time_diff_end > 5) {
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
     }
     
-}, ignoreInit = TRUE)  # Ignore initial execution to prevent unnecessary updates
+}, ignoreInit = TRUE)

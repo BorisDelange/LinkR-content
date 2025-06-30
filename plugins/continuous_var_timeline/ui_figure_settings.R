@@ -1,22 +1,33 @@
 # ==========================================
 # ui_figure_settings.R - Chart Configuration Panel
 # ==========================================
+# 
+# Interactive panel for configuring chart settings including:
+# - Medical concept selection from available data
+# - Data source selection (patient vs visit level)
+# - Timeline synchronization controls
+# - Auto-update preferences
+#
+# ==========================================
 
 div(
     # ====================
     # DATA SOURCE SELECTION
     # ====================
     div(
-        shiny.fluent::Dropdown.shinyInput(
-            ns("data_source_%widget_id%"), 
-            options = list(
-                list(key = "person", text = i18np$t("patient_data")),
-                list(key = "visit_detail", text = i18np$t("stay_data"))
-            ), 
-            value = "person",                    # Default to patient data
-            label = i18np$t("data_to_display")
+        div(
+            shiny.fluent::Dropdown.shinyInput(
+                ns("data_source_%widget_id%"), 
+                options = list(
+                    list(key = "person", text = i18np$t("patient_data")),
+                    list(key = "visit_detail", text = i18np$t("stay_data"))
+                ), 
+                value = "person",                    # Default to patient data
+                label = i18np$t("data_to_display")
+            ),
+            style = "width: 200px;"
         ),
-        style = "width: 200px;"
+        style = "padding-bottom: 15px; border-bottom: solid 1px #808080;"
     ),
     
     # ====================
@@ -43,7 +54,7 @@ div(
             ),
             style = "width: 200px;"
         ),
-        style = "display: flex; gap: 10px; padding-bottom: 15px; border-bottom: solid 1px #808080;"
+        style = "margin-top: 15px;"
     ),
     
     # ====================
@@ -52,7 +63,20 @@ div(
     div(
         shiny.fluent::Toggle.shinyInput(
             ns("synchronize_timelines_%widget_id%"), 
-            label = i18np$t("synchronize_timelines")
+            label = i18np$t("synchronize_timelines"),
+            value = FALSE                           # Default to disabled
+        ),
+        style = "margin-top: 15px;"
+    ),
+    
+    # ====================
+    # AUTOMATIC FIGURE UPDATES
+    # ====================
+    div(
+        shiny.fluent::Toggle.shinyInput(
+            ns("automatically_update_figure_%widget_id%"), 
+            label = i18np$t("automatically_update_figure"),
+            value = TRUE                            # Default to enabled
         ),
         style = "margin-top: 15px;"
     ),
@@ -79,8 +103,6 @@ div(
             ))
         ),
         
-        style = "margin-top: 15px; display: flex; gap: 5px;"
+        style = "margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;"
     )
 )
-
-

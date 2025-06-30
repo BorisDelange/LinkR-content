@@ -7,21 +7,20 @@
 # ======================================
 
 # Define all available tabs in the widget interface
-tabs <- c("figure", "figure_settings", "code", "general_settings")
+tabs <- c("figure", "figure_settings", "code", "user_configurations")
 
 # Main tab switching logic - triggered when user clicks navigation buttons
 observe_event(input$current_tab_trigger_%widget_id%, {
     
-    # Get the requested tab from user input
     tab <- input$current_tab_%widget_id%
     
     # ====================
     # MAIN LAYOUT CONTROL
     # ====================
     
-    # Hide or show the main content area based on selected tab
-    if (tab == "general_settings") {
-        # General settings uses full screen, hide main content area
+    # Hide or show main content area based on selected tab
+    if (tab == "user_configurations") {
+        # User configurations uses full screen, hide main content area
         shinyjs::hide("figure_settings_code_div_%widget_id%")
     } else {
         # All other tabs use the main content area
@@ -33,11 +32,8 @@ observe_event(input$current_tab_trigger_%widget_id%, {
     # ====================
     
     # Hide all tabs except the currently selected one
-    inactive_tabs <- setdiff(c("figure_settings", "code", "general_settings"), tab)
+    inactive_tabs <- setdiff(c("figure_settings", "code", "user_configurations"), tab)
     sapply(paste0(inactive_tabs, "_div_%widget_id%"), shinyjs::hide)
-    
-    # Always hide settings files panel (shown separately via different trigger)
-    shinyjs::hide("settings_files_div_%widget_id%")
     
     # ====================
     # SHOW ACTIVE TAB (WITH ACCESS CONTROL)
@@ -50,37 +46,41 @@ observe_event(input$current_tab_trigger_%widget_id%, {
     }
     
     # ====================
-    # FIGURE DISPLAY LOGIC
+    # UNIFIED PANEL LOGIC (COMPATIBLE WITH NEW STRUCTURE)
     # ====================
     
-    # For figure_settings and code tabs, conditionally show the figure panel
     if (tab %in% c("figure_settings", "code")) {
         
-        # Check if side-by-side layout is enabled
-        if (length(input$figure_and_settings_side_by_side_%widget_id%) > 0 && 
-            input$figure_and_settings_side_by_side_%widget_id%) {
-            # Side-by-side mode: show figure alongside settings/code
+        # Check side-by-side mode state
+        side_by_side <- length(input$figure_and_settings_side_by_side_%widget_id%) > 0 && 
+                      input$figure_and_settings_side_by_side_%widget_id%
+        
+        if (side_by_side) {
+            # Side-by-side mode: let panel_layout_manager handle everything
             shinyjs::show("figure_div_%widget_id%")
+            shinyjs::runjs("if (typeof setPanelWidths_%widget_id% === 'function') setPanelWidths_%widget_id%();")
         } else {
-            # Full-width mode: hide figure panel
+            # Full-width mode: use settings_container structure
             shinyjs::hide("figure_div_%widget_id%")
             
-            # Adjust widths in full-width mode
             shinyjs::runjs(paste0("
                 var figureDiv = $('#", id, "-figure_div_%widget_id%');
+                var settingsContainer = $('#", id, "-settings_container_%widget_id%');
                 var figureSettingsDiv = $('#", id, "-figure_settings_div_%widget_id%');
                 var codeDiv = $('#", id, "-code_div_%widget_id%');
                 
+                // Full-width mode with proper sizing
+                figureDiv.css('flex', '0');
+                settingsContainer.css('flex', '1');
+                
                 if ('", tab, "' === 'code') {
-                    // Full-width code
-                    figureDiv.css('flex', '0');
-                    codeDiv.css('flex', '1');
-                    figureSettingsDiv.css('flex', '0');
+                    // Full-width code editor
+                    figureSettingsDiv.hide();
+                    codeDiv.show().css('flex', '1');
                 } else if ('", tab, "' === 'figure_settings') {
-                    // Full-width settings
-                    figureDiv.css('flex', '0');
-                    figureSettingsDiv.css('flex', '1');
-                    codeDiv.css('flex', '0');
+                    // Full-width settings panel
+                    figureSettingsDiv.show().css('flex', '1');
+                    codeDiv.hide();
                 }
             "))
         }
@@ -88,11 +88,20 @@ observe_event(input$current_tab_trigger_%widget_id%, {
         # Show the action buttons sidebar for these tabs
         shinyjs::show("figure_settings_code_sidenav_%widget_id%")
         
-    } else {
-        # For other tabs, hide the action buttons sidebar
+    } else if (tab == "figure") {
+        # Figure-only mode
+        shinyjs::runjs(paste0("
+            var figureDiv = $('#", id, "-figure_div_%widget_id%');
+            var settingsContainer = $('#", id, "-settings_container_%widget_id%');
+            
+            figureDiv.css('flex', '1');
+            settingsContainer.css('flex', '0');
+        "))
         shinyjs::hide("figure_settings_code_sidenav_%widget_id%")
         
-        # Hide figure panel unless we're on the figure tab itself
+    } else {
+        # For other tabs (user_configurations), hide sidebar and figure
+        shinyjs::hide("figure_settings_code_sidenav_%widget_id%")
         if (tab != "figure") {
             shinyjs::hide("figure_div_%widget_id%")
         }
@@ -108,6 +117,17 @@ observe_event(input$current_tab_trigger_%widget_id%, {
 })
 
 # ======================================
+# USER CONFIGURATIONS TAB HANDLER
+# ======================================
+
+# Observer for showing the user configurations management interface
+observe_event(input$show_user_configurations_tab_%widget_id%, {
+    # Switch to user configurations tab
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'user_configurations');"))
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());"))
+})
+
+# ======================================
 # IMPORT SERVER MODULES
 # ======================================
 
@@ -120,8 +140,8 @@ observe_event(input$current_tab_trigger_%widget_id%, {
 # Code editor server logic (syntax highlighting, code execution, save/load)
 %import_script('server_code.R')%
 
-# Settings files server logic (file management, create/delete operations)
-%import_script('server_settings_files.R')%
+# User configurations server logic (configuration management, create/delete operations)
+%import_script('server_user_configurations.R')%
 
-# General settings server logic (toggle preferences, layout options)
-%import_script('server_general_settings.R')%
+# Layout management server logic (side-by-side toggle, panel resizing)
+%import_script('server_layout_manager.R')%
