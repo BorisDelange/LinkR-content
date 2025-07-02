@@ -33,9 +33,9 @@ div(
     # Interactive timeline chart using plotly (for event data)
     shinyjs::hidden(
         div(
-            id = ns("plot_%widget_id%"),
+            id = ns("plotly_div_%widget_id%"),
             plotly::plotlyOutput(
-                ns("plot_%widget_id%"), 
+                ns("plotly_%widget_id%"), 
                 height = "100%", 
                 width = "100%"
             ),

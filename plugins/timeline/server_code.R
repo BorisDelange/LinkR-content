@@ -88,18 +88,75 @@ observe_event(input$display_figure_%widget_id%, {
             "dygraphs"
         }
         
+        # ====================
+        # AUTOMATIC CHART TYPE FALLBACK
+        # ====================
+        
+        # Check if concepts are available for the selected chart type
+        if (chart_type == "dygraphs") {
+            allowed_domains_dygraphs <- c("Measurement", "Observation")
+            available_concepts_dygraphs <- selected_concepts %>% 
+                dplyr::filter(domain_id %in% allowed_domains_dygraphs)
+            
+            # If no concepts available for dygraphs, automatically fallback to plotly
+            if (nrow(available_concepts_dygraphs) == 0) {
+                chart_type <- "plotly"
+                
+                # Update UI to reflect the chart type change
+                shiny.fluent::updateDropdown.shinyInput(
+                    session, 
+                    "chart_type_%widget_id%", 
+                    value = "plotly"
+                )
+                
+                # Update available concepts list for plotly
+                allowed_domains_plotly <- c("Measurement", "Observation", "Condition", "Procedure", "Drug")
+                available_concepts_plotly <- selected_concepts %>% 
+                    dplyr::filter(domain_id %in% allowed_domains_plotly)
+                
+                shiny.fluent::updateDropdown.shinyInput(
+                    session, 
+                    "concepts_%widget_id%", 
+                    options = convert_tibble_to_list(
+                        available_concepts_plotly,
+                        key_col = "concept_id", 
+                        text_col = "concept_name"
+                    ),
+                    value = available_concepts_plotly$concept_id
+                )
+                
+                # Log the automatic fallback for debugging
+                shinyjs::runjs(paste0(
+                    "console.log('No concepts available for Dygraphs (domains: Measurement, Observation). ",
+                    "Automatically switched to Plotly with ", nrow(available_concepts_plotly), " available concepts.');"
+                ))
+            }
+        }
+        
+        # Get filtered concepts based on final chart type
+        if (chart_type == "dygraphs") {
+            allowed_domains <- c("Measurement", "Observation")
+        } else if (chart_type == "plotly") {
+            allowed_domains <- c("Measurement", "Observation", "Condition", "Procedure", "Drug")
+        } else {
+            allowed_domains <- c("Measurement", "Observation")
+        }
+        
+        filtered_concepts <- selected_concepts %>% 
+            dplyr::filter(domain_id %in% allowed_domains)
+        
         # Generate R code for the current configuration based on chart type
         if (chart_type == "dygraphs") {
             generated_code <- generate_dygraphs_figure_code(
                 data_source = data_source,
-                concepts = selected_concepts %>% 
+                concepts = filtered_concepts %>% 
                     dplyr::filter(concept_id %in% input$concepts_%widget_id%),
                 synchronize_timelines = isTRUE(input$synchronize_timelines_%widget_id%)
             )
         } else {
             generated_code <- generate_plotly_figure_code(
                 data_source = data_source,
-                concepts = selected_concepts %>% 
+                concepts = filtered_concepts %>% 
                     dplyr::filter(concept_id %in% input$concepts_%widget_id%),
                 synchronize_timelines = isTRUE(input$synchronize_timelines_%widget_id%)
             )
@@ -110,7 +167,7 @@ observe_event(input$display_figure_%widget_id%, {
         
         # Store code and trigger execution
         m$code_%widget_id% <- generated_code
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+        shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());")))
     }
     # ====================
     # MANUAL CODE EXECUTION
@@ -314,7 +371,7 @@ observe_event(input$run_code_%widget_id%, {
         
         shinyjs::show("error_message_div_%widget_id%")
         shinyjs::hide("dygraph_div_%widget_id%")
-        shinyjs::hide("plot_%widget_id%")
+        shinyjs::hide("plotly_div_%widget_id%")
     }
     
     # Display chart if generation was successful
@@ -329,13 +386,13 @@ observe_event(input$run_code_%widget_id%, {
         if (chart_type == "dygraphs") {
             output$dygraph_%widget_id% <- dygraphs::renderDygraph(fig)
             shinyjs::hide("error_message_div_%widget_id%")
-            shinyjs::hide("plot_%widget_id%")
+            shinyjs::hide("plotly_div_%widget_id%")
             shinyjs::show("dygraph_div_%widget_id%")
         } else {
-            output$plot_%widget_id% <- plotly::renderPlotly(fig)
+            output$plotly_%widget_id% <- plotly::renderPlotly(fig)
             shinyjs::hide("error_message_div_%widget_id%")
             shinyjs::hide("dygraph_div_%widget_id%")
-            shinyjs::show("plot_%widget_id%")
+            shinyjs::show("plotly_div_%widget_id%")
         }
     }
     

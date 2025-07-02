@@ -321,7 +321,7 @@ generate_plotly_chart_block <- function(synchronize_timelines) {
     
     chart_block <- paste0(
         "if (nrow(data) > 0) {\n",
-        "    fig <- plotly::plot_ly(data = data, source = \"plot_%widget_id%\")\n",
+        "    fig <- plotly::plot_ly(data = data, source = \"plotly_%widget_id%\")\n",
         "    \n",
         "    # Add segments for events with duration (end_datetime > datetime)\n",
         "    fig <- fig %>%\n",
@@ -437,25 +437,25 @@ observe_event(input$synchronize_timelines_%widget_id%, {
             # Add left padding to align with synchronized timeline
             shinyjs::runjs(sprintf(
                 "document.getElementById('%s').style.paddingLeft = '80px';",
-                ns("plot_%widget_id%")
+                ns("plotly_%widget_id%")
             ))
         } else {
             # Remove padding when synchronization is disabled
             shinyjs::runjs(sprintf(
                 "document.getElementById('%s').style.paddingLeft = '0px';",
-                ns("plot_%widget_id%")
+                ns("plotly_%widget_id%")
             ))
         }
     }
 })
 
 # Monitor plotly relayout events for timeline synchronization
-observe_event(plotly::event_data("plotly_relayout", source = "plot_%widget_id%"), {
+observe_event(plotly::event_data("plotly_relayout", source = "plotly_%widget_id%"), {
     
     # Only process if timeline synchronization is enabled
     if (!input$synchronize_timelines_%widget_id%) return()
     
-    relayout_data <- plotly::event_data("plotly_relayout", source = "plot_%widget_id%")
+    relayout_data <- plotly::event_data("plotly_relayout", source = "plotly_%widget_id%")
     
     if (!is.null(relayout_data) && is.list(relayout_data)) {
         

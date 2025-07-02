@@ -3,9 +3,9 @@
   <plugin>
     <app_version>0.3.1.9011</app_version>
     <unique_id>064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e</unique_id>
-    <version>0.0.1.9054</version>
-    <name_en>Continuous var. timeline</name_en>
-    <name_fr>Timeline var. continues</name_fr>
+    <version>0.0.1.9055</version>
+    <name_en>Timeline</name_en>
+    <name_fr>Timeline</name_fr>
     <category_en>NA</category_en>
     <category_fr>NA</category_fr>
     <description_en># 1) Introduction
@@ -231,13 +231,13 @@ Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
     les donn&#xE9;es sont mises &#xE0; jour lorsque l'on change de patient ou de s&#xE9;jour, en fonction de la valeur du 
     param&#xE8;tre "Donn&#xE9;es &#xE0; afficher"
 </description_fr>
-    <short_description_en>Allows displaying data as a timeline using the {dygraphs} library.</short_description_en>
-    <short_description_fr>Permet d'afficher des donn&#xE9;es sous forme de timeline avec la librairie {dygraphs}</short_description_fr>
+    <short_description_en>Allows displaying data as a timeline</short_description_en>
+    <short_description_fr>Permet d'afficher des donn&#xE9;es sous forme de timeline</short_description_fr>
     <authors>
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-08-28 22:19:16</creation_datetime>
-    <update_datetime>2025-07-02 23:34:08</update_datetime>
+    <update_datetime>2025-07-02 23:36:15</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>

@@ -243,9 +243,6 @@ observe_event(input$save_params_and_code_trigger_%widget_id%, {
     
     # Insert new settings into database
     DBI::dbAppendTable(m$db, "widgets_options", new_data)
-    
-    # Show success message
-    show_message_bar("modif_saved", "success")
 })
 
 # ======================================
@@ -260,6 +257,9 @@ shinyjs::delay(1000, {
 # Handle manual save button clicks
 observe_event(input$save_params_and_code_%widget_id%, {
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_params_and_code_trigger_%widget_id%', Math.random());"))
+    
+    # Notify user
+    show_message_bar("modif_saved", "success")
 })
 
 # ======================================
