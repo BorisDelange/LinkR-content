@@ -1,7 +1,6 @@
 # ==========================================
-# ui_figure.R - Figure Display Interface
+# ui_figure.R - Figure Display Interface (Hybrid)
 # ==========================================
-
 div(
     # ====================
     # ERROR MESSAGE PANEL
@@ -15,9 +14,9 @@ div(
     ),
     
     # ====================
-    # MAIN CHART DISPLAY
+    # DYGRAPHS CHART DISPLAY
     # ====================
-    # Interactive time series chart using dygraphs
+    # Interactive time series chart using dygraphs (for continuous data)
     div(
         id = ns("dygraph_div_%widget_id%"),
         dygraphs::dygraphOutput(
@@ -26,6 +25,22 @@ div(
             width = "100%"
         ),
         style = "width: 100%; height: calc(100% - 10px); padding-top: 10px; box-sizing: border-box;"
+    ),
+    
+    # ====================
+    # PLOTLY CHART DISPLAY
+    # ====================
+    # Interactive timeline chart using plotly (for event data)
+    shinyjs::hidden(
+        div(
+            id = ns("plot_%widget_id%"),
+            plotly::plotlyOutput(
+                ns("plot_%widget_id%"), 
+                height = "100%", 
+                width = "100%"
+            ),
+            style = "width: 100%; height: calc(100% - 10px); padding-top: 10px; box-sizing: border-box;"
+        )
     ),
     
     # Container styling with scrollable overflow

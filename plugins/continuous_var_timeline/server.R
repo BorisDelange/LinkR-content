@@ -139,6 +139,8 @@ observe_event(input$show_user_configurations_tab_%widget_id%, {
 
 # Code editor server logic (syntax highlighting, code execution, save/load)
 %import_script('server_code.R')%
+%import_script('server_code_dygraphs.R')%
+%import_script('server_code_plotly.R')%
 
 # User configurations server logic (configuration management, create/delete operations)
 %import_script('server_user_configurations.R')%

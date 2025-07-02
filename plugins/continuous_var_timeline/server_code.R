@@ -3,10 +3,10 @@
 # ==========================================
 # 
 # Handles code editor functionality including:
-# - Code execution and figure generation
-# - Auto-code generation from figure settings
-# - Keyboard shortcuts and ACE editor interactions
+# - Common initialization and keyboard shortcuts
+# - Code execution controller
 # - Auto-execution triggers based on data updates
+# - Chart type specific logic imported from separate files
 #
 # ==========================================
 
@@ -16,6 +16,9 @@
 
 # Initialize code storage variable
 m$code_%widget_id% <- ""
+
+# Initialize code blocks list
+code <- list()
 
 # Fix ACE editor rendering issues on startup
 # Delay ensures DOM is fully loaded before triggering resize
@@ -78,13 +81,29 @@ observe_event(input$display_figure_%widget_id%, {
             "person"
         }
         
-        # Generate R code for the current configuration
-        generated_code <- generate_figure_code(
-            data_source = data_source,
-            concepts = selected_concepts %>% 
-                dplyr::filter(concept_id %in% input$concepts_%widget_id%),
-            synchronize_timelines = isTRUE(input$synchronize_timelines_%widget_id%)
-        )
+        # Get chart type (default to dygraphs)
+        chart_type <- if (length(input$chart_type_%widget_id%) > 0) {
+            input$chart_type_%widget_id%
+        } else {
+            "dygraphs"
+        }
+        
+        # Generate R code for the current configuration based on chart type
+        if (chart_type == "dygraphs") {
+            generated_code <- generate_dygraphs_figure_code(
+                data_source = data_source,
+                concepts = selected_concepts %>% 
+                    dplyr::filter(concept_id %in% input$concepts_%widget_id%),
+                synchronize_timelines = isTRUE(input$synchronize_timelines_%widget_id%)
+            )
+        } else {
+            generated_code <- generate_plotly_figure_code(
+                data_source = data_source,
+                concepts = selected_concepts %>% 
+                    dplyr::filter(concept_id %in% input$concepts_%widget_id%),
+                synchronize_timelines = isTRUE(input$synchronize_timelines_%widget_id%)
+            )
+        }
         
         # Update ACE editor with generated code
         shinyAce::updateAceEditor(session, "code_%widget_id%", value = generated_code)
@@ -104,211 +123,109 @@ observe_event(input$display_figure_%widget_id%, {
 })
 
 # ======================================
-# CODE GENERATION HELPER FUNCTION
+# COMMON HELPER FUNCTIONS
 # ======================================
 
-# Generate R code based on current figure settings
-generate_figure_code <- function(data_source, concepts, synchronize_timelines) {
+# Generate date range processing code block
+generate_date_range_block <- function(data_source, synchronize_timelines) {
     
-    # ====================
-    # BUILD CONCEPTS TABLE
-    # ====================
-    code <- paste0(
-        "concepts <- tibble::tribble(\\n",
-        "    ~concept_id, ~concept_name, ~domain_id, ~vocabulary_id"
-    )
+    if (data_source == "person") {
+        date_block <- paste0(
+            "if (!is.na(m$selected_person)) {\n",
+            "    sql <- glue::glue_sql('\n",
+            "        SELECT \n",
+            "            MIN(visit_start_datetime) AS min_visit_start_datetime, \n",
+            "            MAX(visit_end_datetime) AS max_visit_end_datetime \n",
+            "        FROM visit_occurrence \n",
+            "        WHERE person_id = {m$selected_person} \n",
+            "    ', .con = d$con)\n",
+            "    \n",
+            "    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)\n",
+            "}\n\n",
+            "if (length(data_datetimes_range) > 0) {\n",
+            "    data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, \n",
+            "                            data_datetimes_range$max_visit_end_datetime)\n",
+            "    m$data_datetimes_range_%widget_id% <- data_datetimes_range\n",
+            "}\n\n",
+            "datetimes <- data_datetimes_range\n",
+            "if (length(datetimes) > 0) m$datetimes_%widget_id% <- datetimes"
+        )
+    } else if (data_source == "visit_detail") {
+        date_block <- paste0(
+            "if (!is.na(m$selected_visit_detail)) {\n",
+            "    sql <- glue::glue_sql('\n",
+            "        SELECT \n",
+            "            MIN(visit_detail_start_datetime) AS min_visit_start_datetime, \n",
+            "            MAX(visit_detail_end_datetime) AS max_visit_end_datetime \n",
+            "        FROM visit_detail \n",
+            "        WHERE visit_detail_id = {m$selected_visit_detail} \n",
+            "    ', .con = d$con)\n",
+            "    \n",
+            "    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)\n",
+            "}\n\n",
+            "if (length(data_datetimes_range) > 0) {\n",
+            "    data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, \n",
+            "                            data_datetimes_range$max_visit_end_datetime)\n",
+            "    m$data_datetimes_range_%widget_id% <- data_datetimes_range\n",
+            "}\n\n",
+            "datetimes <- data_datetimes_range\n",
+            "if (length(datetimes) > 0) m$datetimes_%widget_id% <- datetimes"
+        )
+    }
     
-    # Add each concept as a row in the tibble
-    if (nrow(concepts) > 0) {
+    # Add synchronization logic if needed
+    if (synchronize_timelines) {
+        sync_block <- paste0(
+            "if (!is.null(m$debounced_datetimes_timeline_%tab_id%)) {\n",
+            "    if (length(m$debounced_datetimes_timeline_%tab_id%()) > 0) {\n",
+            "        datetimes <- m$debounced_datetimes_timeline_%tab_id%()\n",
+            "    }\n",
+            "}"
+        )
+        
+        # Combine date and sync blocks
+        combined_block <- paste(date_block, sync_block, sep = "\n\n")
+        return(combined_block)
+    }
+    
+    return(date_block)
+}
+
+# Build concepts table code block
+generate_concepts_block <- function(concepts) {
+    
+    if (nrow(concepts) == 0) {
+        # Empty concepts table
+        concepts_block <- paste0(
+            "concepts <- tibble::tribble(\n",
+            "    ~concept_id, ~concept_name, ~domain_id, ~vocabulary_id\n",
+            ")"
+        )
+    } else {
+        # Build concept rows
+        concept_rows <- ""
         for (i in 1:nrow(concepts)) {
             row <- concepts[i, ]
-            code <- paste0(
-                code, ",\\n",
-                "    ", row$concept_id, ", '", row$concept_name, "', '", 
-                row$domain_id, "', '", row$vocabulary_id, "'"
+            concept_rows <- paste0(concept_rows,
+                "    ", row$concept_id, ", \"", row$concept_name, "\", \"", 
+                row$domain_id, "\", \"", row$vocabulary_id, "\""
             )
+            if (i < nrow(concepts)) {
+                concept_rows <- paste0(concept_rows, ",\n")
+            } else {
+                concept_rows <- paste0(concept_rows, "\n")
+            }
         }
-    }
-    code <- paste0(code, "\\n)")
-    
-    # ====================
-    # INITIALIZE DATA STRUCTURES
-    # ====================
-    code <- paste0(
-        code, "\\n\\n",
-        "features <- list()\\n",
-        "features_names <- c()\\n",
-        "raw_data <- tibble::tibble()\\n",
-        "data_datetimes_range <- c()\\n",
-        "combined_features <- c()"
-    )
-    
-    # ====================
-    # BUILD SQL QUERY
-    # ====================
-    code <- paste0(
-        code, "\\n\\n",
-        generate_data_query(data_source)
-    )
-    
-    # ====================
-    # ADD DATE RANGE PROCESSING
-    # ====================
-    code <- paste0(
-        code, "\\n\\n",
-        generate_date_range_processing(data_source, synchronize_timelines)
-    )
-    
-    # ====================
-    # ADD DATA PROCESSING LOOP
-    # ====================
-    code <- paste0(
-        code, "\\n\\n",
-        generate_data_processing_loop()
-    )
-    
-    # ====================
-    # ADD CHART GENERATION
-    # ====================
-    code <- paste0(
-        code, "\\n\\n",
-        generate_chart_code(synchronize_timelines)
-    )
-    
-    return(code)
-}
-
-# Generate SQL query based on data source
-generate_data_query <- function(data_source) {
-    paste0(
-        "sql <- glue::glue_sql('\\n",
-        "    SELECT \\n",
-        "        measurement_concept_id AS concept_id,\\n",
-        "        measurement_source_concept_id AS source_concept_id,\\n",
-        "        measurement_datetime AS datetime,\\n",
-        "        value_as_number\\n",
-        "    FROM measurement \\n",
-        "    WHERE ", data_source, "_id = {m$selected_", data_source, "} \\n",
-        "    AND (measurement_concept_id IN ({concepts$concept_id*}) OR measurement_source_concept_id IN ({concepts$concept_id*}))\\n",
-        "    UNION\\n",
-        "    SELECT \\n",
-        "        observation_concept_id AS concept_id,\\n",
-        "        observation_source_concept_id AS source_concept_id,\\n",
-        "        observation_datetime AS datetime, value_as_number\\n",
-        "    FROM observation \\n",
-        "    WHERE ", data_source, "_id = {m$selected_", data_source, "} \\n",
-        "    AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))\\n",
-        "', .con = d$con)\\n\\n",
-        "raw_data <- DBI::dbGetQuery(d$con, sql) %>% tibble::as_tibble()"
-    )
-}
-
-# Generate date range processing code
-generate_date_range_processing <- function(data_source, synchronize_timelines) {
-    
-    # Data source specific date range queries
-    date_query <- if (data_source == "person") {
-        paste0(
-            "if (!is.na(m$selected_person)){\\n",
-            "    sql <- glue::glue_sql('\\n",
-            "        SELECT \\n",
-            "            MIN(visit_start_datetime) AS min_visit_start_datetime, \\n",
-            "            MAX(visit_end_datetime) AS max_visit_end_datetime \\n",
-            "        FROM visit_occurrence \\n",
-            "        WHERE person_id = {m$selected_person} \\n",
-            "    ', .con = d$con)\\n\\n",
-            "    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)\\n",
-            "}"
-        )
-    } else {
-        paste0(
-            "if (!is.na(m$selected_visit_detail)){\\n",
-            "    sql <- glue::glue_sql('\\n",
-            "        SELECT \\n",
-            "            MIN(visit_detail_start_datetime) AS min_visit_start_datetime, \\n",
-            "            MAX(visit_detail_end_datetime) AS max_visit_end_datetime \\n",
-            "        FROM visit_detail \\n",
-            "        WHERE visit_detail_id = {m$selected_visit_detail} \\n",
-            "    ', .con = d$con)\\n\\n",
-            "    data_datetimes_range <- DBI::dbGetQuery(d$con, sql)\\n",
-            "}"
+        
+        concepts_block <- paste0(
+            "concepts <- tibble::tribble(\n",
+            "    ~concept_id, ~concept_name, ~domain_id, ~vocabulary_id,\n",
+            concept_rows,
+            ")"
         )
     }
     
-    # Timeline synchronization logic
-    sync_code <- if (synchronize_timelines) {
-        paste0(
-            "\\n",
-            "if(!is.null(m$debounced_datetimes_timeline_%tab_id%)) if (length(m$debounced_datetimes_timeline_%tab_id%()) > 0) datetimes <- m$debounced_datetimes_timeline_%tab_id%()"
-        )
-    } else {
-        ""
-    }
-    
-    paste0(
-        date_query, "\\n\\n",
-        "if (length(data_datetimes_range) > 0){\\n",
-        "    data_datetimes_range <- c(data_datetimes_range$min_visit_start_datetime, data_datetimes_range$max_visit_end_datetime)\\n",
-        "    m$data_datetimes_range_%widget_id% <- data_datetimes_range\\n",
-        "}\\n\\n",
-        "datetimes <- data_datetimes_range",
-        sync_code,
-        "\\n\\nif (length(datetimes) > 0) m$datetimes_%widget_id% <- datetimes"
-    )
-}
-
-# Generate data processing loop
-generate_data_processing_loop <- function() {
-    paste0(
-        "for (concept_id in concepts$concept_id) {\\n",
-        "    concept <- concepts %>% dplyr::filter(concept_id == !!concept_id)\\n\\n",
-        "    if (nrow(concept) > 0){\\n",
-        "        if (concept$domain_id %in% c('Measurement', 'Observation')) {\\n",
-        "            data <- raw_data\\n\\n",
-        "            if (nrow(data) > 0) {\\n",
-        "                data <- data %>%\\n",
-        "                    dplyr::filter(concept_id == !!concept_id | source_concept_id == !!concept_id) %>%\\n",
-        "                    dplyr::select(datetime, value_as_number)\\n\\n",
-        "                if (nrow(data) > 0) {\\n",
-        "                    fake_data <- tibble::tibble(\\n",
-        "                        datetime = c(data_datetimes_range[[1]] - lubridate::seconds(1), data_datetimes_range[[2]] + lubridate::seconds(1)),\\n",
-        "                        value_as_number = c(NA, NA)\\n",
-        "                    )\\n\\n",
-        "                    data <- dplyr::bind_rows(fake_data, data)\\n",
-        "                    data <- data %>% dplyr::arrange(datetime)\\n\\n",
-        "                    features[[paste0('concept_', concept_id)]] <- xts::xts(data$value_as_number, data$datetime)\\n",
-        "                    features_names <- c(features_names, concept$concept_name)\\n",
-        "                }\\n",
-        "            }\\n",
-        "        }\\n",
-        "    }\\n",
-        "}\\n\\n",
-        "if (length(features) > 0) combined_features <- do.call(merge, features)\\n",
-        "if (length(features_names) > 0) colnames(combined_features) <- features_names"
-    )
-}
-
-# Generate chart visualization code
-generate_chart_code <- function(synchronize_timelines) {
-    
-    dygraph_call <- if (synchronize_timelines) {
-        "dygraphs::dygraph(combined_features, group = 'tab_%tab_id%') %>%"
-    } else {
-        "dygraphs::dygraph(combined_features) %>%"
-    }
-    
-    paste0(
-        "if (length(combined_features) > 0){\\n    ",
-        "fig <- \\n        ", dygraph_call, "\\n",
-        "        dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2, useDataTimezone = TRUE) %>%\\n",
-        "        dygraphs::dyRangeSelector(dateWindow = c(\\n",
-        "            format(datetimes[[1]], '%Y-%m-%d %H:%M:%S'),\\n",
-        "            format(datetimes[[2]], '%Y-%m-%d %H:%M:%S')\\n",
-        "        )) %>%\\n",
-        "        dygraphs::dyAxis('y', valueRange = c(0, NA))\\n",
-        "}\\n\\n",
-        "fig"
-    )
+    return(concepts_block)
 }
 
 # ======================================
@@ -356,6 +273,16 @@ reset_timeline_variables <- function() {
 }
 
 # ======================================
+# IMPORT CHART TYPE SPECIFIC LOGIC
+# ======================================
+
+# Import dygraphs specific functions and handlers
+%import_script('server_code_dygraphs.R')%
+
+# Import plotly specific functions and handlers  
+%import_script('server_code_plotly.R')%
+
+# ======================================
 # CODE EXECUTION ENGINE
 # ======================================
 
@@ -367,14 +294,7 @@ observe_event(input$run_code_%widget_id%, {
     # ====================
     # EXECUTE USER CODE
     # ====================
-    tryCatch({
-        # Execute the code stored in m$code_%widget_id%
-        eval(parse(text = m$code_%widget_id%))
-    }, error = function(e) {
-        # Log error for debugging
-        warning("Code execution error in widget %widget_id%: ", e$message)
-        fig <<- character()
-    })
+    eval(parse(text = m$code_%widget_id%))
     
     # ====================
     # HANDLE EXECUTION RESULTS
@@ -394,14 +314,29 @@ observe_event(input$run_code_%widget_id%, {
         
         shinyjs::show("error_message_div_%widget_id%")
         shinyjs::hide("dygraph_div_%widget_id%")
+        shinyjs::hide("plot_%widget_id%")
     }
     
     # Display chart if generation was successful
     if (length(fig) > 0) {
-        output$dygraph_%widget_id% <- dygraphs::renderDygraph(fig)
+        # Determine which output to use based on chart type
+        chart_type <- if (length(input$chart_type_%widget_id%) > 0) {
+            input$chart_type_%widget_id%
+        } else {
+            "dygraphs"
+        }
         
-        shinyjs::hide("error_message_div_%widget_id%")
-        shinyjs::show("dygraph_div_%widget_id%")
+        if (chart_type == "dygraphs") {
+            output$dygraph_%widget_id% <- dygraphs::renderDygraph(fig)
+            shinyjs::hide("error_message_div_%widget_id%")
+            shinyjs::hide("plot_%widget_id%")
+            shinyjs::show("dygraph_div_%widget_id%")
+        } else {
+            output$plot_%widget_id% <- plotly::renderPlotly(fig)
+            shinyjs::hide("error_message_div_%widget_id%")
+            shinyjs::hide("dygraph_div_%widget_id%")
+            shinyjs::show("plot_%widget_id%")
+        }
     }
     
     # ====================

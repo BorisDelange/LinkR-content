@@ -3,6 +3,7 @@
 # ==========================================
 # 
 # Interactive panel for configuring chart settings including:
+# - Chart type selection (dygraphs vs plotly)
 # - Medical concept selection from available data
 # - Data source selection (patient vs visit level)
 # - Timeline synchronization controls
@@ -31,17 +32,75 @@ div(
     ),
     
     # ====================
-    # CONCEPTS SELECTION
+    # CHART TYPE SELECTION
+    # ====================
+    div(
+        div(
+            shiny.fluent::Dropdown.shinyInput(
+                ns("chart_type_%widget_id%"), 
+                options = list(
+                    list(key = "dygraphs", text = "dygraphs – Courbes continues (biologie, constantes)"),
+                    list(key = "plotly", text = "plotly – Chronologie d'événements (traitements, actes)")
+                ), 
+                value = "dygraphs",                  # Default to dygraphs
+                label = i18np$t("chart_type")
+            ),
+            style = "width: 350px;"
+        ),
+        style = "margin-top: 15px; padding-bottom: 15px; border-bottom: solid 1px #808080;"
+    ),
+    
+    # ====================
+    # CONCEPTS SELECTION METHOD
+    # ====================
+    div(
+        div(
+            shiny.fluent::Dropdown.shinyInput(
+                ns("concepts_choice_%widget_id%"), 
+                options = list(
+                    list(key = "selected_concept_classes", text = i18np$t("selected_concept_classes")),
+                    list(key = "selected_concepts", text = i18np$t("selected_concepts"))
+                ), 
+                value = "selected_concepts",         # Default to selected concepts
+                label = i18np$t("concepts_to_display")
+            ),
+            style = "width: 200px;"
+        ),
+        style = "margin-top: 15px;"
+    ),
+    
+    # ====================
+    # CONCEPT CLASSES SELECTION (HIDDEN BY DEFAULT)
+    # ====================
+    shinyjs::hidden(
+        div(
+            id = ns("concept_classes_div_%widget_id%"),
+            div(
+                shiny.fluent::Dropdown.shinyInput(
+                    ns("concept_classes_%widget_id%"), 
+                    label = i18np$t("concept_classes"),
+                    options = list(),               # Will be populated dynamically
+                    multiSelect = TRUE
+                ),
+                style = "width: 200px;"
+            ),
+            style = "margin-top: 15px;"
+        )
+    ),
+    
+    # ====================
+    # INDIVIDUAL CONCEPTS SELECTION
     # ====================
     div(
         id = ns("concepts_div_%widget_id%"),
         div(
             # Multi-select dropdown for medical concepts
+            # Domain filter will be updated based on chart type
             shiny.fluent::Dropdown.shinyInput(
                 ns("concepts_%widget_id%"), 
                 label = i18np$t("concepts"),
                 
-                # Filter concepts to only Measurement and Observation domains
+                # Default to Measurement and Observation for dygraphs
                 options = convert_tibble_to_list(
                     selected_concepts %>% 
                         dplyr::filter(domain_id %in% c("Measurement", "Observation")),
@@ -49,8 +108,10 @@ div(
                     text_col = "concept_name"
                 ),
                 
-                value = selected_concepts$concept_id,  # Pre-select all available concepts
-                multiSelect = TRUE                     # Allow multiple selections
+                value = selected_concepts %>% 
+                    dplyr::filter(domain_id %in% c("Measurement", "Observation")) %>%
+                    dplyr::pull(concept_id),        # Pre-select available concepts
+                multiSelect = TRUE                  # Allow multiple selections
             ),
             style = "width: 200px;"
         ),
