@@ -37,6 +37,7 @@ rate,Rate,Débit
 result,Result,Résultat
 save_figure_settings_and_code,Save,Sauvegarder
 save_general_settings,Save general settings,Sauvegarder les paramètres généraux
+select_all_concepts,Select all concepts,Sélectionner tous les concepts
 selected_concept_classes,Selected concept classes,Classes de concepts sélectionnées
 selected_concepts,Selected concepts,Concepts sélectionnés
 show_code_editor,Edit figure code,Editer le code de la figure
@@ -50,5 +51,6 @@ source_procedure,Procedure,Procédure
 start,Start,Début
 stay_data,Stay data,Données du séjour
 synchronize_timelines,Synchronize timelines,Synchroniser les timelines
+unselect_all_concepts,Unselect all concepts,Désélectionner tous les concepts
 user_configuration_delete,User configuration deleted,Configuration utilisateur supprimée
 value,Value,Valeur

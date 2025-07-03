@@ -47,7 +47,7 @@ div(
             ),
             style = "width: 350px;"
         ),
-        style = "margin-top: 15px; padding-bottom: 15px; border-bottom: solid 1px #808080;"
+        style = "margin-top: 5px; padding-bottom: 15px; border-bottom: solid 1px #808080;"
     ),
     
     # ====================
@@ -66,7 +66,7 @@ div(
             ),
             style = "width: 200px;"
         ),
-        style = "margin-top: 15px;"
+        style = "margin-top: 5px;"
     ),
     
     # ====================
@@ -84,7 +84,7 @@ div(
                 ),
                 style = "width: 200px;"
             ),
-            style = "margin-top: 15px;"
+            style = "margin-top: 5px;"
         )
     ),
     
@@ -94,28 +94,37 @@ div(
     div(
         id = ns("concepts_div_%widget_id%"),
         div(
-            # Multi-select dropdown for medical concepts
-            # Domain filter will be updated based on chart type
-            shiny.fluent::Dropdown.shinyInput(
-                ns("concepts_%widget_id%"), 
-                label = i18np$t("concepts"),
-                
-                # Default to Measurement and Observation for dygraphs
-                options = convert_tibble_to_list(
-                    selected_concepts %>% 
-                        dplyr::filter(domain_id %in% c("Measurement", "Observation")),
-                    key_col = "concept_id", 
-                    text_col = "concept_name"
+            div(
+                # Multi-select dropdown for medical concepts
+                # Domain filter will be updated based on chart type
+                shiny.fluent::Dropdown.shinyInput(
+                    ns("concepts_%widget_id%"), 
+                    label = i18np$t("concepts"),
+                    
+                    # Default to Measurement and Observation for dygraphs
+                    options = convert_tibble_to_list(
+                        selected_concepts %>% 
+                            dplyr::filter(domain_id %in% c("Measurement", "Observation")),
+                        key_col = "concept_id", 
+                        text_col = "concept_name"
+                    ),
+                    
+                    value = selected_concepts %>% 
+                        dplyr::filter(domain_id %in% c("Measurement", "Observation")) %>%
+                        dplyr::pull(concept_id),        # Pre-select available concepts
+                    multiSelect = TRUE                  # Allow multiple selections
                 ),
-                
-                value = selected_concepts %>% 
-                    dplyr::filter(domain_id %in% c("Measurement", "Observation")) %>%
-                    dplyr::pull(concept_id),        # Pre-select available concepts
-                multiSelect = TRUE                  # Allow multiple selections
+                style = "width: 200px;"
             ),
-            style = "width: 200px;"
+            div(
+                create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("concepts_check_all_%widget_id%"), iconProps = list(iconName = "CheckboxComposite")), text = i18np$t("select_all_concepts")),
+                create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("concepts_uncheck_all_%widget_id%"), iconProps = list(iconName = "Checkbox")), text = i18np$t("unselect_all_concepts")),
+                style = "margin: 27px 0 0 5px; display: flex;"
+            ),
+            class = "small_icon_button",
+            style = "display: flex;"
         ),
-        style = "margin-top: 15px;"
+        style = "margin-top: 5px;"
     ),
     
     # ====================

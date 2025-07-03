@@ -25,7 +25,7 @@ code <- list()
 shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.dispatchEvent(event);"))
 
 # Auto-execute code when widget first loads to show initial chart
-shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random());")))
+shinyjs::delay(1000, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random());")))
 
 # ======================================
 # CODE EDITOR KEYBOARD SHORTCUTS
@@ -86,51 +86,6 @@ observe_event(input$display_figure_%widget_id%, {
             input$chart_type_%widget_id%
         } else {
             "dygraphs"
-        }
-        
-        # ====================
-        # AUTOMATIC CHART TYPE FALLBACK
-        # ====================
-        
-        # Check if concepts are available for the selected chart type
-        if (chart_type == "dygraphs") {
-            allowed_domains_dygraphs <- c("Measurement", "Observation")
-            available_concepts_dygraphs <- selected_concepts %>% 
-                dplyr::filter(domain_id %in% allowed_domains_dygraphs)
-            
-            # If no concepts available for dygraphs, automatically fallback to plotly
-            if (nrow(available_concepts_dygraphs) == 0) {
-                chart_type <- "plotly"
-                
-                # Update UI to reflect the chart type change
-                shiny.fluent::updateDropdown.shinyInput(
-                    session, 
-                    "chart_type_%widget_id%", 
-                    value = "plotly"
-                )
-                
-                # Update available concepts list for plotly
-                allowed_domains_plotly <- c("Measurement", "Observation", "Condition", "Procedure", "Drug")
-                available_concepts_plotly <- selected_concepts %>% 
-                    dplyr::filter(domain_id %in% allowed_domains_plotly)
-                
-                shiny.fluent::updateDropdown.shinyInput(
-                    session, 
-                    "concepts_%widget_id%", 
-                    options = convert_tibble_to_list(
-                        available_concepts_plotly,
-                        key_col = "concept_id", 
-                        text_col = "concept_name"
-                    ),
-                    value = available_concepts_plotly$concept_id
-                )
-                
-                # Log the automatic fallback for debugging
-                shinyjs::runjs(paste0(
-                    "console.log('No concepts available for Dygraphs (domains: Measurement, Observation). ",
-                    "Automatically switched to Plotly with ", nrow(available_concepts_plotly), " available concepts.');"
-                ))
-            }
         }
         
         # Get filtered concepts based on final chart type

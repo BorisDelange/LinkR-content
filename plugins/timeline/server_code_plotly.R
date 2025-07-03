@@ -36,7 +36,7 @@ generate_plotly_figure_code <- function(data_source, concepts, synchronize_timel
     code$block_4 <- generate_date_range_block(data_source, synchronize_timelines)
     
     # Data processing for plotly timeline
-    code$block_5 <- generate_plotly_data_processing_block()
+    code$block_5 <- generate_plotly_data_processing_block(concepts)
     
     # Chart generation
     code$block_6 <- generate_plotly_chart_block(synchronize_timelines)
@@ -235,7 +235,10 @@ generate_plotly_sql_block <- function(data_source) {
 }
 
 # Generate data processing block for plotly timeline
-generate_plotly_data_processing_block <- function() {
+generate_plotly_data_processing_block <- function(concepts) {
+    
+    # Check if Drug concepts are selected
+    has_drug_concepts <- any(concepts$domain_id == "Drug", na.rm = TRUE)
     
     processing_block <- paste0(
         "# Filter data based on concepts selection\n",
@@ -256,48 +259,84 @@ generate_plotly_data_processing_block <- function() {
         "    data %>%\n",
         "    join_concepts(d$dataset_concept, c(\"data\", \"type\")) %>%\n",
         "    # Replace NA concept_name by their concept_id\n",
-        "    dplyr::mutate(concept_name = dplyr::if_else(is.na(data_concept_name), as.character(data_concept_id), data_concept_name))\n\n",
-        "# Add drug strength information for drug_exposure data\n",
-        "if (any(data$source_table == \"drug_exposure\", na.rm = TRUE)) {\n",
-        "    data <- data %>%\n",
-        "        dplyr::left_join(\n",
-        "            d$dataset_drug_strength %>%\n",
-        "                join_concepts(d$dataset_concept, c(\"ingredient\", \"amount_unit\", \"numerator_unit\", \"denominator_unit\")) %>%\n",
-        "                dplyr::select(\n",
-        "                    drug_concept_id = drug_concept_id, ingredient_concept_id, ingredient_concept_name,\n",
-        "                    amount_value, amount_unit_concept_id, amount_unit_concept_name,\n",
-        "                    numerator_value, numerator_unit_concept_id, numerator_unit_concept_name,\n",
-        "                    denominator_value, denominator_unit_concept_id, denominator_unit_concept_name\n",
-        "                ),\n",
-        "            by = c(\"data_concept_id\" = \"drug_concept_id\"),\n",
-        "            copy = TRUE\n",
-        "        ) %>%\n",
-        "        dplyr::mutate(\n",
-        "            amount = dplyr::case_when(\n",
-        "                source_table == \"drug_exposure\" & !is.na(amount_value) ~ round(quantity * amount_value, 1),\n",
-        "                source_table == \"drug_exposure\" & !is.na(numerator_value) ~ round(quantity * numerator_value, 1)\n",
-        "            ),\n",
-        "            amount_unit = dplyr::case_when(\n",
-        "                source_table == \"drug_exposure\" & !is.na(amount_value) ~ amount_unit_concept_name,\n",
-        "                source_table == \"drug_exposure\" & !is.na(numerator_value) ~ numerator_unit_concept_name\n",
-        "            ),\n",
-        "            duration_hours = dplyr::case_when(\n",
-        "                source_table == \"drug_exposure\" ~ as.numeric(difftime(end_datetime, datetime, units = \"hours\"))\n",
-        "            ),\n",
-        "            rate = dplyr::case_when(\n",
-        "                source_table == \"drug_exposure\" & !is.na(numerator_value) & !is.na(duration_hours) & duration_hours > 0 ~ round(amount / duration_hours, 1)\n",
-        "            ),\n",
-        "            rate_unit = dplyr::case_when(\n",
-        "                source_table == \"drug_exposure\" & !is.na(rate) & !is.na(amount_unit) ~ paste0(amount_unit, \" per hour\")\n",
-        "            ),\n",
-        "            daily_dose = dplyr::case_when(\n",
-        "                source_table == \"drug_exposure\" & is.na(rate) & !is.na(amount) & !is.na(duration_hours) & duration_hours > 0 ~ amount / duration_hours * 24\n",
-        "            ),\n",
-        "            daily_dose_unit = dplyr::case_when(\n",
-        "                source_table == \"drug_exposure\" & !is.na(daily_dose) & !is.na(amount_unit) ~ paste0(amount_unit, \" per day\")\n",
-        "            )\n",
-        "        )\n",
-        "}\n\n",
+        "    dplyr::mutate(concept_name = dplyr::if_else(is.na(data_concept_name), as.character(data_concept_id), data_concept_name))\n\n"
+    )
+    
+    # Only add drug processing if Drug concepts are selected
+    if (has_drug_concepts) {
+        drug_processing <- paste0(
+            "# Add drug strength information for drug_exposure data\n",
+            "if (any(data$source_table == \"drug_exposure\", na.rm = TRUE)) {\n",
+            "    data <- data %>%\n",
+            "        dplyr::left_join(\n",
+            "            d$dataset_drug_strength %>%\n",
+            "                join_concepts(d$dataset_concept, c(\"ingredient\", \"amount_unit\", \"numerator_unit\", \"denominator_unit\")) %>%\n",
+            "                dplyr::select(\n",
+            "                    drug_concept_id = drug_concept_id, ingredient_concept_id, ingredient_concept_name,\n",
+            "                    amount_value, amount_unit_concept_id, amount_unit_concept_name,\n",
+            "                    numerator_value, numerator_unit_concept_id, numerator_unit_concept_name,\n",
+            "                    denominator_value, denominator_unit_concept_id, denominator_unit_concept_name\n",
+            "                ),\n",
+            "            by = c(\"data_concept_id\" = \"drug_concept_id\"),\n",
+            "            copy = TRUE\n",
+            "        ) %>%\n",
+            "        dplyr::mutate(\n",
+            "            amount = dplyr::case_when(\n",
+            "                source_table == \"drug_exposure\" & !is.na(amount_value) ~ round(quantity * amount_value, 1),\n",
+            "                source_table == \"drug_exposure\" & !is.na(numerator_value) ~ round(quantity * numerator_value, 1)\n",
+            "            ),\n",
+            "            amount_unit = dplyr::case_when(\n",
+            "                source_table == \"drug_exposure\" & !is.na(amount_value) ~ amount_unit_concept_name,\n",
+            "                source_table == \"drug_exposure\" & !is.na(numerator_value) ~ numerator_unit_concept_name\n",
+            "            ),\n",
+            "            duration_hours = dplyr::case_when(\n",
+            "                source_table == \"drug_exposure\" ~ as.numeric(difftime(end_datetime, datetime, units = \"hours\"))\n",
+            "            ),\n",
+            "            rate = dplyr::case_when(\n",
+            "                source_table == \"drug_exposure\" & !is.na(numerator_value) & !is.na(duration_hours) & duration_hours > 0 ~ round(amount / duration_hours, 1)\n",
+            "            ),\n",
+            "            rate_unit = dplyr::case_when(\n",
+            "                source_table == \"drug_exposure\" & !is.na(rate) & !is.na(amount_unit) ~ paste0(amount_unit, \" per hour\")\n",
+            "            ),\n",
+            "            daily_dose = dplyr::case_when(\n",
+            "                source_table == \"drug_exposure\" & is.na(rate) & !is.na(amount) & !is.na(duration_hours) & duration_hours > 0 ~ amount / duration_hours * 24\n",
+            "            ),\n",
+            "            daily_dose_unit = dplyr::case_when(\n",
+            "                source_table == \"drug_exposure\" & !is.na(daily_dose) & !is.na(amount_unit) ~ paste0(amount_unit, \" per day\")\n",
+            "            )\n",
+            "        )\n",
+            "} else {\n",
+            "    # Add empty drug columns when no drug data is present\n",
+            "    data <- data %>%\n",
+            "        dplyr::mutate(\n",
+            "            amount = NA_real_,\n",
+            "            amount_unit = NA_character_,\n",
+            "            duration_hours = NA_real_,\n",
+            "            rate = NA_real_,\n",
+            "            rate_unit = NA_character_,\n",
+            "            daily_dose = NA_real_,\n",
+            "            daily_dose_unit = NA_character_\n",
+            "        )\n",
+            "}\n\n"
+        )
+    } else {
+        # Add empty drug columns when no Drug concepts are selected
+        drug_processing <- paste0(
+            "# Add empty drug columns since no Drug concepts are selected\n",
+            "data <- data %>%\n",
+            "    dplyr::mutate(\n",
+            "        amount = NA_real_,\n",
+            "        amount_unit = NA_character_,\n",
+            "        duration_hours = NA_real_,\n",
+            "        rate = NA_real_,\n",
+            "        rate_unit = NA_character_,\n",
+            "        daily_dose = NA_real_,\n",
+            "        daily_dose_unit = NA_character_\n",
+            "    )\n\n"
+        )
+    }
+    
+    final_processing <- paste0(
         "# Final data arrangement\n",
         "data <- data %>% dplyr::arrange(person_id, datetime)\n\n",
         "# Process concept names for display\n",
@@ -313,14 +352,54 @@ generate_plotly_data_processing_block <- function() {
         "if (language == \"fr\") datetime_format <- \"%d-%m-%Y %H:%M\" else datetime_format <- \"%Y-%m-%d %H:%M\""
     )
     
-    return(processing_block)
+    return(paste0(processing_block, drug_processing, final_processing))
 }
 
-# Generate plotly chart visualization code block
+# Define colors for each OMOP data type
+define_omop_colors <- function() {
+    colors <- list(
+        "measurement" = "#619CFF",      # Blue - for laboratory measurements
+        "drug_exposure" = "#F8766D",    # Red/Coral - for medications
+        "procedure" = "#00BA38",        # Green - for procedures
+        "condition" = "#FF8C42",        # Orange - for conditions/diagnoses
+        "observation" = "#C77CFF"       # Purple - for observations
+    )
+    return(colors)
+}
+
+# Get color based on source table type
+get_color_by_source <- function(source_table) {
+    colors <- define_omop_colors()
+    return(colors[[source_table]])
+}
+
+# Generate plotly chart visualization code block with color coding
 generate_plotly_chart_block <- function(synchronize_timelines) {
     
     chart_block <- paste0(
         "if (nrow(data) > 0) {\n",
+        "    # Define colors for each OMOP data type (ggplot2 classic palette)\n",
+        "    omop_colors <- list(\n",
+        "        \"measurement\" = \"#619CFF\",      # Blue\n",
+        "        \"drug_exposure\" = \"#F8766D\",    # Red/Coral\n",
+        "        \"procedure\" = \"#00BA38\",        # Green\n",
+        "        \"condition\" = \"#FF8C42\",        # Orange\n",
+        "        \"observation\" = \"#C77CFF\"       # Purple\n",
+        "    )\n",
+        "    \n",
+        "    # Add color column based on source table type\n",
+        "    data <- data %>%\n",
+        "        dplyr::mutate(\n",
+        "            color = dplyr::case_when(\n",
+        "                source_table == \"measurement\" ~ omop_colors[[\"measurement\"]],\n",
+        "                source_table == \"drug_exposure\" ~ omop_colors[[\"drug_exposure\"]],\n",
+        "                source_table == \"procedure\" ~ omop_colors[[\"procedure\"]],\n",
+        "                source_table == \"condition\" ~ omop_colors[[\"condition\"]],\n",
+        "                source_table == \"observation\" ~ omop_colors[[\"observation\"]],\n",
+        "                TRUE ~ \"#808080\"  # Default gray for unknown types\n",
+        "            )\n",
+        "        )\n",
+        "    \n",
         "    fig <- plotly::plot_ly(data = data, source = \"plotly_%widget_id%\")\n",
         "    \n",
         "    # Add segments for events with duration (end_datetime > datetime)\n",
@@ -331,29 +410,29 @@ generate_plotly_chart_block <- function(synchronize_timelines) {
         "            xend = ~end_datetime,\n",
         "            y = ~as.numeric(concept_name),\n",
         "            yend = ~as.numeric(concept_name),\n",
-        "            line = list(color = \"coral\", width = 5),\n",
+        "            line = list(color = ~color, width = 5),\n",
         "            text = ~paste0(\n",
-        "                \"<b>\", concept_name, \"</b><br>\",\n",
-        "                i18np$t(\"start\"), \" : \", format(datetime, datetime_format), \"<br>\",\n",
-        "                i18np$t(\"end\"), \" : \", format(end_datetime, datetime_format), \"<br>\",\n",
-        "                ifelse(source_table == \"drug_exposure\", paste0(\"<br><b>\", i18np$t(\"dosage\"), \"</b><br>\"), \n",
-        "                       ifelse(source_table == \"measurement\", paste0(\"<br><b>\", i18np$t(\"measurement\"), \"</b><br>\"), \n",
-        "                              ifelse(source_table == \"observation\", paste0(\"<br><b>\", i18np$t(\"observation\"), \"</b><br>\"), \"<br>\"))),\n",
+        "                \"<b style='color:white'>\", concept_name, \"</b><br>\",\n",
+        "                \"<span style='color:white'>\", i18np$t(\"start\"), \" : \", format(datetime, datetime_format), \"</span><br>\",\n",
+        "                \"<span style='color:white'>\", i18np$t(\"end\"), \" : \", format(end_datetime, datetime_format), \"</span><br>\",\n",
+        "                ifelse(source_table == \"drug_exposure\", paste0(\"<br><b style='color:white'>\", i18np$t(\"dosage\"), \"</b><br>\"), \n",
+        "                       ifelse(source_table == \"measurement\", paste0(\"<br><b style='color:white'>\", i18np$t(\"measurement\"), \"</b><br>\"), \n",
+        "                              ifelse(source_table == \"observation\", paste0(\"<br><b style='color:white'>\", i18np$t(\"observation\"), \"</b><br>\"), \"<br>\"))),\n",
         "                # Add drug-specific information when available\n",
         "                ifelse(source_table == \"drug_exposure\" & !is.na(amount), \n",
-        "                       paste0(i18np$t(\"dose\"), \" : \", amount, \" \", ifelse(is.na(amount_unit), \"\", amount_unit), \"<br>\"), \"\"),\n",
+        "                       paste0(\"<span style='color:white'>\", i18np$t(\"dose\"), \" : \", amount, \" \", ifelse(is.na(amount_unit), \"\", amount_unit), \"</span><br>\"), \"\"),\n",
         "                ifelse(source_table == \"drug_exposure\" & !is.na(rate), \n",
-        "                       paste0(i18np$t(\"rate\"), \" : \", rate, \" \", ifelse(is.na(rate_unit), \"\", rate_unit), \"<br>\"), \"\"),\n",
+        "                       paste0(\"<span style='color:white'>\", i18np$t(\"rate\"), \" : \", rate, \" \", ifelse(is.na(rate_unit), \"\", rate_unit), \"</span><br>\"), \"\"),\n",
         "                ifelse(source_table == \"drug_exposure\" & !is.na(daily_dose), \n",
-        "                       paste0(i18np$t(\"daily_dose\"), \" : \", daily_dose, \" \", ifelse(is.na(daily_dose_unit), \"\", daily_dose_unit), \"<br>\"), \"\"),\n",
+        "                       paste0(\"<span style='color:white'>\", i18np$t(\"daily_dose\"), \" : \", daily_dose, \" \", ifelse(is.na(daily_dose_unit), \"\", daily_dose_unit), \"</span><br>\"), \"\"),\n",
         "                ifelse(source_table == \"drug_exposure\" & !is.na(duration_hours), \n",
-        "                       paste0(i18np$t(\"duration\"), \" : \", round(duration_hours, 1), \" \", i18np$t(\"hours\"), \"<br>\"), \"\"),\n",
+        "                       paste0(\"<span style='color:white'>\", i18np$t(\"duration\"), \" : \", round(duration_hours, 1), \" \", i18np$t(\"hours\"), \"</span><br>\"), \"\"),\n",
         "                # Add measurement/observation values\n",
-        "                ifelse(!is.na(value_as_number), paste0(i18np$t(\"value\"), \" : \", value_as_number, \"<br>\"), \"\"),\n",
-        "                ifelse(!is.na(value_as_string) & value_as_string != \"\", paste0(i18np$t(\"result\"), \" : \", value_as_string, \"<br>\"), \"\"),\n",
+        "                ifelse(!is.na(value_as_number), paste0(\"<span style='color:white'>\", i18np$t(\"value\"), \" : \", value_as_number, \"</span><br>\"), \"\"),\n",
+        "                ifelse(!is.na(value_as_string) & value_as_string != \"\", paste0(\"<span style='color:white'>\", i18np$t(\"result\"), \" : \", value_as_string, \"</span><br>\"), \"\"),\n",
         "                # Add quantity for procedures\n",
-        "                ifelse(!is.na(quantity) & source_table != \"drug_exposure\", paste0(i18np$t(\"quantity\"), \" : \", quantity, \"<br>\"), \"\"),\n",
-        "                \"<br><i>\", i18np$t(paste0(\"source_\", source_table)), \"</i>\"\n",
+        "                ifelse(!is.na(quantity) & source_table != \"drug_exposure\", paste0(\"<span style='color:white'>\", i18np$t(\"quantity\"), \" : \", quantity, \"</span><br>\"), \"\"),\n",
+        "                \"<br><i style='color:white'>\", i18np$t(paste0(\"source_\", source_table)), \"</i>\"\n",
         "            ),\n",
         "            hoverinfo = \"text\"\n",
         "        ) %>%\n",
@@ -362,24 +441,24 @@ generate_plotly_chart_block <- function(synchronize_timelines) {
         "            data = subset(data, end_datetime == datetime | is.na(end_datetime)),\n",
         "            x = ~datetime,\n",
         "            y = ~as.numeric(concept_name),\n",
-        "            marker = list(color = \"coral\", size = 10),\n",
+        "            marker = list(color = ~color, size = 10),\n",
         "            text = ~paste0(\n",
-        "                \"<b>\", concept_name, \"</b><br>\",\n",
-        "                i18np$t(\"datetime\"), \" : \", format(datetime, datetime_format), \"<br>\",\n",
-        "                ifelse(source_table == \"drug_exposure\", paste0(\"<br><b>\", i18np$t(\"administration\"), \"</b><br>\"), \n",
-        "                       ifelse(source_table == \"measurement\", paste0(\"<br><b>\", i18np$t(\"measurement\"), \"</b><br>\"), \n",
-        "                              ifelse(source_table == \"observation\", paste0(\"<br><b>\", i18np$t(\"observation\"), \"</b><br>\"), \"<br>\"))),\n",
+        "                \"<b style='color:white'>\", concept_name, \"</b><br>\",\n",
+        "                \"<span style='color:white'>\", i18np$t(\"datetime\"), \" : \", format(datetime, datetime_format), \"</span><br>\",\n",
+        "                ifelse(source_table == \"drug_exposure\", paste0(\"<br><b style='color:white'>\", i18np$t(\"administration\"), \"</b><br>\"), \n",
+        "                       ifelse(source_table == \"measurement\", paste0(\"<br><b style='color:white'>\", i18np$t(\"measurement\"), \"</b><br>\"), \n",
+        "                              ifelse(source_table == \"observation\", paste0(\"<br><b style='color:white'>\", i18np$t(\"observation\"), \"</b><br>\"), \"<br>\"))),\n",
         "                # Add drug-specific information when available\n",
         "                ifelse(source_table == \"drug_exposure\" & !is.na(amount), \n",
-        "                       paste0(i18np$t(\"dose\"), \" : \", amount, \" \", ifelse(is.na(amount_unit), \"\", amount_unit), \"<br>\"), \"\"),\n",
+        "                       paste0(\"<span style='color:white'>\", i18np$t(\"dose\"), \" : \", amount, \" \", ifelse(is.na(amount_unit), \"\", amount_unit), \"</span><br>\"), \"\"),\n",
         "                ifelse(source_table == \"drug_exposure\" & !is.na(rate), \n",
-        "                       paste0(i18np$t(\"rate\"), \" : \", rate, \" \", ifelse(is.na(rate_unit), \"\", rate_unit), \"<br>\"), \"\"),\n",
+        "                       paste0(\"<span style='color:white'>\", i18np$t(\"rate\"), \" : \", rate, \" \", ifelse(is.na(rate_unit), \"\", rate_unit), \"</span><br>\"), \"\"),\n",
         "                # Add measurement/observation values\n",
-        "                ifelse(!is.na(value_as_number), paste0(i18np$t(\"value\"), \" : \", value_as_number, \"<br>\"), \"\"),\n",
-        "                ifelse(!is.na(value_as_string) & value_as_string != \"\", paste0(i18np$t(\"result\"), \" : \", value_as_string, \"<br>\"), \"\"),\n",
+        "                ifelse(!is.na(value_as_number), paste0(\"<span style='color:white'>\", i18np$t(\"value\"), \" : \", value_as_number, \"</span><br>\"), \"\"),\n",
+        "                ifelse(!is.na(value_as_string) & value_as_string != \"\", paste0(\"<span style='color:white'>\", i18np$t(\"result\"), \" : \", value_as_string, \"</span><br>\"), \"\"),\n",
         "                # Add quantity for procedures\n",
-        "                ifelse(!is.na(quantity) & source_table != \"drug_exposure\", paste0(i18np$t(\"quantity\"), \" : \", quantity, \"<br>\"), \"\"),\n",
-        "                \"<br><i>\", i18np$t(paste0(\"source_\", source_table)), \"</i>\"\n",
+        "                ifelse(!is.na(quantity) & source_table != \"drug_exposure\", paste0(\"<span style='color:white'>\", i18np$t(\"quantity\"), \" : \", quantity, \"</span><br>\"), \"\"),\n",
+        "                \"<br><i style='color:white'>\", i18np$t(paste0(\"source_\", source_table)), \"</i>\"\n",
         "            ),\n",
         "            hoverinfo = \"text\"\n",
         "        )\n",
