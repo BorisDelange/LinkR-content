@@ -15,74 +15,91 @@
 # ======================================
 
 # Generate plotly specific figure code
+# This function creates the complete code for a plotly timeline visualization
 generate_plotly_figure_code <- function(data_source, concepts, synchronize_timelines) {
     
-    # Initialize code blocks list
+    # Initialize code blocks list to store different sections of generated code
     code <- list()
     
-    # Build concepts table
+    # Build concepts table - creates a table with selected medical concepts
     code$block_1 <- generate_concepts_block(concepts)
     
-    # Initialize data structures for plotly
+    # Initialize data structures for plotly visualization
+    # Creates empty containers for the data and date ranges
     code$block_2 <- paste0(
-        "data <- tibble::tibble()\n",
-        "data_datetimes_range <- c()"
+        "# Initialize data structures for plotly visualization\n",
+        "data <- tibble::tibble()             # Empty tibble to store processed data\n",
+        "data_datetimes_range <- c()          # Vector to store date range boundaries"
     )
     
     # Build SQL query for all OMOP tables
+    # Creates complex SQL to fetch data from multiple OMOP CDM tables
     code$block_3 <- generate_plotly_sql_block(data_source)
     
-    # Date range processing
+    # Date range processing - determines the time window for visualization
     code$block_4 <- generate_date_range_block(data_source, synchronize_timelines)
     
     # Data processing for plotly timeline
+    # Processes raw data into format suitable for timeline visualization
     code$block_5 <- generate_plotly_data_processing_block(concepts)
     
-    # Chart generation
+    # Chart generation - creates the actual plotly visualization
     code$block_6 <- generate_plotly_chart_block(synchronize_timelines)
     
-    # Combine all blocks into final code
+    # Combine all blocks into final executable code
     final_code <- paste(code, collapse = "\n\n")
     
     return(final_code)
 }
 
 # Generate SQL query for plotly (all OMOP data types)
+# This function creates a comprehensive SQL query that fetches data from all OMOP tables
 generate_plotly_sql_block <- function(data_source) {
     
     # Define OMOP version handling for procedure columns
-    procedure_sql_cols <- paste0(
-        "if (m$omop_version == \"5.3\") procedure_sql_cols <- DBI::SQL(\"\n",
-        "    'procedure' AS source_table,\n",
-        "    procedure_occurrence_id AS source_id,\n",
-        "    person_id,\n",
-        "    visit_detail_id,\n",
-        "    CASE WHEN procedure_concept_id > 0 THEN procedure_concept_id ELSE procedure_source_concept_id END AS data_concept_id,\n",
-        "    procedure_datetime AS datetime,\n",
-        "    procedure_datetime AS end_datetime,\n",
-        "    procedure_type_concept_id AS type_concept_id,\n",
-        "    quantity,\n",
-        "    NULL AS value_as_number,\n",
-        "    NULL AS value_as_string,\n",
-        "    NULL AS value_as_concept_id\n",
-        "\") else procedure_sql_cols <- DBI::SQL(\"\n",
-        "    'procedure' AS source_table,\n",
-        "    procedure_occurrence_id AS source_id,\n",
-        "    person_id,\n",
-        "    visit_detail_id,\n",
-        "    CASE WHEN procedure_concept_id > 0 THEN procedure_concept_id ELSE procedure_source_concept_id END AS data_concept_id,\n",
-        "    procedure_datetime AS datetime,\n",
-        "    procedure_end_datetime AS end_datetime,\n",
-        "    procedure_type_concept_id AS type_concept_id,\n",
-        "    quantity,\n",
-        "    NULL AS value_as_number,\n",
-        "    NULL AS value_as_string,\n",
-        "    NULL AS value_as_concept_id\n",
-        "\")"
-    )
+    # Different OMOP versions have different column names for procedure end dates
+    if (m$omop_version == "5.3") {
+        # OMOP 5.3 uses procedure_datetime for both start and end
+        procedure_sql_cols <- paste0(
+            "procedure_sql_cols <- DBI::SQL(\"\n",
+            "    'procedure' AS source_table,\n",
+            "    procedure_occurrence_id AS source_id,\n",
+            "    person_id,\n",
+            "    visit_detail_id,\n",
+            "    CASE WHEN procedure_concept_id > 0 THEN procedure_concept_id ELSE procedure_source_concept_id END AS data_concept_id,\n",
+            "    procedure_datetime AS datetime,\n",
+            "    procedure_datetime AS end_datetime,\n",
+            "    procedure_type_concept_id AS type_concept_id,\n",
+            "    quantity,\n",
+            "    NULL AS value_as_number,\n",
+            "    NULL AS value_as_string,\n",
+            "    NULL AS value_as_concept_id\n",
+            "\")"
+        )
+    } else {
+        # OMOP 5.4+ has separate procedure_end_datetime column
+        procedure_sql_cols <- paste0(
+            "procedure_sql_cols <- DBI::SQL(\"\n",
+            "    'procedure' AS source_table,\n",
+            "    procedure_occurrence_id AS source_id,\n",
+            "    person_id,\n",
+            "    visit_detail_id,\n",
+            "    CASE WHEN procedure_concept_id > 0 THEN procedure_concept_id ELSE procedure_source_concept_id END AS data_concept_id,\n",
+            "    procedure_datetime AS datetime,\n",
+            "    procedure_end_datetime AS end_datetime,\n",
+            "    procedure_type_concept_id AS type_concept_id,\n",
+            "    quantity,\n",
+            "    NULL AS value_as_number,\n",
+            "    NULL AS value_as_string,\n",
+            "    NULL AS value_as_concept_id\n",
+            "\")"
+        )
+    }
     
-    # Define column mappings for different table types
+    # Define column mappings for condition occurrence table
+    # Standardizes column names and adds calculated fields
     condition_sql_cols <- paste0(
+        "# Define column mappings for condition occurrence table\n",
         "condition_sql_cols <- DBI::SQL(\"\n",
         "    'condition' AS source_table,\n",
         "    condition_occurrence_id AS source_id,\n",
@@ -99,7 +116,10 @@ generate_plotly_sql_block <- function(data_source) {
         "\")"
     )
     
+    # Define column mappings for observation table
+    # Handles observations with various value types (numeric, string, concept)
     observation_sql_cols <- paste0(
+        "# Define column mappings for observation table\n",
         "observation_sql_cols <- DBI::SQL(\"\n",
         "    'observation' AS source_table,\n",
         "    observation_id AS source_id,\n",
@@ -116,7 +136,10 @@ generate_plotly_sql_block <- function(data_source) {
         "\")"
     )
     
+    # Define column mappings for measurement table
+    # Handles laboratory values and other numeric measurements
     measurement_sql_cols <- paste0(
+        "# Define column mappings for measurement table\n",
         "measurement_sql_cols <- DBI::SQL(\"\n",
         "    'measurement' AS source_table,\n",
         "    measurement_id AS source_id,\n",
@@ -133,7 +156,10 @@ generate_plotly_sql_block <- function(data_source) {
         "\")"
     )
     
+    # Define column mappings for drug exposure table
+    # Handles medication administrations with dosage and duration information
     drug_sql_cols <- paste0(
+        "# Define column mappings for drug exposure table\n",
         "drug_sql_cols <- DBI::SQL(\"\n",
         "    'drug_exposure' AS source_table,\n",
         "    drug_exposure_id AS source_id,\n",
@@ -150,83 +176,107 @@ generate_plotly_sql_block <- function(data_source) {
         "\")"
     )
     
-    # Build the main SQL query
+    # Build the main SQL query with concept filtering
+    # Creates a UNION query that combines data from all OMOP tables
     if (data_source == "person") {
         main_sql <- paste0(
+            "# Build comprehensive SQL query for person-level data\n",
+            "# This query combines data from all OMOP tables using UNION ALL\n",
             "sql <- glue::glue_sql(\"\n",
+            "    -- Fetch procedure occurrences\n",
             "    SELECT {`procedure_sql_cols`}\n",
             "    FROM procedure_occurrence\n",
             "    WHERE person_id = {m$selected_person}\n",
+            "    AND (procedure_concept_id IN ({concepts$concept_id*}) OR procedure_source_concept_id IN ({concepts$concept_id*}))\n",
             "    \n",
             "    UNION ALL\n",
             "    \n",
+            "    -- Fetch condition occurrences\n",
             "    SELECT {`condition_sql_cols`}\n",
             "    FROM condition_occurrence\n",
             "    WHERE person_id = {m$selected_person}\n",
+            "    AND (condition_concept_id IN ({concepts$concept_id*}) OR condition_source_concept_id IN ({concepts$concept_id*}))\n",
             "    \n",
             "    UNION ALL\n",
             "    \n",
+            "    -- Fetch observations\n",
             "    SELECT {`observation_sql_cols`}\n",
             "    FROM observation\n",
             "    WHERE person_id = {m$selected_person}\n",
+            "    AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))\n",
             "    \n",
             "    UNION ALL\n",
             "    \n",
+            "    -- Fetch measurements\n",
             "    SELECT {`measurement_sql_cols`}\n",
             "    FROM measurement\n",
             "    WHERE person_id = {m$selected_person}\n",
+            "    AND (measurement_concept_id IN ({concepts$concept_id*}) OR measurement_source_concept_id IN ({concepts$concept_id*}))\n",
             "    \n",
             "    UNION ALL\n",
             "    \n",
+            "    -- Fetch drug exposures\n",
             "    SELECT {`drug_sql_cols`}\n",
             "    FROM drug_exposure\n",
             "    WHERE person_id = {m$selected_person}\n",
+            "    AND (drug_concept_id IN ({concepts$concept_id*}) OR drug_source_concept_id IN ({concepts$concept_id*}))\n",
             "\", .con = d$con)"
         )
     } else if (data_source == "visit_detail") {
         main_sql <- paste0(
+            "# Build comprehensive SQL query for visit detail-level data\n",
+            "# This query combines data from all OMOP tables using UNION ALL\n",
             "sql <- glue::glue_sql(\"\n",
+            "    -- Fetch procedure occurrences for specific visit detail\n",
             "    SELECT {`procedure_sql_cols`}\n",
             "    FROM procedure_occurrence\n",
             "    WHERE visit_detail_id = {m$selected_visit_detail}\n",
+            "    AND (procedure_concept_id IN ({concepts$concept_id*}) OR procedure_source_concept_id IN ({concepts$concept_id*}))\n",
             "    \n",
             "    UNION ALL\n",
             "    \n",
+            "    -- Fetch condition occurrences for specific visit detail\n",
             "    SELECT {`condition_sql_cols`}\n",
             "    FROM condition_occurrence\n",
             "    WHERE visit_detail_id = {m$selected_visit_detail}\n",
+            "    AND (condition_concept_id IN ({concepts$concept_id*}) OR condition_source_concept_id IN ({concepts$concept_id*}))\n",
             "    \n",
             "    UNION ALL\n",
             "    \n",
+            "    -- Fetch observations for specific visit detail\n",
             "    SELECT {`observation_sql_cols`}\n",
             "    FROM observation\n",
             "    WHERE visit_detail_id = {m$selected_visit_detail}\n",
+            "    AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))\n",
             "    \n",
             "    UNION ALL\n",
             "    \n",
+            "    -- Fetch measurements for specific visit detail\n",
             "    SELECT {`measurement_sql_cols`}\n",
             "    FROM measurement\n",
             "    WHERE visit_detail_id = {m$selected_visit_detail}\n",
+            "    AND (measurement_concept_id IN ({concepts$concept_id*}) OR measurement_source_concept_id IN ({concepts$concept_id*}))\n",
             "    \n",
             "    UNION ALL\n",
             "    \n",
+            "    -- Fetch drug exposures for specific visit detail\n",
             "    SELECT {`drug_sql_cols`}\n",
             "    FROM drug_exposure\n",
             "    WHERE visit_detail_id = {m$selected_visit_detail}\n",
+            "    AND (drug_concept_id IN ({concepts$concept_id*}) OR drug_source_concept_id IN ({concepts$concept_id*}))\n",
             "\", .con = d$con)"
         )
     }
     
-    # Combine all SQL parts
+    # Combine all SQL parts into final executable code
     combined_sql <- paste(
         procedure_sql_cols,
         condition_sql_cols,
         observation_sql_cols,
         measurement_sql_cols,
         drug_sql_cols,
-        "",
         main_sql,
-        "",
+        "# Execute the SQL query and convert results to tibble",
         "data <- DBI::dbGetQuery(d$con, sql)",
         sep = "\n\n"
     )
@@ -235,41 +285,48 @@ generate_plotly_sql_block <- function(data_source) {
 }
 
 # Generate data processing block for plotly timeline
+# This function processes the raw data into a format suitable for timeline visualization
 generate_plotly_data_processing_block <- function(concepts) {
     
-    # Check if Drug concepts are selected
+    # Check if Drug concepts are selected to determine if drug processing is needed
     has_drug_concepts <- any(concepts$domain_id == "Drug", na.rm = TRUE)
     
+    # Basic data filtering and processing
     processing_block <- paste0(
-        "# Filter data based on concepts selection\n",
+        "# Filter data based on concept selection criteria\n",
+        "# This allows users to filter by concept classes if specified\n",
         "if (length(input$concepts_choice_%widget_id%) > 0) {\n",
         "    if (input$concepts_choice_%widget_id% == \"selected_concept_classes\") {\n",
-        "        if (nrow(data) > 0) data <- \n",
-        "            data %>%\n",
-        "            dplyr::inner_join(d$dataset_concept %>% dplyr::select(data_concept_id = concept_id, concept_class_id), by = \"data_concept_id\") %>%\n",
-        "            dplyr::filter(concept_class_id %in% input$concept_classes_%widget_id%) %>%\n",
-        "            dplyr::select(-concept_class_id)\n",
-        "    }\n",
-        "    else if (input$concepts_choice_%widget_id% == \"selected_concepts\") {\n",
-        "        if (nrow(data) > 0) data <- data %>% dplyr::filter(data_concept_id %in% input$concepts_%widget_id%)\n",
+        "        if (nrow(data) > 0) {\n",
+        "            # Join with concept class information and filter\n",
+        "            data <- \n",
+        "                data %>%\n",
+        "                dplyr::inner_join(d$dataset_concept %>% dplyr::select(data_concept_id = concept_id, concept_class_id), by = \"data_concept_id\") %>%\n",
+        "                dplyr::filter(concept_class_id %in% input$concept_classes_%widget_id%) %>%\n",
+        "                dplyr::select(-concept_class_id)\n",
+        "        }\n",
         "    }\n",
         "}\n\n",
-        "# Join with concept information and process data\n",
+        "# Join with concept information to get human-readable names\n",
+        "# This enriches the data with concept names and type information\n",
         "data <-\n",
         "    data %>%\n",
         "    join_concepts(d$dataset_concept, c(\"data\", \"type\")) %>%\n",
-        "    # Replace NA concept_name by their concept_id\n",
+        "    # Handle cases where concept names are missing\n",
         "    dplyr::mutate(concept_name = dplyr::if_else(is.na(data_concept_name), as.character(data_concept_id), data_concept_name))\n\n"
     )
     
-    # Only add drug processing if Drug concepts are selected
+    # Add drug-specific processing if Drug concepts are selected
     if (has_drug_concepts) {
         drug_processing <- paste0(
-            "# Add drug strength information for drug_exposure data\n",
+            "# Add drug strength and dosage calculations for drug exposure data\n",
+            "# This section calculates doses, rates, and daily doses based on drug strength tables\n",
             "if (any(data$source_table == \"drug_exposure\", na.rm = TRUE)) {\n",
+            "    # Join with drug strength information from OMOP drug_strength table\n",
             "    data <- data %>%\n",
             "        dplyr::left_join(\n",
             "            d$dataset_drug_strength %>%\n",
+            "                # Get ingredient and unit concept names\n",
             "                join_concepts(d$dataset_concept, c(\"ingredient\", \"amount_unit\", \"numerator_unit\", \"denominator_unit\")) %>%\n",
             "                dplyr::select(\n",
             "                    drug_concept_id = drug_concept_id, ingredient_concept_id, ingredient_concept_name,\n",
@@ -281,32 +338,40 @@ generate_plotly_data_processing_block <- function(concepts) {
             "            copy = TRUE\n",
             "        ) %>%\n",
             "        dplyr::mutate(\n",
+            "            # Calculate total dose amount based on quantity and drug strength\n",
             "            amount = dplyr::case_when(\n",
             "                source_table == \"drug_exposure\" & !is.na(amount_value) ~ round(quantity * amount_value, 1),\n",
             "                source_table == \"drug_exposure\" & !is.na(numerator_value) ~ round(quantity * numerator_value, 1)\n",
             "            ),\n",
+            "            # Determine appropriate units for the calculated amount\n",
             "            amount_unit = dplyr::case_when(\n",
             "                source_table == \"drug_exposure\" & !is.na(amount_value) ~ amount_unit_concept_name,\n",
             "                source_table == \"drug_exposure\" & !is.na(numerator_value) ~ numerator_unit_concept_name\n",
             "            ),\n",
+            "            # Calculate duration in hours for infusion/continuous drugs\n",
             "            duration_hours = dplyr::case_when(\n",
             "                source_table == \"drug_exposure\" ~ as.numeric(difftime(end_datetime, datetime, units = \"hours\"))\n",
             "            ),\n",
+            "            # Calculate infusion rate (amount per hour)\n",
             "            rate = dplyr::case_when(\n",
             "                source_table == \"drug_exposure\" & !is.na(numerator_value) & !is.na(duration_hours) & duration_hours > 0 ~ round(amount / duration_hours, 1)\n",
             "            ),\n",
+            "            # Create rate unit label\n",
             "            rate_unit = dplyr::case_when(\n",
             "                source_table == \"drug_exposure\" & !is.na(rate) & !is.na(amount_unit) ~ paste0(amount_unit, \" per hour\")\n",
             "            ),\n",
+            "            # Calculate daily dose for non-infusion drugs\n",
             "            daily_dose = dplyr::case_when(\n",
             "                source_table == \"drug_exposure\" & is.na(rate) & !is.na(amount) & !is.na(duration_hours) & duration_hours > 0 ~ amount / duration_hours * 24\n",
             "            ),\n",
+            "            # Create daily dose unit label\n",
             "            daily_dose_unit = dplyr::case_when(\n",
             "                source_table == \"drug_exposure\" & !is.na(daily_dose) & !is.na(amount_unit) ~ paste0(amount_unit, \" per day\")\n",
             "            )\n",
             "        )\n",
             "} else {\n",
             "    # Add empty drug columns when no drug data is present\n",
+            "    # This ensures consistent data structure for downstream processing\n",
             "    data <- data %>%\n",
             "        dplyr::mutate(\n",
             "            amount = NA_real_,\n",
@@ -323,6 +388,7 @@ generate_plotly_data_processing_block <- function(concepts) {
         # Add empty drug columns when no Drug concepts are selected
         drug_processing <- paste0(
             "# Add empty drug columns since no Drug concepts are selected\n",
+            "# This ensures consistent data structure regardless of concept selection\n",
             "data <- data %>%\n",
             "    dplyr::mutate(\n",
             "        amount = NA_real_,\n",
@@ -336,26 +402,36 @@ generate_plotly_data_processing_block <- function(concepts) {
         )
     }
     
+    # Final data processing and formatting
     final_processing <- paste0(
-        "# Final data arrangement\n",
+        "# Final data arrangement and formatting\n",
+        "# Sort data chronologically by person and datetime\n",
         "data <- data %>% dplyr::arrange(person_id, datetime)\n\n",
-        "# Process concept names for display\n",
+        "# Create ordered factor levels for Y-axis display\n",
+        "# Concepts are displayed in reverse alphabetical order from bottom to top\n",
         "ordered_levels <- rev(sort(unique(data$concept_name)))\n",
         "data <- data %>% dplyr::mutate(concept_name = factor(concept_name, levels = ordered_levels))\n\n",
+        "# Create shortened labels for long concept names to improve readability\n",
         "unique_levels <- levels(data$concept_name)\n",
         "unique_labels <- ifelse(\n",
         "    nchar(unique_levels) > 22,\n",
         "    paste0(substr(unique_levels, 1, 17), \"...\"),\n",
         "    unique_levels\n",
         ")\n\n",
-        "# Set datetime format based on language\n",
-        "if (language == \"fr\") datetime_format <- \"%d-%m-%Y %H:%M\" else datetime_format <- \"%Y-%m-%d %H:%M\""
+        "# Set datetime display format\n",
+        "# Format dates according to locale preferences\n",
+        if (language == "fr") {
+            "datetime_format <- \"%d/%m/%Y %H:%M\"\n"
+        } else {
+            "datetime_format <- \"%Y-%m-%d %H:%M\"\n"
+        }
     )
     
     return(paste0(processing_block, drug_processing, final_processing))
 }
 
-# Define colors for each OMOP data type
+# Define color scheme for different OMOP data types
+# Each data type gets a distinct color for easy identification
 define_omop_colors <- function() {
     colors <- list(
         "measurement" = "#619CFF",      # Blue - for laboratory measurements
@@ -367,27 +443,30 @@ define_omop_colors <- function() {
     return(colors)
 }
 
-# Get color based on source table type
+# Get appropriate color based on OMOP source table type
 get_color_by_source <- function(source_table) {
     colors <- define_omop_colors()
     return(colors[[source_table]])
 }
 
 # Generate plotly chart visualization code block with color coding
+# This creates the interactive timeline visualization with hover information
 generate_plotly_chart_block <- function(synchronize_timelines) {
     
     chart_block <- paste0(
+        "# Create plotly timeline visualization\n",
         "if (nrow(data) > 0) {\n",
-        "    # Define colors for each OMOP data type (ggplot2 classic palette)\n",
+        "    # Define color palette for different OMOP data types\n",
+        "    # Uses ggplot2 classic color palette for consistency\n",
         "    omop_colors <- list(\n",
-        "        \"measurement\" = \"#619CFF\",      # Blue\n",
-        "        \"drug_exposure\" = \"#F8766D\",    # Red/Coral\n",
-        "        \"procedure\" = \"#00BA38\",        # Green\n",
-        "        \"condition\" = \"#FF8C42\",        # Orange\n",
-        "        \"observation\" = \"#C77CFF\"       # Purple\n",
+        "        \"measurement\" = \"#619CFF\",      # Blue for measurements\n",
+        "        \"drug_exposure\" = \"#F8766D\",    # Red/Coral for medications\n",
+        "        \"procedure\" = \"#00BA38\",        # Green for procedures\n",
+        "        \"condition\" = \"#FF8C42\",        # Orange for conditions\n",
+        "        \"observation\" = \"#C77CFF\"       # Purple for observations\n",
         "    )\n",
         "    \n",
-        "    # Add color column based on source table type\n",
+        "    # Assign colors to data points based on their source table\n",
         "    data <- data %>%\n",
         "        dplyr::mutate(\n",
         "            color = dplyr::case_when(\n",
@@ -400,9 +479,11 @@ generate_plotly_chart_block <- function(synchronize_timelines) {
         "            )\n",
         "        )\n",
         "    \n",
+        "    # Initialize plotly object with data source for event handling\n",
         "    fig <- plotly::plot_ly(data = data, source = \"plotly_%widget_id%\")\n",
         "    \n",
-        "    # Add segments for events with duration (end_datetime > datetime)\n",
+        "    # Add line segments for events that have duration (end_datetime > datetime)\n",
+        "    # These represent ongoing events like medication infusions or conditions\n",
         "    fig <- fig %>%\n",
         "        plotly::add_segments(\n",
         "            data = subset(data, end_datetime > datetime),\n",
@@ -411,14 +492,16 @@ generate_plotly_chart_block <- function(synchronize_timelines) {
         "            y = ~as.numeric(concept_name),\n",
         "            yend = ~as.numeric(concept_name),\n",
         "            line = list(color = ~color, width = 5),\n",
+        "            # Create comprehensive hover text with relevant information\n",
         "            text = ~paste0(\n",
         "                \"<b style='color:white'>\", concept_name, \"</b><br>\",\n",
         "                \"<span style='color:white'>\", i18np$t(\"start\"), \" : \", format(datetime, datetime_format), \"</span><br>\",\n",
         "                \"<span style='color:white'>\", i18np$t(\"end\"), \" : \", format(end_datetime, datetime_format), \"</span><br>\",\n",
+        "                # Add section headers based on data type\n",
         "                ifelse(source_table == \"drug_exposure\", paste0(\"<br><b style='color:white'>\", i18np$t(\"dosage\"), \"</b><br>\"), \n",
         "                       ifelse(source_table == \"measurement\", paste0(\"<br><b style='color:white'>\", i18np$t(\"measurement\"), \"</b><br>\"), \n",
         "                              ifelse(source_table == \"observation\", paste0(\"<br><b style='color:white'>\", i18np$t(\"observation\"), \"</b><br>\"), \"<br>\"))),\n",
-        "                # Add drug-specific information when available\n",
+        "                # Add drug-specific dosage information when available\n",
         "                ifelse(source_table == \"drug_exposure\" & !is.na(amount), \n",
         "                       paste0(\"<span style='color:white'>\", i18np$t(\"dose\"), \" : \", amount, \" \", ifelse(is.na(amount_unit), \"\", amount_unit), \"</span><br>\"), \"\"),\n",
         "                ifelse(source_table == \"drug_exposure\" & !is.na(rate), \n",
@@ -427,24 +510,28 @@ generate_plotly_chart_block <- function(synchronize_timelines) {
         "                       paste0(\"<span style='color:white'>\", i18np$t(\"daily_dose\"), \" : \", daily_dose, \" \", ifelse(is.na(daily_dose_unit), \"\", daily_dose_unit), \"</span><br>\"), \"\"),\n",
         "                ifelse(source_table == \"drug_exposure\" & !is.na(duration_hours), \n",
         "                       paste0(\"<span style='color:white'>\", i18np$t(\"duration\"), \" : \", round(duration_hours, 1), \" \", i18np$t(\"hours\"), \"</span><br>\"), \"\"),\n",
-        "                # Add measurement/observation values\n",
+        "                # Add measurement and observation values\n",
         "                ifelse(!is.na(value_as_number), paste0(\"<span style='color:white'>\", i18np$t(\"value\"), \" : \", value_as_number, \"</span><br>\"), \"\"),\n",
         "                ifelse(!is.na(value_as_string) & value_as_string != \"\", paste0(\"<span style='color:white'>\", i18np$t(\"result\"), \" : \", value_as_string, \"</span><br>\"), \"\"),\n",
         "                # Add quantity for procedures\n",
         "                ifelse(!is.na(quantity) & source_table != \"drug_exposure\", paste0(\"<span style='color:white'>\", i18np$t(\"quantity\"), \" : \", quantity, \"</span><br>\"), \"\"),\n",
+        "                # Add source table information\n",
         "                \"<br><i style='color:white'>\", i18np$t(paste0(\"source_\", source_table)), \"</i>\"\n",
         "            ),\n",
         "            hoverinfo = \"text\"\n",
         "        ) %>%\n",
         "        # Add markers for point events (end_datetime == datetime or NA)\n",
+        "        # These represent instantaneous events like single measurements or procedures\n",
         "        plotly::add_markers(\n",
         "            data = subset(data, end_datetime == datetime | is.na(end_datetime)),\n",
         "            x = ~datetime,\n",
         "            y = ~as.numeric(concept_name),\n",
         "            marker = list(color = ~color, size = 10),\n",
+        "            # Create hover text for point events\n",
         "            text = ~paste0(\n",
         "                \"<b style='color:white'>\", concept_name, \"</b><br>\",\n",
         "                \"<span style='color:white'>\", i18np$t(\"datetime\"), \" : \", format(datetime, datetime_format), \"</span><br>\",\n",
+        "                # Add section headers based on data type\n",
         "                ifelse(source_table == \"drug_exposure\", paste0(\"<br><b style='color:white'>\", i18np$t(\"administration\"), \"</b><br>\"), \n",
         "                       ifelse(source_table == \"measurement\", paste0(\"<br><b style='color:white'>\", i18np$t(\"measurement\"), \"</b><br>\"), \n",
         "                              ifelse(source_table == \"observation\", paste0(\"<br><b style='color:white'>\", i18np$t(\"observation\"), \"</b><br>\"), \"<br>\"))),\n",
@@ -453,19 +540,21 @@ generate_plotly_chart_block <- function(synchronize_timelines) {
         "                       paste0(\"<span style='color:white'>\", i18np$t(\"dose\"), \" : \", amount, \" \", ifelse(is.na(amount_unit), \"\", amount_unit), \"</span><br>\"), \"\"),\n",
         "                ifelse(source_table == \"drug_exposure\" & !is.na(rate), \n",
         "                       paste0(\"<span style='color:white'>\", i18np$t(\"rate\"), \" : \", rate, \" \", ifelse(is.na(rate_unit), \"\", rate_unit), \"</span><br>\"), \"\"),\n",
-        "                # Add measurement/observation values\n",
+        "                # Add measurement and observation values\n",
         "                ifelse(!is.na(value_as_number), paste0(\"<span style='color:white'>\", i18np$t(\"value\"), \" : \", value_as_number, \"</span><br>\"), \"\"),\n",
         "                ifelse(!is.na(value_as_string) & value_as_string != \"\", paste0(\"<span style='color:white'>\", i18np$t(\"result\"), \" : \", value_as_string, \"</span><br>\"), \"\"),\n",
         "                # Add quantity for procedures\n",
         "                ifelse(!is.na(quantity) & source_table != \"drug_exposure\", paste0(\"<span style='color:white'>\", i18np$t(\"quantity\"), \" : \", quantity, \"</span><br>\"), \"\"),\n",
+        "                # Add source table information\n",
         "                \"<br><i style='color:white'>\", i18np$t(paste0(\"source_\", source_table)), \"</i>\"\n",
         "            ),\n",
         "            hoverinfo = \"text\"\n",
         "        )\n",
         "    \n",
-        "    # Configure plot layout\n",
+        "    # Configure plot layout and appearance\n",
         "    fig <- fig %>%\n",
         "        plotly::layout(\n",
+        "            # Configure X-axis (time axis)\n",
         "            xaxis = list(\n",
         "                type = \"date\",\n",
         "                tickmode = \"auto\",\n",
@@ -473,11 +562,13 @@ generate_plotly_chart_block <- function(synchronize_timelines) {
         "                nticks = 10,\n",
         "                tickfont = list(size = 10),\n",
         "                tickformat = datetime_format,\n",
+        "                # Set initial date range for the chart\n",
         "                range = c(\n",
         "                    format(datetimes[[1]], \"%Y-%m-%d %H:%M:%S\"),\n",
         "                    format(datetimes[[2]], \"%Y-%m-%d %H:%M:%S\")\n",
         "                )\n",
         "            ),\n",
+        "            # Configure Y-axis (concept names)\n",
         "            yaxis = list(\n",
         "                tickvals = seq_along(unique_levels),\n",
         "                ticktext = unique_labels,\n",
@@ -485,103 +576,20 @@ generate_plotly_chart_block <- function(synchronize_timelines) {
         "                tickfont = list(family = \"Courier New\", size = 11),\n",
         "                automargin = FALSE\n",
         "            ),\n",
+        "            # Configure hover labels\n",
         "            hoverlabel = list(align = \"left\"),\n",
+        "            # Set margins for proper label display\n",
         "            margin = list(l = 145, r = 0, t = 0, b = 0),\n",
+        "            # Hide legend since colors are self-explanatory\n",
         "            showlegend = FALSE\n",
         "        ) %>%\n",
+        "        # Disable mode bar and register relayout events for timeline sync\n",
         "        plotly::config(displayModeBar = FALSE) %>%\n",
         "        plotly::event_register(\"plotly_relayout\")\n",
-        "}"
+        "}\n\n",
+        "# Return the configured plotly figure\n",
+        "fig"
     )
     
     return(chart_block)
 }
-
-# ======================================
-# PLOTLY TIMELINE SYNCHRONIZATION
-# ======================================
-
-# Adjust plotly padding when timeline synchronization is toggled
-observe_event(input$synchronize_timelines_%widget_id%, {
-    
-    # Only apply padding adjustments for plotly
-    chart_type <- if (length(input$chart_type_%widget_id%) > 0) {
-        input$chart_type_%widget_id%
-    } else {
-        "dygraphs"
-    }
-    
-    if (chart_type == "plotly") {
-        if (input$synchronize_timelines_%widget_id%) {
-            # Add left padding to align with synchronized timeline
-            shinyjs::runjs(sprintf(
-                "document.getElementById('%s').style.paddingLeft = '80px';",
-                ns("plotly_%widget_id%")
-            ))
-        } else {
-            # Remove padding when synchronization is disabled
-            shinyjs::runjs(sprintf(
-                "document.getElementById('%s').style.paddingLeft = '0px';",
-                ns("plotly_%widget_id%")
-            ))
-        }
-    }
-})
-
-# Monitor plotly relayout events for timeline synchronization
-observe_event(plotly::event_data("plotly_relayout", source = "plotly_%widget_id%"), {
-    
-    # Only process if timeline synchronization is enabled
-    if (!input$synchronize_timelines_%widget_id%) return()
-    
-    relayout_data <- plotly::event_data("plotly_relayout", source = "plotly_%widget_id%")
-    
-    if (!is.null(relayout_data) && is.list(relayout_data)) {
-        
-        if ("xaxis.autorange" %in% names(relayout_data) && relayout_data[["xaxis.autorange"]]) {
-            # Auto-range was selected, use full data range
-            if (length(m$data_datetimes_range_%widget_id%) > 0) {
-                m$datetimes_timeline_%tab_id%(m$data_datetimes_range_%widget_id%)
-            }
-        } else if ("xaxis.range[0]" %in% names(relayout_data) && "xaxis.range[1]" %in% names(relayout_data)) {
-            # Manual range selection
-            selected_min <- lubridate::force_tz(
-                as.POSIXct(relayout_data[["xaxis.range[0]"]], origin = "1970-01-01"), 
-                tzone = "UTC"
-            )
-            selected_max <- lubridate::force_tz(
-                as.POSIXct(relayout_data[["xaxis.range[1]"]], origin = "1970-01-01"), 
-                tzone = "UTC"
-            )
-            m$datetimes_timeline_%tab_id%(c(selected_min, selected_max))
-        }
-    }
-})
-
-# Listen for timeline changes from other synchronized widgets (plotly version)
-observe_event(m$debounced_datetimes_timeline_%tab_id%(), {
-    
-    # Only process if synchronization is enabled and data is available
-    if (!input$synchronize_timelines_%widget_id% || 
-        length(m$debounced_datetimes_timeline_%tab_id%()) == 0 || 
-        length(m$datetimes_%widget_id%) == 0) {
-        return()
-    }
-    
-    # Check for significant timeline changes
-    # Calculate time difference between current and synchronized timelines
-    time_diff_start <- abs(
-        as.numeric(m$debounced_datetimes_timeline_%tab_id%()[[1]]) - 
-        as.numeric(m$datetimes_%widget_id%[[1]])
-    )
-    time_diff_end <- abs(
-        as.numeric(m$debounced_datetimes_timeline_%tab_id%()[[2]]) - 
-        as.numeric(m$datetimes_%widget_id%[[2]])
-    )
-    
-    # Trigger code re-execution if timeline has changed significantly (>5 seconds)
-    if (time_diff_start > 5 || time_diff_end > 5) {
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-    }
-    
-}, ignoreInit = TRUE)

@@ -188,6 +188,14 @@ if (nrow(side_by_side_result) > 0) {
     }
 }
 
+if (!side_by_side){
+    shinyjs::delay(1000, {
+        shinyjs::show("figure_button_div_%widget_id%")
+        shinyjs::hide("resizer_%widget_id%")
+        shinyjs::hide("figure_settings_code_div_%widget_id%")
+    })
+}
+
 # Initialize the layout state in JavaScript
 shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-figure_and_settings_side_by_side_%widget_id%', ", tolower(side_by_side), ");"))
 

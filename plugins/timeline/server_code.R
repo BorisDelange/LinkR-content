@@ -24,9 +24,6 @@ code <- list()
 # Delay ensures DOM is fully loaded before triggering resize
 shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.dispatchEvent(event);"))
 
-# Auto-execute code when widget first loads to show initial chart
-shinyjs::delay(1000, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random());")))
-
 # ======================================
 # CODE EDITOR KEYBOARD SHORTCUTS
 # ======================================
@@ -361,3 +358,106 @@ observe_event(input$run_code_%widget_id%, {
         }
     }
 })
+
+# ======================================
+# TIMELINE SYNCHRONIZATION SYSTEM
+# ======================================
+
+# Initialize timeline variables if they don't exist
+if (length(m$datetimes_timeline_%tab_id%) == 0) {
+    # Main timeline reactive value
+    m$datetimes_timeline_%tab_id% <- reactiveVal()
+    
+    # Debounced version to prevent excessive updates
+    m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
+}
+
+# Adjust chart padding when timeline synchronization is toggled
+observe_event(input$synchronize_timelines_%widget_id%, {
+    
+    # Get current chart type to apply padding to correct container
+    chart_type <- if (length(input$chart_type_%widget_id%) > 0) {
+        input$chart_type_%widget_id%
+    } else {
+        "dygraphs"
+    }
+    
+    if (input$synchronize_timelines_%widget_id%) {
+        # Add left padding to align with synchronized timeline
+        if (chart_type == "dygraphs") {
+            shinyjs::runjs(sprintf(
+                "document.getElementById('%s').style.paddingLeft = '80px'; var event = new Event('resize'); window.dispatchEvent(event);",
+                ns("dygraph_div_%widget_id%")
+            ))
+        }
+    } else {
+        # Remove padding when synchronization is disabled
+        if (chart_type == "dygraphs") {
+            shinyjs::runjs(sprintf(
+                "document.getElementById('%s').style.paddingLeft = '0px'; var event = new Event('resize'); window.dispatchEvent(event);",
+                ns("dygraph_div_%widget_id%")
+            ))
+        }
+    }
+})
+
+# Monitor dygraph date window changes and broadcast to other widgets
+observe_event(input$dygraph_%widget_id%_date_window, {
+    
+    # Only process if timeline synchronization is enabled
+    if (!input$synchronize_timelines_%widget_id%) return()
+    
+    # Convert date window from JavaScript format to R POSIXct
+    datetime_values <- as.POSIXct(
+        input$dygraph_%widget_id%_date_window, 
+        format = "%Y-%m-%dT%H:%M:%OSZ", 
+        tz = "UTC"
+    )
+    
+    # Update the shared timeline reactive value
+    m$datetimes_timeline_%tab_id%(datetime_values)
+})
+
+# Monitor plotly relayout events for timeline synchronization
+observe_event(plotly::event_data("plotly_relayout", source = "plotly_%widget_id%"), {
+    
+    # Only process if timeline synchronization is enabled
+    if (!input$synchronize_timelines_%widget_id%) return()
+    
+    relayout_data <- plotly::event_data("plotly_relayout", source = "plotly_%widget_id%")
+    
+    if (!is.null(relayout_data) && is.list(relayout_data)) {
+        
+        if ("xaxis.autorange" %in% names(relayout_data) && relayout_data[["xaxis.autorange"]]) {
+            # Auto-range was selected, use full data range
+            if (length(m$data_datetimes_range_%widget_id%) > 0) {
+                m$datetimes_timeline_%tab_id%(m$data_datetimes_range_%widget_id%)
+            }
+        } else if ("xaxis.range[0]" %in% names(relayout_data) && "xaxis.range[1]" %in% names(relayout_data)) {
+            # Manual range selection
+            selected_min <- lubridate::force_tz(
+                as.POSIXct(relayout_data[["xaxis.range[0]"]], origin = "1970-01-01"), 
+                tzone = "UTC"
+            )
+            selected_max <- lubridate::force_tz(
+                as.POSIXct(relayout_data[["xaxis.range[1]"]], origin = "1970-01-01"), 
+                tzone = "UTC"
+            )
+            m$datetimes_timeline_%tab_id%(c(selected_min, selected_max))
+        }
+    }
+})
+
+# Listen for timeline changes from other synchronized widgets
+observe_event(m$debounced_datetimes_timeline_%tab_id%(), {
+    
+    # Only process if synchronization is enabled and data is available
+    if (!input$synchronize_timelines_%widget_id% || 
+        length(m$debounced_datetimes_timeline_%tab_id%()) == 0 || 
+        length(m$datetimes_%widget_id%) == 0) {
+        return()
+    }
+    
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    
+}, ignoreInit = TRUE)
