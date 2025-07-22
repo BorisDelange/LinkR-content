@@ -64,11 +64,11 @@ if ("projects_widgets_console" %in% user_accesses) {
 
 # Save buttons - only shown if user has settings access permissions
 if ("projects_widgets_settings" %in% user_accesses) {
-   # Save figure settings and code button
-   save_figure_settings_buttons <- shiny.fluent::IconButton.shinyInput(
+   # Save output settings and code button
+   save_output_settings_buttons <- shiny.fluent::IconButton.shinyInput(
        ns("save_params_and_code_%widget_id%"), 
        iconProps = list(iconName = "Save"), 
-       title = i18np$t("save_figure_settings_and_code"), 
+       title = i18np$t("save_output_settings_and_code"), 
        style = "margin: 0"
    )
    
@@ -80,7 +80,7 @@ if ("projects_widgets_settings" %in% user_accesses) {
        style = "margin: 0"
    )
 } else {
-   save_figure_settings_buttons <- ""
+   save_output_settings_buttons <- ""
    save_general_settings_button <- ""   
 }
 
@@ -128,30 +128,30 @@ tagList(
        # TOP NAVIGATION BAR
        # ====================
        div(
-           # Hidden figure button (shown conditionally via JavaScript)
+           # Hidden output button (shown conditionally via JavaScript)
            shinyjs::hidden(
                div(
-                   id = ns("figure_button_div_%widget_id%"),
+                   id = ns("output_button_div_%widget_id%"),
                    shiny.fluent::IconButton.shinyInput(
-                       ns("figure_button_%widget_id%"), 
+                       ns("output_button_%widget_id%"), 
                        iconProps = list(iconName = "BarChart4"), 
-                       title = i18np$t("show_figure"),
+                       title = i18np$t("show_output"),
                        onClick = htmlwidgets::JS(paste0("item => {",
                            "Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());",
-                           "Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'figure');",
+                           "Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'output');",
                        "}"))
                    )
                )
            ),
            
-           # Figure settings button
+           # Output settings button
            shiny.fluent::IconButton.shinyInput(
-               ns("figure_settings_button_%widget_id%"), 
+               ns("output_settings_button_%widget_id%"), 
                iconProps = list(iconName = "AllApps"), 
-               title = i18np$t("show_figure_settings"),
+               title = i18np$t("show_output_settings"),
                onClick = htmlwidgets::JS(paste0("item => {",
                    "Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());",
-                   "Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'figure_settings');",
+                   "Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'output_settings');",
                "}"))
            ),
            
@@ -162,7 +162,7 @@ tagList(
            shiny.fluent::IconButton.shinyInput(
                ns("side_by_side_button_%widget_id%"), 
                iconProps = list(iconName = "DockLeft"), 
-               title = i18np$t("figure_and_settings_side_by_side")
+               title = i18np$t("output_and_settings_side_by_side")
            ),
            
            # User configurations UI
@@ -219,12 +219,12 @@ tagList(
        # ====================
        
        div(
-           id = ns("figure_settings_code_div_%widget_id%"),
+           id = ns("output_settings_code_div_%widget_id%"),
            
-           # Figure display area (left panel)
+           # Output display area (left panel)
            div(
-               id = ns("figure_div_%widget_id%"),
-               %import_script('ui_figure.R')%,
+               id = ns("output_div_%widget_id%"),
+               %import_script('ui_output.R')%,
                style = "height: 100%; flex: 1; box-sizing: border-box; min-width: 50px;",
                class = "left-panel"
            ),
@@ -241,10 +241,10 @@ tagList(
                id = ns("settings_container_%widget_id%"),
                style = "height: 100%; display: flex; flex: 0 0 20%; box-sizing: border-box;",
                
-               # Figure settings panel
+               # Output settings panel
                div(
-                   id = ns("figure_settings_div_%widget_id%"),
-                   %import_script('ui_figure_settings.R')%,
+                   id = ns("output_settings_div_%widget_id%"),
+                   %import_script('ui_output_settings.R')%,
                    style = "height: 100%; padding: 0 8px; overflow: auto; flex: 1; box-sizing: border-box;"
                ),
                
@@ -260,18 +260,18 @@ tagList(
                
                # Right sidebar with action buttons
                div(
-                   id = ns("figure_settings_code_sidenav_%widget_id%"),
+                   id = ns("output_settings_code_sidenav_%widget_id%"),
                    
-                   # Display figure button
+                   # Display output button
                    shiny.fluent::IconButton.shinyInput(
-                       ns("display_figure_%widget_id%"), 
+                       ns("display_output_%widget_id%"), 
                        iconProps = list(iconName = "Play"), 
-                       title = i18np$t("display_figure"), 
+                       title = i18np$t("display_output"), 
                        style = "margin: 0"
                    ),
                    
-                   # Save figure settings button (conditional)
-                   save_figure_settings_buttons,
+                   # Save output settings button (conditional)
+                   save_output_settings_buttons,
                    
                    # Sidebar styling
                    class = "widget_icon",

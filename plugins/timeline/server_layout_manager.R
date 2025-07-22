@@ -35,31 +35,31 @@ panel_layout_manager <- paste0("
     // Global function to set panel widths based on current active tab
     window.setPanelWidths_%widget_id% = function() {
         var currentTab = Shiny.shinyapp.$inputValues['", id, "-current_tab_%widget_id%'];
-        var figureDiv = $('#", id, "-figure_div_%widget_id%');
+        var outputDiv = $('#", id, "-output_div_%widget_id%');
         var settingsContainer = $('#", id, "-settings_container_%widget_id%');
-        var figureSettingsDiv = $('#", id, "-figure_settings_div_%widget_id%');
+        var outputSettingsDiv = $('#", id, "-output_settings_div_%widget_id%');
         var codeDiv = $('#", id, "-code_div_%widget_id%');
         
         // Only apply panel sizing in side-by-side mode
-        var sideBySide = Shiny.shinyapp.$inputValues['", id, "-figure_and_settings_side_by_side_%widget_id%'];
+        var sideBySide = Shiny.shinyapp.$inputValues['", id, "-output_and_settings_side_by_side_%widget_id%'];
         if (!sideBySide) return;
         
         if (currentTab === 'code') {
-            // Code mode: Figure panel + Code editor side by side
-            figureDiv.css('flex', '1');  // Figure takes remaining space
+            // Code mode: Output panel + Code editor side by side
+            outputDiv.css('flex', '1');  // Output takes remaining space
             settingsContainer.css('flex', '0 0 ' + window.panelMemory_%widget_id%.code);
             
             // Show code editor, hide settings panel
-            figureSettingsDiv.hide();
+            outputSettingsDiv.hide();
             codeDiv.show().css('flex', '1');
             
-        } else if (currentTab === 'figure_settings') {
-            // Settings mode: Figure panel + Settings panel side by side
-            figureDiv.css('flex', '1');  // Figure takes remaining space
+        } else if (currentTab === 'output_settings') {
+            // Settings mode: Output panel + Settings panel side by side
+            outputDiv.css('flex', '1');  // Output takes remaining space
             settingsContainer.css('flex', '0 0 ' + window.panelMemory_%widget_id%.settings);
             
             // Show settings panel, hide code editor
-            figureSettingsDiv.show().css('flex', '1');
+            outputSettingsDiv.show().css('flex', '1');
             codeDiv.hide();
         }
     };
@@ -87,12 +87,12 @@ panel_layout_manager <- paste0("
     
     // Initialize drag-to-resize functionality (only once per widget)
     if (!window.resizingInitialized_%widget_id%) {
-        var container = document.getElementById('", id, "-figure_settings_code_div_%widget_id%');
+        var container = document.getElementById('", id, "-output_settings_code_div_%widget_id%');
         var isResizing = false;
         var lastDownX = 0;
         
         // Get references to panels and resizer handle
-        var leftPanel = container.querySelector('.left-panel');  // Figure panel
+        var leftPanel = container.querySelector('.left-panel');  // Output panel
         var settingsContainer = document.getElementById('", id, "-settings_container_%widget_id%');
         var resizer = container.querySelector('.resizer');  // Drag handle
         
@@ -135,7 +135,7 @@ panel_layout_manager <- paste0("
                 if (currentTab === 'code') {
                     window.panelMemory_%widget_id%.code = rightPercent + '%';
                     console.log('Saved code panel width:', rightPercent + '%');
-                } else if (currentTab === 'figure_settings') {
+                } else if (currentTab === 'output_settings') {
                     window.panelMemory_%widget_id%.settings = rightPercent + '%';
                     console.log('Saved settings panel width:', rightPercent + '%');
                 }
@@ -156,7 +156,7 @@ panel_layout_manager <- paste0("
             var currentTab = Shiny.shinyapp.$inputValues['", id, "-current_tab_%widget_id%'];
             if (currentTab === 'code') {
                 console.log('Final code panel width saved:', window.panelMemory_%widget_id%.code);
-            } else if (currentTab === 'figure_settings') {
+            } else if (currentTab === 'output_settings') {
                 console.log('Final settings panel width saved:', window.panelMemory_%widget_id%.settings);
             }
         }
@@ -174,7 +174,7 @@ panel_layout_manager <- paste0("
 sql <- glue::glue_sql(
     "SELECT value_num 
      FROM widgets_options 
-     WHERE widget_id = %widget_id% AND category = 'general_settings' AND name = 'figure_and_settings_side_by_side'", 
+     WHERE widget_id = %widget_id% AND category = 'general_settings' AND name = 'output_and_settings_side_by_side'", 
     .con = m$db
 )
 side_by_side_result <- DBI::dbGetQuery(m$db, sql)
@@ -190,14 +190,14 @@ if (nrow(side_by_side_result) > 0) {
 
 if (!side_by_side){
     shinyjs::delay(1000, {
-        shinyjs::show("figure_button_div_%widget_id%")
+        shinyjs::show("output_button_div_%widget_id%")
         shinyjs::hide("resizer_%widget_id%")
-        shinyjs::hide("figure_settings_code_div_%widget_id%")
+        shinyjs::hide("output_settings_code_div_%widget_id%")
     })
 }
 
 # Initialize the layout state in JavaScript
-shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-figure_and_settings_side_by_side_%widget_id%', ", tolower(side_by_side), ");"))
+shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-output_and_settings_side_by_side_%widget_id%', ", tolower(side_by_side), ");"))
 
 # Initialize the panel layout system with a slight delay to ensure DOM is ready
 shinyjs::delay(100, shinyjs::runjs(panel_layout_manager))
@@ -215,13 +215,13 @@ observe_event(input$side_by_side_button_%widget_id%, {
     
     # Get current state and toggle it
     current_side_by_side <- TRUE
-    if (length(input$figure_and_settings_side_by_side_%widget_id%) > 0) {
-        current_side_by_side <- input$figure_and_settings_side_by_side_%widget_id%
+    if (length(input$output_and_settings_side_by_side_%widget_id%) > 0) {
+        current_side_by_side <- input$output_and_settings_side_by_side_%widget_id%
     }
     new_side_by_side <- !current_side_by_side
     
     # Update the JavaScript state
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-figure_and_settings_side_by_side_%widget_id%', ", tolower(new_side_by_side), ");"))
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-output_and_settings_side_by_side_%widget_id%', ", tolower(new_side_by_side), ");"))
     
     # ==========================================
     # HANDLE TAB SWITCHING LOGIC
@@ -229,13 +229,13 @@ observe_event(input$side_by_side_button_%widget_id%, {
     
     # When enabling side-by-side mode, switch to appropriate tab
     if (length(input$current_tab_%widget_id%) == 0 ||
-        (input$current_tab_%widget_id% == "figure" && new_side_by_side)) {
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'figure_settings');"))
+        (input$current_tab_%widget_id% == "output" && new_side_by_side)) {
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'output_settings');"))
     }
     
-    # When disabling side-by-side mode, switch to figure-only view
+    # When disabling side-by-side mode, switch to output-only view
     if (!new_side_by_side) {
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'figure');"))
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'output');"))
     }
     
     # Trigger tab change event to update UI
@@ -248,7 +248,7 @@ observe_event(input$side_by_side_button_%widget_id%, {
     if (new_side_by_side) {
         # Enable side-by-side mode
         shinyjs::runjs(panel_layout_manager)  # Reinitialize the layout system
-        shinyjs::hide("figure_button_div_%widget_id%")  # Hide figure button (not needed in side-by-side)
+        shinyjs::hide("output_button_div_%widget_id%")  # Hide output button (not needed in side-by-side)
         shinyjs::show("resizer_%widget_id%")  # Show drag-to-resize handle
         
         # Force application of correct panel widths after a short delay
@@ -256,7 +256,7 @@ observe_event(input$side_by_side_button_%widget_id%, {
         
     } else {
         # Enable full-width mode
-        shinyjs::show("figure_button_div_%widget_id%")  # Show figure button for navigation
+        shinyjs::show("output_button_div_%widget_id%")  # Show output button for navigation
         shinyjs::hide("resizer_%widget_id%")  # Hide resize handle (not needed in full-width)
     }
     
@@ -269,7 +269,7 @@ observe_event(input$side_by_side_button_%widget_id%, {
         m$db, 
         glue::glue_sql(
             "DELETE FROM widgets_options 
-             WHERE widget_id = %widget_id% AND category = 'general_settings' AND name = 'figure_and_settings_side_by_side'", 
+             WHERE widget_id = %widget_id% AND category = 'general_settings' AND name = 'output_and_settings_side_by_side'", 
             .con = m$db
         )
     )
@@ -281,7 +281,7 @@ observe_event(input$side_by_side_button_%widget_id%, {
         person_id = NA_integer_,
         link_id = NA_integer_,
         category = "general_settings",
-        name = "figure_and_settings_side_by_side",
+        name = "output_and_settings_side_by_side",
         value = NA_character_,
         value_num = as.integer(new_side_by_side),  # Store as 1 (TRUE) or 0 (FALSE)
         creator_id = m$user_id,

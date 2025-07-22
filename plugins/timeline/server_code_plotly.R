@@ -14,15 +14,15 @@
 # PLOTLY CODE GENERATION
 # ======================================
 
-# Generate plotly specific figure code
+# Generate plotly specific output code
 # This function creates the complete code for a plotly timeline visualization
-generate_plotly_figure_code <- function(data_source, concepts, synchronize_timelines) {
+generate_plotly_output_code_%widget_id% <- function(data_source, concepts, synchronize_timelines) {
     
     # Initialize code blocks list to store different sections of generated code
     code <- list()
     
     # Build concepts table - creates a table with selected medical concepts
-    code$block_1 <- generate_concepts_block(concepts)
+    code$block_1 <- generate_concepts_block_%widget_id%(concepts)
     
     # Initialize data structures for plotly visualization
     # Creates empty containers for the data and date ranges
@@ -34,17 +34,17 @@ generate_plotly_figure_code <- function(data_source, concepts, synchronize_timel
     
     # Build SQL query for all OMOP tables
     # Creates complex SQL to fetch data from multiple OMOP CDM tables
-    code$block_3 <- generate_plotly_sql_block(data_source)
+    code$block_3 <- generate_plotly_sql_block_%widget_id%(data_source)
     
     # Date range processing - determines the time window for visualization
-    code$block_4 <- generate_date_range_block(data_source, synchronize_timelines)
+    code$block_4 <- generate_date_range_block_%widget_id%(data_source, synchronize_timelines)
     
     # Data processing for plotly timeline
     # Processes raw data into format suitable for timeline visualization
-    code$block_5 <- generate_plotly_data_processing_block(concepts)
+    code$block_5 <- generate_plotly_data_processing_block_%widget_id%(concepts)
     
     # Chart generation - creates the actual plotly visualization
-    code$block_6 <- generate_plotly_chart_block(synchronize_timelines)
+    code$block_6 <- generate_plotly_chart_block_%widget_id%(synchronize_timelines)
     
     # Combine all blocks into final executable code
     final_code <- paste(code, collapse = "\n\n")
@@ -54,7 +54,7 @@ generate_plotly_figure_code <- function(data_source, concepts, synchronize_timel
 
 # Generate SQL query for plotly (all OMOP data types)
 # This function creates a comprehensive SQL query that fetches data from all OMOP tables
-generate_plotly_sql_block <- function(data_source) {
+generate_plotly_sql_block_%widget_id% <- function(data_source) {
     
     # Define OMOP version handling for procedure columns
     # Different OMOP versions have different column names for procedure end dates
@@ -292,7 +292,7 @@ generate_plotly_sql_block <- function(data_source) {
 
 # Generate data processing block for plotly timeline
 # This function processes the raw data into a format suitable for timeline visualization
-generate_plotly_data_processing_block <- function(concepts) {
+generate_plotly_data_processing_block_%widget_id% <- function(concepts) {
     
     # Check if Drug concepts are selected to determine if drug processing is needed
     has_drug_concepts <- any(concepts$domain_id == "Drug", na.rm = TRUE)
@@ -460,7 +460,7 @@ get_color_by_source <- function(source_table) {
 
 # Generate plotly chart visualization code block with color coding
 # This creates the interactive timeline visualization with hover information
-generate_plotly_chart_block <- function(synchronize_timelines) {
+generate_plotly_chart_block_%widget_id% <- function(synchronize_timelines) {
     
     chart_block <- paste0(
         "# Create plotly timeline visualization\n",
@@ -620,7 +620,7 @@ generate_plotly_chart_block <- function(synchronize_timelines) {
         "        plotly::config(displayModeBar = FALSE) %>%\n",
         "        plotly::event_register(\"plotly_relayout\")\n",
         "}\n\n",
-        "# Return the configured plotly figure\n",
+        "# Return the configured plotly output\n",
         "fig"
     )
     

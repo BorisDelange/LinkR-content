@@ -1,13 +1,11 @@
 # ==========================================
-# server_figure_settings.R - Figure Settings Logic
+# server_output_settings.R - Output Settings Logic
 # ==========================================
 # 
-# Manages figure settings including loading/saving from user configurations,
+# Manages output settings including loading/saving from user configurations,
 # timeline synchronization, chart type management, and settings persistence
 # Smart defaults based on concept selection and saved configurations
 #
-# ==========================================
-
 # ======================================
 # DYNAMIC UI UPDATES BASED ON SELECTIONS
 # ======================================
@@ -228,38 +226,38 @@ apply_smart_defaults <- function(concepts_to_check, has_saved_config = FALSE) {
 }
 
 # ======================================
-# LOAD FIGURE SETTINGS FROM DATABASE
+# LOAD OUTPUT SETTINGS FROM DATABASE
 # ======================================
 
-# Handler for loading saved figure settings and code from selected user configuration
-observe_event(input$load_figure_settings_%widget_id%, {
+# Handler for loading saved output settings and code from selected user configuration
+observe_event(input$load_output_settings_%widget_id%, {
     
     # Get the selected user configuration ID
     link_id <- input$user_configuration_%widget_id%
     
-    # Query database for all figure settings associated with this configuration
+    # Query database for all output settings associated with this configuration
     sql <- glue::glue_sql(
         "SELECT name, value, value_num 
          FROM widgets_options 
-         WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", 
+         WHERE widget_id = %widget_id% AND category = 'output_settings' AND link_id = {link_id}", 
         .con = m$db
     )
-    figure_settings <- DBI::dbGetQuery(m$db, sql)
+    output_settings <- DBI::dbGetQuery(m$db, sql)
     
     code <- ""
     has_saved_concepts <- FALSE
     loaded_concepts <- c()
     
     # Update UI components with saved values
-    if (nrow(figure_settings) > 0) {
+    if (nrow(output_settings) > 0) {
         # Process each saved setting and update corresponding UI element
-        sapply(figure_settings$name, function(name) {
+        sapply(output_settings$name, function(name) {
             
             # Extract value and numeric value for this setting
-            value <- figure_settings %>% 
+            value <- output_settings %>% 
                 dplyr::filter(name == !!name) %>% 
                 dplyr::pull(value)
-            value_num <- figure_settings %>% 
+            value_num <- output_settings %>% 
                 dplyr::filter(name == !!name) %>% 
                 dplyr::pull(value_num)
             
@@ -302,7 +300,7 @@ observe_event(input$load_figure_settings_%widget_id%, {
                     value = value
                 )
             }
-            else if (name %in% c("synchronize_timelines", "automatically_update_figure")) {
+            else if (name %in% c("synchronize_timelines", "automatically_update_output")) {
                 # Update toggle switches
                 # Convert numeric value back to logical
                 value <- as.logical(value_num)
@@ -320,8 +318,8 @@ observe_event(input$load_figure_settings_%widget_id%, {
             }
         })
     }
-    # No saved configuration found - trigger figure display with default settings
-    else shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random());"))
+    # No saved configuration found - trigger output display with default settings
+    else shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
     
     # Handle case where no saved concepts exist - select all and apply smart defaults
     if (!has_saved_concepts) {
@@ -356,10 +354,10 @@ observe_event(input$load_figure_settings_%widget_id%, {
 })
 
 # ======================================
-# SAVE FIGURE SETTINGS TO DATABASE
+# SAVE OUTPUT SETTINGS TO DATABASE
 # ======================================
 
-# Observer for saving current figure settings and code to selected user configuration
+# Observer for saving current output settings and code to selected user configuration
 observe_event(input$save_params_and_code_trigger_%widget_id%, {
     
     # Validate user configuration selection
@@ -376,7 +374,7 @@ observe_event(input$save_params_and_code_trigger_%widget_id%, {
         m$db, 
         glue::glue_sql(
             "DELETE FROM widgets_options 
-             WHERE widget_id = %widget_id% AND category = 'figure_settings' AND link_id = {link_id}", 
+             WHERE widget_id = %widget_id% AND category = 'output_settings' AND link_id = {link_id}", 
             .con = m$db
         )
     )
@@ -390,7 +388,7 @@ observe_event(input$save_params_and_code_trigger_%widget_id%, {
         "concepts", input$concepts_%widget_id% %>% toString(), NA_real_,
         "concept_classes", input$concept_classes_%widget_id% %>% toString(), NA_real_,
         "synchronize_timelines", NA_character_, as.integer(input$synchronize_timelines_%widget_id%),
-        "automatically_update_figure", NA_character_, as.integer(input$automatically_update_figure_%widget_id%),
+        "automatically_update_output", NA_character_, as.integer(input$automatically_update_output_%widget_id%),
         "code", input$code_%widget_id%, NA_real_
     )
     
@@ -401,7 +399,7 @@ observe_event(input$save_params_and_code_trigger_%widget_id%, {
             widget_id = %widget_id%, 
             person_id = NA_integer_, 
             link_id = link_id,
-            category = "figure_settings", 
+            category = "output_settings", 
             name, 
             value, 
             value_num, 

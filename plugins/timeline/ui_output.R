@@ -1,5 +1,5 @@
 # ==========================================
-# ui_figure.R - Figure Display Interface (Hybrid)
+# ui_output.R - Output Display Interface (Hybrid)
 # ==========================================
 div(
     # ====================

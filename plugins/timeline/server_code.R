@@ -17,9 +17,6 @@
 # Initialize code storage variable
 m$code_%widget_id% <- ""
 
-# Initialize code blocks list
-code <- list()
-
 # Fix ACE editor rendering issues on startup
 # Delay ensures DOM is fully loaded before triggering resize
 shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.dispatchEvent(event);"))
@@ -53,23 +50,23 @@ observe_event(input$code_%widget_id%_save, {
 })
 
 # ======================================
-# FIGURE DISPLAY CONTROLLER
+# OUTPUT DISPLAY CONTROLLER
 # ======================================
 
 # Main code execution handler - triggered by display button or shortcuts
-observe_event(input$display_figure_%widget_id%, {
+observe_event(input$display_output_%widget_id%, {
     
-    # Determine current tab (default to figure_settings if not set)
+    # Determine current tab (default to output_settings if not set)
     current_tab <- if (length(input$current_tab_%widget_id%) == 0) {
-        "figure_settings"
+        "output_settings"
     } else {
         input$current_tab_%widget_id%
     }
     
     # ====================
-    # AUTO-GENERATE CODE FROM FIGURE SETTINGS
+    # AUTO-GENERATE CODE FROM OUTPUT SETTINGS
     # ====================
-    if (current_tab == "figure_settings") {
+    if (current_tab == "output_settings") {
         
         # Get data source selection (default to person)
         data_source <- if (length(input$data_source_%widget_id%) > 0) {
@@ -99,14 +96,14 @@ observe_event(input$display_figure_%widget_id%, {
         
         # Generate R code for the current configuration based on chart type
         if (chart_type == "dygraphs") {
-            generated_code <- generate_dygraphs_figure_code(
+            generated_code <- generate_dygraphs_output_code_%widget_id%(
                 data_source = data_source,
                 concepts = filtered_concepts %>% 
                     dplyr::filter(concept_id %in% input$concepts_%widget_id%),
                 synchronize_timelines = isTRUE(input$synchronize_timelines_%widget_id%)
             )
         } else {
-            generated_code <- generate_plotly_figure_code(
+            generated_code <- generate_plotly_output_code_%widget_id%(
                 data_source = data_source,
                 concepts = filtered_concepts %>% 
                     dplyr::filter(concept_id %in% input$concepts_%widget_id%),
@@ -136,7 +133,7 @@ observe_event(input$display_figure_%widget_id%, {
 # ======================================
 
 # Generate date range processing code block
-generate_date_range_block <- function(data_source, synchronize_timelines) {
+generate_date_range_block_%widget_id% <- function(data_source, synchronize_timelines) {
     
     if (data_source == "person") {
         date_block <- paste0(
@@ -201,7 +198,7 @@ generate_date_range_block <- function(data_source, synchronize_timelines) {
 }
 
 # Build concepts table code block
-generate_concepts_block <- function(concepts) {
+generate_concepts_block_%widget_id% <- function(concepts) {
     
     if (nrow(concepts) == 0) {
         # Empty concepts table
@@ -244,7 +241,7 @@ generate_concepts_block <- function(concepts) {
 # Auto-run code when patient selection changes
 observe_event(m$selected_person, {
     # Check if auto-run is enabled and data source matches
-    if (!isTRUE(input$automatically_update_figure_%widget_id%) || 
+    if (!isTRUE(input$automatically_update_output_%widget_id%) || 
         length(input$data_source_%widget_id%) == 0 || 
         input$data_source_%widget_id% != "person") {
         return()
@@ -260,7 +257,7 @@ observe_event(m$selected_person, {
 # Auto-run code when visit detail selection changes
 observe_event(m$selected_visit_detail, {
     # Check if auto-run is enabled and data source matches
-    if (!isTRUE(input$automatically_update_figure_%widget_id%) || 
+    if (!isTRUE(input$automatically_update_output_%widget_id%) || 
         length(input$data_source_%widget_id%) == 0 || 
         input$data_source_%widget_id% != "visit_detail") {
         return()
@@ -351,10 +348,10 @@ observe_event(input$run_code_%widget_id%, {
     # ====================
     # AUTO-NAVIGATION
     # ====================
-    # If not in side-by-side mode, automatically switch to figure tab
-    if (length(input$figure_and_settings_side_by_side_%widget_id%) > 0) {
-        if (!input$figure_and_settings_side_by_side_%widget_id%) {
-            shinyjs::click("figure_button_%widget_id%")
+    # If not in side-by-side mode, automatically switch to output tab
+    if (length(input$output_and_settings_side_by_side_%widget_id%) > 0) {
+        if (!input$output_and_settings_side_by_side_%widget_id%) {
+            shinyjs::click("output_button_%widget_id%")
         }
     }
 })

@@ -41,7 +41,7 @@ observe_event(input$show_user_configurations_%widget_id%, {
 # Show user configurations management panel
 observe_event(input$show_user_configurations_tab_%widget_id%, {
     # Hide all main content tabs
-    sapply(c(paste0(tabs, "_div_%widget_id%"), "figure_settings_code_div_%widget_id%"), shinyjs::hide)
+    sapply(c(paste0(tabs, "_div_%widget_id%"), "output_settings_code_div_%widget_id%"), shinyjs::hide)
     
     # Show configuration management interface
     shinyjs::show("user_configurations_div_%widget_id%")
@@ -221,8 +221,8 @@ observe_event(input$user_configuration_%widget_id%, {
     )
     DBI::dbAppendTable(m$db, "widgets_options", new_data)
     
-    # Trigger loading of figure settings and code from selected configuration
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-load_figure_settings_%widget_id%', Math.random());"))
+    # Trigger loading of output settings and code from selected configuration
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-load_output_settings_%widget_id%', Math.random());"))
 })
 
 # ======================================

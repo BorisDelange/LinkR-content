@@ -1,5 +1,5 @@
 # ==========================================
-# ui_figure_settings.R - Chart Configuration Panel
+# ui_output_settings.R - Chart Configuration Panel
 # ==========================================
 # 
 # Interactive panel for configuring chart settings including:
@@ -140,13 +140,13 @@ div(
     ),
     
     # ====================
-    # AUTOMATIC FIGURE UPDATES
+    # AUTOMATIC OUTPUT UPDATES
     # ====================
     div(
         shiny.fluent::Toggle.shinyInput(
-            ns("automatically_update_figure_%widget_id%"), 
-            label = i18np$t("automatically_update_figure"),
-            value = TRUE                            # Default to enabled
+            ns("automatically_update_output_%widget_id%"), 
+            label = i18np$t("automatically_update_output"),
+            value = TRUE
         ),
         style = "margin-top: 15px;"
     ),
@@ -157,17 +157,17 @@ div(
     div(
         # Primary action - Display the chart
         shiny.fluent::PrimaryButton.shinyInput(
-            ns("settings_display_figure_%widget_id%"), 
-            i18np$t("display_figure"),
+            ns("settings_display_output_%widget_id%"), 
+            i18np$t("display_output"),
             onClick = htmlwidgets::JS(paste0(
-                "item => { Shiny.setInputValue('", id, "-display_figure_%widget_id%', Math.random()); }"
+                "item => { Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random()); }"
             ))
         ),
         
         # Secondary action - Save current configuration
         shiny.fluent::DefaultButton.shinyInput(
             ns("save_settings_%widget_id%"), 
-            i18np$t("save_figure_settings_and_code"),
+            i18np$t("save_output_settings_and_code"),
             onClick = htmlwidgets::JS(paste0(
                 "item => { Shiny.setInputValue('", id, "-save_params_and_code_%widget_id%', Math.random()); }"
             ))

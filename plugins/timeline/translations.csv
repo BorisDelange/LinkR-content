@@ -1,7 +1,7 @@
 base,en,fr
 add,Add,Ajouter
 administration,Administration,Administration
-automatically_update_figure,Automatically update figure,Mettre à jour automatiquement la figure
+automatically_update_output,Automatically update output,Mettre à jour automatiquement les résultats
 chart_type,Chart type,Type de graphique
 concept_classes,Concept classes,Classes de concepts
 concepts,Concepts,Concepts
@@ -16,13 +16,13 @@ datetime,Date & time,Date et heure
 delete,Delete,Supprimer
 delete_user_configuration_text,Confirm deletion of the user configuration?,Confirmer la suppression de la configuration utilisateur ?
 delete_user_configuration_title,Delete user configuration,Supprimer la configuration utilisateur
-display_figure,Display figure,Afficher la figure
+display_output,Display output,Afficher le résultat
 dont_delete,Cancel,Annuler
 dosage,Dosage,Dosage
 dose,Dose,Dose
 duration,Duration,Durée
 end,End,Fin
-figure_and_settings_side_by_side,Figure and settings/editor side by side,Figure et paramètres/éditeur côte à côte
+output_and_settings_side_by_side,Output and settings/editor side by side,Résultats et réglages/éditeur côte à côte
 hours,hours,heures
 measurement,Measurement,Mesure
 modif_saved,Updates saved,Modifications enregistrées
@@ -35,14 +35,13 @@ patient_data,Patient data,Données du patient
 provide_valid_name,Provide valid name,Nom valide requis
 rate,Rate,Débit
 result,Result,Résultat
-save_figure_settings_and_code,Save,Sauvegarder
-save_general_settings,Save general settings,Sauvegarder les paramètres généraux
+save_output_settings_and_code,Save,Sauvegarder
 select_all_concepts,Select all concepts,Sélectionner tous les concepts
 selected_concept_classes,Selected concept classes,Classes de concepts sélectionnées
 selected_concepts,Selected concepts,Concepts sélectionnés
-show_code_editor,Edit figure code,Editer le code de la figure
-show_figure,Figure,Figure
-show_figure_settings,Set up the figure,Paramétrer la figure
+show_code_editor,Code editor,Editeur de code
+show_output,Output,Résultats
+show_output_settings,Output settings,Modifier les réglages
 source_condition,Condition,Condition
 source_drug_exposure,Drug exposure,Traitement
 source_measurement,Measurement,Mesure

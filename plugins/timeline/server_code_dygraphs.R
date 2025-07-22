@@ -14,14 +14,14 @@
 # DYGRAPHS CODE GENERATION
 # ======================================
 
-# Generate dygraphs specific figure code
-generate_dygraphs_figure_code <- function(data_source, concepts, synchronize_timelines) {
+# Generate dygraphs specific output code
+generate_dygraphs_output_code_%widget_id% <- function(data_source, concepts, synchronize_timelines) {
     
     # Initialize code blocks list
     code <- list()
     
     # Build concepts table
-    code$block_1 <- generate_concepts_block(concepts)
+    code$block_1 <- generate_concepts_block_%widget_id%(concepts)
     
     # Initialize data structures for dygraphs
     code$block_2 <- paste0(
@@ -34,16 +34,16 @@ generate_dygraphs_figure_code <- function(data_source, concepts, synchronize_tim
     )
     
     # Build SQL query for Measurement and Observation
-    code$block_3 <- generate_dygraphs_sql_block(data_source)
+    code$block_3 <- generate_dygraphs_sql_block_%widget_id%(data_source)
     
     # Date range processing
-    code$block_4 <- generate_date_range_block(data_source, synchronize_timelines)
+    code$block_4 <- generate_date_range_block_%widget_id%(data_source, synchronize_timelines)
     
     # Data processing loop for XTS creation
-    code$block_5 <- generate_dygraphs_data_processing_block()
+    code$block_5 <- generate_dygraphs_data_processing_block_%widget_id%()
     
     # Chart generation
-    code$block_6 <- generate_dygraphs_chart_block(synchronize_timelines)
+    code$block_6 <- generate_dygraphs_chart_block_%widget_id%(synchronize_timelines)
     
     # Combine all blocks into final code
     final_code <- paste(code, collapse = "\n\n")
@@ -52,7 +52,7 @@ generate_dygraphs_figure_code <- function(data_source, concepts, synchronize_tim
 }
 
 # Generate SQL query for dygraphs (Measurement and Observation only)
-generate_dygraphs_sql_block <- function(data_source) {
+generate_dygraphs_sql_block_%widget_id% <- function(data_source) {
     
     if (data_source == "person") {
         sql_block <- paste0(
@@ -132,7 +132,7 @@ generate_dygraphs_sql_block <- function(data_source) {
 }
 
 # Generate data processing block for dygraphs XTS creation
-generate_dygraphs_data_processing_block <- function() {
+generate_dygraphs_data_processing_block_%widget_id% <- function() {
     
     processing_block <- paste0(
         "# Process each concept to create XTS time series objects\n",
@@ -197,7 +197,7 @@ generate_dygraphs_data_processing_block <- function() {
 }
 
 # Generate dygraph chart visualization code block
-generate_dygraphs_chart_block <- function(synchronize_timelines) {
+generate_dygraphs_chart_block_%widget_id% <- function(synchronize_timelines) {
     
     if (synchronize_timelines) {
         chart_block <- paste0(
