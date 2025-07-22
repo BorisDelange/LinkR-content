@@ -157,7 +157,7 @@ div(
         # Primary action - Display the chart
         shiny.fluent::PrimaryButton.shinyInput(
             ns("settings_display_output_%widget_id%"), 
-            i18np$t("display_output"),
+            i18np$t("display_output"), iconProps = list(iconName = "Play"),
             onClick = htmlwidgets::JS(paste0(
                 "item => { Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random()); }"
             ))
@@ -166,7 +166,7 @@ div(
         # Secondary action - Save current configuration
         shiny.fluent::DefaultButton.shinyInput(
             ns("save_settings_%widget_id%"), 
-            i18np$t("save_output_settings_and_code"),
+            i18np$t("save_output_settings_and_code"), iconProps = list(iconName = "Save"),
             onClick = htmlwidgets::JS(paste0(
                 "item => { Shiny.setInputValue('", id, "-save_output_settings_and_code_%widget_id%', Math.random()); }"
             ))
