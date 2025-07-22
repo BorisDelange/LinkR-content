@@ -46,7 +46,7 @@ observe_event(input$code_%widget_id%_run_all, {
 
 # Handle save keyboard shortcut (Ctrl+S)
 observe_event(input$code_%widget_id%_save, {
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_params_and_code_%widget_id%', Math.random());"))
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_output_settings_and_code_%widget_id%', Math.random());"))
 })
 
 # ======================================
@@ -349,11 +349,7 @@ observe_event(input$run_code_%widget_id%, {
     # AUTO-NAVIGATION
     # ====================
     # If not in side-by-side mode, automatically switch to output tab
-    if (length(input$output_and_settings_side_by_side_%widget_id%) > 0) {
-        if (!input$output_and_settings_side_by_side_%widget_id%) {
-            shinyjs::click("output_button_%widget_id%")
-        }
-    }
+    if (isFALSE(input$output_and_settings_side_by_side_%widget_id%)) shinyjs::click("output_button_%widget_id%")
 })
 
 # ======================================

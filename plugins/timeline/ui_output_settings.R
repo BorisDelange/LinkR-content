@@ -134,7 +134,7 @@ div(
         shiny.fluent::Toggle.shinyInput(
             ns("synchronize_timelines_%widget_id%"), 
             label = i18np$t("synchronize_timelines"),
-            value = FALSE                           # Default to disabled
+            value = FALSE
         ),
         style = "margin-top: 15px;"
     ),
@@ -169,7 +169,7 @@ div(
             ns("save_settings_%widget_id%"), 
             i18np$t("save_output_settings_and_code"),
             onClick = htmlwidgets::JS(paste0(
-                "item => { Shiny.setInputValue('", id, "-save_params_and_code_%widget_id%', Math.random()); }"
+                "item => { Shiny.setInputValue('", id, "-save_output_settings_and_code_%widget_id%', Math.random()); }"
             ))
         ),
         

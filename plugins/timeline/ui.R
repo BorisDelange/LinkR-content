@@ -66,7 +66,7 @@ if ("projects_widgets_console" %in% user_accesses) {
 if ("projects_widgets_settings" %in% user_accesses) {
    # Save output settings and code button
    save_output_settings_buttons <- shiny.fluent::IconButton.shinyInput(
-       ns("save_params_and_code_%widget_id%"), 
+       ns("save_output_settings_and_code_%widget_id%"), 
        iconProps = list(iconName = "Save"), 
        title = i18np$t("save_output_settings_and_code"), 
        style = "margin: 0"

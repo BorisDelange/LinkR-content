@@ -358,7 +358,7 @@ observe_event(input$load_output_settings_%widget_id%, {
 # ======================================
 
 # Observer for saving current output settings and code to selected user configuration
-observe_event(input$save_params_and_code_trigger_%widget_id%, {
+observe_event(input$save_output_settings_and_code_trigger_%widget_id%, {
     
     # Validate user configuration selection
     if (length(input$user_configuration_%widget_id%) == 0) {
@@ -416,14 +416,9 @@ observe_event(input$save_params_and_code_trigger_%widget_id%, {
 # SAVE TRIGGERS
 # ======================================
 
-# Auto-save on startup (without notification)
-# shinyjs::delay(1000, {
-    # shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_params_and_code_trigger_%widget_id%', Math.random());"))
-# })
-
 # Handle manual save button clicks
-observe_event(input$save_params_and_code_%widget_id%, {
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_params_and_code_trigger_%widget_id%', Math.random());"))
+observe_event(input$save_output_settings_and_code_%widget_id%, {
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_output_settings_and_code_trigger_%widget_id%', Math.random());"))
     
     # Notify user
     show_message_bar("modif_saved", "success")
