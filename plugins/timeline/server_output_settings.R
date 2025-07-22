@@ -23,23 +23,7 @@ observe_event(input$chart_type_%widget_id%, {
     }
     
     # Filter concepts for the selected chart type
-    filtered_concepts <- selected_concepts %>% 
-        dplyr::filter(domain_id %in% allowed_domains)
-    
-    # Get current selected concepts to preserve selection
-    current_selected_concepts <- input$concepts_%widget_id%
-    
-    # Filter current selection to keep only concepts available in new chart type
-    preserved_concepts <- current_selected_concepts[
-        current_selected_concepts %in% filtered_concepts$concept_id
-    ]
-    
-    # If no concepts can be preserved, select all available concepts
-    final_selection <- if (length(preserved_concepts) > 0) {
-        preserved_concepts
-    } else {
-        filtered_concepts$concept_id
-    }
+    filtered_concepts <- selected_concepts %>% dplyr::filter(domain_id %in% allowed_domains)
     
     # Update concepts dropdown options
     shiny.fluent::updateDropdown.shinyInput(
@@ -49,8 +33,7 @@ observe_event(input$chart_type_%widget_id%, {
             filtered_concepts,
             key_col = "concept_id", 
             text_col = "concept_name"
-        ),
-        value = final_selection
+        )
     )
 })
 
