@@ -103,8 +103,7 @@ div(
                     
                     # Default to Measurement and Observation for dygraphs
                     options = convert_tibble_to_list(
-                        selected_concepts %>% 
-                            dplyr::filter(domain_id %in% c("Measurement", "Observation")),
+                        selected_concepts %>% dplyr::filter(domain_id %in% c("Measurement", "Observation")),
                         key_col = "concept_id", 
                         text_col = "concept_name"
                     ),

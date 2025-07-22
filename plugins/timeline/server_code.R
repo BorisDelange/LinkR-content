@@ -248,7 +248,7 @@ observe_event(m$selected_person, {
     }
     
     # Reset timeline synchronization variables
-    reset_timeline_variables()
+    reset_timeline_variables_%widget_id%()
     
     # Execute code
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
@@ -264,14 +264,14 @@ observe_event(m$selected_visit_detail, {
     }
     
     # Reset timeline synchronization variables
-    reset_timeline_variables()
+    reset_timeline_variables_%widget_id%()
     
     # Execute code
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
 })
 
 # Helper function to reset timeline synchronization variables
-reset_timeline_variables <- function() {
+reset_timeline_variables_%widget_id% <- function() {
     m$debounced_datetimes_timeline_%tab_id% <- reactiveVal()
     m$datetimes_timeline_%tab_id% <- reactiveVal()
     m$debounced_datetimes_timeline_%tab_id% <- reactiveVal()

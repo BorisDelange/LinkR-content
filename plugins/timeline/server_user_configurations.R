@@ -293,3 +293,174 @@ observe_event(input$confirm_configuration_deletion_%widget_id%, {
     # Show warning message about configuration deletion
     show_message_bar("user_configuration_delete", "warning")
 })
+
+# ======================================
+# LOAD OUTPUT SETTINGS FROM DATABASE
+# ======================================
+
+# Handler for loading saved output settings and code from selected user configuration
+observe_event(input$load_output_settings_%widget_id%, {
+    
+    # Get the selected user configuration ID
+    link_id <- input$user_configuration_%widget_id%
+    
+    # Query database for all output settings associated with this configuration
+    sql <- glue::glue_sql(
+        "SELECT name, value, value_num 
+         FROM widgets_options 
+         WHERE widget_id = %widget_id% AND category = 'output_settings' AND link_id = {link_id}", 
+        .con = m$db
+    )
+    output_settings <- DBI::dbGetQuery(m$db, sql)
+    
+    code <- ""
+    has_saved_concepts <- FALSE
+    
+    # Update UI components with saved values
+    if (nrow(output_settings) > 0) {
+        # Process each saved setting and update corresponding UI element
+        sapply(output_settings$name, function(name) {
+            
+            # Extract value and numeric value for this setting
+            value <- output_settings %>% 
+                dplyr::filter(name == !!name) %>% 
+                dplyr::pull(value)
+            value_num <- output_settings %>% 
+                dplyr::filter(name == !!name) %>% 
+                dplyr::pull(value_num)
+            
+            # Update UI elements based on setting type
+            if (name %in% c("data_source", "chart_type", "concepts_choice")) {
+                # Update dropdown selections
+                shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            } 
+            else if (name == "concepts") {
+                # Update concepts multi-select dropdown
+                # Convert comma-separated string back to numeric vector
+                value <- as.numeric(unlist(strsplit(value, ", ")))
+                
+                # Check if we have valid saved concepts
+                if (length(value) > 0 && !any(is.na(value))) {
+                    has_saved_concepts <<- TRUE
+                    shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+                } else {
+                    # No valid saved concepts - will use all available concepts
+                    has_saved_concepts <<- FALSE
+                }
+            }
+            else if (name == "concept_classes") {
+                # Update concept classes multi-select dropdown
+                # Convert comma-separated string back to character vector
+                value <- unlist(strsplit(value, ", "))
+                shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            }
+            else if (name %in% c("synchronize_timelines", "automatically_update_output")) {
+                # Update toggle switches
+                # Convert numeric value back to logical
+                value <- as.logical(value_num)
+                shiny.fluent::updateToggle.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+            }
+            else if (name == "code") {
+                # Update code editor content
+                code <<- value
+                m$code_%widget_id% <- value
+                shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
+            }
+        })
+    }
+    # No saved configuration found - trigger output display with default settings
+    else shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
+    
+    # Handle case where no saved concepts exist - select all
+    if (!has_saved_concepts) {
+        # Select all available concepts
+        all_concepts <- selected_concepts$concept_id
+        
+        if (length(all_concepts) > 0) {
+            concept_domains <- selected_concepts %>%
+                dplyr::filter(concept_id %in% all_concepts) %>%  # Utiliser all_concepts au lieu de concepts_to_check
+                dplyr::pull(domain_id) %>%
+                unique()
+        }
+    }
+    
+    # Auto-execute code if enabled
+    if (length(input$run_code_at_user_configuration_load_%widget_id%) > 0) {
+        if (input$run_code_at_user_configuration_load_%widget_id%) {
+            shinyjs::delay(500, {
+                shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))  
+            })
+        }
+    }
+})
+
+# ======================================
+# SAVE OUTPUT SETTINGS AND CODE TO DATABASE
+# ======================================
+
+# Observer for saving current output settings and code to selected user configuration
+observe_event(input$save_output_settings_and_code_trigger_%widget_id%, {
+    
+    # Validate user configuration selection
+    if (length(input$user_configuration_%widget_id%) == 0) {
+        # If no configuration is selected, redirect to configuration management
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-show_user_configurations_tab_%widget_id%', Math.random());"))
+        return()
+    }
+    
+    link_id <- input$user_configuration_%widget_id%
+
+    # Remove existing settings for this configuration to avoid duplicates
+    sql_send_statement(
+        m$db, 
+        glue::glue_sql(
+            "DELETE FROM widgets_options 
+             WHERE widget_id = %widget_id% AND category = 'output_settings' AND link_id = {link_id}", 
+            .con = m$db
+        )
+    )
+    
+    # Prepare new settings data
+    new_data <- tibble::tribble(
+        ~name, ~value, ~value_num,
+        "data_source", input$data_source_%widget_id%, NA_real_,
+        "chart_type", input$chart_type_%widget_id%, NA_real_,
+        "concepts_choice", input$concepts_choice_%widget_id%, NA_real_,
+        "concepts", input$concepts_%widget_id% %>% toString(), NA_real_,
+        "concept_classes", input$concept_classes_%widget_id% %>% toString(), NA_real_,
+        "synchronize_timelines", NA_character_, as.integer(input$synchronize_timelines_%widget_id%),
+        "automatically_update_output", NA_character_, as.integer(input$automatically_update_output_%widget_id%),
+        "code", input$code_%widget_id%, NA_real_
+    )
+    
+    # Add database metadata
+    new_data <- new_data %>%
+        dplyr::transmute(
+            id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), 
+            widget_id = %widget_id%, 
+            person_id = NA_integer_, 
+            link_id = link_id,
+            category = "output_settings", 
+            name, 
+            value, 
+            value_num, 
+            creator_id = m$user_id, 
+            datetime = now(), 
+            deleted = FALSE
+        )
+    
+    # Insert new settings into database
+    DBI::dbAppendTable(m$db, "widgets_options", new_data)
+})
+
+# ======================================
+# SAVE TRIGGERS
+# ======================================
+
+# Handle manual save button clicks
+observe_event(input$save_output_settings_and_code_%widget_id%, {
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_output_settings_and_code_trigger_%widget_id%', Math.random());"))
+    
+    # Notify user
+    show_message_bar("modif_saved", "success")
+})

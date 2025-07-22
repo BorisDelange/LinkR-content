@@ -37,6 +37,7 @@ tagList(
                         ), 
                         style = "width: 200px;"
                     ),
+                    bind_enter_key_to_button(input_id = ns("user_configuration_name_%widget_id%"), button_id = ns("add_user_configuration_%widget_id%")),
                     
                     # Add button positioned at bottom right
                     div(
