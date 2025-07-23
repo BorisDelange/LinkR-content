@@ -104,17 +104,8 @@ if ("projects_widgets_settings" %in% user_accesses) {
        title = i18np$t("save_output_settings_and_code"), 
        style = "margin: 0"
    )
-   
-   # Save general settings button
-   save_general_settings_button <- shiny.fluent::IconButton.shinyInput(
-       ns("save_general_settings_button_%widget_id%"), 
-       iconProps = list(iconName = "Save"), 
-       title = i18np$t("save_general_settings"), 
-       style = "margin: 0"
-   )
 } else {
    save_output_settings_buttons <- ""
-   save_general_settings_button <- ""   
 }
 
 # ======================================

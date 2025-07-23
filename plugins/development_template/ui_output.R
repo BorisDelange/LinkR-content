@@ -80,7 +80,7 @@ div(
         id = ns("plot_div_%widget_id%"),
         plotOutput(
             ns("plot_%widget_id%"), 
-            height = "400px", 
+            height = "330px",
             width = "100%"
         ),
         style = "width: 100%; padding: 10px; box-sizing: border-box;"

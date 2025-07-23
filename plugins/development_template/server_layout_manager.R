@@ -241,7 +241,7 @@ if (!side_by_side){
 shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-output_and_settings_side_by_side_%widget_id%', ", tolower(side_by_side), ");"))
 
 # Initialize the panel layout system with a slight delay to ensure DOM is ready
-shinyjs::delay(100, shinyjs::runjs(panel_layout_manager))
+shinyjs::delay(1000, shinyjs::runjs(panel_layout_manager))
 
 # ======================================
 # SIDE-BY-SIDE TOGGLE BUTTON HANDLER
