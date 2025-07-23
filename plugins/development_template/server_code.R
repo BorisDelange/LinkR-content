@@ -2,6 +2,16 @@
 # server_code.R - Code Editor Server Logic
 # ==========================================
 
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
+# ██                                                                            ██
+# ██  This file MUST be customized for your specific plugin.                    ██
+# ██  Follow the template structure and implement your logic.                   ██
+# ██  See comments and examples for guidance.                                   ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
 # PLUGIN TEMPLATE - CODE EDITOR SERVER FILE
 # 
 # This file handles the server-side logic for the code editor and output generation.
@@ -117,17 +127,19 @@ observe_event(input$display_output_%widget_id%, {
             c()  # Empty selection
         }
         
-        # Example: Get boolean settings
-        show_legend <- isTRUE(input$show_legend_%widget_id%)
-        interactive_mode <- isTRUE(input$interactive_mode_%widget_id%)
+        # Get plot title from input
+        plot_title <- if (length(input$plot_title_%widget_id%) > 0) {
+            input$plot_title_%widget_id%
+        } else {
+            "Data Analysis Results"  # Default title
+        }
         
         # Generate R code based on current configuration
         # IMPLEMENT THIS FUNCTION FOR YOUR SPECIFIC PLUGIN
         generated_code <- generate_output_code_%widget_id%(
             output_type = output_type,
             variables = selected_variables,
-            show_legend = show_legend,
-            interactive_mode = interactive_mode
+            plot_title = plot_title
         )
         
         # Update ACE editor with generated code
@@ -153,10 +165,7 @@ observe_event(input$display_output_%widget_id%, {
 
 # IMPLEMENT THIS FUNCTION FOR YOUR SPECIFIC PLUGIN
 # This function should generate R code based on user settings from the UI
-generate_output_code_%widget_id% <- function(output_type = "plot", 
-                                            variables = c(), 
-                                            show_legend = TRUE, 
-                                            interactive_mode = FALSE) {
+generate_output_code_%widget_id% <- function(output_type = "plot", variables = c(), plot_title = "Data Analysis Results") {
     
     # Example code generation using the iris dataset
     code_lines <- c()
@@ -186,7 +195,7 @@ generate_output_code_%widget_id% <- function(output_type = "plot",
     }
     
     # Add output generation code based on type
-    if (output_type == "plot") {
+    if (output_type == "histogram") {
         code_lines <- c(code_lines,
             "# Generate histogram plot"
         )
@@ -196,7 +205,7 @@ generate_output_code_%widget_id% <- function(output_type = "plot",
             code_lines <- c(code_lines,
                 paste0("result <- ggplot2::ggplot(data, ggplot2::aes(x = `", variables[1], "`)) +"),
                 "    ggplot2::geom_histogram(bins = 30, fill = 'steelblue', alpha = 0.7) +",
-                paste0("    ggplot2::labs(title = 'Distribution of ", variables[1], "', x = '", variables[1], "', y = 'Frequency') +"),
+                paste0("    ggplot2::labs(title = '", plot_title, "', x = '", variables[1], "', y = 'Frequency') +"),
                 "    ggplot2::theme_minimal()"
             )
         } else if (length(variables) > 1) {
@@ -209,7 +218,7 @@ generate_output_code_%widget_id% <- function(output_type = "plot",
                 "result <- ggplot2::ggplot(plot_data, ggplot2::aes(x = value)) +",
                 "    ggplot2::geom_histogram(bins = 30, fill = 'steelblue', alpha = 0.7) +",
                 "    ggplot2::facet_wrap(~variable, scales = 'free') +",
-                "    ggplot2::labs(title = 'Distribution of Selected Variables', x = 'Value', y = 'Frequency') +",
+                paste0("    ggplot2::labs(title = '", plot_title, "', x = 'Value', y = 'Frequency') +"),
                 "    ggplot2::theme_minimal()"
             )
         } else {
@@ -222,22 +231,8 @@ generate_output_code_%widget_id% <- function(output_type = "plot",
                 "result <- ggplot2::ggplot(plot_data, ggplot2::aes(x = value)) +",
                 "    ggplot2::geom_histogram(bins = 30, fill = 'steelblue', alpha = 0.7) +",
                 "    ggplot2::facet_wrap(~variable, scales = 'free') +",
-                "    ggplot2::labs(title = 'Distribution of All Numeric Variables', x = 'Value', y = 'Frequency') +",
+                paste0("    ggplot2::labs(title = '", plot_title, "', x = 'Value', y = 'Frequency') +"),
                 "    ggplot2::theme_minimal()"
-            )
-        }
-        
-        # Add legend control
-        if (!show_legend) {
-            code_lines <- c(code_lines, "result <- result + ggplot2::theme(legend.position = 'none')")
-        }
-        
-        # Add interactivity if requested
-        if (interactive_mode) {
-            code_lines <- c(code_lines, 
-                "",
-                "# Convert to interactive plot",
-                "result <- plotly::ggplotly(result)"
             )
         }
         
@@ -268,14 +263,6 @@ generate_output_code_%widget_id% <- function(output_type = "plot",
             "result <- DT::datatable(result, options = list(pageLength = 15))"
         )
         
-    } else {
-        code_lines <- c(code_lines,
-            "# Default: Generate summary plot",
-            "result <- ggplot2::ggplot(data, ggplot2::aes(x = Sepal.Length, y = Sepal.Width)) +",
-            "    ggplot2::geom_point(ggplot2::aes(color = Species)) +",
-            "    ggplot2::labs(title = 'Iris Dataset: Sepal Length vs Width') +",
-            "    ggplot2::theme_minimal()"
-        )
     }
     
     # Combine all code lines
@@ -291,15 +278,15 @@ generate_output_code_%widget_id% <- function(output_type = "plot",
 # Example: Auto-run code when data context changes
 # Uncomment and customize based on your plugin's data dependencies
 
-# observe_event(m$selected_data_source, {
-#     # Check if auto-run is enabled
-#     if (!isTRUE(input$auto_update_%widget_id%)) {
-#         return()
-#     }
-#     
-#     # Execute code when data context changes
-#     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-# })
+observe_event(m$selected_person, {
+    # Check if auto-run is enabled
+    if (!isTRUE(input$auto_update_%widget_id%)) {
+        return()
+    }
+    
+    # Execute code when data context changes
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+})
 
 # ======================================
 # CODE EXECUTION ENGINE

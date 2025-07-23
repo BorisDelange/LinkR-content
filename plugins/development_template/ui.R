@@ -2,6 +2,16 @@
 # UI - Main interface file
 # ==========================================
 
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 OPTIONAL CUSTOMIZATION - PLUGIN ENHANCEMENT  🔧                        ██
+# ██                                                                            ██
+# ██  This file provides default functionality that works out-of-the-box.       ██
+# ██  Customize only if you need specific features or modifications.            ██
+# ██  Safe to use as-is for standard plugin requirements.                       ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
 # PLUGIN TEMPLATE - UI MAIN FILE
 # 
 # This file defines the main user interface structure for the widget plugin template.

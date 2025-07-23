@@ -2,6 +2,16 @@
 # Server - Main file
 # ==========================================
 
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 OPTIONAL CUSTOMIZATION - PLUGIN ENHANCEMENT  🔧                        ██
+# ██                                                                            ██
+# ██  This file provides default functionality that works out-of-the-box.       ██
+# ██  Customize only if you need specific features or modifications.            ██
+# ██  Safe to use as-is for standard plugin requirements.                       ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
 # PLUGIN TEMPLATE - SERVER MAIN FILE
 # 
 # This file serves as the main server logic controller for the widget plugin template.

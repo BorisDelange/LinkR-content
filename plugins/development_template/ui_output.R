@@ -2,6 +2,16 @@
 # ui_output.R - Output Display Interface
 # ==========================================
 
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
+# ██                                                                            ██
+# ██  This file MUST be customized for your specific plugin.                    ██
+# ██  Follow the template structure and implement your logic.                   ██
+# ██  See comments and examples for guidance.                                   ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
 # PLUGIN TEMPLATE - OUTPUT DISPLAY UI FILE
 # 
 # This file defines the output display interface for the widget plugin template.

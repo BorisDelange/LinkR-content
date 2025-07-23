@@ -2,6 +2,16 @@
 # server_layout_manager.R - Dynamic Layout Management
 # ==========================================
 
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  ⚠️  DO NOT MODIFY - CORE TEMPLATE FRAMEWORK  ⚠️                           ██
+# ██                                                                            ██
+# ██  This file is part of the template framework and works automatically.      ██
+# ██  Modifications are NOT required and may break functionality.               ██
+# ██  Only modify if you have specific advanced requirements.                   ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
 # PLUGIN TEMPLATE - LAYOUT MANAGER SERVER FILE
 # 
 # This file manages the dynamic layout system for the widget plugin template.
