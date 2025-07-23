@@ -348,7 +348,7 @@ observe_event(input$user_configuration_%widget_id%, {
     DBI::dbAppendTable(m$db, "widgets_options", new_data)
     
     # Trigger loading of output settings and code from selected configuration
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-load_output_settings_%widget_id%', Math.random());"))
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-load_configuration_%widget_id%', Math.random());"))
 })
 
 # ======================================
@@ -421,11 +421,11 @@ observe_event(input$confirm_configuration_deletion_%widget_id%, {
 })
 
 # ======================================
-# LOAD OUTPUT SETTINGS FROM DATABASE
+# CONFIGURATION LOADING FROM DATABASE
 # ======================================
 
 # Handler for loading saved output settings and code from selected user configuration
-observe_event(input$load_output_settings_%widget_id%, {
+observe_event(input$load_configuration_%widget_id%, {
     
     # Get the selected user configuration ID
     link_id <- input$user_configuration_%widget_id%
@@ -441,6 +441,7 @@ observe_event(input$load_output_settings_%widget_id%, {
     
     code <- ""
     has_saved_concepts <- FALSE
+    auto_update <- FALSE
     
     # Update UI components with saved values
     if (nrow(output_settings) > 0) {
@@ -485,6 +486,7 @@ observe_event(input$load_output_settings_%widget_id%, {
                 # Convert numeric value back to logical
                 value <- as.logical(value_num)
                 shiny.fluent::updateToggle.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
+                if (name == "automatically_update_output" && !is.na(value)) auto_update <<- value
             }
             else if (name == "code") {
                 # Update code editor content
@@ -511,17 +513,15 @@ observe_event(input$load_output_settings_%widget_id%, {
     }
     
     # Auto-execute code if enabled
-    if (length(input$run_code_at_user_configuration_load_%widget_id%) > 0) {
-        if (input$run_code_at_user_configuration_load_%widget_id%) {
-            shinyjs::delay(500, {
-                shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))  
-            })
-        }
+    if (auto_update) {
+        shinyjs::delay(500, {
+            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))  
+        })
     }
 })
 
 # ======================================
-# SAVE OUTPUT SETTINGS AND CODE TO DATABASE
+# CONFIGURATION SAVING TO DATABASE
 # ======================================
 
 # Observer for saving current output settings and code to selected user configuration
