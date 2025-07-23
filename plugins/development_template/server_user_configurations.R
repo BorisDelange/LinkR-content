@@ -4,9 +4,9 @@
 
 # ████████████████████████████████████████████████████████████████████████████████
 # ██                                                                            ██
-# ██  ⚠️  DO NOT MODIFY - CORE TEMPLATE FRAMEWORK  ⚠️                           ██
+# ██  ⚠️  DO NOT MODIFY - CORE PLUGIN FRAMEWORK  ⚠️                             ██
 # ██                                                                            ██
-# ██  This file is part of the template framework and works automatically.      ██
+# ██  This file is part of the plugin framework and works automatically.        ██
 # ██  Modifications are NOT required and may break functionality.               ██
 # ██  Only modify if you have specific advanced requirements.                   ██
 # ██                                                                            ██
