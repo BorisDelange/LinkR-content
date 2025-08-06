@@ -1,7 +1,13 @@
 # ==========================================
 # server_code.R - Code Editor Server Logic
 # ==========================================
-
+# 
+# Handles code editor functionality including:
+# - Common initialization and keyboard shortcuts
+# - Code execution controller
+# - Auto-execution triggers based on data updates
+# - Chart type specific logic imported from separate files
+#
 # ======================================
 # INITIALIZATION
 # ======================================

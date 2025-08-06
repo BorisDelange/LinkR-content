@@ -1,7 +1,11 @@
 # ==========================================
 # server_output_settings.R - Output Configuration Server Logic
 # ==========================================
-
+# 
+# Manages output settings including loading/saving from user configurations,
+# timeline synchronization, chart type management, and settings persistence
+# Smart defaults based on concept selection and saved configurations
+#
 # ======================================
 # CENTRALIZED INPUT DEFINITIONS
 # ======================================

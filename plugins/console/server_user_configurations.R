@@ -1,7 +1,10 @@
 # ==========================================
 # server_user_configurations.R - User Configurations Server Logic
 # ==========================================
-
+# 
+# Manages user configuration files including creation, deletion, selection, renaming,
+# and persistence of configuration preferences in the database
+#
 # ======================================
 # UI STYLING CONFIGURATION
 # ======================================
@@ -175,7 +178,8 @@ add_user_configuration_%widget_id% <- function(configuration_name, notification 
     )
     
     # Reset code editor to empty state for new configuration
-    shinyAce::updateAceEditor(session, "code_%widget_id%", value = "")
+    default_code <- get_default_code("console")
+    shinyAce::updateAceEditor(session, "code_%widget_id%", value = default_code)
     
     # Close modal
     shinyjs::hide("add_user_configuration_modal_%widget_id%")
