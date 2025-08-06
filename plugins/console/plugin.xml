@@ -3,7 +3,7 @@
   <plugin>
     <app_version>0.3.1.9012</app_version>
     <unique_id>d7662fb4dde4f229baff062dd673177ced4375168b5c9ef0782717d89769efb6</unique_id>
-    <version>0.0.1.9018</version>
+    <version>0.0.1.9019</version>
     <name_en>Console</name_en>
     <name_fr>Console</name_fr>
     <category_en>NA</category_en>
@@ -16,7 +16,7 @@
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-07-07 13:21:53</creation_datetime>
-    <update_datetime>2025-08-06 10:50:09</update_datetime>
+    <update_datetime>2025-08-06 11:07:14</update_datetime>
     <type>12</type>
   </plugin>
 </plugins>
