@@ -1,142 +1,410 @@
-# Server - Code
+# ==========================================
+# server_code.R - Code Editor Server Logic
+# ==========================================
 
-# Init code var
+# ======================================
+# INITIALIZATION
+# ======================================
+
+# Initialize code storage variable
 m$code_%widget_id% <- ""
 
-# Outputs
+# Define available output types for each programming language
 outputs <- list()
 outputs$r <- c("console", "ui", "figure", "table", "datatable", "dygraphs", "plotly", "rmarkdown")
 outputs$python <- c("console", "matplotlib")
 
-# Prevent a bug with scroll into ace editor
+# Fix ACE editor rendering issues on startup
+# Delay ensures DOM is fully loaded before triggering resize
 shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.dispatchEvent(event);"))
 
-# Comment code
-observe_event(input$code_%widget_id%_comment, {
+# ======================================
+# DEFAULT CODE TEMPLATES
+# ======================================
+
+# Generate default code examples for different output types
+get_default_code <- function(output_type) {
+  switch(output_type,
+    "console" = "# Data exploration with dplyr
+# Basic operations on iris dataset
+iris %>% 
+  dplyr::filter(Species == 'setosa') %>%
+  dplyr::select(Sepal.Length, Sepal.Width, Petal.Length) %>%
+  dplyr::summarise(
+    mean_sepal_length = mean(Sepal.Length),
+    mean_sepal_width = mean(Sepal.Width),
+    mean_petal_length = mean(Petal.Length),
+    count = dplyr::n()
+  ) %>% tibble::as_tibble()",
     
+    "figure" = "# Stylized histogram of iris sepal length
+ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Length, fill = Species)) +
+  ggplot2::geom_histogram(bins = 20, alpha = 0.7, color = 'white') +
+  ggplot2::scale_fill_manual(values = c('#1f77b4', '#2ca02c', '#ff7f0e')) +
+  ggplot2::labs(
+    title = 'Distribution of Sepal Length by Species',
+    x = 'Sepal Length (cm)',
+    y = 'Frequency',
+    fill = 'Species'
+  ) +
+  ggplot2::theme_minimal() +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(size = 14, face = 'bold', hjust = 0.5),
+    axis.title = ggplot2::element_text(size = 12),
+    legend.title = ggplot2::element_text(size = 11)
+  )",
+    
+    "table" = "# Display iris summary statistics
+iris %>%
+  dplyr::group_by(Species) %>%
+  dplyr::summarise(
+    Count = dplyr::n(),
+    Mean_Sepal_Length = round(mean(Sepal.Length), 2),
+    Mean_Sepal_Width = round(mean(Sepal.Width), 2),
+    Mean_Petal_Length = round(mean(Petal.Length), 2),
+    Mean_Petal_Width = round(mean(Petal.Width), 2),
+    .groups = 'drop'
+  )",
+    
+    "datatable" = "# Interactive data table
+iris %>%
+  dplyr::mutate(
+    Sepal.Ratio = round(Sepal.Length / Sepal.Width, 2),
+    Petal.Ratio = round(Petal.Length / Petal.Width, 2)
+  ) %>%
+  dplyr::select(
+    Species, Sepal.Length, Sepal.Width, Sepal.Ratio, 
+    Petal.Length, Petal.Width, Petal.Ratio
+  )",
+    
+    "dygraphs" = "# Time series visualization with dygraphs
+# Create sample time series data
+dates <- seq(as.Date('2023-01-01'), as.Date('2023-12-31'), by = 'day')
+values <- cumsum(rnorm(length(dates), 0, 1)) + 100
+ts_data <- xts::xts(values, order.by = dates)
+
+dygraphs::dygraph(ts_data, main = 'Sample Time Series') %>%
+  dygraphs::dyOptions(colors = '#1f77b4', strokeWidth = 2) %>%
+  dygraphs::dyRangeSelector() %>%
+  dygraphs::dyHighlight(highlightCircleSize = 5)",
+    
+    "plotly" = "# Interactive scatter plot with plotly
+plotly::plot_ly(
+  data = iris,
+  x = ~Sepal.Length,
+  y = ~Sepal.Width,
+  color = ~Species,
+  colors = c('#1f77b4', '#2ca02c', '#ff7f0e'),
+  type = 'scatter',
+  mode = 'markers',
+  marker = list(size = 8, opacity = 0.8)
+) %>%
+  plotly::layout(
+    title = 'Iris Dataset: Sepal Length vs Width',
+    xaxis = list(title = 'Sepal Length (cm)'),
+    yaxis = list(title = 'Sepal Width (cm)'),
+    hovermode = 'closest'
+  )",
+    
+    "rmarkdown" = "# Iris Dataset Analysis
+
+## Overview
+The iris dataset contains measurements of iris flowers from three species.
+
+```{r}
+summary(iris)
+```
+
+## Species Distribution
+```{r}
+table(iris$Species)
+```
+
+## Visualization
+```{r}
+ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  ggplot2::geom_point(size = 2) +
+  ggplot2::theme_minimal() +
+  ggplot2::labs(title = 'Sepal Dimensions by Species')
+```",
+    
+    "ui" = "# Simple UI metric display
+# Calculate mean sepal length
+mean_sepal_length <- round(mean(iris$Sepal.Length), 1)
+
+div(
+  style = \"
+    text-align: center; 
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  \",
+  div(
+    style = \"color: #2C699A; margin-bottom: 10px;\",
+    shiny::tags$i(class = \"fas fa-seedling fa-2x\")
+  ),
+  div(
+    style = \"color: #2C699A; font-size: 36px; font-weight: bold; margin: 10px 0;\",
+    paste0(mean_sepal_length, \" cm\")
+  ),
+  div(
+    style = \"color: #666; font-size: 14px; text-transform: uppercase;\",
+    \"Average Sepal Length\"
+  )
+)",
+    
+    # Default fallback
+    "# Select an output type to see example code"
+  )
+}
+
+# ======================================
+# OUTPUT TYPE CHANGE HANDLER
+# ======================================
+
+# Provide default code when output type changes and editor is empty
+observe_event(input$output_%widget_id%, {
+    # Only set default code if current editor is empty or contains only whitespace
+    current_code <- trimws(if(is.null(input$code_%widget_id%)) "" else input$code_%widget_id%)
+    
+    if (current_code == "" && !is.null(input$output_%widget_id%)) {
+        default_code <- get_default_code(input$output_%widget_id%)
+        
+        # Update the ACE editor with default code
+        shinyAce::updateAceEditor(
+            session = session,
+            editorId = paste0("code_%widget_id%"),
+            value = default_code
+        )
+    }
+})
+
+# Change ACE editor language mode based on output type
+observe_event(input$output_%widget_id%, {
+  if (!is.null(input$output_%widget_id%)) {
+    # Determine editor mode based on output type
+    editor_mode <- switch(input$output_%widget_id%,
+      "rmarkdown" = "markdown",
+      input$prog_language_%widget_id%  # Default for all other output types
+    )
+    
+    # Update ACE editor mode
+    shinyAce::updateAceEditor(
+      session = session,
+      editorId = paste0("code_%widget_id%"),
+      mode = editor_mode
+    )
+  }
+})
+
+# Change ACE editor language mode based on programming language
+observe_event(input$prog_language_%widget_id%, {
+  if (!is.null(input$prog_language_%widget_id%)) {
+    # Update ACE editor mode based on selected language
+    shinyAce::updateAceEditor(
+      session = session,
+      editorId = paste0("code_%widget_id%"),
+      mode = input$prog_language_%widget_id%
+    )
+  }
+})
+
+# ======================================
+# CODE EDITOR KEYBOARD SHORTCUTS
+# ======================================
+
+# Handle comment/uncomment keyboard shortcut (Ctrl+Shift+C)
+observe_event(input$code_%widget_id%_comment, {
     toggle_comments(
-        id = id, input_id = "code_%widget_id%", code = input$code_%widget_id%,
-        selection = input$code_%widget_id%_comment$range, session = session
+        input_id = "code_%widget_id%", 
+        code = input$code_%widget_id%,
+        selection = input$code_%widget_id%_comment$range, 
+        session = session
     )
 })
 
-# Run all code with shortcut
+# Handle run all code keyboard shortcut (Ctrl+Shift+Enter)
 observe_event(input$code_%widget_id%_run_all, {
-    
-    if ("projects_widgets_console" %in% user_accesses){
+    # Only allow code execution if user has console access
+    if ("projects_widgets_console" %in% user_accesses) {
         m$code_%widget_id% <- input$code_%widget_id%
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
     }
 })
 
-# Run code when button is clicked
-observe_event(input$display_figure_%widget_id%, {
+# Handle save keyboard shortcut (Ctrl+S)
+observe_event(input$code_%widget_id%_save, {
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_output_settings_and_code_%widget_id%', Math.random());"))
+})
+
+# ======================================
+# OUTPUT DISPLAY CONTROLLER
+# ======================================
+
+# Main code execution handler - triggered by display button or shortcuts
+observe_event(input$display_output_%widget_id%, {
     
-    if ("projects_widgets_console" %in% user_accesses){
+    # ====================
+    # MANUAL CODE EXECUTION
+    # ====================
+    
+    if ("projects_widgets_console" %in% user_accesses) {
+        # If on code tab, run whatever is currently in the editor
         m$code_%widget_id% <- input$code_%widget_id%
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
     }
 })
 
-# Run code
+# ======================================
+# CODE EXECUTION ENGINE
+# ======================================
+
+# Main code execution handler
 observe_event(input$run_code_%widget_id%, {
     
+    # Check if programming language is selected
     if (length(input$prog_language_%widget_id%) == 0) return()
     
+    # Get user selections
     language <- input$prog_language_%widget_id%
     code_output <- input$output_%widget_id%
     code <- m$code_%widget_id%
     
+    # Determine if code should be isolated based on auto-update setting
     isolate_code <- TRUE
-    if (length(input$run_code_on_data_update_%widget_id%) > 0) if (input$run_code_on_data_update_%widget_id%) isolate_code <- FALSE
+    if (isTRUE(input$auto_update_%widget_id%)) isolate_code <- FALSE
     
-    if (isolate_code & language == "r" & code_output != "rmarkdown") code <- paste0("isolate({\\n", code, "\\n})")
+    # Apply isolation wrapper for R code (except rmarkdown)
+    if (isolate_code & language == "r" & code_output != "rmarkdown") {
+        code <- paste0("isolate({\\n", code, "\\n})")
+    }
     
-    # Hide all outputs
-    sapply(paste0(outputs[[language]], "_output_%widget_id%"), shinyjs::hide)
-    shinyjs::show(paste0(code_output, "_output_%widget_id%"))
-
-    # Language = R
-    if (language == "r"){
+    # ====================
+    # HIDE ALL OUTPUTS INITIALLY
+    # ====================
+    
+    # Hide all output containers for the current language
+    sapply(paste0(outputs[[language]], "_output_div_%widget_id%"), shinyjs::hide)
+    
+    # ====================
+    # EXECUTE CODE BY LANGUAGE
+    # ====================
+    
+    # R Language Execution
+    if (language == "r") {
         
-        # Output = console
-        if (code_output == "console"){
-            captured_output <- capture.output(tryCatch(eval(parse(text = code)), error = function(e) print(e), warning = function(w) print(w))) %>% paste(collapse = "\\n")
-            output$console_output_%widget_id% <- renderText(captured_output)
-        }
-        
-        # Output = UI
-        else if (code_output == "ui") output$ui_output_%widget_id% <- renderUI(eval(parse(text = code)))
-        
-        # Output = figure
-        else if (code_output == "figure") output$figure_output_%widget_id% <- renderPlot(eval(parse(text = code)))
-        
-        # Output = table
-        else if (code_output == "table") output$table_output_%widget_id% <- renderTable(eval(parse(text = code)))
-        
-        # Output = DataTable
-        else if (code_output == "datatable") output$datatable_output_%widget_id% <- DT::renderDT(
-            DT::datatable(
-                eval(parse(text = code)),
-                
-                rownames = FALSE,
-                options = list(
-                    dom = "<'datatable_length'l><'top't><'bottom'p>",
-                    compact = TRUE, hover = TRUE
-                ),
-                
-                # CSS for datatable
-                callback = htmlwidgets::JS(
-                  "table.on('draw.dt', function() {",
-                  "  $('.dataTable tbody tr td').css({",
-                  "    'height': '12px',",
-                  "    'padding': '2px 5px'",
-                  "  });",
-                  "  $('.dataTable thead tr td div .form-control').css('font-size', '12px');",
-                  "  $('.dataTable thead tr td').css('padding', '5px');",
-                  "});"
+        # Console Output - capture all output including errors
+        if (code_output == "console") {
+            captured_output <- capture.output(
+                tryCatch(
+                    eval(parse(text = code)), 
+                    error = function(e) print(e), 
+                    warning = function(w) print(w)
                 )
-            )
-        )
-        
-        # Output = Dygraphs
-        
-        else if (code_output == "dygraphs"){
-            output$dygraphs_output_%widget_id% <- dygraphs::renderDygraph(eval(parse(text = code)))
+            ) %>% paste(collapse = "\n")
+            output$console_output_%widget_id% <- renderText(captured_output)
+            shinyjs::show("console_output_div_%widget_id%")
         }
         
-        # Output = Plotly
-        
-        else if (code_output == "plotly"){
-            output$plotly_output_%widget_id% <- plotly::renderPlotly(eval(parse(text = code)))
+        # Other output types - with error handling
+        else {
+            tryCatch({
+                # Execute the code and get the result
+                result <- eval(parse(text = code))
+                
+                # Route to appropriate output renderer
+                if (code_output == "ui") {
+                    output$ui_output_%widget_id% <- renderUI(result)
+                }
+                else if (code_output == "figure") {
+                    output$figure_output_%widget_id% <- renderPlot(result)
+                }
+                else if (code_output == "table") {
+                    output$table_output_%widget_id% <- renderTable(result)
+                }
+                else if (code_output == "datatable") {
+                    output$datatable_output_%widget_id% <- DT::renderDT(
+                        DT::datatable(
+                            result,
+                            rownames = FALSE,
+                            options = list(
+                                dom = "<'datatable_length'l><'top't><'bottom'p>",
+                                compact = TRUE, hover = TRUE
+                            ),
+                            # CSS styling for datatable
+                            callback = htmlwidgets::JS(
+                                "table.on('draw.dt', function() {",
+                                "  $('.dataTable tbody tr td').css({",
+                                "    'height': '12px',",
+                                "    'padding': '2px 5px'",
+                                "  });",
+                                "  $('.dataTable thead tr td div .form-control').css('font-size', '12px');",
+                                "  $('.dataTable thead tr td').css('padding', '5px');",
+                                "});"
+                            )
+                        )
+                    )
+                }
+                else if (code_output == "dygraphs") {
+                    output$dygraphs_output_%widget_id% <- dygraphs::renderDygraph(result)
+                }
+                else if (code_output == "plotly") {
+                    output$plotly_output_%widget_id% <- plotly::renderPlotly(result)
+                }
+                else if (code_output == "rmarkdown") {
+                    output_file <- create_rmarkdown_file(code, interpret_code = TRUE)
+                    output$rmarkdown_output_%widget_id% <- renderUI(div(class = "markdown", withMathJax(includeMarkdown(output_file))))
+                }
+                
+                # Show the selected output container
+                shinyjs::show(paste0(code_output, "_output_div_%widget_id%"))
+                
+            }, error = function(e) {
+                # If there's an error, display it in console format
+                error_message <- paste("Error:", e$message)
+                
+                shinyjs::show("console_output_div_%widget_id%")
+                
+                # Display the error message in console output
+                output$console_output_%widget_id% <- renderText(error_message)
+            })
         }
+    }
+    
+    # Python Language Execution
+    else if (language == "python") {
         
-        # Output = RMarkdown
-        else if (code_output == "rmarkdown"){
+        tryCatch({
+            # Console Output for Python
+            if (code_output == "console") {
+                output$console_output_%widget_id% <- renderText(capture_python_output(code))
+            }
             
-            # Create temp dir
-            dir <- paste0(m$app_folder, "/temp_files/", m$user_id, "/markdowns")
-            output_file <- paste0(dir, "/", paste0(sample(c(0:9, letters[1:6]), 8, TRUE), collapse = ''), "_", now() %>% stringr::str_replace_all(":", "_") %>% stringr::str_replace_all(" ", "_"), ".Md")
-            if (!dir.exists(dir)) dir.create(dir)
-              
-            # Create the markdown file
-            knitr::knit(text = code, output = output_file, quiet = TRUE)
-      
-            output$rmarkdown_output_%widget_id% <- renderUI(div(class = "markdown", withMathJax(includeMarkdown(output_file))))
-        }
+            # Matplotlib Output for Python (implementation needed)
+            # else if (code_output == "matplotlib") {
+            #     # Implementation for matplotlib output
+            #     # This would require Python integration setup
+            # }
+            
+            # Show the selected output container
+            shinyjs::show(paste0(code_output, "_output_div_%widget_id%"))
+            
+        }, error = function(e) {
+            # If there's an error, display it in console format
+            error_message <- paste("Python Error:", e$message)
+            
+            shinyjs::show("console_output_div_%widget_id%")
+            
+            # Display the error message in console output
+            output$console_output_%widget_id% <- renderText(error_message)
+        })
     }
     
-    # Language = Python
-    else if (language == "python"){
-        
-        if (code_output == "console") output$console_output_%widget_id% <- renderText(capture_python_output(code))
-        
-        # else if (code_output == "matplotlib")
-    }
-    
-    # Go to figure tab
-    if (!input$figure_and_settings_side_by_side_%widget_id%) shinyjs::click("figure_button_%widget_id%")
+    # ====================
+    # AUTO-NAVIGATION
+    # ====================
+    # Optional: automatically switch to output tab after execution
+    if (isFALSE(input$output_and_settings_side_by_side_%widget_id%)) shinyjs::click("output_button_%widget_id%")
 })
-
-# Save code with shortcut
-observe_event(input$code_%widget_id%_save, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_params_and_code_%widget_id%', Math.random());")))
