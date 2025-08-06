@@ -2,50 +2,6 @@
 # ui_user_configurations.R - User Configuration Management Interface
 # ==========================================
 
-# ████████████████████████████████████████████████████████████████████████████████
-# ██                                                                            ██
-# ██  ⚠️  DO NOT MODIFY - CORE PLUGIN FRAMEWORK  ⚠️                             ██
-# ██                                                                            ██
-# ██  This file is part of the plugin framework and works automatically.        ██
-# ██  Modifications are NOT required and may break functionality.               ██
-# ██  Only modify if you have specific advanced requirements.                   ██
-# ██                                                                            ██
-# ████████████████████████████████████████████████████████████████████████████████
-
-# PLUGIN TEMPLATE - USER CONFIGURATIONS UI FILE
-# 
-# This file defines the user configuration management interface for the widget plugin template.
-# It provides functionality for users to save, load, rename, and manage different configuration presets,
-# allowing them to quickly switch between different analysis scenarios or parameter sets.
-# 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - The default functionality should work for most plugins without modification
-# - Customize text labels and messages if needed for your specific use case
-# - Consider adding validation logic in server.R for configuration names
-# - The database integration is handled automatically by the main UI template
-# 
-# FEATURES PROVIDED:
-# - Create new configuration presets with custom names
-# - Select and load existing configurations from dropdown
-# - Rename existing configurations with validation and duplicate checking
-# - Delete unwanted configurations with confirmation dialog
-# - Modal dialogs for user interactions (create/rename/delete)
-# - Integration with the main widget's database storage system
-# 
-# USER WORKFLOW:
-# 1. User configures widget settings in the output_settings panel
-# 2. User clicks "Create Configuration" to save current settings
-# 3. User can switch between configurations via dropdown selection
-# 4. User can rename configurations to better organize their presets
-# 5. User can delete configurations they no longer need
-# 
-# DATABASE INTEGRATION:
-# - Configurations are automatically saved to the widgets_options table
-# - Each configuration stores all current widget parameters and code
-# - Configuration names are validated and updated in real-time
-# - The dropdown options are populated from database queries in ui.R
-# - No additional database setup required - handled by the template framework
-
 tagList(
     # ====================
     # CREATE AND RENAME CONFIGURATION MODALS

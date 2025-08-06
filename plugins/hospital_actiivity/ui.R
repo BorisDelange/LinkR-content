@@ -2,39 +2,6 @@
 # UI - Main interface file
 # ==========================================
 
-# ████████████████████████████████████████████████████████████████████████████████
-# ██                                                                            ██
-# ██  🔧 OPTIONAL CUSTOMIZATION - PLUGIN ENHANCEMENT  🔧                        ██
-# ██                                                                            ██
-# ██  This file provides default functionality that works out-of-the-box.       ██
-# ██  Customize only if you need specific features or modifications.            ██
-# ██  Safe to use as-is for standard plugin requirements.                       ██
-# ██                                                                            ██
-# ████████████████████████████████████████████████████████████████████████████████
-
-# PLUGIN TEMPLATE - UI MAIN FILE
-# 
-# This file defines the main user interface structure for the widget plugin template.
-# It creates a responsive layout with auto-hiding navigation, resizable panels, and 
-# access-controlled components based on user permissions.
-# 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - Replace the %import_script()% calls with your specific UI components
-# - Add any new UI imports in their respective sections
-# 
-# UI ARCHITECTURE:
-# - Auto-hiding top navigation bar that appears on hover
-# - Resizable split-panel layout (output on left, settings/code on right)
-# - Access-controlled buttons (code editor, save functions) based on user permissions
-# - User configurations dropdown for saved presets
-# - Side-by-side toggle for different viewing modes
-# 
-# MAIN COMPONENTS:
-# - output: Left panel displaying execution results
-# - output_settings: Right panel with no-code configuration interface
-# - code: Code editor panel (can replace or share space with output_settings)
-# - user_configurations: Full-screen configuration management interface
-
 # ======================================
 # LOAD USER CONFIGURATIONS FROM DATABASE
 # ======================================

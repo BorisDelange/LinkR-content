@@ -2,55 +2,6 @@
 # server_layout_manager.R - Dynamic Layout Management
 # ==========================================
 
-# ████████████████████████████████████████████████████████████████████████████████
-# ██                                                                            ██
-# ██  ⚠️  DO NOT MODIFY - CORE PLUGIN FRAMEWORK  ⚠️                             ██
-# ██                                                                            ██
-# ██  This file is part of the plugin framework and works automatically.        ██
-# ██  Modifications are NOT required and may break functionality.               ██
-# ██  Only modify if you have specific advanced requirements.                   ██
-# ██                                                                            ██
-# ████████████████████████████████████████████████████████████████████████████████
-
-# PLUGIN TEMPLATE - LAYOUT MANAGER SERVER FILE
-# 
-# This file manages the dynamic layout system for the widget plugin template.
-# It provides a sophisticated resizable panel interface that enhances user experience
-# by allowing flexible workspace arrangements.
-# 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - This file should work without modification for most plugins
-# - The layout system automatically adapts to different panel configurations
-# - Panel width preferences are automatically saved to the database
-# - No customization typically needed unless adding new panel types
-# 
-# FEATURES PROVIDED:
-# - Side-by-side vs full-width layout modes for optimal screen real estate usage
-# - Interactive drag-to-resize functionality with visual feedback
-# - Persistent panel width memory that remembers user preferences
-# - Automatic database storage of layout preferences
-# - Responsive design that works on different screen sizes
-# - Smooth transitions between different layout modes
-# 
-# LAYOUT MODES:
-# 
-# SIDE-BY-SIDE MODE:
-#   - Output panel + Settings/Code panel displayed simultaneously
-#   - Interactive resizer handle allows width adjustment
-#   - Optimal for users who want to see configuration and results together
-#   - Panel widths are remembered separately for settings vs code tabs
-# 
-# FULL-WIDTH MODE:
-#   - Single panel takes full width with tab-based navigation
-#   - Better for users with limited screen space
-#   - Navigation buttons allow switching between output, settings, and code
-# 
-# DATABASE INTEGRATION:
-# - Layout preferences stored in widgets_options table
-# - Automatically loaded on widget initialization
-# - Changes saved immediately without user intervention
-# - No additional database setup required
-
 # ======================================
 # JAVASCRIPT PANEL LAYOUT SYSTEM
 # ======================================

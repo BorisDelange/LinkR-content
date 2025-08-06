@@ -2,28 +2,6 @@
 # server_code.R - Code Editor Server Logic
 # ==========================================
 
-# ████████████████████████████████████████████████████████████████████████████████
-# ██                                                                            ██
-# ██  🔧 HEALTHCARE DASHBOARD PLUGIN IMPLEMENTATION  🔧                         ██
-# ██                                                                            ██
-# ██  Healthcare dashboard plugin for OMOP data analysis.                       ██
-# ██  Generates HTML cards displaying healthcare indicators.                     ██
-# ██                                                                            ██
-# ████████████████████████████████████████████████████████████████████████████████
-
-# HEALTHCARE DASHBOARD PLUGIN - CODE EDITOR SERVER FILE
-# 
-# This file handles the server-side logic for the healthcare dashboard plugin.
-# It provides automatic HTML code generation from UI settings and manual code execution
-# for healthcare indicators using OMOP Common Data Model.
-# 
-# CORE FUNCTIONALITY:
-# - Automatic HTML code generation for healthcare indicators
-# - Support for patient count, admission count, mortality, and length of stay metrics
-# - Hospital unit filtering and scope selection
-# - OMOP CDM database integration via get_query()
-# - Responsive HTML card display with healthcare icons
-
 # ======================================
 # INITIALIZATION
 # ======================================
@@ -136,220 +114,496 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
     
     code_lines <- c()
     
-    # ====================
-    # VALIDATION: CHECK FOR UNIT SELECTION WHEN SCOPE IS HOSPITAL UNITS
-    # ====================
+    # Define tooltip variables for direct integration
+    tooltip_class_name <- paste0("custom-tooltip-%widget_id%")
+    tooltip_class_name_units <- paste0("custom-tooltip-units-%widget_id%")
+    tooltip_style_value <- "visibility: hidden; opacity: 0; position: absolute; top: 100%; left: 0; background-color: rgba(0,0,0,0.9); color: white; padding: 8px 12px; border-radius: 4px; font-size: 12px; z-index: 1000; transition: opacity 0.3s; min-width: 200px; text-align: left; box-shadow: 0 2px 8px rgba(0,0,0,0.3); line-height: 1.3;"
+    tooltip_js_show_value <- paste0("this.querySelector('.", tooltip_class_name, "').style.visibility = 'visible'; this.querySelector('.", tooltip_class_name, "').style.opacity = '1';")
+    tooltip_js_hide_value <- paste0("this.querySelector('.", tooltip_class_name, "').style.visibility = 'hidden'; this.querySelector('.", tooltip_class_name, "').style.opacity = '0';")
+    tooltip_js_show_units <- paste0("this.querySelector('.", tooltip_class_name_units, "').style.visibility = 'visible'; this.querySelector('.", tooltip_class_name_units, "').style.opacity = '1';")
+    tooltip_js_hide_units <- paste0("this.querySelector('.", tooltip_class_name_units, "').style.visibility = 'hidden'; this.querySelector('.", tooltip_class_name_units, "').style.opacity = '0';")
     
-    code_lines <- c(code_lines,
-        "# Validation: Check if units are selected when scope is hospital units",
-        'if ("', indicator_scope, '" == "hospital_units" && length(c(', paste0('"', hospital_units, '"', collapse = ", "), ')) == 0) {',
-        '    error_msg <- if (m$language == "en") {',
-        '        "Please select at least one hospital unit."',
-        '    } else {',
-        '        "Veuillez sélectionner au moins une unité hospitalière."',
-        '    }',
-        '    stop(error_msg)',
-        '}',
-        ""
-    )
+    # Extract unit IDs and names
+    if (length(hospital_units) > 0) {
+        if (is.list(hospital_units) && length(hospital_units) > 0) {
+            if (!is.null(names(hospital_units[[1]])) && "key" %in% names(hospital_units[[1]])) {
+                unit_ids <- sapply(hospital_units, function(x) x$key)
+                unit_names <- sapply(hospital_units, function(x) x$text)
+            } else {
+                unit_ids <- unlist(hospital_units)
+                unit_names <- unlist(hospital_units)
+            }
+        } else {
+            unit_ids <- hospital_units
+            unit_names <- hospital_units
+        }
+        
+        unit_ids <- as.character(unit_ids)
+        unit_names <- as.character(unit_names)
+        unit_ids_str <- paste(unit_ids, collapse = ", ")
+        unit_names_str <- paste(paste0("- ", unit_names), collapse = "\\n")
+    } else {
+        unit_ids <- c()
+        unit_names <- c()
+        unit_ids_str <- ""
+        unit_names_str <- ""
+    }
     
-    # ====================
-    # DATA EXTRACTION BASED ON INDICATOR
-    # ====================
+    # Only generate care site code when scope is hospital units and units are selected
+    if (indicator_scope == "hospital_units" && length(unit_ids) > 0) {
+        code_lines <- c(code_lines,
+            "# Get care site names for selected units",
+            "care_sites <- get_query(\"",
+            "    SELECT DISTINCT care_site_id, care_site_name",
+            "    FROM care_site",
+            paste0("    WHERE care_site_id IN (", unit_ids_str, ")"),
+            "    ORDER BY care_site_name",
+            "\")",
+            "",
+            "# Create unit names list for tooltip",
+            "if (nrow(care_sites) > 0) {",
+            "    unit_names_for_tooltip <- paste0(\"- \", care_sites$care_site_name, collapse = \"<br>\")",
+            "} else {",
+            "    unit_names_for_tooltip <- \"\"",
+            "}",
+            "",
+            ""
+        )
+    } else if (indicator_scope == "hospital_units") {
+        code_lines <- c(code_lines,
+            "# Validation: Check if units are selected when scope is hospital units",
+            'error_msg <- i18np$t("please_select_at_least_one_hospital_unit")',
+            'stop(error_msg)',
+            ""
+        )
+    }
     
     if (indicator == "patient_count") {
-        # Patient count indicator
         if (indicator_scope == "hospitalization") {
             code_lines <- c(code_lines,
-                "# Extract distinct patient count from hospital visits",
+                "# Extract distinct patient count from all hospital visits",
                 "patients <- get_query(\"",
                 "    SELECT DISTINCT person_id",
                 "    FROM visit_occurrence",
-                "    WHERE visit_concept_id IN (9201, 9203)  -- Inpatient visits",
                 "\")",
+                "",
+                "value <- nrow(patients)",
+                "",
+                "# Generate HTML card result",
+                "res <- div()",
+                "",
+                "if (value > 0) {",
+                "    res <- div(",
+                "        style = \"",
+                "            text-align: center;",
+                "            height: 100%;",
+                "            display: flex;",
+                "            align-items: center;",
+                "            flex-direction: column;",
+                "            justify-content: center;",
+                "        \",",
+                "        div(",
+                "            style = \"color: #2C699A; margin-bottom: 10px;\",",
+                "            tags$i(class = \"fas fa-hospital-user fa-2x\")",
+                "        ),",
+                "        div(",
+                "            style = \"color: #2C699A; font-size: 36px; font-weight: bold; margin: 10px 0;\",",
+                "            value",
+                "        ),",
+                "        div(",
+                "            style = \"color: #666; font-size: 14px; text-transform: uppercase;\",",
+                "            div(",
+                "                i18np$t(\"hospitalized_patients\")",
+                "            )",
+                "        )",
+                "    )",
+                "}",
                 ""
             )
         } else {
-            # Hospital units scope
-            unit_ids_str <- paste(hospital_units, collapse = ", ")
             code_lines <- c(code_lines,
                 "# Extract distinct patient count from selected hospital units",
-                paste0("patients <- get_query(\""),
+                "patients <- get_query(\"",
                 "    SELECT DISTINCT person_id",
                 "    FROM visit_detail",
                 paste0("    WHERE care_site_id IN (", unit_ids_str, ")"),
                 "\")",
+                "",
+                "value <- nrow(patients)",
+                "",
+                "# Generate HTML card result with unit info",
+                "res <- div()",
+                "",
+                "if (value > 0) {",
+                "    res <- div(",
+                "        style = \"",
+                "            text-align: center;",
+                "            height: 100%;",
+                "            display: flex;",
+                "            align-items: center;",
+                "            flex-direction: column;",
+                "            justify-content: center;",
+                "        \",",
+                "        div(",
+                "            style = \"color: #2C699A; margin-bottom: 10px;\",",
+                "            tags$i(class = \"fas fa-hospital-user fa-2x\")",
+                "        ),",
+                "        div(",
+                "            style = \"color: #2C699A; font-size: 36px; font-weight: bold; margin: 10px 0;\",",
+                "            value",
+                "        ),",
+                "        div(",
+                "            style = \"color: #666; font-size: 14px; text-transform: uppercase;\",",
+                "            div(",
+                "                div(",
+                "                    i18np$t(\"patients\"),",
+                "                    tags$br(),",
+                "                    i18np$t(\"in_selected_units\")",
+                "                ),",
+                paste0("                div(class = \"", tooltip_class_name, "\", div("),
+                "                    paste0(i18np$t(\"hospital_units\"), \" :\"),",
+                "                    div(",
+                "                        HTML(unit_names_for_tooltip),",
+                "                        style = \"margin-top: 10px;\"",
+                "                    )",
+                paste0("                ), style = \"", tooltip_style_value, "\"),"),
+                "                style = \"position: relative; cursor: pointer;\",",
+                paste0("                onmouseover = \"", tooltip_js_show_value, "\","),
+                paste0("                onmouseout = \"", tooltip_js_hide_value, "\""),
+                "            )",
+                "        )",
+                "    )",
+                "}",
                 ""
             )
         }
         
-        # Set legend and icon
-        code_lines <- c(code_lines,
-            "# Set language-specific legend",
-            'if (m$language == "en") legend <- "Patients" else if (m$language == "fr") legend <- "Patients"',
-            'icon_class <- "fas fa-hospital-user fa-2x"',
-            "value <- nrow(patients)",
-            ""
-        )
-        
     } else if (indicator == "admission_count") {
-        # Admission count indicator
         if (indicator_scope == "hospitalization") {
             code_lines <- c(code_lines,
                 "# Extract hospital admissions count",
                 "admissions <- get_query(\"",
                 "    SELECT visit_occurrence_id, person_id, visit_start_date, visit_end_date",
                 "    FROM visit_occurrence",
-                "    WHERE visit_concept_id IN (9201, 9203)  -- Inpatient visits",
                 "\")",
+                "",
+                "value <- nrow(admissions)",
+                "",
+                "# Generate HTML card result",
+                "res <- div()",
+                "",
+                "if (value > 0) {",
+                "    res <- div(",
+                "        style = \"",
+                "            text-align: center;",
+                "            height: 100%;",
+                "            display: flex;",
+                "            align-items: center;",
+                "            flex-direction: column;",
+                "            justify-content: center;",
+                "        \",",
+                "        div(",
+                "            style = \"color: #1e7e34; margin-bottom: 10px;\",",
+                "            tags$i(class = \"fas fa-bed fa-2x\")",
+                "        ),",
+                "        div(",
+                "            style = \"color: #1e7e34; font-size: 36px; font-weight: bold; margin: 10px 0;\",",
+                "            value",
+                "        ),",
+                "        div(",
+                "            style = \"color: #666; font-size: 14px; text-transform: uppercase;\",",
+                "            div(",
+                "                i18np$t(\"admission_count\")",
+                "            )",
+                "        )",
+                "    )",
+                "}",
                 ""
             )
         } else {
-            # Hospital units scope - count unit stays
-            unit_ids_str <- paste(hospital_units, collapse = ", ")
             code_lines <- c(code_lines,
                 "# Extract hospital unit stays count",
-                paste0("admissions <- get_query(\""),
+                "admissions <- get_query(\"",
                 "    SELECT visit_detail_id, person_id, visit_detail_start_date, visit_detail_end_date",
                 "    FROM visit_detail",
                 paste0("    WHERE care_site_id IN (", unit_ids_str, ")"),
                 "\")",
+                "",
+                "value <- nrow(admissions)",
+                "",
+                "# Generate HTML card result with unit info",
+                "res <- div()",
+                "",
+                "if (value > 0) {",
+                "    res <- div(",
+                "        style = \"",
+                "            text-align: center;",
+                "            height: 100%;",
+                "            display: flex;",
+                "            align-items: center;",
+                "            flex-direction: column;",
+                "            justify-content: center;",
+                "        \",",
+                "        div(",
+                "            style = \"color: #1e7e34; margin-bottom: 10px;\",",
+                "            tags$i(class = \"fas fa-bed fa-2x\")",
+                "        ),",
+                "        div(",
+                "            style = \"color: #1e7e34; font-size: 36px; font-weight: bold; margin: 10px 0;\",",
+                "            value",
+                "        ),",
+                "        div(",
+                "            style = \"color: #666; font-size: 14px; text-transform: uppercase;\",",
+                "            div(",
+                "                div(",
+                "                    i18np$t(\"stays\"),",
+                "                    tags$br(),",
+                "                    i18np$t(\"in_selected_units\")",
+                "                ),",
+                paste0("                div(class = \"", tooltip_class_name, "\", div("),
+                "                    paste0(i18np$t(\"hospital_units\"), \" :\"),",
+                "                    div(",
+                "                        HTML(unit_names_for_tooltip),",
+                "                        style = \"margin-top: 10px;\"",
+                "                    )",
+                paste0("                ), style = \"", tooltip_style_value, "\"),"),
+                "                style = \"position: relative; cursor: pointer;\",",
+                paste0("                onmouseover = \"", tooltip_js_show_value, "\","),
+                paste0("                onmouseout = \"", tooltip_js_hide_value, "\""),
+                "            )",
+                "        )",
+                "    )",
+                "}",
                 ""
             )
         }
         
-        # Set legend and icon
-        legend_text <- if (indicator_scope == "hospitalization") {
-            'if (m$language == "en") legend <- "Admissions" else if (m$language == "fr") legend <- "Admissions"'
-        } else {
-            'if (m$language == "en") legend <- "Unit Stays" else if (m$language == "fr") legend <- "Séjours"'
-        }
-        
-        code_lines <- c(code_lines,
-            "# Set language-specific legend",
-            legend_text,
-            'icon_class <- "fas fa-bed fa-2x"',
-            "value <- nrow(admissions)",
-            ""
-        )
-        
     } else if (indicator == "mortality") {
-        # Mortality indicator
         if (indicator_scope == "hospitalization") {
             code_lines <- c(code_lines,
-                "# Extract hospital mortality data",
+                "# Extract hospital mortality and patient data",
                 "deaths <- get_query(\"",
                 "    SELECT DISTINCT d.person_id, d.death_date",
                 "    FROM death d",
                 "    JOIN visit_occurrence v ON d.person_id = v.person_id",
-                "    WHERE v.visit_concept_id IN (9201, 9203)  -- Inpatient visits",
                 "\")",
+                "",
+                "total_patients <- get_query(\"",
+                "    SELECT DISTINCT person_id",
+                "    FROM visit_occurrence",
+                "\")",
+                "",
+                "death_count <- nrow(deaths)",
+                "total_count <- nrow(total_patients)",
+                "value <- if(total_count > 0) round((death_count / total_count) * 100, 1) else 0",
+                "",
+                "# Generate HTML card result",
+                "res <- div()",
+                "",
+                "if (total_count > 0) {",
+                "    res <- div(",
+                "        style = \"",
+                "            text-align: center;",
+                "            height: 100%;",
+                "            display: flex;",
+                "            align-items: center;",
+                "            flex-direction: column;",
+                "            justify-content: center;",
+                "        \",",
+                "        div(",
+                "            style = \"color: #dc3545; margin-bottom: 10px;\",",
+                "            tags$i(class = \"fas fa-heart-broken fa-2x\")",
+                "        ),",
+                "        div(",
+                "            style = \"color: #dc3545; font-size: 36px; font-weight: bold; margin: 10px 0; position: relative; cursor: pointer;\",",
+                "            paste0(value, \"%\"),",
+                paste0("            onmouseover = \"", tooltip_js_show_value, "\","),
+                paste0("            onmouseout = \"", tooltip_js_hide_value, "\","),
+                paste0("            div(class = \"", tooltip_class_name, "\", paste0(death_count, \" décès sur \", total_count, \" patients\"), style = \"", tooltip_style_value, "\")"),
+                "        ),",
+                "        div(",
+                "            style = \"color: #666; font-size: 14px; text-transform: uppercase;\",",
+                "            i18np$t(\"mortality\")",
+                "        )",
+                "    )",
+                "}",
                 ""
             )
         } else {
-            # Hospital units scope
-            unit_ids_str <- paste(hospital_units, collapse = ", ")
             code_lines <- c(code_lines,
-                "# Extract unit-specific mortality data",
-                paste0("deaths <- get_query(\""),
+                "# Extract unit-specific mortality and patient data",
+                "deaths <- get_query(\"",
                 "    SELECT DISTINCT d.person_id, d.death_date",
                 "    FROM death d",
                 "    JOIN visit_detail vd ON d.person_id = vd.person_id",
                 paste0("    WHERE vd.care_site_id IN (", unit_ids_str, ")"),
                 "\")",
+                "",
+                "total_patients <- get_query(\"",
+                "    SELECT DISTINCT person_id",
+                "    FROM visit_detail",
+                paste0("    WHERE care_site_id IN (", unit_ids_str, ")"),
+                "\")",
+                "",
+                "death_count <- nrow(deaths)",
+                "total_count <- nrow(total_patients)",
+                "value <- if(total_count > 0) round((death_count / total_count) * 100, 1) else 0",
+                "",
+                "# Generate HTML card result with unit info",
+                "res <- div()",
+                "",
+                "if (total_count > 0) {",
+                "    res <- div(",
+                "        style = \"",
+                "            text-align: center;",
+                "            height: 100%;",
+                "            display: flex;",
+                "            align-items: center;",
+                "            flex-direction: column;",
+                "            justify-content: center;",
+                "        \",",
+                "        div(",
+                "            style = \"color: #dc3545; margin-bottom: 10px;\",",
+                "            tags$i(class = \"fas fa-heart-broken fa-2x\")",
+                "        ),",
+                "        div(",
+                "            style = \"color: #dc3545; font-size: 36px; font-weight: bold; margin: 10px 0; position: relative; cursor: pointer;\",",
+                "            paste0(value, \"%\"),",
+                paste0("            onmouseover = \"", tooltip_js_show_value, "\","),
+                paste0("            onmouseout = \"", tooltip_js_hide_value, "\","),
+                paste0("            div(class = \"", tooltip_class_name, "\", paste0(death_count, \" décès sur \", total_count, \" patients\"), style = \"", tooltip_style_value, "\")"),
+                "        ),",
+                "        div(",
+                "            style = \"color: #666; font-size: 14px; text-transform: uppercase; position: relative;\",",
+                "            div(",
+                "                i18np$t(\"deaths\"),",
+                "                tags$br(),",
+                "                i18np$t(\"in_selected_units\"),",
+                "                style = \"cursor: pointer;\",",
+                paste0("                onmouseover = \"", tooltip_js_show_units, "\","),
+                paste0("                onmouseout = \"", tooltip_js_hide_units, "\""),
+                "            ),",
+                paste0("            div(class = \"", tooltip_class_name_units, "\", div("),
+                "                paste0(i18np$t(\"hospital_units\"), \" :\"),",
+                "                div(",
+                "                    HTML(unit_names_for_tooltip),",
+                "                    style = \"margin-top: 10px;\"",
+                "                )",
+                paste0("            ), style = \"", tooltip_style_value, "\")"),
+                "        )",
+                "    )",
+                "}",
                 ""
             )
         }
         
-        # Set legend and icon
-        code_lines <- c(code_lines,
-            "# Set language-specific legend",
-            'if (m$language == "en") legend <- "Deaths" else if (m$language == "fr") legend <- "Décès"',
-            'icon_class <- "fas fa-heart-broken fa-2x"',
-            "value <- nrow(deaths)",
-            ""
-        )
-        
     } else if (indicator == "average_length_of_stay") {
-        # Average length of stay indicator
         if (indicator_scope == "hospitalization") {
             code_lines <- c(code_lines,
                 "# Extract hospital length of stay data",
                 "stays <- get_query(\"",
                 "    SELECT visit_occurrence_id, person_id, visit_start_date, visit_end_date,",
-                "           DATEDIFF(visit_end_date, visit_start_date) as length_of_stay",
+                "           DATEDIFF('day', visit_start_date, visit_end_date) as length_of_stay",
                 "    FROM visit_occurrence",
-                "    WHERE visit_concept_id IN (9201, 9203)  -- Inpatient visits",
-                "    AND visit_end_date IS NOT NULL",
+                "    WHERE visit_end_date IS NOT NULL",
                 "\")",
+                "",
+                "# Calculate average length of stay",
+                "value <- if(nrow(stays) > 0) round(mean(stays$length_of_stay, na.rm = TRUE), 1) else 0",
+                "",
+                "# Generate HTML card result",
+                "res <- div()",
+                "",
+                "if (value > 0) {",
+                "    res <- div(",
+                "        style = \"",
+                "            text-align: center;",
+                "            height: 100%;",
+                "            display: flex;",
+                "            align-items: center;",
+                "            flex-direction: column;",
+                "            justify-content: center;",
+                "        \",",
+                "        div(",
+                "            style = \"color: #fd7e14; margin-bottom: 10px;\",",
+                "            tags$i(class = \"fas fa-calendar-day fa-2x\")",
+                "        ),",
+                "        div(",
+                "            style = \"color: #fd7e14; font-size: 36px; font-weight: bold; margin: 10px 0;\",",
+                "            paste0(value, \" \", tags$span(i18np$t(\"days\"), style = \"font-size: 18px;\"))",
+                "        ),",
+                "        div(",
+                "            style = \"color: #666; font-size: 14px; text-transform: uppercase;\",",
+                "            i18np$t(\"average_length_of_stay\")",
+                "        )",
+                "    )",
+                "}",
                 ""
             )
         } else {
-            # Hospital units scope
-            unit_ids_str <- paste(hospital_units, collapse = ", ")
             code_lines <- c(code_lines,
                 "# Extract unit length of stay data",
-                paste0("stays <- get_query(\""),
+                "stays <- get_query(\"",
                 "    SELECT visit_detail_id, person_id, visit_detail_start_date, visit_detail_end_date,",
-                "           DATEDIFF(visit_detail_end_date, visit_detail_start_date) as length_of_stay",
+                "           DATEDIFF('day', visit_detail_start_date, visit_detail_end_date) as length_of_stay",
                 "    FROM visit_detail",
                 paste0("    WHERE care_site_id IN (", unit_ids_str, ")"),
                 "    AND visit_detail_end_date IS NOT NULL",
                 "\")",
+                "",
+                "# Calculate average length of stay",
+                "value <- if(nrow(stays) > 0) round(mean(stays$length_of_stay, na.rm = TRUE), 1) else 0",
+                "",
+                "# Generate HTML card result with unit info",
+                "res <- div()",
+                "",
+                "if (value > 0) {",
+                "    res <- div(",
+                "        style = \"",
+                "            text-align: center;",
+                "            height: 100%;",
+                "            display: flex;",
+                "            align-items: center;",
+                "            flex-direction: column;",
+                "            justify-content: center;",
+                "        \",",
+                "        div(",
+                "            style = \"color: #fd7e14; margin-bottom: 10px;\",",
+                "            tags$i(class = \"fas fa-calendar-day fa-2x\")",
+                "        ),",
+                "        div(",
+                "            style = \"color: #fd7e14; font-size: 36px; font-weight: bold; margin: 10px 0;\",",
+                "            paste0(value, \" \", tags$span(i18np$t(\"days\"), style = \"font-size: 18px;\"))",
+                "        ),",
+                "        div(",
+                "            style = \"color: #666; font-size: 14px; text-transform: uppercase;\",",
+                "            div(",
+                "                div(",
+                "                    i18np$t(\"average_length_of_stay\"),",
+                "                    tags$br(),",
+                "                    i18np$t(\"in_selected_units\")",
+                "                ),",
+                paste0("                div(class = \"", tooltip_class_name, "\", div("),
+                "                    paste0(i18np$t(\"hospital_units\"), \" :\"),",
+                "                    div(",
+                "                        HTML(unit_names_for_tooltip),",
+                "                        style = \"margin-top: 10px;\"",
+                "                    )",
+                paste0("                ), style = \"", tooltip_style_value, "\"),"),
+                "                style = \"position: relative; cursor: pointer;\",",
+                paste0("                onmouseover = \"", tooltip_js_show_value, "\","),
+                paste0("                onmouseout = \"", tooltip_js_hide_value, "\""),
+                "            )",
+                "        )",
+                "    )",
+                "}",
                 ""
             )
         }
-        
-        # Set legend and icon
-        code_lines <- c(code_lines,
-            "# Calculate average length of stay",
-            "avg_los <- if(nrow(stays) > 0) round(mean(stays$length_of_stay, na.rm = TRUE), 1) else 0",
-            "",
-            "# Set language-specific legend",
-            'if (m$language == "en") legend <- "Avg. LOS (days)" else if (m$language == "fr") legend <- "DMS (jours)"',
-            'icon_class <- "fas fa-calendar-day fa-2x"',
-            "value <- avg_los",
-            ""
-        )
     }
     
-    # ====================
-    # HTML CARD GENERATION
-    # ====================
+    code_lines <- c(code_lines, "res")
     
-    code_lines <- c(code_lines,
-        "# Generate HTML card result",
-        "res <- div()",
-        "",
-        "if (value > 0) {",
-        "    res <- div(",
-        "        style = \"",
-        "            text-align: center;",
-        "            height: 100%;",
-        "            display: flex;",
-        "            align-items: center;",
-        "            flex-direction: column;",
-        "            justify-content: center;",
-        "        \",",
-        "        div(",
-        "            style = \"color: #2C699A; margin-bottom: 10px;\",",
-        "            tags$i(class = icon_class)",
-        "        ),",
-        "        div(",
-        "            style = \"color: #2C699A; font-size: 36px; font-weight: bold; margin: 10px 0;\",",
-        "            value",
-        "        ),",
-        "        div(",
-        "            style = \"color: #666; font-size: 14px; text-transform: uppercase;\",",
-        "            legend",
-        "        )",
-        "    )",
-        "}",
-        "",
-        "res"
-    )
-    
-    # Combine all code lines
     generated_code <- paste(code_lines, collapse = "\n")
     
     return(generated_code)

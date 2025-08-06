@@ -1,6 +1,7 @@
 base,en,fr
 add,Add,Ajouter
 admission_count,Number of admissions,Nombre d'admissions
+admission_count_tooltip,Number of hospital admissions,Nombre d'admissions hospitalières
 automatic_updates,Automatically update output,Mettre à jour automatiquement les résultats
 average_length_of_stay,Average length of stay,Durée moyenne de séjour
 cardiology,Cardiology,Cardiologie
@@ -11,18 +12,24 @@ configuration_name,Configuration name,Nom de la configuration
 create_user_configuration,Create new user configuration,Créer une nouvelle configuration
 data_analysis_results,Data analysis results,Résultats des analyses
 data_table,Data table,Tableau de données
+days,days,jours
+deaths_in_selected_units,Deaths in Selected Units,Décès dans les unités sélectionnées
+deaths,Deaths,Décès
 delete,Delete,Supprimer
 delete_user_configuration_text,Confirm deletion of the user configuration?,Confirmer la suppression de la configuration utilisateur ?
 delete_user_configuration_title,Delete user configuration,Supprimer la configuration utilisateur
 display_output,Display output,Afficher le résultat
+dms_in_selected_units,Average LOS in Selected Units (days),DMS dans les unités sélectionnées (jours)
 dont_delete,Cancel,Annuler
 emergency_department,Emergency Department,Service d'urgences
 histogram,Histogram,Histogramme
 hospital_unit,Hospital Unit,Unité hospitalière
 hospital_units,Hospital Unit(s),Unité(s) hospitalière(s)
 hospitalization,Hospitalization,Hospitalisation
+hospitalized_patients,Hospitalized Patients,Patients hospitalisés
 indicator,Indicator,Indicateur
 indicator_scope,Indicator Scope,Périmètre de l'indicateur
+in_selected_units,in Selected Units,dans les unités sélectionnées
 internal_medicine,Internal Medicine,Médecine interne
 modif_saved,Updates saved,Modifications enregistrées
 mortality,Mortality,Mortalité
@@ -32,7 +39,10 @@ no_user_configuration_selected,No user configuration selected,Aucune configurati
 output_and_settings_side_by_side,Output and settings/editor side by side,Résultats et réglages/éditeur côte à côte
 output_type,Output type,Format de sortie
 patient_count,Number of patients,Nombre de patients
+patients,Patients,Patients
+patients_in_selected_units,Patients in Selected Units,Patients admis dans les unités sélectionnées
 pediatrics,Pediatrics,Pédiatrie
+please_select_at_least_one_hospital_unit,Please select at least one hospital unit.,Veuillez sélectionner au moins une unité hospitalière.
 plot_title,Plot title,Titre de la figure
 provide_valid_name,Provide valid name,Nom valide requis
 rename,Rename,Renommer
@@ -42,6 +52,8 @@ select_all_units,Select All Units,Sélectionner toutes les unités
 show_code_editor,Code editor,Editeur de code
 show_output,Output,Résultats
 show_output_settings,Output settings,Modifier les réglages
+stays,Stays,Séjours
+stays_in_selected_units,Stays in Selected Units,Séjours dans les unités sélectionnées
 summary_statistics,Summary statistics,Résumé statistique
 surgery,Surgery,Chirurgie
 user_configuration_delete,User configuration deleted,Configuration utilisateur supprimée
