@@ -23,3 +23,11 @@ show_output,Output,Résultats
 show_output_settings,Output settings,Modifier les réglages
 user_configuration_delete,User configuration deleted,Configuration utilisateur supprimée
 user_configuration_renamed,User configuration renamed,Configuration renommée
+output_type,Output type,Format de sortie
+variables,Variables,Variables
+automatic_updates,Automatically update output,Mettre à jour automatiquement les résultats
+plot_title,Plot title,Titre de la figure
+data_analysis_results,Data analysis results,Résultats des analyses
+histogram,Histogram,Histogramme
+data_table,Data table,Tableau de données
+summary_statistics,Summary statistics,Résumé statistique

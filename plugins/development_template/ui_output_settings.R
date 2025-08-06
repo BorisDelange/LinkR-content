@@ -90,12 +90,12 @@ div(
             shiny.fluent::Dropdown.shinyInput(
                 ns("output_type_%widget_id%"), 
                 options = list(
-                    list(key = "histogram", text = "Histogram"),
-                    list(key = "table", text = "Data Table"),
-                    list(key = "summary", text = "Summary Statistics")
+                    list(key = "histogram", text = i18np$t("histogram")),
+                    list(key = "table", text = i18np$t("data_table")),
+                    list(key = "summary", text = i18np$t("summary_statistics"))
                 ), 
                 value = "histogram",
-                label = "Output Type"
+                label = i18np$t("output_type")
             ),
             style = "width: 200px;"
         ),
@@ -111,7 +111,7 @@ div(
         div(
             shiny.fluent::Dropdown.shinyInput(
                 ns("variables_%widget_id%"), 
-                label = "Variables to Analyze",
+                label = i18np$t("variables"),
                 options = list(
                     list(key = "Sepal.Length", text = "Sepal Length"),
                     list(key = "Sepal.Width", text = "Sepal Width"),
@@ -142,7 +142,7 @@ div(
         # id = ns("group_by_div_%widget_id%"),
         # shiny.fluent::Dropdown.shinyInput(
             # ns("group_by_%widget_id%"),
-            # label = "Group By Variable",
+            # label = i18np$t("group_by_variable"),
             # options = list(
                 # list(key = "none", text = "No Grouping"),
                 # list(key = "Species", text = "Species"),
@@ -162,7 +162,7 @@ div(
         # id = ns("alpha_level_div_%widget_id%"),
         # shiny.fluent::SpinButton.shinyInput(
             # ns("alpha_level_%widget_id%"),
-            # label = "Transparency Level",
+            # label = i18np$t("transparency_level"),
             # value = 0.7,
             # min = 0.1,
             # max = 1.0,
@@ -179,7 +179,7 @@ div(
         # id = ns("color_scheme_div_%widget_id%"),
         # shiny.fluent::Dropdown.shinyInput(
             # ns("color_scheme_%widget_id%"),
-            # label = "Color Palette",
+            # label = i18np$t("color_palette"),
             # options = list(
                 # list(key = "default", text = "Default Colors"),
                 # list(key = "viridis", text = "Viridis"),
@@ -200,8 +200,8 @@ div(
         id = ns("plot_title_div_%widget_id%"),
         shiny.fluent::TextField.shinyInput(
             ns("plot_title_%widget_id%"),
-            label = "Plot Title",
-            value = "Data Analysis Results"
+            label = i18np$t("plot_title"),
+            value = i18np$t("data_analysis_results")
         ),
         style = "width: 250px;"
     ),
@@ -215,7 +215,7 @@ div(
             # id = ns("show_legend_div_%widget_id%"),
             # shiny.fluent::Toggle.shinyInput(
                 # ns("show_legend_%widget_id%"), 
-                # label = "Show Legend",
+                # label = i18np$t("show_legend"),
                 # value = TRUE
             # ),
             # style = "margin-right: 20px;"
@@ -224,7 +224,7 @@ div(
             id = ns("auto_update_div_%widget_id%"),
             shiny.fluent::Toggle.shinyInput(
                 ns("auto_update_%widget_id%"), 
-                label = "Automatic Updates",
+                label = i18np$t("automatic_updates"),
                 value = TRUE
             )
         ),
@@ -241,7 +241,7 @@ div(
             # id = ns("start_date_div_%widget_id%"),
             # shiny.fluent::DatePicker.shinyInput(
                 # ns("start_date_%widget_id%"),
-                # label = "Start Date",
+                # label = i18np$t("start_date"),
                 # value = Sys.Date() - 30
             # ),
             # style = "width: 150px; margin-right: 15px;"
@@ -250,7 +250,7 @@ div(
             # id = ns("end_date_div_%widget_id%"),
             # shiny.fluent::DatePicker.shinyInput(
                 # ns("end_date_%widget_id%"),
-                # label = "End Date", 
+                # label = i18np$t("end_date"), 
                 # value = Sys.Date()
             # ),
             # style = "width: 150px;"
@@ -268,7 +268,7 @@ div(
             # id = ns("x_axis_label_div_%widget_id%"),
             # shiny.fluent::TextField.shinyInput(
                 # ns("x_axis_label_%widget_id%"),
-                # label = "X-Axis Label",
+                # label = i18np$t("x_axis_label"),
                 # value = "X Variable"
             # ),
             # style = "width: 150px; margin-right: 15px;"
@@ -277,7 +277,7 @@ div(
             # id = ns("y_axis_label_div_%widget_id%"),
             # shiny.fluent::TextField.shinyInput(
                 # ns("y_axis_label_%widget_id%"),
-                # label = "Y-Axis Label",
+                # label = i18np$t("y_axis_label"),
                 # value = "Y Variable"
             # ),
             # style = "width: 150px;"

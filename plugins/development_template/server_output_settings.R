@@ -71,7 +71,7 @@
 all_inputs_%widget_id% <- list(
     list(id = "output_type", type = "dropdown", default = "histogram"),
     list(id = "variables", type = "multiselect", default = c("Sepal.Length")),
-    list(id = "plot_title",type = "text", default = "Data Analysis Results"),
+    list(id = "plot_title",type = "text", default = i18np$t("data_analysis_results")),
     list(id = "auto_update", type = "toggle", default = TRUE),
     list(id = "code", type = "code", default = "")
     # Add more inputs as needed:
