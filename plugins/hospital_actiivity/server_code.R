@@ -120,8 +120,8 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
     tooltip_style_value <- "visibility: hidden; opacity: 0; position: absolute; top: 100%; left: 0; background-color: rgba(0,0,0,0.9); color: white; padding: 8px 12px; border-radius: 4px; font-size: 12px; z-index: 1000; transition: opacity 0.3s; min-width: 200px; text-align: left; box-shadow: 0 2px 8px rgba(0,0,0,0.3); line-height: 1.3;"
     tooltip_js_show_value <- paste0("this.querySelector('.", tooltip_class_name, "').style.visibility = 'visible'; this.querySelector('.", tooltip_class_name, "').style.opacity = '1';")
     tooltip_js_hide_value <- paste0("this.querySelector('.", tooltip_class_name, "').style.visibility = 'hidden'; this.querySelector('.", tooltip_class_name, "').style.opacity = '0';")
-    tooltip_js_show_units <- paste0("this.querySelector('.", tooltip_class_name_units, "').style.visibility = 'visible'; this.querySelector('.", tooltip_class_name_units, "').style.opacity = '1';")
-    tooltip_js_hide_units <- paste0("this.querySelector('.", tooltip_class_name_units, "').style.visibility = 'hidden'; this.querySelector('.", tooltip_class_name_units, "').style.opacity = '0';")
+    tooltip_js_show_units <- paste0("this.parentElement.querySelector('.", tooltip_class_name_units, "').style.visibility = 'visible'; this.parentElement.querySelector('.", tooltip_class_name_units, "').style.opacity = '1';")
+    tooltip_js_hide_units <- paste0("this.parentElement.querySelector('.", tooltip_class_name_units, "').style.visibility = 'hidden'; this.parentElement.querySelector('.", tooltip_class_name_units, "').style.opacity = '0';")
     
     # Extract unit IDs and names
     if (length(hospital_units) > 0) {
@@ -381,11 +381,13 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
     } else if (indicator == "mortality") {
         if (indicator_scope == "hospitalization") {
             code_lines <- c(code_lines,
-                "# Extract hospital mortality and patient data",
+                "# Extract hospital mortality during hospitalization",
                 "deaths <- get_query(\"",
-                "    SELECT DISTINCT d.person_id, d.death_date",
+                "    SELECT DISTINCT d.person_id, d.death_datetime",
                 "    FROM death d",
                 "    JOIN visit_occurrence v ON d.person_id = v.person_id",
+                "    WHERE d.death_datetime >= v.visit_start_datetime",
+                "    AND d.death_datetime <= COALESCE(v.visit_end_datetime, CAST(NOW() AS DATE))",
                 "\")",
                 "",
                 "total_patients <- get_query(\"",
@@ -419,7 +421,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
                 "            paste0(value, \"%\"),",
                 paste0("            onmouseover = \"", tooltip_js_show_value, "\","),
                 paste0("            onmouseout = \"", tooltip_js_hide_value, "\","),
-                paste0("            div(class = \"", tooltip_class_name, "\", paste0(death_count, \" décès sur \", total_count, \" patients\"), style = \"", tooltip_style_value, "\")"),
+                paste0("            div(class = \"", tooltip_class_name, "\", paste0(death_count, \" \", i18np$t(\"deaths_on_total_patients\"), \" \", total_count, \" \", tolower(i18np$t(\"patients\"))), tags$br(), tags$br(), paste0(i18np$t(\"deaths_during_unit_stays\")), style = \"", tooltip_style_value, "\")"),
                 "        ),",
                 "        div(",
                 "            style = \"color: #666; font-size: 14px; text-transform: uppercase;\",",
@@ -431,12 +433,14 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
             )
         } else {
             code_lines <- c(code_lines,
-                "# Extract unit-specific mortality and patient data",
+                "# Extract unit-specific mortality during hospitalization",
                 "deaths <- get_query(\"",
-                "    SELECT DISTINCT d.person_id, d.death_date",
+                "    SELECT DISTINCT d.person_id, d.death_datetime, vd.visit_detail_id",
                 "    FROM death d",
                 "    JOIN visit_detail vd ON d.person_id = vd.person_id",
                 paste0("    WHERE vd.care_site_id IN (", unit_ids_str, ")"),
+                "    AND d.death_datetime >= vd.visit_detail_start_datetime",
+                "    AND d.death_datetime <= COALESCE(vd.visit_detail_end_datetime, CAST(NOW() AS DATE))",
                 "\")",
                 "",
                 "total_patients <- get_query(\"",
@@ -471,7 +475,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
                 "            paste0(value, \"%\"),",
                 paste0("            onmouseover = \"", tooltip_js_show_value, "\","),
                 paste0("            onmouseout = \"", tooltip_js_hide_value, "\","),
-                paste0("            div(class = \"", tooltip_class_name, "\", paste0(death_count, \" décès sur \", total_count, \" patients\"), style = \"", tooltip_style_value, "\")"),
+                paste0("            div(class = \"", tooltip_class_name, "\", paste0(death_count, \" \", i18np$t(\"deaths_on_total_patients\"), \" \", total_count, \" \", tolower(i18np$t(\"patients\"))), tags$br(), tags$br(), paste0(i18np$t(\"deaths_during_hospitalization\")), style = \"", tooltip_style_value, "\")"),
                 "        ),",
                 "        div(",
                 "            style = \"color: #666; font-size: 14px; text-transform: uppercase; position: relative;\",",

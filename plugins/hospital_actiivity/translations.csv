@@ -13,7 +13,10 @@ create_user_configuration,Create new user configuration,Créer une nouvelle conf
 data_analysis_results,Data analysis results,Résultats des analyses
 data_table,Data table,Tableau de données
 days,days,jours
+deaths_during_hospitalization,The deaths occurred during the stay in the selected units,Les décès sont survenus durant le séjour dans les unités sélectionnées
+deaths_during_unit_stays,Deaths occurred during hospital stays in selected units,Décès survenus durant les séjours hospitaliers dans les unités sélectionnées
 deaths_in_selected_units,Deaths in Selected Units,Décès dans les unités sélectionnées
+deaths_on_total_patients,deaths on,décès sur
 deaths,Deaths,Décès
 delete,Delete,Supprimer
 delete_user_configuration_text,Confirm deletion of the user configuration?,Confirmer la suppression de la configuration utilisateur ?
