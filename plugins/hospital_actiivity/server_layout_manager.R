@@ -163,33 +163,38 @@ panel_layout_manager <- paste0("
 # ======================================
 
 # Query database for saved side-by-side layout preference
-sql <- glue::glue_sql(
-    "SELECT value_num 
-     FROM widgets_options 
-     WHERE widget_id = %widget_id% AND category = 'general_settings' AND name = 'output_and_settings_side_by_side'", 
-    .con = m$db
-)
-side_by_side_result <- DBI::dbGetQuery(m$db, sql)
+shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-get_saved_side_by_side_value_%widget_id%', Math.random());"))
 
-# Set default or load saved preference
-side_by_side <- TRUE  # Default to side-by-side mode
-if (nrow(side_by_side_result) > 0) {
-    saved_value <- side_by_side_result %>% dplyr::pull(value_num) %>% as.logical()
-    if (!is.na(saved_value)) {
-        side_by_side <- saved_value
+observe_event(input$get_saved_side_by_side_value_%widget_id%, {
+    
+    sql <- glue::glue_sql(
+        "SELECT value_num 
+         FROM widgets_options 
+         WHERE widget_id = %widget_id% AND category = 'general_settings' AND name = 'output_and_settings_side_by_side'", 
+        .con = m$db
+    )
+    side_by_side_result <- DBI::dbGetQuery(m$db, sql)
+    
+    # Set default or load saved preference
+    side_by_side <- TRUE  # Default to side-by-side mode
+    if (nrow(side_by_side_result) > 0) {
+        saved_value <- side_by_side_result %>% dplyr::pull(value_num) %>% as.logical()
+        if (!is.na(saved_value)) {
+            side_by_side <- saved_value
+        }
     }
-}
-
-if (!side_by_side){
-    shinyjs::delay(1000, {
-        shinyjs::show("output_button_div_%widget_id%")
-        shinyjs::hide("resizer_%widget_id%")
-        shinyjs::hide("output_settings_code_div_%widget_id%")
-    })
-}
-
-# Initialize the layout state in JavaScript
-shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-output_and_settings_side_by_side_%widget_id%', ", tolower(side_by_side), ");"))
+    
+    if (!side_by_side){
+        shinyjs::delay(1000, {
+            shinyjs::show("output_button_div_%widget_id%")
+            shinyjs::hide("resizer_%widget_id%")
+            shinyjs::hide("output_settings_code_div_%widget_id%")
+        })
+    }
+    
+    # # Initialize the layout state in JavaScript
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-output_and_settings_side_by_side_%widget_id%', ", tolower(side_by_side), ");"))
+})
 
 # Initialize the panel layout system with a slight delay to ensure DOM is ready
 shinyjs::delay(1000, shinyjs::runjs(panel_layout_manager))

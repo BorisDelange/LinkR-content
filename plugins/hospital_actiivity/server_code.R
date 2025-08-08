@@ -115,12 +115,73 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
     code_lines <- c()
     
     # Define tooltip variables for direct integration
+    # Enhanced tooltip variables with portal-style positioning
     tooltip_class_name <- paste0("custom-tooltip-%widget_id%")
     tooltip_class_name_units <- paste0("custom-tooltip-units-%widget_id%")
-    tooltip_style_value <- "visibility: hidden; opacity: 0; position: absolute; top: 100%; left: 0; background-color: rgba(0,0,0,0.9); color: white; padding: 8px 12px; border-radius: 4px; font-size: 12px; z-index: 1000; transition: opacity 0.3s; min-width: 200px; text-align: left; box-shadow: 0 2px 8px rgba(0,0,0,0.3); line-height: 1.3;"
-    tooltip_js_show_value <- paste0("this.querySelector('.", tooltip_class_name, "').style.visibility = 'visible'; this.querySelector('.", tooltip_class_name, "').style.opacity = '1';")
+    
+    # Fixed positioning tooltip that escapes container bounds
+    tooltip_style_value <- "visibility: hidden; opacity: 0; position: fixed; background-color: rgba(0,0,0,0.9); color: white; padding: 8px 12px; border-radius: 4px; font-size: 12px; z-index: 9999; transition: opacity 0.3s; min-width: 200px; max-width: 300px; text-align: left; box-shadow: 0 4px 12px rgba(0,0,0,0.4); line-height: 1.3; pointer-events: none;"
+    
+    # JavaScript for dynamic positioning
+    tooltip_js_show_value <- paste0("
+        var tooltip = this.querySelector('.", tooltip_class_name, "');
+        var rect = this.getBoundingClientRect();
+        var tooltipRect = tooltip.getBoundingClientRect();
+        var viewportWidth = window.innerWidth;
+        var viewportHeight = window.innerHeight;
+        
+        // Calculate optimal position
+        var left = rect.left + (rect.width / 2) - (200 / 2);
+        var top = rect.bottom + 8;
+        
+        // Adjust if tooltip would go off-screen horizontally
+        if (left + 200 > viewportWidth - 10) {
+            left = viewportWidth - 210;
+        }
+        if (left < 10) {
+            left = 10;
+        }
+        
+        // Adjust if tooltip would go off-screen vertically
+        if (top + 100 > viewportHeight - 10) {
+            top = rect.top - 100 - 8;
+        }
+        
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+        tooltip.style.visibility = 'visible';
+        tooltip.style.opacity = '1';
+    ")
+    
     tooltip_js_hide_value <- paste0("this.querySelector('.", tooltip_class_name, "').style.visibility = 'hidden'; this.querySelector('.", tooltip_class_name, "').style.opacity = '0';")
-    tooltip_js_show_units <- paste0("this.parentElement.querySelector('.", tooltip_class_name_units, "').style.visibility = 'visible'; this.parentElement.querySelector('.", tooltip_class_name_units, "').style.opacity = '1';")
+    
+    # Similar logic for units tooltip
+    tooltip_js_show_units <- paste0("
+        var tooltip = this.parentElement.querySelector('.", tooltip_class_name_units, "');
+        var rect = this.getBoundingClientRect();
+        var viewportWidth = window.innerWidth;
+        var viewportHeight = window.innerHeight;
+        
+        var left = rect.left + (rect.width / 2) - (200 / 2);
+        var top = rect.bottom + 8;
+        
+        if (left + 200 > viewportWidth - 10) {
+            left = viewportWidth - 210;
+        }
+        if (left < 10) {
+            left = 10;
+        }
+        
+        if (top + 100 > viewportHeight - 10) {
+            top = rect.top - 100 - 8;
+        }
+        
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+        tooltip.style.visibility = 'visible';
+        tooltip.style.opacity = '1';
+    ")
+    
     tooltip_js_hide_units <- paste0("this.parentElement.querySelector('.", tooltip_class_name_units, "').style.visibility = 'hidden'; this.parentElement.querySelector('.", tooltip_class_name_units, "').style.opacity = '0';")
     
     # Extract unit IDs and names
@@ -153,7 +214,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
     if (indicator_scope == "hospital_units" && length(unit_ids) > 0) {
         code_lines <- c(code_lines,
             "# Get care site names for selected units",
-            "care_sites <- get_query(\"",
+            "care_sites <- d$con %>% run_query(\"",
             "    SELECT DISTINCT care_site_id, care_site_name",
             "    FROM care_site",
             paste0("    WHERE care_site_id IN (", unit_ids_str, ")"),
@@ -182,7 +243,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         if (indicator_scope == "hospitalization") {
             code_lines <- c(code_lines,
                 "# Extract distinct patient count from all hospital visits",
-                "patients <- get_query(\"",
+                "patients <- d$con %>% run_query(\"",
                 "    SELECT DISTINCT person_id",
                 "    FROM visit_occurrence",
                 "\")",
@@ -223,7 +284,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         } else {
             code_lines <- c(code_lines,
                 "# Extract distinct patient count from selected hospital units",
-                "patients <- get_query(\"",
+                "patients <- d$con %>% run_query(\"",
                 "    SELECT DISTINCT person_id",
                 "    FROM visit_detail",
                 paste0("    WHERE care_site_id IN (", unit_ids_str, ")"),
@@ -282,7 +343,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         if (indicator_scope == "hospitalization") {
             code_lines <- c(code_lines,
                 "# Extract hospital admissions count",
-                "admissions <- get_query(\"",
+                "admissions <- d$con %>% run_query(\"",
                 "    SELECT visit_occurrence_id, person_id, visit_start_date, visit_end_date",
                 "    FROM visit_occurrence",
                 "\")",
@@ -323,7 +384,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         } else {
             code_lines <- c(code_lines,
                 "# Extract hospital unit stays count",
-                "admissions <- get_query(\"",
+                "admissions <- d$con %>% run_query(\"",
                 "    SELECT visit_detail_id, person_id, visit_detail_start_date, visit_detail_end_date",
                 "    FROM visit_detail",
                 paste0("    WHERE care_site_id IN (", unit_ids_str, ")"),
@@ -382,7 +443,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         if (indicator_scope == "hospitalization") {
             code_lines <- c(code_lines,
                 "# Extract hospital mortality during hospitalization",
-                "deaths <- get_query(\"",
+                "deaths <- d$con %>% run_query(\"",
                 "    SELECT DISTINCT d.person_id, d.death_datetime",
                 "    FROM death d",
                 "    JOIN visit_occurrence v ON d.person_id = v.person_id",
@@ -390,7 +451,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
                 "    AND d.death_datetime <= COALESCE(v.visit_end_datetime, CAST(NOW() AS DATE))",
                 "\")",
                 "",
-                "total_patients <- get_query(\"",
+                "total_patients <- d$con %>% run_query(\"",
                 "    SELECT DISTINCT person_id",
                 "    FROM visit_occurrence",
                 "\")",
@@ -434,7 +495,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         } else {
             code_lines <- c(code_lines,
                 "# Extract unit-specific mortality during hospitalization",
-                "deaths <- get_query(\"",
+                "deaths <- d$con %>% run_query(\"",
                 "    SELECT DISTINCT d.person_id, d.death_datetime, vd.visit_detail_id",
                 "    FROM death d",
                 "    JOIN visit_detail vd ON d.person_id = vd.person_id",
@@ -443,7 +504,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
                 "    AND d.death_datetime <= COALESCE(vd.visit_detail_end_datetime, CAST(NOW() AS DATE))",
                 "\")",
                 "",
-                "total_patients <- get_query(\"",
+                "total_patients <- d$con %>% run_query(\"",
                 "    SELECT DISTINCT person_id",
                 "    FROM visit_detail",
                 paste0("    WHERE care_site_id IN (", unit_ids_str, ")"),
@@ -505,7 +566,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         if (indicator_scope == "hospitalization") {
             code_lines <- c(code_lines,
                 "# Extract hospital length of stay data",
-                "stays <- get_query(\"",
+                "stays <- d$con %>% run_query(\"",
                 "    SELECT visit_occurrence_id, person_id, visit_start_date, visit_end_date,",
                 "           DATEDIFF('day', visit_start_date, visit_end_date) as length_of_stay",
                 "    FROM visit_occurrence",
@@ -534,7 +595,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
                 "        ),",
                 "        div(",
                 "            style = \"color: #fd7e14; font-size: 36px; font-weight: bold; margin: 10px 0;\",",
-                "            paste0(value, \" \", tags$span(i18np$t(\"days\"), style = \"font-size: 18px;\"))",
+                "            paste0(value, \" \"), tags$span(i18np$t(\"days\"), style = \"font-size: 18px;\")",
                 "        ),",
                 "        div(",
                 "            style = \"color: #666; font-size: 14px; text-transform: uppercase;\",",
@@ -547,7 +608,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         } else {
             code_lines <- c(code_lines,
                 "# Extract unit length of stay data",
-                "stays <- get_query(\"",
+                "stays <- d$con %>% run_query(\"",
                 "    SELECT visit_detail_id, person_id, visit_detail_start_date, visit_detail_end_date,",
                 "           DATEDIFF('day', visit_detail_start_date, visit_detail_end_date) as length_of_stay",
                 "    FROM visit_detail",
@@ -577,7 +638,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
                 "        ),",
                 "        div(",
                 "            style = \"color: #fd7e14; font-size: 36px; font-weight: bold; margin: 10px 0;\",",
-                "            paste0(value, \" \", tags$span(i18np$t(\"days\"), style = \"font-size: 18px;\"))",
+                "            paste0(value, \" \"), tags$span(i18np$t(\"days\"), style = \"font-size: 18px;\")",
                 "        ),",
                 "        div(",
                 "            style = \"color: #666; font-size: 14px; text-transform: uppercase;\",",
