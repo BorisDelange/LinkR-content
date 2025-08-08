@@ -227,7 +227,6 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
             "} else {",
             "    unit_names_for_tooltip <- \"\"",
             "}",
-            "",
             ""
         )
     } else if (indicator_scope == "hospital_units") {
@@ -243,10 +242,16 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         if (indicator_scope == "hospitalization") {
             code_lines <- c(code_lines,
                 "# Extract distinct patient count from all hospital visits",
-                "patients <- d$con %>% run_query(\"",
+                "",
+                #"visit_occurrence_ids <- paste(m$subset_persons$visit_occurrence_id, collapse = \", \")",
+                #"",
+                "patients <- d$con %>% run_query(paste0(\"",
                 "    SELECT DISTINCT person_id",
                 "    FROM visit_occurrence",
-                "\")",
+                #"    WHERE visit_occurrence_id IN (\", visit_occurrence_ids, \")",
+                "    WHERE visit_start_date >= DATE('\", m$subset_dates[1], \"')",
+                "    AND visit_start_date <= DATE('\", m$subset_dates[2], \"')",
+                "\"))",
                 "",
                 "value <- nrow(patients)",
                 "",
@@ -284,11 +289,17 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         } else {
             code_lines <- c(code_lines,
                 "# Extract distinct patient count from selected hospital units",
-                "patients <- d$con %>% run_query(\"",
+                "",
+                #"visit_detail_ids <- paste(m$subset_persons$visit_detail_id, collapse = \", \")",
+                #"",
+                "patients <- d$con %>% run_query(paste0(\"",
                 "    SELECT DISTINCT person_id",
                 "    FROM visit_detail",
                 paste0("    WHERE care_site_id IN (", unit_ids_str, ")"),
-                "\")",
+                #"    AND visit_detail_id IN (\", visit_detail_ids, \")",
+                "    AND visit_detail_start_date >= DATE('\", m$subset_dates[1], \"')",
+                "    AND visit_detail_start_date <= DATE('\", m$subset_dates[2], \"')",
+                "\"))",
                 "",
                 "value <- nrow(patients)",
                 "",
@@ -343,10 +354,16 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         if (indicator_scope == "hospitalization") {
             code_lines <- c(code_lines,
                 "# Extract hospital admissions count",
-                "admissions <- d$con %>% run_query(\"",
+                "",
+                #"visit_occurrence_ids <- paste(m$subset_persons$visit_occurrence_id, collapse = \", \")",
+                #"",
+                "admissions <- d$con %>% run_query(paste0(\"",
                 "    SELECT visit_occurrence_id, person_id, visit_start_date, visit_end_date",
                 "    FROM visit_occurrence",
-                "\")",
+                #"    WHERE visit_occurrence_id IN (\", visit_occurrence_ids, \")",
+                "    WHERE visit_start_date >= DATE('\", m$subset_dates[1], \"')",
+                "    AND visit_start_date <= DATE('\", m$subset_dates[2], \"')",
+                "\"))",
                 "",
                 "value <- nrow(admissions)",
                 "",
@@ -384,11 +401,17 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         } else {
             code_lines <- c(code_lines,
                 "# Extract hospital unit stays count",
-                "admissions <- d$con %>% run_query(\"",
+                "",
+                #"visit_detail_ids <- paste(m$subset_persons$visit_detail_id, collapse = \", \")",
+                #"",
+                "admissions <- d$con %>% run_query(paste0(\"",
                 "    SELECT visit_detail_id, person_id, visit_detail_start_date, visit_detail_end_date",
                 "    FROM visit_detail",
                 paste0("    WHERE care_site_id IN (", unit_ids_str, ")"),
-                "\")",
+                #"    AND visit_detail_id IN (\", visit_detail_ids, \")",
+                "    AND visit_detail_start_date >= DATE('\", m$subset_dates[1], \"')",
+                "    AND visit_detail_start_date <= DATE('\", m$subset_dates[2], \"')",
+                "\"))",
                 "",
                 "value <- nrow(admissions)",
                 "",
@@ -443,18 +466,30 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         if (indicator_scope == "hospitalization") {
             code_lines <- c(code_lines,
                 "# Extract hospital mortality during hospitalization",
-                "deaths <- d$con %>% run_query(\"",
+                "",
+                #"visit_occurrence_ids <- paste(m$subset_persons$visit_occurrence_id, collapse = \", \")",
+                #"",
+                "# Common WHERE clause for both queries",
+                "common_where <- paste0(\"",
+                #"    WHERE v.person_id IN (\", person_ids, \")",
+                "    WHERE v.visit_start_date >= DATE('\", m$subset_dates[1], \"')",
+                "    AND v.visit_start_date <= DATE('\", m$subset_dates[2], \"')",
+                "\")",
+                "",
+                "deaths <- d$con %>% run_query(paste0(\"",
                 "    SELECT DISTINCT d.person_id, d.death_datetime",
                 "    FROM death d",
                 "    JOIN visit_occurrence v ON d.person_id = v.person_id",
-                "    WHERE d.death_datetime >= v.visit_start_datetime",
+                "    \", common_where, \"",
+                "    AND d.death_datetime >= v.visit_start_datetime",
                 "    AND d.death_datetime <= COALESCE(v.visit_end_datetime, CAST(NOW() AS DATE))",
-                "\")",
+                "\"))",
                 "",
-                "total_patients <- d$con %>% run_query(\"",
-                "    SELECT DISTINCT person_id",
-                "    FROM visit_occurrence",
-                "\")",
+                "total_patients <- d$con %>% run_query(paste0(\"",
+                "    SELECT DISTINCT v.person_id",
+                "    FROM visit_occurrence v",
+                "    \", common_where",
+                "))",
                 "",
                 "death_count <- nrow(deaths)",
                 "total_count <- nrow(total_patients)",
@@ -482,7 +517,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
                 "            paste0(value, \"%\"),",
                 paste0("            onmouseover = \"", tooltip_js_show_value, "\","),
                 paste0("            onmouseout = \"", tooltip_js_hide_value, "\","),
-                paste0("            div(class = \"", tooltip_class_name, "\", paste0(death_count, \" \", i18np$t(\"deaths_on_total_patients\"), \" \", total_count, \" \", tolower(i18np$t(\"patients\"))), tags$br(), tags$br(), paste0(i18np$t(\"deaths_during_unit_stays\")), style = \"", tooltip_style_value, "\")"),
+                paste0("            div(class = \"", tooltip_class_name, "\", paste0(death_count, \" \", i18np$t(\"deaths_on_total_patients\"), \" \", total_count, \" \", tolower(i18np$t(\"patients\"))), style = \"", tooltip_style_value, "\")"),
                 "        ),",
                 "        div(",
                 "            style = \"color: #666; font-size: 14px; text-transform: uppercase;\",",
@@ -495,20 +530,31 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         } else {
             code_lines <- c(code_lines,
                 "# Extract unit-specific mortality during hospitalization",
-                "deaths <- d$con %>% run_query(\"",
+                "",
+                #"visit_detail_ids <- paste(m$subset_persons$visit_detail_id, collapse = \", \")",
+                #"",
+                "# Common WHERE clause for both queries",
+                "common_where <- paste0(\"",
+                #"    WHERE vd.visit_detail_id IN (\", visit_detail_ids, \")",
+                "    WHERE vd.visit_detail_start_date >= DATE('\", m$subset_dates[1], \"')",
+                "    AND vd.visit_detail_start_date <= DATE('\", m$subset_dates[2], \"')",
+                "\")",
+                "",
+                "deaths <- d$con %>% run_query(paste0(\"",
                 "    SELECT DISTINCT d.person_id, d.death_datetime, vd.visit_detail_id",
                 "    FROM death d",
                 "    JOIN visit_detail vd ON d.person_id = vd.person_id",
-                paste0("    WHERE vd.care_site_id IN (", unit_ids_str, ")"),
+                "    \", common_where, \"",
                 "    AND d.death_datetime >= vd.visit_detail_start_datetime",
                 "    AND d.death_datetime <= COALESCE(vd.visit_detail_end_datetime, CAST(NOW() AS DATE))",
-                "\")",
+                "\"))",
                 "",
-                "total_patients <- d$con %>% run_query(\"",
+                "total_patients <- d$con %>% run_query(paste0(\"",
                 "    SELECT DISTINCT person_id",
-                "    FROM visit_detail",
-                paste0("    WHERE care_site_id IN (", unit_ids_str, ")"),
-                "\")",
+                "    FROM visit_detail vd",
+                "    \", common_where, \"",
+                paste0("    AND care_site_id IN (", unit_ids_str, ")"),
+                "\"))",
                 "",
                 "death_count <- nrow(deaths)",
                 "total_count <- nrow(total_patients)",
@@ -566,12 +612,18 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         if (indicator_scope == "hospitalization") {
             code_lines <- c(code_lines,
                 "# Extract hospital length of stay data",
-                "stays <- d$con %>% run_query(\"",
+                "",
+                #"visit_occurrence_ids <- paste(m$subset_persons$visit_occurrence_id, collapse = \", \")",
+                #"",
+                "stays <- d$con %>% run_query(paste0(\"",
                 "    SELECT visit_occurrence_id, person_id, visit_start_date, visit_end_date,",
                 "           DATEDIFF('day', visit_start_date, visit_end_date) as length_of_stay",
                 "    FROM visit_occurrence",
                 "    WHERE visit_end_date IS NOT NULL",
-                "\")",
+                #"    AND visit_occurrence_id IN (\", visit_occurrence_ids, \")",
+                "    AND visit_start_date >= DATE('\", m$subset_dates[1], \"')",
+                "    AND visit_start_date <= DATE('\", m$subset_dates[2], \"')",
+                "\"))",
                 "",
                 "# Calculate average length of stay",
                 "value <- if(nrow(stays) > 0) round(mean(stays$length_of_stay, na.rm = TRUE), 1) else 0",
@@ -608,13 +660,19 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
         } else {
             code_lines <- c(code_lines,
                 "# Extract unit length of stay data",
-                "stays <- d$con %>% run_query(\"",
+                "",
+                #"visit_detail_ids <- paste(m$subset_persons$visit_detail_id, collapse = \", \")",
+                #"",
+                "stays <- d$con %>% run_query(paste0(\"",
                 "    SELECT visit_detail_id, person_id, visit_detail_start_date, visit_detail_end_date,",
                 "           DATEDIFF('day', visit_detail_start_date, visit_detail_end_date) as length_of_stay",
                 "    FROM visit_detail",
                 paste0("    WHERE care_site_id IN (", unit_ids_str, ")"),
                 "    AND visit_detail_end_date IS NOT NULL",
-                "\")",
+                #"    AND visit_detail_id IN (\", visit_detail_ids, \")",
+                "    AND visit_detail_start_date >= DATE('\", m$subset_dates[1], \"')",
+                "    AND visit_detail_start_date <= DATE('\", m$subset_dates[2], \"')",
+                "\"))",
                 "",
                 "# Calculate average length of stay",
                 "value <- if(nrow(stays) > 0) round(mean(stays$length_of_stay, na.rm = TRUE), 1) else 0",
@@ -679,7 +737,7 @@ generate_healthcare_code_%widget_id% <- function(indicator = "patient_count", in
 # ======================================
 
 # Auto-run code when data context changes
-observe_event(m$selected_person, {
+observe_event(m$selected_subset, {
     # Check if auto-run is enabled
     if (!isTRUE(input$auto_update_%widget_id%)) {
         return()
@@ -687,6 +745,18 @@ observe_event(m$selected_person, {
     
     # Execute code when data context changes
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    print("======================================= subset (%widget_id%) ========================")
+})
+
+observe_event(m$subset_dates, {
+    # Check if auto-run is enabled
+    if (!isTRUE(input$auto_update_%widget_id%)) {
+        return()
+    }
+    
+    # Execute code when data context changes
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    print("======================================= dates (%widget_id%) ========================")
 })
 
 # ======================================
@@ -700,16 +770,25 @@ observe_event(input$run_code_%widget_id%, {
     res <- NULL
     error_message <- NULL
     
+    # Check if subset is selected when required
+    subset_loaded <- TRUE
+    if (is.null(m$subset_persons) || nrow(m$subset_persons) == 0) {
+        subset_loaded <- FALSE
+        error_message <- i18np$t("no_subset_selected")
+    }
+    
     # ====================
     # EXECUTE USER CODE
     # ====================
-    tryCatch({
-        # Execute the R code in the current environment
-        eval(parse(text = m$code_%widget_id%))
-    }, error = function(e) {
-        # Capture any execution errors
-        error_message <<- paste("Error executing code:", e$message)
-    })
+    if (subset_loaded){
+        tryCatch({
+            # Execute the R code in the current environment
+            eval(parse(text = m$code_%widget_id%))
+        }, error = function(e) {
+            # Capture any execution errors
+            error_message <<- paste("Error executing code:", e$message)
+        })
+    }
     
     # ====================
     # HANDLE EXECUTION RESULTS

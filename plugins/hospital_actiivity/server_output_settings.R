@@ -20,7 +20,15 @@ all_inputs_%widget_id% <- list(
 
 # Update hospital unit dropdown with care site data
 observe_event(input$indicator_scope_%widget_id%, {
+    shiny.fluent::updateDropdown.shinyInput(
+        session, 
+        "hospital_unit_%widget_id%", 
+        options = get_hospital_unit_options_%widget_id%()
+    )
+})
 
+get_hospital_unit_options_%widget_id% <- function(){
+    
     # Load hospital units from care_site table
     care_sites <- NULL
     tryCatch({
@@ -53,12 +61,8 @@ observe_event(input$indicator_scope_%widget_id%, {
         hospital_unit_options <- c(hospital_unit_options, care_site_options)
     }
     
-    shiny.fluent::updateDropdown.shinyInput(
-        session, 
-        "hospital_unit_%widget_id%", 
-        options = hospital_unit_options
-    )
-})
+    return(hospital_unit_options)
+}
 
 # ======================================
 # CONDITIONAL UI DISPLAY LOGIC
@@ -86,11 +90,13 @@ observe_event(input$indicator_scope_%widget_id%, {
 # Select all hospital units button
 observe_event(input$hospital_unit_check_all_%widget_id%, {
     # Get all available unit IDs
+    hospital_unit_options <- get_hospital_unit_options_%widget_id%()
     all_unit_ids <- sapply(hospital_unit_options, function(x) x$key)
     shiny.fluent::updateDropdown.shinyInput(session, "hospital_unit_%widget_id%", options = hospital_unit_options, value = all_unit_ids)
 })
 
 # Clear all hospital units button
 observe_event(input$hospital_unit_uncheck_all_%widget_id%, {
+    hospital_unit_options <- get_hospital_unit_options_%widget_id%()
     shiny.fluent::updateDropdown.shinyInput(session, "hospital_unit_%widget_id%", options = hospital_unit_options, value = character(0))
 })

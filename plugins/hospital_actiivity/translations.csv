@@ -38,6 +38,7 @@ modif_saved,Updates saved,Modifications enregistrées
 mortality,Mortality,Mortalité
 name_already_used,This name is already used,Ce nom est déjà utilisé
 new_user_configuration_added,New user configuration added,Nouvelle configuration utilisateur ajoutée
+no_subset_selected,No patient group selected. Please select a patient group.,Aucun groupe de patients sélectionné. Veuillez sélectionner un groupe de patients.
 no_user_configuration_selected,No user configuration selected,Aucune configuration utilisateur sélectionnée
 output_and_settings_side_by_side,Output and settings/editor side by side,Résultats et réglages/éditeur côte à côte
 output_type,Output type,Format de sortie
