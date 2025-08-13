@@ -1,0 +1,69 @@
+base,en,fr
+add,Add,Ajouter
+admission_count,Number of admissions,Nombre d'admissions
+admission_count_tooltip,Number of hospital admissions,Nombre d'admissions hospitalières
+admitted_patients,Admitted patients,Patients admis
+automatic_updates,Automatically update output,Mettre à jour automatiquement les résultats
+average_length_of_stay,Average length of stay,Durée moyenne de séjour
+cardiology,Cardiology,Cardiologie
+clear_selection,Clear Selection,Effacer la sélection
+configuration,Configuration,Configuration
+configuration_1,Configuration 1,Configuration 1
+configuration_name,Configuration name,Nom de la configuration
+create_user_configuration,Create new user configuration,Créer une nouvelle configuration
+data_analysis_results,Data analysis results,Résultats des analyses
+data_table,Data table,Tableau de données
+days,days,jours
+deaths_during_hospitalization,The deaths occurred during the stay in the selected units,Les décès sont survenus durant le séjour dans les unités sélectionnées
+deaths_during_unit_stays,Deaths occurred during hospital stays in selected units,Décès survenus durant les séjours hospitaliers dans les unités sélectionnées
+deaths_in_selected_units,Deaths in Selected Units,Décès dans les unités sélectionnées
+deaths_on_total_patients,deaths on,décès sur
+deaths,Deaths,Décès
+delete,Delete,Supprimer
+delete_user_configuration_text,Confirm deletion of the user configuration?,Confirmer la suppression de la configuration utilisateur ?
+delete_user_configuration_title,Delete user configuration,Supprimer la configuration utilisateur
+display_output,Display output,Afficher le résultat
+dms_in_selected_units,Average LOS in Selected Units (days),DMS dans les unités sélectionnées (jours)
+dont_delete,Cancel,Annuler
+emergency_department,Emergency Department,Service d'urgences
+histogram,Histogram,Histogramme
+hospital_unit,Hospital Unit,Unité hospitalière
+hospital_units,Hospital Unit(s),Unité(s) hospitalière(s)
+hospitalization,Hospitalization,Hospitalisation
+hospitalized_patients,Hospitalized Patients,Patients hospitalisés
+indicator,Indicator,Indicateur
+indicator_scope,Indicator Scope,Périmètre de l'indicateur
+in_selected_units,in Selected Units,dans les unités sélectionnées
+internal_medicine,Internal Medicine,Médecine interne
+legend_1,Legend 1,Légende 1
+legend_1_placeholder,Enter first legend text,Saisir le texte de la première légende
+legend_2,Legend 2,Légende 2
+legend_2_placeholder,Enter second legend text,Saisir le texte de la seconde légende
+modif_saved,Updates saved,Modifications enregistrées
+mortality,Mortality,Mortalité
+name_already_used,This name is already used,Ce nom est déjà utilisé
+new_user_configuration_added,New user configuration added,Nouvelle configuration utilisateur ajoutée
+no_subset_selected,No patient group selected. Please select a patient group.,Aucun groupe de patients sélectionné. Veuillez sélectionner un groupe de patients.
+no_user_configuration_selected,No user configuration selected,Aucune configuration utilisateur sélectionnée
+output_and_settings_side_by_side,Output and settings/editor side by side,Résultats et réglages/éditeur côte à côte
+output_type,Output type,Format de sortie
+patient_count,Number of patients,Nombre de patients
+patients_in_selected_units,Patients in Selected Units,Patients admis dans les unités sélectionnées
+pediatrics,Pediatrics,Pédiatrie
+please_select_at_least_one_hospital_unit,Please select at least one hospital unit.,Veuillez sélectionner au moins une unité hospitalière.
+plot_title,Plot title,Titre de la figure
+provide_valid_name,Provide valid name,Nom valide requis
+rename,Rename,Renommer
+rename_user_configuration,Rename user configuration,Renommer la configuration
+save_output_settings_and_code,Save,Sauvegarder
+select_all_units,Select All Units,Sélectionner toutes les unités
+show_code_editor,Code editor,Editeur de code
+show_output,Output,Résultats
+show_output_settings,Output settings,Modifier les réglages
+stays,Stays,Séjours
+stays_in_selected_units,Stays in Selected Units,Séjours dans les unités sélectionnées
+summary_statistics,Summary statistics,Résumé statistique
+surgery,Surgery,Chirurgie
+user_configuration_delete,User configuration deleted,Configuration utilisateur supprimée
+user_configuration_renamed,User configuration renamed,Configuration renommée
+variables,Variables,Variables
