@@ -2,6 +2,7 @@ base,en,fr
 add,Add,Ajouter
 admission_count,Number of admissions,Nombre d'admissions
 admission_count_tooltip,Number of hospital admissions,Nombre d'admissions hospitalières
+admissions_by_unit,Number of admissions by unit,Nombre d'admissions par service
 admission_schedule,Admission schedule,Horaire des admissions
 admission_timeline,Timeline of admissions,Timeline des admissions
 admission_timeline_title,Timeline of Hospital Admissions,Timeline des admissions hospitalières
@@ -66,6 +67,8 @@ select_all_units,Select All Units,Sélectionner toutes les unités
 show_code_editor,Code editor,Editeur de code
 show_output,Output,Résultats
 show_output_settings,Output settings,Modifier les réglages
+start_date,Start,Début
+end_date,End,Fin
 stays,Stays,Séjours
 stays_in_selected_units,Stays in Selected Units,Séjours dans les unités sélectionnées
 summary_statistics,Summary statistics,Résumé statistique

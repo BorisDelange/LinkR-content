@@ -99,7 +99,7 @@ observe_event(input$display_output_%widget_id%, {
             "mortality_rate" = ,             # Mortality rate
             "average_length_of_stay" = ,     # Average length of stay
             "bed_occupancy_rate" = ,         # Bed occupancy rate
-            "readmission_rate" = generate_admissions_code_%widget_id%(
+            "readmission_rate" = generate_admissions_ui_code_%widget_id%(
                 indicator = indicator,
                 indicator_scope = indicator_scope,
                 hospital_units = hospital_units,
@@ -112,7 +112,7 @@ observe_event(input$display_output_%widget_id%, {
             # ====================
             # Timeline indicators require different visualization parameters
             # They use time-series specific charts with custom axis labels
-            "admission_timeline" = generate_timeline_code_%widget_id%(
+            "admission_timeline" = generate_admissions_timeline_code_%widget_id%(
                 indicator = indicator,
                 indicator_scope = indicator_scope,
                 hospital_units = hospital_units,
@@ -141,7 +141,7 @@ observe_event(input$display_output_%widget_id%, {
             # ====================
             # If indicator is not recognized, default to standard admissions function
             # This ensures the application doesn't break with unexpected values
-            generate_admissions_code_%widget_id%(
+            generate_admissions_ui_code_%widget_id%(
                 indicator = indicator,
                 indicator_scope = indicator_scope,
                 hospital_units = hospital_units,

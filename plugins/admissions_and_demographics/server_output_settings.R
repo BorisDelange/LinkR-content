@@ -14,7 +14,8 @@ all_inputs_%widget_id% <- list(
     list(id = "timeline_title", type = "text", default = ""),
     list(id = "timeline_x_label", type = "text", default = ""),
     list(id = "timeline_y_label", type = "text", default = ""),
-    list(id = "timeline_nb_bins", type = "text", default = "12"),
+    list(id = "timeline_nb_bins", type = "spinbutton", default = 10),
+    list(id = "histogram_nb_bins", type = "spinbutton", default = 10),
     list(id = "auto_update", type = "toggle", default = TRUE),
     list(id = "code", type = "code", default = "")
 )
@@ -193,10 +194,10 @@ observe_event(input$indicator_%widget_id%, {
             value = i18np$t("timeline_y_axis_default")
         )
         
-        shiny.fluent::updateTextField.shinyInput(
+        shiny.fluent::updateSpinButton.shinyInput(
             session, 
             "timeline_nb_bins_%widget_id%", 
-            value = "12"
+            value = 10
         )
     }
 })
@@ -209,13 +210,23 @@ observe_event(input$indicator_%widget_id%, {
     indicator <- input$indicator_%widget_id%
     
     if (!is.null(indicator)) {
+        # Define which indicators require histogram bins
+        histogram_indicators <- c("average_age", "average_length_of_stay")
+        
         if (indicator == "admission_timeline") {
-            # For timeline: hide standard legend, show timeline fields
+            # For timeline: hide standard legend and histogram, show timeline fields
             shinyjs::hide("legend_div_%widget_id%")
+            shinyjs::hide("histogram_div_%widget_id%")
             shinyjs::show("timeline_div_%widget_id%")
-        } else {
-            # For other indicators: show standard legend, hide timeline fields
+        } else if (indicator %in% histogram_indicators) {
+            # For histogram indicators: show standard legend and histogram bins, hide timeline
             shinyjs::show("legend_div_%widget_id%")
+            shinyjs::show("histogram_div_%widget_id%")
+            shinyjs::hide("timeline_div_%widget_id%")
+        } else {
+            # For other indicators: show standard legend only
+            shinyjs::show("legend_div_%widget_id%")
+            shinyjs::hide("histogram_div_%widget_id%")
             shinyjs::hide("timeline_div_%widget_id%")
         }
     }

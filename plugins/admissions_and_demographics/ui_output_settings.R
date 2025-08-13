@@ -61,7 +61,7 @@ div(
             div(
                 shiny.fluent::Dropdown.shinyInput(
                     ns("hospital_unit_%widget_id%"), 
-                    label = i18np$t("hospital_unit"),
+                    label = i18np$t("hospital_units"),
                     multiSelect = TRUE
                 ),
                 style = "width: 250px;"
@@ -99,7 +99,7 @@ div(
             ),
             style = "width: 250px;"
         ),
-        style = "padding-top: 10px;"
+        style = "margin-top: 15px; padding-top: 15px; border-top: solid 1px #808080;"
     ),
     
     # ====================
@@ -131,9 +131,42 @@ div(
                     label = i18np$t("y_axis_legend"),
                     value = ""
                 ),
+                style = "width: 250px; padding-bottom: 10px;"
+            ),
+            div(
+                div(i18np$t("nb_bins"), style = "font-weight: 600; margin-bottom: 5px;"),
+                shiny.fluent::SpinButton.shinyInput(
+                    ns("timeline_nb_bins_%widget_id%"),
+                    value = 10,
+                    min = 1,
+                    max = 200,
+                    step = 5
+                ),
                 style = "width: 250px;"
             ),
-            style = "padding-top: 10px;"
+            style = "margin-top: 15px; padding-top: 15px; border-top: solid 1px #808080;"
+        )
+    ),
+    
+    # ====================
+    # HISTOGRAM BINS CONFIGURATION
+    # ====================
+    # Number of bins for histogram charts (hidden by default)
+    shinyjs::hidden(
+        div(
+            id = ns("histogram_div_%widget_id%"),
+            div(
+                div(i18np$t("nb_bins"), style = "font-weight: 600; margin-bottom: 5px;"),
+                shiny.fluent::SpinButton.shinyInput(
+                    ns("histogram_nb_bins_%widget_id%"),
+                    value = 10,
+                    min = 5,
+                    max = 100,
+                    step = 5
+                ),
+                style = "width: 250px;"
+            ),
+            style = "margin-top: 15px; padding-top: 15px; border-top: solid 1px #808080;"
         )
     ),
     
