@@ -2,9 +2,14 @@ base,en,fr
 add,Add,Ajouter
 admission_count,Number of admissions,Nombre d'admissions
 admission_count_tooltip,Number of hospital admissions,Nombre d'admissions hospitalières
+admission_schedule,Admission schedule,Horaire des admissions
+admission_timeline,Timeline of admissions,Timeline des admissions
+admission_timeline_title,Timeline of Hospital Admissions,Timeline des admissions hospitalières
 admitted_patients,Admitted patients,Patients admis
 automatic_updates,Automatically update output,Mettre à jour automatiquement les résultats
+average_age,Average age,Age moyen
 average_length_of_stay,Average length of stay,Durée moyenne de séjour
+bed_occupancy_rate,Bed occupancy rate,Taux d'occupation des lits
 cardiology,Cardiology,Cardiologie
 clear_selection,Clear Selection,Effacer la sélection
 configuration,Configuration,Configuration
@@ -40,7 +45,7 @@ legend_1_placeholder,Enter first legend text,Saisir le texte de la première lé
 legend_2,Legend 2,Légende 2
 legend_2_placeholder,Enter second legend text,Saisir le texte de la seconde légende
 modif_saved,Updates saved,Modifications enregistrées
-mortality,Mortality,Mortalité
+mortality_rate,Mortality rate,Taux de mortalité
 name_already_used,This name is already used,Ce nom est déjà utilisé
 new_user_configuration_added,New user configuration added,Nouvelle configuration utilisateur ajoutée
 no_subset_selected,No patient group selected. Please select a patient group.,Aucun groupe de patients sélectionné. Veuillez sélectionner un groupe de patients.
@@ -53,6 +58,7 @@ pediatrics,Pediatrics,Pédiatrie
 please_select_at_least_one_hospital_unit,Please select at least one hospital unit.,Veuillez sélectionner au moins une unité hospitalière.
 plot_title,Plot title,Titre de la figure
 provide_valid_name,Provide valid name,Nom valide requis
+readmission_rate,Readmission rate,Taux de réadmission
 rename,Rename,Renommer
 rename_user_configuration,Rename user configuration,Renommer la configuration
 save_output_settings_and_code,Save,Sauvegarder
@@ -64,6 +70,12 @@ stays,Stays,Séjours
 stays_in_selected_units,Stays in Selected Units,Séjours dans les unités sélectionnées
 summary_statistics,Summary statistics,Résumé statistique
 surgery,Surgery,Chirurgie
+timeline_x_axis_default,Date,Date
+timeline_y_axis_default,Number of admissions,Nombre d'admissions
 user_configuration_delete,User configuration deleted,Configuration utilisateur supprimée
 user_configuration_renamed,User configuration renamed,Configuration renommée
 variables,Variables,Variables
+x_axis_legend,X-axis legend,Légende axe X
+y_axis_legend,Y-axis legend,Légende axe Y
+nb_bins,Number of bins,Nombre de barres
+no_data_available,No data available,Aucune donnée disponible

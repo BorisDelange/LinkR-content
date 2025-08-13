@@ -15,8 +15,13 @@ div(
                 options = list(
                     list(key = "patient_count", text = i18np$t("patient_count")),
                     list(key = "admission_count", text = i18np$t("admission_count")),
-                    list(key = "mortality", text = i18np$t("mortality")),
-                    list(key = "average_length_of_stay", text = i18np$t("average_length_of_stay"))
+                    list(key = "admission_timeline", text = i18np$t("admission_timeline")),
+                    list(key = "readmission_rate", text = i18np$t("readmission_rate")),
+                    list(key = "admission_schedule", text = i18np$t("admission_schedule")),
+                    list(key = "average_age", text = i18np$t("average_age")),
+                    list(key = "mortality_rate", text = i18np$t("mortality_rate")),
+                    list(key = "average_length_of_stay", text = i18np$t("average_length_of_stay")),
+                    list(key = "bed_occupancy_rate", text = i18np$t("bed_occupancy_rate"))
                 ), 
                 value = "patient_count",
                 label = i18np$t("indicator")
@@ -47,6 +52,32 @@ div(
     ),
     
     # ====================
+    # HOSPITAL UNIT SELECTION
+    # ====================
+    # Multi-select dropdown for choosing specific hospital units
+    shinyjs::hidden(
+        div(
+            id = ns("hospital_unit_div_%widget_id%"),
+            div(
+                shiny.fluent::Dropdown.shinyInput(
+                    ns("hospital_unit_%widget_id%"), 
+                    label = i18np$t("hospital_unit"),
+                    multiSelect = TRUE
+                ),
+                style = "width: 250px;"
+            ),
+            div(
+                id = ns("hospital_unit_buttons_%widget_id%"),
+                create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("hospital_unit_check_all_%widget_id%"), iconProps = list(iconName = "CheckboxComposite")), text = i18np$t("select_all_units")),
+                create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("hospital_unit_uncheck_all_%widget_id%"), iconProps = list(iconName = "Checkbox")), text = i18np$t("clear_selection")),
+                style = "margin: 27px 0 0 5px; display: flex;"
+            ),
+            class = "small_icon_button",
+            style = "display: flex; padding-top: 10px;"
+        )
+    ),
+    
+    # ====================
     # LEGEND CONFIGURATION
     # ====================
     # Text fields for customizing chart legends
@@ -72,28 +103,37 @@ div(
     ),
     
     # ====================
-    # HOSPITAL UNIT SELECTION
+    # TIMELINE CONFIGURATION
     # ====================
-    # Multi-select dropdown for choosing specific hospital units
+    # Text fields for timeline charts (hidden by default)
     shinyjs::hidden(
         div(
-            id = ns("hospital_unit_div_%widget_id%"),
+            id = ns("timeline_div_%widget_id%"),
             div(
-                shiny.fluent::Dropdown.shinyInput(
-                    ns("hospital_unit_%widget_id%"), 
-                    label = i18np$t("hospital_unit"),
-                    multiSelect = TRUE
+                shiny.fluent::TextField.shinyInput(
+                    ns("timeline_title_%widget_id%"),
+                    label = i18np$t("plot_title"),
+                    value = ""
+                ),
+                style = "width: 250px; padding-bottom: 10px;"
+            ),
+            div(
+                shiny.fluent::TextField.shinyInput(
+                    ns("timeline_x_label_%widget_id%"),
+                    label = i18np$t("x_axis_legend"),
+                    value = ""
+                ),
+                style = "width: 250px; padding-bottom: 10px;"
+            ),
+            div(
+                shiny.fluent::TextField.shinyInput(
+                    ns("timeline_y_label_%widget_id%"),
+                    label = i18np$t("y_axis_legend"),
+                    value = ""
                 ),
                 style = "width: 250px;"
             ),
-            div(
-                id = ns("hospital_unit_buttons_%widget_id%"),
-                create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("hospital_unit_check_all_%widget_id%"), iconProps = list(iconName = "CheckboxComposite")), text = i18np$t("select_all_units")),
-                create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("hospital_unit_uncheck_all_%widget_id%"), iconProps = list(iconName = "Checkbox")), text = i18np$t("clear_selection")),
-                style = "margin: 27px 0 0 5px; display: flex;"
-            ),
-            class = "small_icon_button",
-            style = "display: flex; padding-top: 10px;"
+            style = "padding-top: 10px;"
         )
     ),
     

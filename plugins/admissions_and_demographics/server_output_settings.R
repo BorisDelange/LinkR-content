@@ -11,6 +11,10 @@ all_inputs_%widget_id% <- list(
     list(id = "hospital_unit", type = "multiselect", default = NULL),
     list(id = "legend_1", type = "text", default = i18np$t("hospitalized_patients")),
     list(id = "legend_2", type = "text", default = ""),
+    list(id = "timeline_title", type = "text", default = ""),
+    list(id = "timeline_x_label", type = "text", default = ""),
+    list(id = "timeline_y_label", type = "text", default = ""),
+    list(id = "timeline_nb_bins", type = "text", default = "12"),
     list(id = "auto_update", type = "toggle", default = TRUE),
     list(id = "code", type = "code", default = "")
 )
@@ -93,9 +97,37 @@ observe_event(c(input$indicator_%widget_id%, input$indicator_scope_%widget_id%),
                 legend_1_value <- i18np$t("stays")
                 legend_2_value <- i18np$t("in_selected_units")
             }
-        } else if (indicator == "mortality") {
+        } else if (indicator == "admission_timeline") {
+            # Timeline specific values will be handled by timeline update logic
+            legend_1_value <- i18np$t("admission_timeline")
+            legend_2_value <- ""
+        } else if (indicator == "readmission_rate") {
             if (indicator_scope == "hospitalization") {
-                legend_1_value <- i18np$t("mortality")
+                legend_1_value <- i18np$t("readmission_rate")
+                legend_2_value <- ""
+            } else {  # hospital_units
+                legend_1_value <- i18np$t("readmission_rate")
+                legend_2_value <- i18np$t("in_selected_units")
+            }
+        } else if (indicator == "admission_schedule") {
+            if (indicator_scope == "hospitalization") {
+                legend_1_value <- i18np$t("admission_schedule")
+                legend_2_value <- ""
+            } else {  # hospital_units
+                legend_1_value <- i18np$t("admission_schedule")
+                legend_2_value <- i18np$t("in_selected_units")
+            }
+        } else if (indicator == "average_age") {
+            if (indicator_scope == "hospitalization") {
+                legend_1_value <- i18np$t("average_age")
+                legend_2_value <- ""
+            } else {  # hospital_units
+                legend_1_value <- i18np$t("average_age")
+                legend_2_value <- i18np$t("in_selected_units")
+            }
+        } else if (indicator == "mortality_rate") {
+            if (indicator_scope == "hospitalization") {
+                legend_1_value <- i18np$t("mortality_rate")
                 legend_2_value <- ""
             } else {  # hospital_units
                 legend_1_value <- i18np$t("deaths")
@@ -107,6 +139,14 @@ observe_event(c(input$indicator_%widget_id%, input$indicator_scope_%widget_id%),
                 legend_2_value <- ""
             } else {  # hospital_units
                 legend_1_value <- i18np$t("average_length_of_stay")
+                legend_2_value <- i18np$t("in_selected_units")
+            }
+        } else if (indicator == "bed_occupancy_rate") {
+            if (indicator_scope == "hospitalization") {
+                legend_1_value <- i18np$t("bed_occupancy_rate")
+                legend_2_value <- ""
+            } else {  # hospital_units
+                legend_1_value <- i18np$t("bed_occupancy_rate")
                 legend_2_value <- i18np$t("in_selected_units")
             }
         }
@@ -127,8 +167,60 @@ observe_event(c(input$indicator_%widget_id%, input$indicator_scope_%widget_id%),
 })
 
 # ======================================
+# TIMELINE VALUES UPDATE LOGIC
+# ======================================
+# Update timeline field values for admission timeline indicator
+observe_event(input$indicator_%widget_id%, {
+    indicator <- input$indicator_%widget_id%
+    
+    if (!is.null(indicator) && indicator == "admission_timeline") {
+        # Set default timeline values
+        shiny.fluent::updateTextField.shinyInput(
+            session, 
+            "timeline_title_%widget_id%", 
+            value = i18np$t("admission_timeline_title")
+        )
+        
+        shiny.fluent::updateTextField.shinyInput(
+            session, 
+            "timeline_x_label_%widget_id%", 
+            value = i18np$t("timeline_x_axis_default")
+        )
+        
+        shiny.fluent::updateTextField.shinyInput(
+            session, 
+            "timeline_y_label_%widget_id%", 
+            value = i18np$t("timeline_y_axis_default")
+        )
+        
+        shiny.fluent::updateTextField.shinyInput(
+            session, 
+            "timeline_nb_bins_%widget_id%", 
+            value = "12"
+        )
+    }
+})
+
+# ======================================
 # CONDITIONAL UI DISPLAY LOGIC
 # ======================================
+# Show/hide different UI sections based on indicator selection
+observe_event(input$indicator_%widget_id%, {
+    indicator <- input$indicator_%widget_id%
+    
+    if (!is.null(indicator)) {
+        if (indicator == "admission_timeline") {
+            # For timeline: hide standard legend, show timeline fields
+            shinyjs::hide("legend_div_%widget_id%")
+            shinyjs::show("timeline_div_%widget_id%")
+        } else {
+            # For other indicators: show standard legend, hide timeline fields
+            shinyjs::show("legend_div_%widget_id%")
+            shinyjs::hide("timeline_div_%widget_id%")
+        }
+    }
+})
+
 # Show/hide hospital unit dropdown based on indicator scope selection
 observe_event(input$indicator_scope_%widget_id%, {
     indicator_scope <- input$indicator_scope_%widget_id%

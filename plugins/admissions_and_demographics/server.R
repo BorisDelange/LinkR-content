@@ -136,7 +136,9 @@ observe_event(input$show_user_configurations_tab_%widget_id%, {
 # Output settings server logic (chart configuration, data source selection)
 %import_script('server_output_settings.R')%
 
-# Code editor server logic (syntax highlighting, code execution, save/load)
+# Code editor server logic
+%import_script('server_code_admissions.R')%
+%import_script('server_code_demographics.R')%
 %import_script('server_code.R')%
 
 # User configurations server logic (configuration management, create/delete operations)
