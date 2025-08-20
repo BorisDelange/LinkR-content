@@ -10,6 +10,7 @@ admitted_patients,Admitted patients,Patients admis
 automatic_updates,Automatically update output,Mettre à jour automatiquement les résultats
 average_age,Average age,Age moyen
 average_length_of_stay,Average length of stay,Durée moyenne de séjour
+based_on,Based on,Basé sur
 bed_occupancy_rate,Bed occupancy rate,Taux d'occupation des lits
 cardiology,Cardiology,Cardiologie
 clear_selection,Clear Selection,Effacer la sélection
@@ -32,6 +33,7 @@ display_output,Display output,Afficher le résultat
 dms_in_selected_units,Average LOS in Selected Units (days),DMS dans les unités sélectionnées (jours)
 dont_delete,Cancel,Annuler
 emergency_department,Emergency Department,Service d'urgences
+gender_distribution,Gender distribution,Distribution par sexe
 histogram,Histogram,Histogramme
 hospital_unit,Hospital Unit,Unité hospitalière
 hospital_units,Hospital Unit(s),Unité(s) hospitalière(s)
@@ -49,11 +51,14 @@ modif_saved,Updates saved,Modifications enregistrées
 mortality_rate,Mortality rate,Taux de mortalité
 name_already_used,This name is already used,Ce nom est déjà utilisé
 new_user_configuration_added,New user configuration added,Nouvelle configuration utilisateur ajoutée
+no_output_generated,No output generated. Please check your code and settings.,Aucun résultat généré. Veuillez vérifier votre code et vos paramètres.
 no_subset_selected,No patient group selected. Please select a patient group.,Aucun groupe de patients sélectionné. Veuillez sélectionner un groupe de patients.
+select_patient_group_instruction,Please select a patient group from the data module to view analytics.,Veuillez sélectionner un groupe de patients depuis le module de données pour voir les analyses.
 no_user_configuration_selected,No user configuration selected,Aucune configuration utilisateur sélectionnée
 output_and_settings_side_by_side,Output and settings/editor side by side,Résultats et réglages/éditeur côte à côte
 output_type,Output type,Format de sortie
 patient_count,Number of patients,Nombre de patients
+patients,Patients,Patients
 patients_in_selected_units,Patients in Selected Units,Patients admis dans les unités sélectionnées
 pediatrics,Pediatrics,Pédiatrie
 please_select_at_least_one_hospital_unit,Please select at least one hospital unit.,Veuillez sélectionner au moins une unité hospitalière.
@@ -80,5 +85,6 @@ user_configuration_renamed,User configuration renamed,Configuration renommée
 variables,Variables,Variables
 x_axis_legend,X-axis legend,Légende axe X
 y_axis_legend,Y-axis legend,Légende axe Y
+years,years,ans
 nb_bins,Number of bins,Nombre de barres
 no_data_available,No data available,Aucune donnée disponible

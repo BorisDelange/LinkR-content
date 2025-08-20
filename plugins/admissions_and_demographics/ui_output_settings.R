@@ -19,6 +19,7 @@ div(
                     list(key = "readmission_rate", text = i18np$t("readmission_rate")),
                     list(key = "admission_schedule", text = i18np$t("admission_schedule")),
                     list(key = "average_age", text = i18np$t("average_age")),
+                    list(key = "gender", text = i18np$t("gender_distribution")),
                     list(key = "mortality_rate", text = i18np$t("mortality_rate")),
                     list(key = "average_length_of_stay", text = i18np$t("average_length_of_stay")),
                     list(key = "bed_occupancy_rate", text = i18np$t("bed_occupancy_rate"))

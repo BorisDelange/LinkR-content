@@ -127,14 +127,20 @@ observe_event(input$display_output_%widget_id%, {
             # ====================
             # Demographic indicators focus on patient characteristics
             # They may require different aggregation methods and visualizations
-            # "average_age" = ,                # Average patient age
-            # "admission_schedule" = generate_demographics_code_%widget_id%(
-            #     indicator = indicator,
-            #     indicator_scope = indicator_scope,
-            #     hospital_units = hospital_units,
-            #     legend_1 = input$legend_1_%widget_id%,
-            #     legend_2 = input$legend_2_%widget_id%
-            # ),
+            "average_age" = generate_demographics_ui_code_%widget_id%(
+                indicator = indicator,
+                indicator_scope = indicator_scope,
+                hospital_units = hospital_units,
+                legend_1 = input$legend_1_%widget_id%,
+                legend_2 = input$legend_2_%widget_id%
+            ),
+            "gender" = generate_demographics_ui_code_%widget_id%(
+                indicator = indicator,
+                indicator_scope = indicator_scope,
+                hospital_units = hospital_units,
+                legend_1 = input$legend_1_%widget_id%,
+                legend_2 = input$legend_2_%widget_id%
+            ),
             
             # ====================
             # DEFAULT FALLBACK
@@ -235,17 +241,36 @@ observe_event(input$run_code_%widget_id%, {
         display_message <- if (!is.null(error_message)) {
             error_message
         } else {
-            "No output generated. Please check your code and settings."
+            i18np$t("no_output_generated")
         }
         
-        # Display error in console output and hide all other outputs
-        output$console_output_%widget_id% <- renderText(display_message)
-        shinyjs::hide("ui_output_div_%widget_id%")
-        shinyjs::hide("plotly_output_div_%widget_id%")
-        shinyjs::show("console_output_div_%widget_id%")
+        # Check if this is the "no subset selected" or "no output generated" message for special formatting
+        if ((error_message == i18np$t("no_subset_selected")) || (display_message == i18np$t("no_output_generated"))) {
+            # Display nice message in UI output
+            output$ui_output_%widget_id% <- renderUI({
+                div(
+                    style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 10px;",
+                    div(
+                        style = "font-size: 14px; color: #6c757d;",
+                        display_message
+                    )
+                )
+            })
+            shinyjs::show("ui_output_div_%widget_id%")
+            shinyjs::hide("plotly_output_div_%widget_id%")
+            shinyjs::hide("console_output_div_%widget_id%")
+        } else {
+            # Display other errors in console output
+            output$console_output_%widget_id% <- renderText(display_message)
+            shinyjs::hide("ui_output_div_%widget_id%")
+            shinyjs::hide("plotly_output_div_%widget_id%")
+            shinyjs::show("console_output_div_%widget_id%")
+            
+            # Clear UI output
+            output$ui_output_%widget_id% <- renderUI(NULL)
+        }
         
-        # Clear both UI and plot outputs
-        output$ui_output_%widget_id% <- renderUI(NULL)
+        # Clear plot output
         output$plotly_output_%widget_id% <- plotly::renderPlotly(NULL)
     }
     

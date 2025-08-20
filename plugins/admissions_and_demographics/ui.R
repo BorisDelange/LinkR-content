@@ -369,6 +369,7 @@ tagList(
                 
                 nav.style.height = '28px';
                 nav.style.opacity = '1';
+                nav.style.padding = '5px 0 0 5px';
                 content.style.height = 'calc(100% - 34px)';
                 
                 setTimeout(() => {
@@ -388,6 +389,7 @@ tagList(
                 
                 nav.style.height = '0px';
                 nav.style.opacity = '0';
+                nav.style.padding = '0px';
                 content.style.height = '100%';
                 
                 setTimeout(() => {

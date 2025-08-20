@@ -3,7 +3,7 @@
   <plugin>
     <app_version>0.3.1.9012</app_version>
     <unique_id>da1bc28378d0ccc42cbdef8f472e4cd0b3da3e60d7bc19832c1fb9630a3bd043</unique_id>
-    <version>0.0.1.9011</version>
+    <version>0.0.1.9012</version>
     <name_en>Admissions and demographics</name_en>
     <name_fr>Admissions et d&#xE9;mographie</name_fr>
     <category_en>NA</category_en>
@@ -16,7 +16,7 @@
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2025-08-06 09:18:21</creation_datetime>
-    <update_datetime>2025-08-20 15:01:04</update_datetime>
+    <update_datetime>2025-08-20 17:15:17</update_datetime>
     <type>2</type>
   </plugin>
 </plugins>
