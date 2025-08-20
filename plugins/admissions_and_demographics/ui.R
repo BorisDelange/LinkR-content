@@ -44,6 +44,28 @@ if (nrow(selected_configuration_result) > 0) {
 }
 
 # ======================================
+# LOAD SIDE-BY-SIDE LAYOUT PREFERENCE FROM DATABASE
+# ======================================
+
+# Query database for saved side-by-side layout preference
+sql <- glue::glue_sql(
+    "SELECT value_num 
+     FROM widgets_options 
+     WHERE widget_id = %widget_id% AND category = 'general_settings' AND name = 'output_and_settings_side_by_side'", 
+    .con = m$db
+)
+side_by_side_result <- DBI::dbGetQuery(m$db, sql)
+
+# Set default or load saved preference
+side_by_side <- TRUE  # Default to side-by-side mode
+if (nrow(side_by_side_result) > 0) {
+    saved_value <- side_by_side_result %>% dplyr::pull(value_num) %>% as.logical()
+    if (!is.na(saved_value)) {
+        side_by_side <- saved_value
+    }
+}
+
+# ======================================
 # ACCESS-CONTROLLED BUTTON CONFIGURATION
 # ======================================
 
@@ -90,21 +112,38 @@ tagList(
         div(
             id = ns("navigation_bar_%widget_id%"),
             
-            # Hidden output button (shown conditionally via JavaScript)
-            shinyjs::hidden(
-                div(
-                    id = ns("output_button_div_%widget_id%"),
-                    shiny.fluent::IconButton.shinyInput(
-                        ns("output_button_%widget_id%"), 
-                        iconProps = list(iconName = "BarChart4"), 
-                        title = i18np$t("show_output"),
-                        onClick = htmlwidgets::JS(paste0("item => {",
-                            "Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());",
-                            "Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'output');",
-                        "}"))
+            # Output button (conditionally hidden at startup)
+            {
+                if (side_by_side) {
+                    shinyjs::hidden(
+                        div(
+                            id = ns("output_button_div_%widget_id%"),
+                            shiny.fluent::IconButton.shinyInput(
+                                ns("output_button_%widget_id%"), 
+                                iconProps = list(iconName = "BarChart4"), 
+                                title = i18np$t("show_output"),
+                                onClick = htmlwidgets::JS(paste0("item => {",
+                                    "Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());",
+                                    "Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'output');",
+                                "}"))
+                            )
+                        )
                     )
-                )
-            ),
+                } else {
+                    div(
+                        id = ns("output_button_div_%widget_id%"),
+                        shiny.fluent::IconButton.shinyInput(
+                            ns("output_button_%widget_id%"), 
+                            iconProps = list(iconName = "BarChart4"), 
+                            title = i18np$t("show_output"),
+                            onClick = htmlwidgets::JS(paste0("item => {",
+                                "Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());",
+                                "Shiny.setInputValue('", id, "-current_tab_%widget_id%', 'output');",
+                            "}"))
+                        )
+                    )
+                }
+            },
             
             # Output settings button
             shiny.fluent::IconButton.shinyInput(
@@ -163,55 +202,115 @@ tagList(
                 class = "left-panel"
             ),
             
-            # Resizable divider
-            div(
-                id = ns("resizer_%widget_id%"),
-                style = "width: 5px; cursor: col-resize; background-color: #ccc; flex: 0 0 5px;",
-                class = "resizer"
-            ),
-            
-            # Settings container (settings panel + sidebar)
-            div(
-                id = ns("settings_container_%widget_id%"),
-                style = "height: 100%; display: flex; flex: 0 0 20%; box-sizing: border-box;",
-                
-                # Output settings panel
-                div(
-                    id = ns("output_settings_div_%widget_id%"),
-                    %import_script('ui_output_settings.R')%,
-                    style = "height: 100%; padding: 0 8px; overflow: auto; flex: 1; box-sizing: border-box;"
-                ),
-                
-                # Code editor panel (hidden by default)
-                shinyjs::hidden(
-                    div(
-                        id = ns("code_div_%widget_id%"),
-                        %import_script('ui_code.R')%,
-                        style = "height: 100%; overflow: auto; flex: 0 0 50%; box-sizing: border-box;",
-                        class = "right-panel"
+            # Resizable divider (conditionally hidden at startup)
+            {
+                if (!side_by_side) {
+                    shinyjs::hidden(
+                        div(
+                            id = ns("resizer_%widget_id%"),
+                            style = "width: 5px; cursor: col-resize; background-color: #ccc; flex: 0 0 5px;",
+                            class = "resizer"
+                        )
                     )
-                ),
-                
-                # Right sidebar with action buttons
-                div(
-                    id = ns("output_settings_code_sidenav_%widget_id%"),
-                    
-                    # Display output button
-                    shiny.fluent::IconButton.shinyInput(
-                        ns("display_output_%widget_id%"), 
-                        iconProps = list(iconName = "Play"), 
-                        title = i18np$t("display_output"), 
-                        style = "margin: 0"
-                    ),
-                    
-                    # Save output settings button (conditional)
-                    save_output_settings_buttons,
-                    
-                    # Sidebar styling
-                    class = "widget_icon",
-                    style = "border-left: solid grey 0.5px; width: 25px; flex: 0 0 25px;"
-                )
-            ),
+                } else {
+                    div(
+                        id = ns("resizer_%widget_id%"),
+                        style = "width: 5px; cursor: col-resize; background-color: #ccc; flex: 0 0 5px;",
+                        class = "resizer"
+                    )
+                }
+            },
+            
+            # Settings container (settings panel + sidebar) - conditionally hidden at startup
+            {
+                if (!side_by_side) {
+                    shinyjs::hidden(
+                        div(
+                            id = ns("settings_container_%widget_id%"),
+                            style = "height: 100%; display: flex; flex: 0 0 20%; box-sizing: border-box;",
+                            
+                            # Output settings panel
+                            div(
+                                id = ns("output_settings_div_%widget_id%"),
+                                %import_script('ui_output_settings.R')%,
+                                style = "height: 100%; padding: 0 8px; overflow: auto; flex: 1; box-sizing: border-box;"
+                            ),
+                            
+                            # Code editor panel (hidden by default)
+                            shinyjs::hidden(
+                                div(
+                                    id = ns("code_div_%widget_id%"),
+                                    %import_script('ui_code.R')%,
+                                    style = "height: 100%; overflow: auto; flex: 0 0 50%; box-sizing: border-box;",
+                                    class = "right-panel"
+                                )
+                            ),
+                            
+                            # Right sidebar with action buttons
+                            div(
+                                id = ns("output_settings_code_sidenav_%widget_id%"),
+                                
+                                # Display output button
+                                shiny.fluent::IconButton.shinyInput(
+                                    ns("display_output_%widget_id%"), 
+                                    iconProps = list(iconName = "Play"), 
+                                    title = i18np$t("display_output"), 
+                                    style = "margin: 0"
+                                ),
+                                
+                                # Save output settings button (conditional)
+                                save_output_settings_buttons,
+                                
+                                # Sidebar styling
+                                class = "widget_icon",
+                                style = "border-left: solid grey 0.5px; width: 25px; flex: 0 0 25px;"
+                            )
+                        )
+                    )
+                } else {
+                    div(
+                        id = ns("settings_container_%widget_id%"),
+                        style = "height: 100%; display: flex; flex: 0 0 20%; box-sizing: border-box;",
+                        
+                        # Output settings panel
+                        div(
+                            id = ns("output_settings_div_%widget_id%"),
+                            %import_script('ui_output_settings.R')%,
+                            style = "height: 100%; padding: 0 8px; overflow: auto; flex: 1; box-sizing: border-box;"
+                        ),
+                        
+                        # Code editor panel (hidden by default)
+                        shinyjs::hidden(
+                            div(
+                                id = ns("code_div_%widget_id%"),
+                                %import_script('ui_code.R')%,
+                                style = "height: 100%; overflow: auto; flex: 0 0 50%; box-sizing: border-box;",
+                                class = "right-panel"
+                            )
+                        ),
+                        
+                        # Right sidebar with action buttons
+                        div(
+                            id = ns("output_settings_code_sidenav_%widget_id%"),
+                            
+                            # Display output button
+                            shiny.fluent::IconButton.shinyInput(
+                                ns("display_output_%widget_id%"), 
+                                iconProps = list(iconName = "Play"), 
+                                title = i18np$t("display_output"), 
+                                style = "margin: 0"
+                            ),
+                            
+                            # Save output settings button (conditional)
+                            save_output_settings_buttons,
+                            
+                            # Sidebar styling
+                            class = "widget_icon",
+                            style = "border-left: solid grey 0.5px; width: 25px; flex: 0 0 25px;"
+                        )
+                    )
+                }
+            },
             
             # Main content area styling
             style = "display: flex; height: 100%; transition: height 0.3s ease-in-out;",
@@ -231,6 +330,12 @@ tagList(
             )
         )
     ),
+    
+    # Initialize side-by-side state in JavaScript
+    tags$script(HTML(paste0("
+        // Initialize the layout state in JavaScript
+        Shiny.setInputValue('", id, "-output_and_settings_side_by_side_%widget_id%', ", tolower(side_by_side), ");
+    "))),
     
     # Unified navigation control script
     tags$script(HTML(paste0("
