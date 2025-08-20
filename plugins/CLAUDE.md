@@ -173,6 +173,74 @@ Leverage OMOP Common Data Model:
 - Follow healthcare data privacy and security practices
 - Integrate with patient cohort and data subset systems
 
+## OMOP Version Compatibility
+
+LinkR supports both OMOP CDM versions 5.3 and 5.4. The current dataset version is available via `m$omop_version`. Plugins must handle version differences appropriately.
+
+### Version Detection and Column Validation
+
+Use the built-in function to check column availability:
+
+```r
+# Check if a column exists in the current OMOP version
+if ("birth_datetime" %in% get_omop_col_names(m$omop_version)$person) {
+    # Use birth_datetime column
+} else {
+    # Fallback to year_of_birth
+}
+```
+
+### Key Differences Between OMOP 5.3 and 5.4
+
+**Tables that differ significantly:**
+
+- **`visit_occurrence`**: Column names changed (e.g., `admitting_source_concept_id` vs `admitted_from_concept_id`)
+- **`visit_detail`**: Similar admission/discharge column naming differences (`admitting_source_value` vs `admitted_from_source_value`, `discharge_to_source_value` vs `discharged_to_source_value`)
+- **`device_exposure`**: Additional columns in 5.4 (`production_id`, `unit_concept_id`, `unit_source_value`, `unit_source_concept_id`)
+- **`location`**: Extended with geography columns in 5.4 (`country_concept_id`, `country_source_value`, `latitude`, `longitude`)
+- **`measurement`**, **`observation`**, **`procedure_occurrence`**: Event linking columns added in 5.4 (`measurement_event_id`, `observation_event_id`, etc.)
+- **`metadata`**: Additional `metadata_id` and `value_as_number` columns in 5.4
+- **`note`**: Event linking columns added in 5.4 (`note_event_id`, `note_event_field_concept_id`)
+
+**Missing tables in some versions:**
+- **`attribute_definition`**: Only available in OMOP 5.3
+
+### Best Practices for Version Compatibility
+
+1. **Always validate column existence before using** for the tables and columns mentioned above:
+   ```r
+   omop_cols <- get_omop_col_names(m$omop_version)
+   if ("birth_datetime" %in% omop_cols$person) {
+       # Safe to use birth_datetime
+   }
+   ```
+
+2. **Implement fallback logic** for optional columns:
+   ```r
+   # Age calculation with version compatibility
+   age_calc <- if ("birth_datetime" %in% get_omop_col_names(m$omop_version)$person) {
+       "as.numeric(difftime(visit_start_date, birth_datetime, units = 'days')) / 365.25"
+   } else {
+       "lubridate::year(visit_start_date) - year_of_birth"
+   }
+   ```
+
+3. **Handle admission/discharge columns** appropriately:
+   ```r
+   # Visit occurrence admission source column
+   admission_col <- if ("admitted_from_concept_id" %in% get_omop_col_names(m$omop_version)$visit_occurrence) {
+       "admitted_from_concept_id"  # OMOP 5.4
+   } else {
+       "admitting_source_concept_id"  # OMOP 5.3
+   }
+   ```
+
+4. **Document version requirements** in plugin metadata if specific columns are essential.
+
+### Testing Across Versions
+
+When developing plugins, test with both OMOP versions if possible. The `get_omop_col_names()` function provides the authoritative column list for each version, ensuring compatibility without hardcoding version-specific logic.
+
 ### Code Quality Standards
 
 - Follow LinkR's reactive programming patterns with `observe_event()`
