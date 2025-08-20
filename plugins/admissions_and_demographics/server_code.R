@@ -245,15 +245,26 @@ observe_event(input$run_code_%widget_id%, {
             i18np$t("no_output_generated")
         }
         
-        # Check if this is the "no subset selected" or "no output generated" message for special formatting
-        if ((error_message == i18np$t("no_subset_selected")) || (display_message == i18np$t("no_output_generated"))) {
+        # Check if this is a user-friendly message that should be displayed with nice formatting
+        ui_messages <- c(
+            i18np$t("no_subset_selected"),
+            i18np$t("no_output_generated"),
+            i18np$t("please_select_at_least_one_hospital_unit")
+        )
+        
+        # Check if the message contains any of the UI-friendly messages
+        is_ui_message <- any(sapply(ui_messages, function(msg) grepl(msg, display_message, fixed = TRUE)))
+        
+        if (is_ui_message) {
+            # Extract the actual message without "Error executing code:" prefix if present
+            clean_message <- gsub("^Error executing code: ", "", display_message)
             # Display nice message in UI output
             output$ui_output_%widget_id% <- renderUI({
                 div(
                     style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 10px;",
                     div(
                         style = "font-size: 14px; color: #6c757d;",
-                        display_message
+                        clean_message
                     )
                 )
             })
