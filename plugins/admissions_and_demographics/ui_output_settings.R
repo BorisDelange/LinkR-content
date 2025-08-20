@@ -119,6 +119,7 @@ div(
                 style = "width: 250px; padding-bottom: 10px;"
             ),
             div(
+                id = ns("timeline_x_label_div_%widget_id%"),
                 shiny.fluent::TextField.shinyInput(
                     ns("timeline_x_label_%widget_id%"),
                     label = i18np$t("x_axis_legend"),
@@ -127,6 +128,7 @@ div(
                 style = "width: 250px; padding-bottom: 10px;"
             ),
             div(
+                id = ns("timeline_y_label_div_%widget_id%"),
                 shiny.fluent::TextField.shinyInput(
                     ns("timeline_y_label_%widget_id%"),
                     label = i18np$t("y_axis_legend"),
@@ -135,6 +137,7 @@ div(
                 style = "width: 250px; padding-bottom: 10px;"
             ),
             div(
+                id = ns("timeline_nb_bins_div_%widget_id%"),
                 div(i18np$t("nb_bins"), style = "font-weight: 600; margin-bottom: 5px;"),
                 shiny.fluent::SpinButton.shinyInput(
                     ns("timeline_nb_bins_%widget_id%"),

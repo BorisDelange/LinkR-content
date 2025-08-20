@@ -138,6 +138,7 @@ observe_event(input$display_output_%widget_id%, {
                 indicator = indicator,
                 indicator_scope = indicator_scope,
                 hospital_units = hospital_units,
+                title = input$timeline_title_%widget_id%,
                 legend_1 = input$legend_1_%widget_id%,
                 legend_2 = input$legend_2_%widget_id%
             ),
@@ -258,20 +259,23 @@ observe_event(input$run_code_%widget_id%, {
             })
             shinyjs::show("ui_output_div_%widget_id%")
             shinyjs::hide("plotly_output_div_%widget_id%")
+            shinyjs::hide("ggplot_output_div_%widget_id%")
             shinyjs::hide("console_output_div_%widget_id%")
         } else {
             # Display other errors in console output
             output$console_output_%widget_id% <- renderText(display_message)
             shinyjs::hide("ui_output_div_%widget_id%")
             shinyjs::hide("plotly_output_div_%widget_id%")
+            shinyjs::hide("ggplot_output_div_%widget_id%")
             shinyjs::show("console_output_div_%widget_id%")
             
             # Clear UI output
             output$ui_output_%widget_id% <- renderUI(NULL)
         }
         
-        # Clear plot output
+        # Clear plot outputs
         output$plotly_output_%widget_id% <- plotly::renderPlotly(NULL)
+        output$ggplot_output_%widget_id% <- renderPlot(NULL)
     }
     
     # ====================
@@ -291,8 +295,27 @@ observe_event(input$run_code_%widget_id%, {
             
             # Hide other outputs and show plot
             shinyjs::hide("ui_output_div_%widget_id%")
+            shinyjs::hide("ggplot_output_div_%widget_id%")
             shinyjs::hide("console_output_div_%widget_id%")
             shinyjs::show("plotly_output_div_%widget_id%")
+            
+            # Clear UI output
+            output$ui_output_%widget_id% <- renderUI(NULL)
+            
+        } else if (inherits(res, "ggplot")) {
+            # ====================
+            # RENDER GGPLOT OUTPUT
+            # ====================
+            # Display ggplot visualizations (pie charts, etc.)
+            output$ggplot_output_%widget_id% <- renderPlot({
+                res
+            })
+            
+            # Hide other outputs and show ggplot
+            shinyjs::hide("ui_output_div_%widget_id%")
+            shinyjs::hide("plotly_output_div_%widget_id%")
+            shinyjs::hide("console_output_div_%widget_id%")
+            shinyjs::show("ggplot_output_div_%widget_id%")
             
             # Clear UI output
             output$ui_output_%widget_id% <- renderUI(NULL)
@@ -306,11 +329,13 @@ observe_event(input$run_code_%widget_id%, {
             
             # Hide other outputs and show UI
             shinyjs::hide("plotly_output_div_%widget_id%")
+            shinyjs::hide("ggplot_output_div_%widget_id%")
             shinyjs::hide("console_output_div_%widget_id%")
             shinyjs::show("ui_output_div_%widget_id%")
             
-            # Clear plot output
+            # Clear plot outputs
             output$plotly_output_%widget_id% <- plotly::renderPlotly(NULL)
+            output$ggplot_output_%widget_id% <- renderPlot(NULL)
         }
     }
     

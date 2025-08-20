@@ -150,6 +150,14 @@ observe_event(c(input$indicator_%widget_id%, input$indicator_scope_%widget_id%),
                 legend_1_value <- i18np$t("bed_occupancy_rate")
                 legend_2_value <- i18np$t("in_selected_units")
             }
+        } else if (indicator == "gender") {
+            if (indicator_scope == "hospitalization") {
+                legend_1_value <- i18np$t("gender_distribution")
+                legend_2_value <- ""
+            } else {  # hospital_units
+                legend_1_value <- i18np$t("gender_distribution")
+                legend_2_value <- i18np$t("in_selected_units")
+            }
         }
         
         # Update text field values
@@ -199,6 +207,26 @@ observe_event(input$indicator_%widget_id%, {
             "timeline_nb_bins_%widget_id%", 
             value = 10
         )
+    } else if (!is.null(indicator) && indicator == "gender") {
+        # Set default values for gender pie chart
+        shiny.fluent::updateTextField.shinyInput(
+            session, 
+            "timeline_title_%widget_id%", 
+            value = i18np$t("gender_distribution")
+        )
+        
+        # Clear other timeline fields not needed for gender
+        shiny.fluent::updateTextField.shinyInput(
+            session, 
+            "timeline_x_label_%widget_id%", 
+            value = ""
+        )
+        
+        shiny.fluent::updateTextField.shinyInput(
+            session, 
+            "timeline_y_label_%widget_id%", 
+            value = ""
+        )
     }
 })
 
@@ -211,13 +239,24 @@ observe_event(input$indicator_%widget_id%, {
     
     if (!is.null(indicator)) {
         # Define which indicators require histogram bins
-        histogram_indicators <- c("average_age", "average_length_of_stay")
+        histogram_indicators <- c("average_length_of_stay")
         
         if (indicator == "admission_timeline") {
-            # For timeline: hide standard legend and histogram, show timeline fields
+            # For timeline: hide standard legend and histogram, show all timeline fields
             shinyjs::hide("legend_div_%widget_id%")
             shinyjs::hide("histogram_div_%widget_id%")
             shinyjs::show("timeline_div_%widget_id%")
+            shinyjs::show("timeline_x_label_div_%widget_id%")
+            shinyjs::show("timeline_y_label_div_%widget_id%")
+            shinyjs::show("timeline_nb_bins_div_%widget_id%")
+        } else if (indicator == "gender") {
+            # For gender: show only title input, hide legend, histogram, and timeline axis/bins inputs
+            shinyjs::hide("legend_div_%widget_id%")
+            shinyjs::hide("histogram_div_%widget_id%")
+            shinyjs::show("timeline_div_%widget_id%")
+            shinyjs::hide("timeline_x_label_div_%widget_id%")
+            shinyjs::hide("timeline_y_label_div_%widget_id%")
+            shinyjs::hide("timeline_nb_bins_div_%widget_id%")
         } else if (indicator %in% histogram_indicators) {
             # For histogram indicators: show standard legend and histogram bins, hide timeline
             shinyjs::show("legend_div_%widget_id%")

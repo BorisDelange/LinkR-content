@@ -30,6 +30,22 @@ div(
     ),
     
     # ====================
+    # GGPLOT OUTPUT CONTAINER
+    # ====================
+    # Container for ggplot visualizations (pie charts, etc.)
+    shinyjs::hidden(
+        div(
+            id = ns("ggplot_output_div_%widget_id%"),
+            plotOutput(
+                ns("ggplot_output_%widget_id%"), 
+                height = "100%",
+                width = "100%"
+            ),
+            style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box;"
+        )
+    ),
+    
+    # ====================
     # CONSOLE OUTPUT CONTAINER
     # ====================
     # Container for debugging and console messages
