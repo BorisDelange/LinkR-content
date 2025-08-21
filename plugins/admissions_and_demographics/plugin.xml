@@ -3,7 +3,7 @@
   <plugin>
     <app_version>0.3.1.9012</app_version>
     <unique_id>da1bc28378d0ccc42cbdef8f472e4cd0b3da3e60d7bc19832c1fb9630a3bd043</unique_id>
-    <version>0.0.1.9014</version>
+    <version>0.0.1.9015</version>
     <name_en>Admissions and demographics</name_en>
     <name_fr>Admissions et d&#xE9;mographie</name_fr>
     <category_en>NA</category_en>
@@ -129,13 +129,17 @@ The plugin operates on a bidirectional principle:
 2. **Execution**: This code is executed to produce visual results
 3. **Customization**: Data scientists can modify code for specific analyses
 4. **Unified Save**: Saving preserves both interface parameters AND code</description_en>
-    <description_fr># Plugin Indicateurs Hospitaliers
-
-## Introduction
+    <description_fr>## Introduction
 
 Ce plugin fournit une visualisation et une analyse automatiques des indicateurs cl&#xE9;s d'activit&#xE9; hospitali&#xE8;re &#xE0; partir des donn&#xE9;es OMOP CDM. Il offre une interface intuitive pour g&#xE9;n&#xE9;rer rapidement des statistiques essentielles sur votre population de patients : nombre de patients, dur&#xE9;e moyenne de s&#xE9;jour, r&#xE9;partition d&#xE9;mographique, mortalit&#xE9;, et plus encore.
 
-![Vue g&#xE9;n&#xE9;rale du plugin](screenshot_general.png)
+&lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
+    &lt;img 
+        src="%element_folder%/img/screenshot_general.png"
+        alt="Vue g&#xE9;n&#xE9;rale du plugin",
+        width="400"
+    /&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 ## Fonctionnalit&#xE9;s principales
 
@@ -256,7 +260,7 @@ Le plugin fonctionne selon un principe bidirectionnel :
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2025-08-06 09:18:21</creation_datetime>
-    <update_datetime>2025-08-20 22:14:18</update_datetime>
+    <update_datetime>2025-08-21 08:05:38</update_datetime>
     <type>2</type>
   </plugin>
 </plugins>
