@@ -4,7 +4,13 @@
 
 This plugin provides automatic visualization and analysis of key hospital activity indicators from OMOP CDM data. It offers an intuitive interface to quickly generate essential statistics about your patient population: patient count, average length of stay, demographic distribution, mortality, and more.
 
-![General plugin view](screenshot_general.png)
+<table align="center"><tr><td>
+    <img 
+        src="img/en_screenshot_general.png"
+        alt="Vue générale du plugin",
+        width="750"
+    />
+</td></tr></table>
 
 ## Key Features
 
