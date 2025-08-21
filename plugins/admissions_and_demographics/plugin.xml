@@ -3,7 +3,7 @@
   <plugin>
     <app_version>0.3.1.9012</app_version>
     <unique_id>da1bc28378d0ccc42cbdef8f472e4cd0b3da3e60d7bc19832c1fb9630a3bd043</unique_id>
-    <version>0.0.1.9018</version>
+    <version>0.0.1.9019</version>
     <name_en>Admissions and demographics</name_en>
     <name_fr>Admissions et d&#xE9;mographie</name_fr>
     <category_en>NA</category_en>
@@ -157,13 +157,9 @@ The plugin operates on a bidirectional principle:
 
 Ce plugin fournit une visualisation et une analyse automatiques des indicateurs cl&#xE9;s d'activit&#xE9; hospitali&#xE8;re &#xE0; partir des donn&#xE9;es OMOP CDM. Il offre une interface intuitive pour g&#xE9;n&#xE9;rer rapidement des statistiques essentielles sur votre population de patients : nombre de patients, dur&#xE9;e moyenne de s&#xE9;jour, r&#xE9;partition d&#xE9;mographique, mortalit&#xE9;, et plus encore.
 
-&lt;table align="center"&gt;&lt;tr&gt;&lt;td&gt;
-    &lt;img 
-        src="%element_folder%/img/fr_screenshot_general.png"
-        alt="Vue g&#xE9;n&#xE9;rale du plugin",
-        width="400"
-    /&gt;
-&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/fr_plugin_overview.png" alt="Vue g&#xE9;n&#xE9;rale du plugin" width="750"&gt;
+&lt;/p&gt;
 
 ## Fonctionnalit&#xE9;s principales
 
@@ -181,39 +177,57 @@ Le plugin fournit une interface graphique compl&#xE8;te pour configurer vos indi
 #### Nombre de patients
 Affiche le nombre total de patients uniques dans la cohorte s&#xE9;lectionn&#xE9;e. Id&#xE9;al pour comprendre rapidement la taille de votre population d'&#xE9;tude.
 
-![Indicateur Nombre de Patients](screenshot_patient_count.png)
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/fr_patient_count.png" alt="Indicateur du nombre de patients" width="200"&gt;
+&lt;/p&gt;
 
 #### Nombre d'admissions
 Compte le nombre total de s&#xE9;jours hospitaliers, permettant d'identifier les patients avec plusieurs hospitalisations.
 
-![Indicateur Nombre d'Admissions](screenshot_admission_count.png)
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/fr_admission_count.png" alt="Indicateur du nombre d'admissions" width="200"&gt;
+&lt;/p&gt;
 
 #### Chronologie des admissions
 Visualise la r&#xE9;partition temporelle des admissions sous forme d'histogramme. Aide &#xE0; identifier les tendances et les pics d'activit&#xE9;.
 
-![Indicateur Chronologie des Admissions](screenshot_admission_timeline.png)
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/fr_admission_timeline.png" alt="Timeline des admissions" width="700"&gt;
+&lt;/p&gt;
 
 #### &#xC2;ge moyen
 Calcule et affiche l'&#xE2;ge moyen des patients avec des statistiques d&#xE9;taill&#xE9;es (min, max, quartiles) au survol. L'&#xE2;ge est calcul&#xE9; &#xE0; la date d'admission, en privil&#xE9;giant la date de naissance pr&#xE9;cise lorsqu'elle est disponible.
 
-![Indicateur &#xC2;ge Moyen](screenshot_average_age.png)
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/fr_average_age.png" alt="Indicateur de l'&#xE2;ge des patients" width="200"&gt;
+&lt;/p&gt;
 
 #### R&#xE9;partition par sexe
 Pr&#xE9;sente la r&#xE9;partition hommes/femmes de votre population sous forme de graphique en secteurs avec pourcentages et effectifs.
 
-![R&#xE9;partition par Sexe](screenshot_gender.png)
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/fr_gender.png" alt="Pie chart du sexe des patients" width="350"&gt;
+&lt;/p&gt;
 
 #### Taux de mortalit&#xE9;
 Calcule le pourcentage de patients d&#xE9;c&#xE9;d&#xE9;s dans la cohorte s&#xE9;lectionn&#xE9;e, avec le nombre absolu au survol.
 
-![Indicateur Taux de Mortalit&#xE9;](screenshot_mortality_rate.png)
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/fr_mortality_rate.png" alt="Indicateur du taux de d&#xE9;c&#xE8;s" width="200"&gt;
+&lt;/p&gt;
 
 #### Dur&#xE9;e moyenne de s&#xE9;jour
 Affiche la dur&#xE9;e moyenne d'hospitalisation en jours, avec la possibilit&#xE9; de visualiser la distribution compl&#xE8;te sous forme d'histogramme.
 
-![Indicateur Dur&#xE9;e Moyenne de S&#xE9;jour](screenshot_average_length_of_stay.png)
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/fr_length_of_stay.png" alt="Indicateur de la dur&#xE9;e de s&#xE9;jour" width="200"&gt;
+&lt;/p&gt;
 
 ## Configuration et param&#xE8;tres
+
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/fr_configuration.png" alt="Interface de configuration du plugin" width="750"&gt;
+&lt;/p&gt;
 
 ### P&#xE9;rim&#xE8;tre d'analyse
 
@@ -263,6 +277,10 @@ Les configurations sont li&#xE9;es au widget et peuvent &#xEA;tre partag&#xE9;es
 
 ## Mode avanc&#xE9; : &#xE9;dition de code
 
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/fr_code_editor.png" alt="Interface de d'&#xE9;dition du code" width="750"&gt;
+&lt;/p&gt;
+
 ### G&#xE9;n&#xE9;ration automatique de code
 
 Comme tous les plugins LinkR, ce plugin g&#xE9;n&#xE8;re automatiquement du code R correspondant &#xE0; vos s&#xE9;lections d'interface. Ce code est :
@@ -270,7 +288,7 @@ Comme tous les plugins LinkR, ce plugin g&#xE9;n&#xE8;re automatiquement du code
 - **&#xC9;ditable** : Les utilisateurs avanc&#xE9;s peuvent personnaliser le code g&#xE9;n&#xE9;r&#xE9;
 - **R&#xE9;utilisable** : Peut &#xEA;tre copi&#xE9; pour cr&#xE9;er des analyses personnalis&#xE9;es
 
-### Flux de travail interface &#x2194; code
+### Flux de travail interface &lt;-&gt; code
 
 Le plugin fonctionne selon un principe bidirectionnel :
 
@@ -284,7 +302,7 @@ Le plugin fonctionne selon un principe bidirectionnel :
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2025-08-06 09:18:21</creation_datetime>
-    <update_datetime>2025-08-21 18:10:21</update_datetime>
+    <update_datetime>2025-08-21 20:00:02</update_datetime>
     <type>2</type>
   </plugin>
 </plugins>
