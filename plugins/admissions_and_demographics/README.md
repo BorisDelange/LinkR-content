@@ -5,7 +5,7 @@
 This plugin provides automatic visualization and analysis of key hospital activity indicators from OMOP CDM data. It offers an intuitive interface to quickly generate essential statistics about your patient population: patient count, average length of stay, demographic distribution, mortality, and more.
 
 <p align="center">
-  <img src="img/en_screenshot_general.png" alt="Vue générale du plugin" width="750">
+  <img src="img/en_plugin_overview.png" alt="Plugin overview" width="750">
 </p>
 
 ## Key Features
@@ -24,39 +24,57 @@ The plugin provides a comprehensive graphical interface to configure your indica
 #### Patient Count
 Displays the total number of unique patients in the selected cohort. Ideal for quickly understanding your study population size.
 
-![Patient Count Indicator](screenshot_patient_count.png)
+<p align="center">
+  <img src="img/en_patient_count.png" alt="Patient count indicator" width="200">
+</p>
 
 #### Admission Count
 Counts the total number of hospital stays, allowing identification of patients with multiple hospitalizations.
 
-![Admission Count Indicator](screenshot_admission_count.png)
+<p align="center">
+  <img src="img/en_admission_count.png" alt="Admissions count indicator" width="200">
+</p>
 
 #### Admission Timeline
 Visualizes the temporal distribution of admissions as a histogram. Helps identify trends and activity peaks.
 
-![Admission Timeline Indicator](screenshot_admission_timeline.png)
+<p align="center">
+  <img src="img/en_admission_timeline.png" alt="Admission timeline indicator" width="700">
+</p>
 
 #### Average Age
 Calculates and displays the average patient age with detailed statistics (min, max, quartiles) on hover. Age is calculated at admission date, prioritizing precise birth date when available.
 
-![Average Age Indicator](screenshot_average_age.png)
+<p align="center">
+  <img src="img/en_average_age.png" alt="Average age indicator" width="200">
+</p>
 
 #### Gender Distribution
 Presents the male/female distribution of your population as a pie chart with percentages and counts.
 
-![Gender Distribution Indicator](screenshot_gender.png)
+<p align="center">
+  <img src="img/en_gender.png" alt="Gender distribution indicator" width="300">
+</p>
 
 #### Mortality Rate
 Calculates the percentage of deceased patients in the selected cohort, with absolute number on hover.
 
-![Mortality Rate Indicator](screenshot_mortality_rate.png)
+<p align="center">
+  <img src="img/en_mortality_rate.png" alt="Mortality rate indicator" width="200">
+</p>
 
 #### Average Length of Stay
 Displays the average hospitalization duration in days, with the option to visualize the complete distribution as a histogram.
 
-![Average Length of Stay Indicator](screenshot_average_length_of_stay.png)
+<p align="center">
+  <img src="img/en_length_of_stay.png" alt="Length of stay indicator" width="200">
+</p>
 
 ## Configuration and Settings
+
+<p align="center">
+  <img src="img/en_configuration.png" alt="Configuration panel" width="750">
+</p>
 
 ### Analysis Scope
 
@@ -105,6 +123,10 @@ Configurations save:
 Configurations are linked to the widget and can be shared between users with access to the same project, facilitating collaboration and standardization of analyses.
 
 ## Advanced Mode: Code Editing
+
+<p align="center">
+  <img src="img/en_code_editor.png" alt="Code editor panel" width="750">
+</p>
 
 ### Automatic Code Generation
 

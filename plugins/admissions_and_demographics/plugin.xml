@@ -3,7 +3,7 @@
   <plugin>
     <app_version>0.3.1.9012</app_version>
     <unique_id>da1bc28378d0ccc42cbdef8f472e4cd0b3da3e60d7bc19832c1fb9630a3bd043</unique_id>
-    <version>0.0.1.9017</version>
+    <version>0.0.1.9018</version>
     <name_en>Admissions and demographics</name_en>
     <name_fr>Admissions et d&#xE9;mographie</name_fr>
     <category_en>NA</category_en>
@@ -15,7 +15,7 @@
 This plugin provides automatic visualization and analysis of key hospital activity indicators from OMOP CDM data. It offers an intuitive interface to quickly generate essential statistics about your patient population: patient count, average length of stay, demographic distribution, mortality, and more.
 
 &lt;p align="center"&gt;
-  &lt;img src="%element_folder%/img/en_screenshot_general.png" alt="Vue g&#xE9;n&#xE9;rale du plugin" width="750"&gt;
+  &lt;img src="%element_folder%/img/en_plugin_overview.png" alt="Plugin overview" width="750"&gt;
 &lt;/p&gt;
 
 ## Key Features
@@ -34,39 +34,57 @@ The plugin provides a comprehensive graphical interface to configure your indica
 #### Patient Count
 Displays the total number of unique patients in the selected cohort. Ideal for quickly understanding your study population size.
 
-![Patient Count Indicator](screenshot_patient_count.png)
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/en_patient_count.png" alt="Patient count indicator" width="200"&gt;
+&lt;/p&gt;
 
 #### Admission Count
 Counts the total number of hospital stays, allowing identification of patients with multiple hospitalizations.
 
-![Admission Count Indicator](screenshot_admission_count.png)
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/en_admission_count.png" alt="Admissions count indicator" width="200"&gt;
+&lt;/p&gt;
 
 #### Admission Timeline
 Visualizes the temporal distribution of admissions as a histogram. Helps identify trends and activity peaks.
 
-![Admission Timeline Indicator](screenshot_admission_timeline.png)
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/en_admission_timeline.png" alt="Admission timeline indicator" width="700"&gt;
+&lt;/p&gt;
 
 #### Average Age
 Calculates and displays the average patient age with detailed statistics (min, max, quartiles) on hover. Age is calculated at admission date, prioritizing precise birth date when available.
 
-![Average Age Indicator](screenshot_average_age.png)
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/en_average_age.png" alt="Average age indicator" width="200"&gt;
+&lt;/p&gt;
 
 #### Gender Distribution
 Presents the male/female distribution of your population as a pie chart with percentages and counts.
 
-![Gender Distribution Indicator](screenshot_gender.png)
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/en_gender.png" alt="Gender distribution indicator" width="300"&gt;
+&lt;/p&gt;
 
 #### Mortality Rate
 Calculates the percentage of deceased patients in the selected cohort, with absolute number on hover.
 
-![Mortality Rate Indicator](screenshot_mortality_rate.png)
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/en_mortality_rate.png" alt="Mortality rate indicator" width="200"&gt;
+&lt;/p&gt;
 
 #### Average Length of Stay
 Displays the average hospitalization duration in days, with the option to visualize the complete distribution as a histogram.
 
-![Average Length of Stay Indicator](screenshot_average_length_of_stay.png)
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/en_length_of_stay.png" alt="Length of stay indicator" width="200"&gt;
+&lt;/p&gt;
 
 ## Configuration and Settings
+
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/en_configuration.png" alt="Configuration panel" width="750"&gt;
+&lt;/p&gt;
 
 ### Analysis Scope
 
@@ -115,6 +133,10 @@ Configurations save:
 Configurations are linked to the widget and can be shared between users with access to the same project, facilitating collaboration and standardization of analyses.
 
 ## Advanced Mode: Code Editing
+
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/en_code_editor.png" alt="Code editor panel" width="750"&gt;
+&lt;/p&gt;
 
 ### Automatic Code Generation
 
@@ -262,7 +284,7 @@ Le plugin fonctionne selon un principe bidirectionnel :
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2025-08-06 09:18:21</creation_datetime>
-    <update_datetime>2025-08-21 17:34:51</update_datetime>
+    <update_datetime>2025-08-21 18:10:21</update_datetime>
     <type>2</type>
   </plugin>
 </plugins>
