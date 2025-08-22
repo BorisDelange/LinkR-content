@@ -302,3 +302,12 @@ observe_event(input$hospital_unit_uncheck_all_%widget_id%, {
     hospital_unit_options <- get_hospital_unit_options_%widget_id%()
     shiny.fluent::updateDropdown.shinyInput(session, "hospital_unit_%widget_id%", options = hospital_unit_options, value = character(0))
 })
+
+# ======================================
+# BUTTON PERMISSIONS
+# ======================================
+
+# Hide Display + Save button if user doesn't have save permissions
+if (!("projects_widgets_settings" %in% user_accesses)) {
+    shinyjs::hide("display_and_save_%widget_id%")
+}

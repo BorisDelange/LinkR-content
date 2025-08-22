@@ -173,7 +173,7 @@ tagList(
             ),
             
             # Navigation bar styling and unified mouse handling
-            class = "widget_icon data_widget_top_icons top-navigation-bar",
+            class = "widget_icon",
             
             style = paste0(
                 "color: #808080; border-bottom: solid grey 0.5px; height: 0px; padding: 5px 0 0 5px; font-size: 12px; display: flex; opacity: 0; position: relative; z-index: 100;",
@@ -227,7 +227,7 @@ tagList(
                     shinyjs::hidden(
                         div(
                             id = ns("settings_container_%widget_id%"),
-                            style = "height: 100%; display: flex; flex: 0 0 20%; box-sizing: border-box;",
+                            style = "height: 100%; display: flex; flex: 0 0 20%; box-sizing: border-box; min-width: 100px;",
                             
                             # Output settings panel
                             div(
@@ -336,6 +336,7 @@ tagList(
         // Initialize the layout state in JavaScript
         Shiny.setInputValue('", id, "-output_and_settings_side_by_side_%widget_id%', ", tolower(side_by_side), ");
     "))),
+    
     
     # Unified navigation control script
     tags$script(HTML(paste0("
