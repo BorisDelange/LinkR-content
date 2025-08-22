@@ -1,15 +1,40 @@
 # ==========================================
-# ui_output_settings.R - Chart Configuration Panel
+# ui_output_settings.R - Timeline Configuration Panel
 # ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
+# ██                                                                            ██
+# ██  This file MUST be customized for your specific plugin.                    ██
+# ██  Follow the template structure and implement your logic.                   ██
+# ██  See comments and examples for guidance.                                   ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# TIMELINE PLUGIN - OUTPUT SETTINGS UI FILE
 # 
-# Interactive panel for configuring chart settings including:
+# This file defines the no-code configuration interface for the Timeline plugin.
+# It provides user-friendly controls that automatically generate and modify the underlying
+# R code for medical timeline visualization based on user selections.
+# 
+# Interactive panel for configuring timeline chart settings including:
 # - Chart type selection (dygraphs vs plotly)
-# - Medical concept selection from available data
+# - Medical concept selection from available OMOP data
 # - Data source selection (patient vs visit level)
 # - Timeline synchronization controls
 # - Auto-update preferences
-#
-# ==========================================
+# 
+# IMPORTANT NOTES:
+# - AVOID using conditionalPanel() to show/hide UI elements. Instead, manage this logic
+#   in the server file (server_output_settings.R) using shinyjs::show and shinyjs::hide functions.
+#   This provides better control and maintains consistency with the reactive framework.
+# - Each div element includes an ID attribute to enable dynamic show/hide functionality
+#   using shinyjs::show() and shinyjs::hide() from the server logic. This allows for
+#   conditional display of UI elements based on user selections.
+# - When adding or removing configuration elements, make sure to update both the
+#   CONFIGURATION LOADING FROM DATABASE and CONFIGURATION SAVING TO DATABASE sections
+#   in server_user_configurations.R to ensure user choices are properly saved and restored.
 
 div(
     # ====================
@@ -153,25 +178,31 @@ div(
     # ====================
     # ACTION BUTTONS
     # ====================
+    # Standard action buttons - customize labels as needed
     div(
-        # Primary action - Display the chart
-        shiny.fluent::PrimaryButton.shinyInput(
-            ns("settings_display_output_%widget_id%"), 
+        id = ns("action_buttons_div_%widget_id%"),
+        # Default action - Generate/Update timeline only
+        shiny.fluent::DefaultButton.shinyInput(
+            ns("display_output_2_%widget_id%"), 
             i18np$t("display_output"), iconProps = list(iconName = "Play"),
             onClick = htmlwidgets::JS(paste0(
                 "item => { Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random()); }"
             ))
         ),
         
-        # Secondary action - Save current configuration
-        shiny.fluent::DefaultButton.shinyInput(
-            ns("save_settings_%widget_id%"), 
-            i18np$t("save_output_settings_and_code"), iconProps = list(iconName = "Save"),
+        # Primary action - Display and Save (if user has permissions)
+        # This button is shown/hidden based on user access in the main UI file
+        shiny.fluent::PrimaryButton.shinyInput(
+            ns("display_and_save_%widget_id%"), 
+            i18np$t("display_and_save"), 
+            iconProps = list(iconName = "SaveAs"),
             onClick = htmlwidgets::JS(paste0(
-                "item => { Shiny.setInputValue('", id, "-save_output_settings_and_code_%widget_id%', Math.random()); }"
+                "item => { ",
+                "Shiny.setInputValue('", id, "-display_and_save_%widget_id%', Math.random()); ",
+                "}"
             ))
         ),
         
-        style = "margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;"
+        style = "margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; padding-top: 15px; border-top: solid 1px #808080;"
     )
 )

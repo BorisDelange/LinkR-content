@@ -1,17 +1,58 @@
 # ==========================================
-# server_layout_manager.R
-# ==========================================
-# 
-# Manages the dynamic layout system for the widget interface, handling:
-# - Side-by-side vs full-width layout modes
-# - Interactive panel resizing with drag handles
-# - Panel width memory and persistence
-# - Database storage of layout preferences
-#
+# server_layout_manager.R - Dynamic Layout Management
 # ==========================================
 
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  ⚠️  DO NOT MODIFY - CORE PLUGIN FRAMEWORK  ⚠️                             ██
+# ██                                                                            ██
+# ██  This file is part of the plugin framework and works automatically.        ██
+# ██  Modifications are NOT required and may break functionality.               ██
+# ██  Only modify if you have specific advanced requirements.                   ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# PLUGIN TEMPLATE - LAYOUT MANAGER SERVER FILE
+# 
+# This file manages the dynamic layout system for the widget plugin template.
+# It provides a sophisticated resizable panel interface that enhances user experience
+# by allowing flexible workspace arrangements.
+# 
+# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
+# - This file should work without modification for most plugins
+# - The layout system automatically adapts to different panel configurations
+# - Panel width preferences are automatically saved to the database
+# - No customization typically needed unless adding new panel types
+# 
+# FEATURES PROVIDED:
+# - Side-by-side vs full-width layout modes for optimal screen real estate usage
+# - Interactive drag-to-resize functionality with visual feedback
+# - Persistent panel width memory that remembers user preferences
+# - Automatic database storage of layout preferences
+# - Responsive design that works on different screen sizes
+# - Smooth transitions between different layout modes
+# 
+# LAYOUT MODES:
+# 
+# SIDE-BY-SIDE MODE:
+#   - Output panel + Settings/Code panel displayed simultaneously
+#   - Interactive resizer handle allows width adjustment
+#   - Optimal for users who want to see configuration and results together
+#   - Panel widths are remembered separately for settings vs code tabs
+# 
+# FULL-WIDTH MODE:
+#   - Single panel takes full width with tab-based navigation
+#   - Better for users with limited screen space
+#   - Navigation buttons allow switching between output, settings, and code
+# 
+# DATABASE INTEGRATION:
+# - Layout preferences stored in widgets_options table
+# - Automatically loaded on widget initialization
+# - Changes saved immediately without user intervention
+# - No additional database setup required
+
 # ======================================
-# JAVASCRIPT PANEL LAYOUT SYSTEM
+# PANEL LAYOUT REFRESH
 # ======================================
 
 # Create the JavaScript system for managing panel layouts and resizing
@@ -127,9 +168,14 @@ panel_layout_manager <- paste0("
             var rightPercent = 100 - leftPercent - 0.5; // Reserve 0.5% for resizer handle
             
             // Enforce minimum panel sizes to prevent panels from becoming unusable
-            if (leftPercent > 15 && rightPercent > 15) {
+            // Settings container needs at least 100px to keep sidenav visible
+            var minRightWidth = 100;
+            var minRightPercent = (minRightWidth / containerWidth) * 100;
+            
+            if (leftPercent > 15 && rightPercent > Math.max(minRightPercent, 10)) {
                 leftPanel.style.flex = '0 0 ' + leftPercent + '%';
                 settingsContainer.style.flex = '0 0 ' + rightPercent + '%';
+                settingsContainer.style.minWidth = minRightWidth + 'px';
                 
                 // Save the width preference for the current active tab
                 if (currentTab === 'code') {
@@ -166,10 +212,6 @@ panel_layout_manager <- paste0("
     }
 ")
 
-# ======================================
-# LOAD SIDE-BY-SIDE PREFERENCE FROM DATABASE
-# ======================================
-
 # Query database for saved side-by-side layout preference
 sql <- glue::glue_sql(
     "SELECT value_num 
@@ -188,19 +230,10 @@ if (nrow(side_by_side_result) > 0) {
     }
 }
 
-if (!side_by_side){
-    shinyjs::delay(1000, {
-        shinyjs::show("output_button_div_%widget_id%")
-        shinyjs::hide("resizer_%widget_id%")
-        shinyjs::hide("output_settings_code_div_%widget_id%")
-    })
+# Initialize the panel layout system ONLY if starting in side-by-side mode
+if (side_by_side) {
+    shinyjs::delay(2000, shinyjs::runjs(panel_layout_manager))
 }
-
-# Initialize the layout state in JavaScript
-shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-output_and_settings_side_by_side_%widget_id%', ", tolower(side_by_side), ");"))
-
-# Initialize the panel layout system with a slight delay to ensure DOM is ready
-shinyjs::delay(100, shinyjs::runjs(panel_layout_manager))
 
 # ======================================
 # SIDE-BY-SIDE TOGGLE BUTTON HANDLER
@@ -247,17 +280,25 @@ observe_event(input$side_by_side_button_%widget_id%, {
     
     if (new_side_by_side) {
         # Enable side-by-side mode
-        shinyjs::runjs(panel_layout_manager)  # Reinitialize the layout system
         shinyjs::hide("output_button_div_%widget_id%")  # Hide output button (not needed in side-by-side)
-        shinyjs::show("resizer_%widget_id%")  # Show drag-to-resize handle
+        sapply(c("resizer_%widget_id%", "settings_container_%widget_id%"), shinyjs::show)  # Show resizer and settings container
         
-        # Force application of correct panel widths after a short delay
-        shinyjs::delay(150, shinyjs::runjs("window.setPanelWidths_%widget_id%();"))
+        # Initialize the layout system ONLY if not already initialized - WITH DELAY to let shinyjs::show() work
+        shinyjs::delay(200, shinyjs::runjs(paste0("
+            if (!window.resizingInitialized_%widget_id%) {
+                ", panel_layout_manager, "
+            } else {
+                // Just apply panel widths if already initialized
+                if (typeof setPanelWidths_%widget_id% === 'function') {
+                    setTimeout(function() { setPanelWidths_%widget_id%(); }, 150);
+                }
+            }
+        ")))
         
     } else {
         # Enable full-width mode
         shinyjs::show("output_button_div_%widget_id%")  # Show output button for navigation
-        shinyjs::hide("resizer_%widget_id%")  # Hide resize handle (not needed in full-width)
+        sapply(c("resizer_%widget_id%", "settings_container_%widget_id%"), shinyjs::hide)  # Hide resizer and settings container
     }
     
     # ==========================================

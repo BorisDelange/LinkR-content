@@ -306,17 +306,42 @@ observe_event(input$run_code_%widget_id%, {
     # HANDLE EXECUTION RESULTS
     # ====================
     
-    # Show error message if no chart was generated
+    # Show appropriate error message if no chart was generated
     if (length(fig) == 0) {
-        output$error_message_%widget_id% <- renderUI(
+        # Determine specific error message based on context
+        data_source <- if (length(input$data_source_%widget_id%) > 0) {
+            input$data_source_%widget_id%
+        } else {
+            "person"
+        }
+        
+        # Check if patient/visit is selected
+        if (data_source == "person") {
+            patient_selected <- !is.na(m$selected_person) && length(m$selected_person) > 0
+            error_message <- if (!patient_selected) {
+                i18np$t("no_patient_selected")
+            } else {
+                i18np$t("no_data_for_patient")
+            }
+        } else {
+            visit_selected <- !is.na(m$selected_visit_detail) && length(m$selected_visit_detail) > 0
+            error_message <- if (!visit_selected) {
+                i18np$t("no_visit_selected")
+            } else {
+                i18np$t("no_data_for_patient")
+            }
+        }
+        
+        # Use same styling as Admissions and Demographics plugin
+        output$error_message_%widget_id% <- renderUI({
             div(
-                shiny.fluent::MessageBar(
-                    i18np$t("no_data_to_display"), 
-                    messageBarType = 5
-                ), 
-                style = "display: inline-block;"
+                style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center;",
+                div(
+                    style = "font-size: 14px; color: #6c757d;",
+                    error_message
+                )
             )
-        )
+        })
         
         shinyjs::show("error_message_div_%widget_id%")
         shinyjs::hide("dygraph_div_%widget_id%")
@@ -350,6 +375,21 @@ observe_event(input$run_code_%widget_id%, {
     # ====================
     # If not in side-by-side mode, automatically switch to output tab
     if (isFALSE(input$output_and_settings_side_by_side_%widget_id%)) shinyjs::click("output_button_%widget_id%")
+    
+    # ====================
+    # SAVE AFTER DISPLAY IF REQUESTED
+    # ====================
+    # Check if save was requested after display (from Display + Save button)
+    if (exists("save_after_display_%widget_id%") && save_after_display_%widget_id%()) {
+        # Reset the flag
+        save_after_display_%widget_id%(FALSE)
+        
+        # Trigger the save process
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_configuration_trigger_%widget_id%', Math.random());"))
+        
+        # Notify user
+        show_message_bar("modif_saved", "success")
+    }
 })
 
 # ======================================

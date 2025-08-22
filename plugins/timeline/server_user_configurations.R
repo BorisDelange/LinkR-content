@@ -1,11 +1,72 @@
 # ==========================================
-# server_user_configurations.R - User Configuration Management
+# server_user_configurations.R - User Configurations Server Logic
 # ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  ⚠️  DO NOT MODIFY - CORE PLUGIN FRAMEWORK  ⚠️                             ██
+# ██                                                                            ██
+# ██  This file is part of the plugin framework and works automatically.        ██
+# ██  Modifications are NOT required and may break functionality.               ██
+# ██  Only modify if you have specific advanced requirements.                   ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# PLUGIN TEMPLATE - USER CONFIGURATIONS SERVER FILE
 # 
-# Manages user configuration files including creation, deletion, selection, renaming,
-# and persistence of configuration preferences in the database
-#
-# ==========================================
+# This file handles the server-side logic for user configuration management.
+# It provides comprehensive functionality for creating, selecting, renaming, 
+# deleting, persisting, loading, and saving user configuration presets, 
+# allowing users to save and quickly switch between different analysis scenarios.
+# 
+# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
+# - This file should work without modification for most plugins
+# - The configuration system automatically integrates with your plugin's settings
+# - Database operations are handled automatically by the template framework
+# - Validation and UI styling are already implemented
+# - No customization typically needed unless adding special configuration features
+# 
+# CORE FUNCTIONALITY:
+# - Create new configuration presets with validation
+# - Select and load existing configurations from database
+# - Rename configurations with validation and duplicate checking
+# - Delete configurations with confirmation dialogs
+# - Automatic database persistence of all configuration operations
+# - Save current widget settings to selected configuration
+# - Load saved configuration settings and apply to UI components
+# - Manual and automatic save triggers for configuration updates
+# - UI state management and visual feedback
+# - Integration with the main widget's settings system
+# 
+# USER WORKFLOW:
+# 1. User configures widget settings in output_settings panel
+# 2. User creates a new configuration to save current settings
+# 3. User can switch between configurations via dropdown
+# 4. Selected configurations are automatically loaded from database
+# 5. User can rename configurations to better organize their presets
+# 6. User can manually save changes to current configuration
+# 7. User can delete configurations they no longer need
+# 8. All settings persist across sessions via database storage
+# 
+# DATABASE INTEGRATION:
+# - All operations automatically saved to widgets_options table
+# - Configurations linked to specific widgets via widget_id
+# - Settings persistence handled by automated save/load mechanisms
+# - Configuration loading retrieves all saved widget settings
+# - Configuration saving stores current UI state to database
+# - Configuration renaming updates database records in real-time
+# - Save triggers handle both manual and automatic persistence
+# - No additional setup required - works out of the box
+# 
+# CONFIGURATION PERSISTENCE FEATURES:
+# - Automatic loading of saved settings when configuration selected
+# - Smart defaults applied when no saved configuration exists
+# - Support for multiple setting types (dropdowns, toggles, text, code)
+# - Manual save triggers via user action
+# - Automatic save capabilities for real-time persistence
+# - Cross-session configuration availability
+# - Configuration name validation and duplicate prevention
+# - Seamless renaming with immediate UI updates
 
 # ======================================
 # UI STYLING CONFIGURATION
@@ -54,6 +115,11 @@ observe_event(input$show_user_configurations_tab_%widget_id%, {
 # Show modal dialog for creating new user configuration
 observe_event(input$create_user_configuration_%widget_id%, {
     shinyjs::show("add_user_configuration_modal_%widget_id%")
+    
+    # Focus on the text field after a small delay to ensure modal is visible
+    shinyjs::delay(50, {
+        shinyjs::runjs(paste0("document.getElementById('", id, "-user_configuration_name_add_%widget_id%').focus();"))
+    })
 })
 
 # Close create user configuration modal
@@ -192,7 +258,7 @@ add_user_configuration_%widget_id% <- function(configuration_name, notification 
 }
 
 # Auto-create default configuration when widget loads
-shinyjs::delay(500, add_user_configuration_%widget_id%(i18np$t("configuration_1"), notification = FALSE))
+shinyjs::delay(1000, add_user_configuration_%widget_id%(i18np$t("configuration_1"), notification = FALSE))
 
 # Handle user confirmation to create new configuration
 observe_event(input$add_user_configuration_%widget_id%, {
@@ -424,98 +490,179 @@ observe_event(input$confirm_configuration_deletion_%widget_id%, {
 # CONFIGURATION LOADING FROM DATABASE
 # ======================================
 
-# Handler for loading saved output settings and code from selected user configuration
+# Load saved configuration settings from database
 observe_event(input$load_configuration_%widget_id%, {
     
-    # Get the selected user configuration ID
-    link_id <- input$user_configuration_%widget_id%
+    # Get selected configuration ID
+    configuration_id <- input$user_configuration_%widget_id%
     
-    # Query database for all output settings associated with this configuration
+    if (is.null(configuration_id)) {
+        return()
+    }
+    
+    # Query database for saved settings
     sql <- glue::glue_sql(
         "SELECT name, value, value_num 
          FROM widgets_options 
-         WHERE widget_id = %widget_id% AND category = 'output_settings' AND link_id = {link_id}", 
+         WHERE widget_id = %widget_id% AND category = 'output_settings' AND link_id = {configuration_id}", 
         .con = m$db
     )
-    output_settings <- DBI::dbGetQuery(m$db, sql)
+    saved_settings <- DBI::dbGetQuery(m$db, sql)
     
-    code <- ""
-    has_saved_concepts <- FALSE
+    # Initialize tracking variables
     auto_update <- FALSE
+    loaded_input_ids <- character(0)
     
-    # Update UI components with saved values
-    if (nrow(output_settings) > 0) {
-        # Process each saved setting and update corresponding UI element
-        sapply(output_settings$name, function(name) {
-            
-            # Extract value and numeric value for this setting
-            value <- output_settings %>% 
-                dplyr::filter(name == !!name) %>% 
-                dplyr::pull(value)
-            value_num <- output_settings %>% 
-                dplyr::filter(name == !!name) %>% 
-                dplyr::pull(value_num)
-            
-            # Update UI elements based on setting type
-            if (name %in% c("data_source", "chart_type", "concepts_choice")) {
-                # Update dropdown selections
-                shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
-            } 
-            else if (name == "concepts") {
-                # Update concepts multi-select dropdown
-                # Convert comma-separated string back to numeric vector
-                value <- as.numeric(unlist(strsplit(value, ", ")))
-                
-                # Check if we have valid saved concepts
-                if (length(value) > 0 && !any(is.na(value))) {
-                    has_saved_concepts <<- TRUE
-                    shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
-                } else {
-                    # No valid saved concepts - will use all available concepts
-                    has_saved_concepts <<- FALSE
-                }
-            }
-            else if (name == "concept_classes") {
-                # Update concept classes multi-select dropdown
-                # Convert comma-separated string back to character vector
-                value <- unlist(strsplit(value, ", "))
-                shiny.fluent::updateDropdown.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
-            }
-            else if (name %in% c("synchronize_timelines", "automatically_update_output")) {
-                # Update toggle switches
-                # Convert numeric value back to logical
-                value <- as.logical(value_num)
-                shiny.fluent::updateToggle.shinyInput(session, paste0(name, "_%widget_id%"), value = value)
-                if (name == "automatically_update_output" && !is.na(value)) auto_update <<- value
-            }
-            else if (name == "code") {
-                # Update code editor content
-                code <<- value
-                m$code_%widget_id% <- value
-                shinyAce::updateAceEditor(session, "code_%widget_id%", value = code)
-            }
-        })
-    }
-    # No saved configuration found - trigger output display with default settings
-    else shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
-    
-    # Handle case where no saved concepts exist - select all
-    if (!has_saved_concepts) {
-        # Select all available concepts
-        all_concepts <- selected_concepts$concept_id
+    # Apply saved settings to UI using automated logic
+    if (nrow(saved_settings) > 0) {
         
-        if (length(all_concepts) > 0) {
-            concept_domains <- selected_concepts %>%
-                dplyr::filter(concept_id %in% all_concepts) %>%  # Use all_concepts instead of concepts_to_check
-                dplyr::pull(domain_id) %>%
-                unique()
+        # Process each saved setting
+        for (i in 1:nrow(saved_settings)) {
+            setting_name <- saved_settings$name[i]
+            setting_value <- saved_settings$value[i]
+            setting_value_num <- saved_settings$value_num[i]
+            
+            # Find matching input configuration
+            input_config <- Filter(function(x) x$id == setting_name, all_inputs_%widget_id%)
+            
+            if (length(input_config) > 0) {
+                input_def <- input_config[[1]]
+                input_id <- paste0(setting_name, "_%widget_id%")
+                
+                # Track which inputs were loaded from saved settings
+                loaded_input_ids <- c(loaded_input_ids, setting_name)
+                
+                # Apply setting based on input type
+                switch(
+                    input_def$type,
+                    "dropdown" = {
+                        shiny.fluent::updateDropdown.shinyInput(session, input_id, value = setting_value)
+                    },
+                    "multiselect" = {
+                        if (!is.na(setting_value) && setting_value != "") {
+                            variables_vector <- unlist(strsplit(setting_value, ", ?"))
+                            shiny.fluent::updateDropdown.shinyInput(session, input_id, value = variables_vector)
+                        }
+                    },
+                    "text" = {
+                        if (!is.na(setting_value)) {
+                            shiny.fluent::updateTextField.shinyInput(session, input_id, value = setting_value)
+                        }
+                    },
+                    "toggle" = {
+                        toggle_value <- as.logical(setting_value_num)
+                        if (!is.na(toggle_value)) {
+                            shiny.fluent::updateToggle.shinyInput(session, input_id, value = toggle_value)
+                            if (setting_name == "auto_update" && toggle_value) auto_update <- TRUE
+                        }
+                    },
+                    "code" = {
+                        if (!is.na(setting_value)) {
+                            m[[paste0("code_%widget_id%")]] <- setting_value
+                            shinyAce::updateAceEditor(session, input_id, value = setting_value)
+                        }
+                    },
+                    "date" = {
+                        if (!is.na(setting_value) && setting_value != "") {
+                            date_value <- as.Date(setting_value)
+                            shiny.fluent::updateDatePicker.shinyInput(session, input_id, value = date_value)
+                        }
+                    },
+                    "number" = {
+                        if (!is.na(setting_value_num)) {
+                            shiny.fluent::updateSpinButton.shinyInput(session, input_id, value = setting_value_num)
+                        }
+                    }
+                )
+            }
         }
     }
     
-    # Auto-execute code if enabled
-    if (auto_update) {
+    # Apply default values for inputs that weren't loaded from saved settings
+    for (input_def in all_inputs_%widget_id%) {
+        input_id_short <- input_def$id
+        input_id_full <- paste0(input_id_short, "_%widget_id%")
+        
+        # Skip if this input was already loaded from saved settings
+        if (input_id_short %in% loaded_input_ids) {
+            next
+        }
+        
+        # Apply default value based on input type
+        switch(
+            input_def$type,
+            "dropdown" = {
+                shiny.fluent::updateDropdown.shinyInput(session, input_id_full, value = input_def$default)
+            },
+            "multiselect" = {
+                # Special case for concepts: select all available concepts by default
+                if (input_id_short == "concepts" && input_def$default == "all_available") {
+                    # Get chart type to determine available domains
+                    chart_type <- if (exists("input") && length(input$chart_type_%widget_id%) > 0) {
+                        input$chart_type_%widget_id%
+                    } else {
+                        "dygraphs"  # default
+                    }
+                    
+                    allowed_domains <- if (chart_type == "dygraphs") {
+                        c("Measurement", "Observation")
+                    } else if (chart_type == "plotly") {
+                        c("Measurement", "Observation", "Condition", "Procedure", "Drug")
+                    } else {
+                        c("Measurement", "Observation")
+                    }
+                    
+                    # Select all available concepts for the current chart type
+                    if (exists("selected_concepts")) {
+                        available_concepts <- selected_concepts %>% 
+                            dplyr::filter(domain_id %in% allowed_domains) %>%
+                            dplyr::pull(concept_id)
+                        shiny.fluent::updateDropdown.shinyInput(session, input_id_full, value = available_concepts)
+                    } else {
+                        shiny.fluent::updateDropdown.shinyInput(session, input_id_full, value = c())
+                    }
+                } else {
+                    shiny.fluent::updateDropdown.shinyInput(session, input_id_full, value = input_def$default)
+                }
+            },
+            "text" = {
+                shiny.fluent::updateTextField.shinyInput(session, input_id_full, value = input_def$default)
+            },
+            "toggle" = {
+                shiny.fluent::updateToggle.shinyInput(session, input_id_full, value = input_def$default)
+                # Check if auto_update default is TRUE
+                if (input_id_short == "auto_update" && isTRUE(input_def$default)) {
+                    auto_update <- TRUE
+                }
+            },
+            "code" = {
+                m[[paste0("code_%widget_id%")]] <- input_def$default
+                shinyAce::updateAceEditor(session, input_id_full, value = input_def$default)
+            },
+            "date" = {
+                # Handle date defaults (could be Date object or function call)
+                default_date <- if (is.function(input_def$default)) {
+                    input_def$default()
+                } else {
+                    input_def$default
+                }
+                shiny.fluent::updateDatePicker.shinyInput(session, input_id_full, value = default_date)
+            },
+            "number" = {
+                shiny.fluent::updateSpinButton.shinyInput(session, input_id_full, value = input_def$default)
+            }
+        )
+    }
+    
+    if (nrow(saved_settings) == 0) {
+        # No saved configuration found - trigger output display with default settings
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
+    }
+    
+    # Auto-execute if enabled (either from saved settings or defaults)
+    else if (auto_update) {
         shinyjs::delay(500, {
-            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))  
+            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
         })
     }
 })
@@ -524,48 +671,81 @@ observe_event(input$load_configuration_%widget_id%, {
 # CONFIGURATION SAVING TO DATABASE
 # ======================================
 
-# Observer for saving current output settings and code to selected user configuration
-observe_event(input$save_output_settings_and_code_trigger_%widget_id%, {
+# Save current settings to database
+observe_event(input$save_configuration_trigger_%widget_id%, {
     
-    # Validate user configuration selection
-    if (length(input$user_configuration_%widget_id%) == 0) {
-        # If no configuration is selected, redirect to configuration management
+    # Validate configuration selection
+    configuration_id <- input$user_configuration_%widget_id%
+    if (is.null(configuration_id)) {
+        # Redirect to configuration management if none selected
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-show_user_configurations_tab_%widget_id%', Math.random());"))
         return()
     }
     
-    link_id <- input$user_configuration_%widget_id%
-
-    # Remove existing settings for this configuration to avoid duplicates
+    # Remove existing settings to avoid duplicates
     sql_send_statement(
         m$db, 
         glue::glue_sql(
             "DELETE FROM widgets_options 
-             WHERE widget_id = %widget_id% AND category = 'output_settings' AND link_id = {link_id}", 
+             WHERE widget_id = %widget_id% AND category = 'output_settings' AND link_id = {configuration_id}", 
             .con = m$db
         )
     )
     
-    # Prepare new settings data
-    new_data <- tibble::tribble(
-        ~name, ~value, ~value_num,
-        "data_source", input$data_source_%widget_id%, NA_real_,
-        "chart_type", input$chart_type_%widget_id%, NA_real_,
-        "concepts_choice", input$concepts_choice_%widget_id%, NA_real_,
-        "concepts", input$concepts_%widget_id% %>% toString(), NA_real_,
-        "concept_classes", input$concept_classes_%widget_id% %>% toString(), NA_real_,
-        "synchronize_timelines", NA_character_, as.integer(input$synchronize_timelines_%widget_id%),
-        "automatically_update_output", NA_character_, as.integer(input$automatically_update_output_%widget_id%),
-        "code", input$code_%widget_id%, NA_real_
-    )
+    # Generate settings to save automatically from all_inputs configuration
+    settings_list <- list()
+    
+    for (input_def in all_inputs_%widget_id%) {
+        input_id <- paste0(input_def$id, "_%widget_id%")
+        input_value <- input[[input_id]]
+        
+        # Prepare value and value_num based on input type
+        value_char <- NA_character_
+        value_num <- NA_real_
+        
+        switch(input_def$type,
+            "dropdown" = {
+                value_char <- if(is.null(input_value)) "" else as.character(input_value)
+            },
+            "multiselect" = {
+                value_char <- if(is.null(input_value)) "" else paste(input_value, collapse = ", ")
+            },
+            "text" = {
+                value_char <- if(is.null(input_value)) "" else as.character(input_value)
+            },
+            "toggle" = {
+                value_num <- as.numeric(isTRUE(input_value))
+            },
+            "code" = {
+                value_char <- if(is.null(input_value)) "" else as.character(input_value)
+            },
+            "date" = {
+                value_char <- if(is.null(input_value)) "" else as.character(input_value)
+            },
+            "number" = {
+                value_num <- if(is.null(input_value)) as.numeric(input_def$default) else as.numeric(input_value)
+            }
+        )
+        
+        # Add to settings list
+        settings_list[[length(settings_list) + 1]] <- data.frame(
+            name = input_def$id,
+            value = value_char,
+            value_num = value_num,
+            stringsAsFactors = FALSE
+        )
+    }
+    
+    # Combine all settings into a single dataframe
+    settings_to_save <- do.call(rbind, settings_list)
     
     # Add database metadata
-    new_data <- new_data %>%
+    settings_with_metadata <- settings_to_save %>%
         dplyr::transmute(
-            id = get_last_row(m$db, "widgets_options") + 1:nrow(new_data), 
+            id = get_last_row(m$db, "widgets_options") + 1:nrow(settings_to_save), 
             widget_id = %widget_id%, 
             person_id = NA_integer_, 
-            link_id = link_id,
+            link_id = configuration_id,
             category = "output_settings", 
             name, 
             value, 
@@ -575,8 +755,8 @@ observe_event(input$save_output_settings_and_code_trigger_%widget_id%, {
             deleted = FALSE
         )
     
-    # Insert new settings into database
-    DBI::dbAppendTable(m$db, "widgets_options", new_data)
+    # Save to database
+    DBI::dbAppendTable(m$db, "widgets_options", settings_with_metadata)
 })
 
 # ======================================
@@ -585,8 +765,25 @@ observe_event(input$save_output_settings_and_code_trigger_%widget_id%, {
 
 # Handle manual save button clicks
 observe_event(input$save_output_settings_and_code_%widget_id%, {
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_output_settings_and_code_trigger_%widget_id%', Math.random());"))
+    # Trigger the save process
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_configuration_trigger_%widget_id%', Math.random());"))
     
     # Notify user
     show_message_bar("modif_saved", "success")
+})
+
+# ======================================
+# DISPLAY AND SAVE BUTTON HANDLER
+# ======================================
+
+# Create a reactive value to track when save should happen after display
+save_after_display_%widget_id% <- reactiveVal(FALSE)
+
+# Handle the combined Display + Save button
+observe_event(input$display_and_save_%widget_id%, {
+    # Set flag to save after display completes
+    save_after_display_%widget_id%(TRUE)
+    
+    # Trigger the display output action (which will generate the code)
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
 })
