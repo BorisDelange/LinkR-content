@@ -293,12 +293,34 @@ observe_event(input$code_%widget_id%_save, {
 observe_event(input$display_output_%widget_id%, {
     
     # ====================
-    # MANUAL CODE EXECUTION
+    # CONSOLE PLUGIN CODE PREPARATION
     # ====================
     
     if ("projects_widgets_console" %in% user_accesses) {
-        # If on code tab, run whatever is currently in the editor
-        m$code_%widget_id% <- input$code_%widget_id%
+        # Get current code from editor
+        current_code <- trimws(if(is.null(input$code_%widget_id%)) "" else input$code_%widget_id%)
+        
+        # If code is empty or default template, use the template for current output type
+        if (current_code == "" || current_code == "# Select an output type to see example code") {
+            if (!is.null(input$output_%widget_id%)) {
+                default_code <- get_default_code(input$output_%widget_id%)
+                
+                # Update the ACE editor with default code
+                shinyAce::updateAceEditor(
+                    session = session,
+                    editorId = paste0("code_%widget_id%"),
+                    value = default_code
+                )
+                
+                # Store the code for execution
+                m$code_%widget_id% <- default_code
+            }
+        } else {
+            # Use the code from the editor
+            m$code_%widget_id% <- current_code
+        }
+        
+        # Trigger code execution
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
     }
 })
@@ -324,7 +346,7 @@ observe_event(input$run_code_%widget_id%, {
     
     # Apply isolation wrapper for R code (except rmarkdown)
     if (isolate_code & language == "r" & code_output != "rmarkdown") {
-        code <- paste0("isolate({\\n", code, "\\n})")
+        code <- paste0("isolate({\n", code, "\n})")
     }
     
     # ====================
@@ -473,4 +495,19 @@ observe_event(input$run_code_%widget_id%, {
     # ====================
     # Optional: automatically switch to output tab after execution
     if (isFALSE(input$output_and_settings_side_by_side_%widget_id%)) shinyjs::click("output_button_%widget_id%")
+    
+    # ====================
+    # SAVE AFTER DISPLAY LOGIC
+    # ====================
+    # Check if save was requested after display (from Display + Save button)
+    if (exists("save_after_display_%widget_id%") && save_after_display_%widget_id%()) {
+        # Reset the flag
+        save_after_display_%widget_id%(FALSE)
+        
+        # Trigger the save process
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_configuration_trigger_%widget_id%', Math.random());"))
+        
+        # Notify user
+        show_message_bar("modif_saved", "success")
+    }
 })

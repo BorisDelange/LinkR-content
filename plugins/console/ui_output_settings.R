@@ -40,8 +40,7 @@ div(
                 ns("prog_language_%widget_id%"), 
                 label = i18np$t("language"),
                 options = list(
-                    list(key = "r", text = i18np$t("r")),
-                    list(key = "python", text = i18np$t("python"))
+                    list(key = "r", text = i18np$t("r"))
                 ),
                 value = "r"
             ),
