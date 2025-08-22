@@ -96,6 +96,11 @@ observe_event(input$output_type_%widget_id%, {
     }
 })
 
+# Hide Display + Save button if user doesn't have save permissions
+if (!("projects_widgets_settings" %in% user_accesses)) {
+    shinyjs::hide("display_and_save_%widget_id%")
+}
+
 # ======================================
 # VARIABLES CHECK/UNCHECK BUTTONS
 # ======================================

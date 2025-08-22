@@ -240,8 +240,7 @@ generate_output_code_%widget_id% <- function(output_type = "plot", variables = c
         code_lines <- c(code_lines,
             "# Generate data table",
             "result <- DT::datatable(selected_data,",
-            "    options = list(pageLength = 10, scrollX = TRUE),",
-            "    caption = 'Selected Variables from Iris Dataset'",
+            "    options = list(pageLength = 10, scrollX = TRUE)",
             ")"
         )
         
@@ -388,4 +387,19 @@ observe_event(input$run_code_%widget_id%, {
     # ====================
     # Optional: automatically switch to output tab after execution
     if (isFALSE(input$output_and_settings_side_by_side_%widget_id%)) shinyjs::click("output_button_%widget_id%")
+    
+    # ====================
+    # SAVE AFTER DISPLAY IF REQUESTED
+    # ====================
+    # Check if save was requested after display (from Display + Save button)
+    if (exists("save_after_display_%widget_id%") && save_after_display_%widget_id%()) {
+        # Reset the flag
+        save_after_display_%widget_id%(FALSE)
+        
+        # Trigger the save process
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_configuration_trigger_%widget_id%', Math.random());"))
+        
+        # Notify user
+        show_message_bar("modif_saved", "success")
+    }
 })

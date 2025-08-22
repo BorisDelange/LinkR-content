@@ -738,3 +738,19 @@ observe_event(input$save_output_settings_and_code_%widget_id%, {
     # Notify user
     show_message_bar("modif_saved", "success")
 })
+
+# ======================================
+# DISPLAY AND SAVE BUTTON HANDLER
+# ======================================
+
+# Create a reactive value to track when save should happen after display
+save_after_display_%widget_id% <- reactiveVal(FALSE)
+
+# Handle the combined Display + Save button
+observe_event(input$display_and_save_%widget_id%, {
+    # Set flag to save after display completes
+    save_after_display_%widget_id%(TRUE)
+    
+    # Trigger the display output action (which will generate the code)
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
+})

@@ -168,9 +168,14 @@ panel_layout_manager <- paste0("
             var rightPercent = 100 - leftPercent - 0.5; // Reserve 0.5% for resizer handle
             
             // Enforce minimum panel sizes to prevent panels from becoming unusable
-            if (leftPercent > 15 && rightPercent > 15) {
+            // Settings container needs at least 100px to keep sidenav visible
+            var minRightWidth = 100;
+            var minRightPercent = (minRightWidth / containerWidth) * 100;
+            
+            if (leftPercent > 15 && rightPercent > Math.max(minRightPercent, 10)) {
                 leftPanel.style.flex = '0 0 ' + leftPercent + '%';
                 settingsContainer.style.flex = '0 0 ' + rightPercent + '%';
+                settingsContainer.style.minWidth = minRightWidth + 'px';
                 
                 // Save the width preference for the current active tab
                 if (currentTab === 'code') {
@@ -207,41 +212,8 @@ panel_layout_manager <- paste0("
     }
 ")
 
-# ======================================
-# LOAD SIDE-BY-SIDE PREFERENCE FROM DATABASE
-# ======================================
-
-# Query database for saved side-by-side layout preference
-sql <- glue::glue_sql(
-    "SELECT value_num 
-     FROM widgets_options 
-     WHERE widget_id = %widget_id% AND category = 'general_settings' AND name = 'output_and_settings_side_by_side'", 
-    .con = m$db
-)
-side_by_side_result <- DBI::dbGetQuery(m$db, sql)
-
-# Set default or load saved preference
-side_by_side <- TRUE  # Default to side-by-side mode
-if (nrow(side_by_side_result) > 0) {
-    saved_value <- side_by_side_result %>% dplyr::pull(value_num) %>% as.logical()
-    if (!is.na(saved_value)) {
-        side_by_side <- saved_value
-    }
-}
-
-if (!side_by_side){
-    shinyjs::delay(1000, {
-        shinyjs::show("output_button_div_%widget_id%")
-        shinyjs::hide("resizer_%widget_id%")
-        shinyjs::hide("output_settings_code_div_%widget_id%")
-    })
-}
-
-# Initialize the layout state in JavaScript
-shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-output_and_settings_side_by_side_%widget_id%', ", tolower(side_by_side), ");"))
-
 # Initialize the panel layout system with a slight delay to ensure DOM is ready
-shinyjs::delay(1000, shinyjs::runjs(panel_layout_manager))
+shinyjs::delay(500, shinyjs::runjs(panel_layout_manager))
 
 # ======================================
 # SIDE-BY-SIDE TOGGLE BUTTON HANDLER

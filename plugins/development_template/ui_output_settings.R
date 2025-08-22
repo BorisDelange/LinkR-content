@@ -105,33 +105,48 @@ div(
     # ====================
     # EXAMPLE: VARIABLE SELECTION
     # ====================
-    # Multi-select dropdown for choosing analysis variables
+    # Responsive container for variables and plot title
     div(
-        id = ns("variables_div_%widget_id%"),
+        id = ns("variables_and_title_container_%widget_id%"),
+        # Multi-select dropdown for choosing analysis variables
         div(
-            shiny.fluent::Dropdown.shinyInput(
-                ns("variables_%widget_id%"), 
-                label = i18np$t("variables"),
-                options = list(
-                    list(key = "Sepal.Length", text = "Sepal Length"),
-                    list(key = "Sepal.Width", text = "Sepal Width"),
-                    list(key = "Petal.Length", text = "Petal Length"),
-                    list(key = "Petal.Width", text = "Petal Width"),
-                    list(key = "Species", text = "Species")
+            id = ns("variables_div_%widget_id%"),
+            div(
+                shiny.fluent::Dropdown.shinyInput(
+                    ns("variables_%widget_id%"), 
+                    label = i18np$t("variables"),
+                    options = list(
+                        list(key = "Sepal.Length", text = "Sepal Length"),
+                        list(key = "Sepal.Width", text = "Sepal Width"),
+                        list(key = "Petal.Length", text = "Petal Length"),
+                        list(key = "Petal.Width", text = "Petal Width"),
+                        list(key = "Species", text = "Species")
+                    ),
+                    multiSelect = TRUE,
+                    value = c("Sepal.Length")  # Default selection
                 ),
-                multiSelect = TRUE,
-                value = c("Sepal.Length")  # Default selection
+                style = "width: 200px;"
             ),
-            style = "width: 200px;"
+            div(
+                id = ns("variables_buttons_%widget_id%"),
+                create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("variables_check_all_%widget_id%"), iconProps = list(iconName = "CheckboxComposite")), text = "Select All Variables"),
+                create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("variables_uncheck_all_%widget_id%"), iconProps = list(iconName = "Checkbox")), text = "Clear Selection"),
+                style = "margin: 27px 0 0 5px; display: flex;"
+            ),
+            class = "small_icon_button",
+            style = "display: flex; flex: 0 0 auto; margin-right: 15px;"
         ),
+        # Plot title input
         div(
-            id = ns("variables_buttons_%widget_id%"),
-            create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("variables_check_all_%widget_id%"), iconProps = list(iconName = "CheckboxComposite")), text = "Select All Variables"),
-            create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("variables_uncheck_all_%widget_id%"), iconProps = list(iconName = "Checkbox")), text = "Clear Selection"),
-            style = "margin: 27px 0 0 5px; display: flex;"
+            id = ns("plot_title_div_%widget_id%"),
+            shiny.fluent::TextField.shinyInput(
+                ns("plot_title_%widget_id%"),
+                label = i18np$t("plot_title"),
+                value = i18np$t("data_analysis_results")
+            ),
+            style = "width: 250px; flex: 0 0 auto;"
         ),
-        class = "small_icon_button",
-        style = "display: flex;"
+        style = "display: flex; flex-wrap: wrap; gap: 5px; padding-bottom: 15px; border-bottom: solid 1px #808080;"
     ),
     
     # ====================
@@ -191,20 +206,6 @@ div(
         # ),
         # style = "width: 200px;"
     # ),
-    
-    # ====================
-    # EXAMPLE: DISPLAY OPTIONS
-    # ====================
-    # Conditional title input (managed via server logic, not conditionalPanel)
-    div(
-        id = ns("plot_title_div_%widget_id%"),
-        shiny.fluent::TextField.shinyInput(
-            ns("plot_title_%widget_id%"),
-            label = i18np$t("plot_title"),
-            value = i18np$t("data_analysis_results")
-        ),
-        style = "width: 250px;"
-    ),
     
     # ====================
     # EXAMPLE: BOOLEAN TOGGLES
@@ -291,8 +292,8 @@ div(
     # Standard action buttons - customize labels as needed
     div(
         id = ns("action_buttons_div_%widget_id%"),
-        # Primary action - Generate/Update output
-        shiny.fluent::PrimaryButton.shinyInput(
+        # Default action - Generate/Update output only
+        shiny.fluent::DefaultButton.shinyInput(
             ns("display_output_2_%widget_id%"), 
             i18np$t("display_output"), iconProps = list(iconName = "Play"),
             onClick = htmlwidgets::JS(paste0(
@@ -300,13 +301,16 @@ div(
             ))
         ),
         
-        # Secondary action - Save configuration (if user has permissions)
+        # Primary action - Display and Save (if user has permissions)
         # This button is shown/hidden based on user access in the main UI file
-        shiny.fluent::DefaultButton.shinyInput(
-            ns("save_output_settings_and_code_2_%widget_id%"), 
-            i18np$t("save_output_settings_and_code"), iconProps = list(iconName = "Save"),
+        shiny.fluent::PrimaryButton.shinyInput(
+            ns("display_and_save_%widget_id%"), 
+            i18np$t("display_and_save"), 
+            iconProps = list(iconName = "SaveAs"),
             onClick = htmlwidgets::JS(paste0(
-                "item => { Shiny.setInputValue('", id, "-save_output_settings_and_code_%widget_id%', Math.random()); }"
+                "item => { ",
+                "Shiny.setInputValue('", id, "-display_and_save_%widget_id%', Math.random()); ",
+                "}"
             ))
         ),
         
