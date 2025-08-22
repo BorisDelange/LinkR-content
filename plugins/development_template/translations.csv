@@ -1,0 +1,34 @@
+base,en,fr
+add,Add,Ajouter
+automatic_updates,Automatically update output,Mettre à jour automatiquement les résultats
+configuration,Configuration,Configuration
+configuration_1,Configuration 1,Configuration 1
+configuration_name,Configuration name,Nom de la configuration
+create_user_configuration,Create new user configuration,Créer une nouvelle configuration
+data_analysis_results,Data analysis results,Résultats des analyses
+data_table,Data table,Tableau de données
+delete,Delete,Supprimer
+delete_user_configuration_text,Confirm deletion of the user configuration?,Confirmer la suppression de la configuration utilisateur ?
+delete_user_configuration_title,Delete user configuration,Supprimer la configuration utilisateur
+display_and_save,Display + Save,Afficher + sauvegarder
+display_output,Display output,Afficher le résultat
+dont_delete,Cancel,Annuler
+histogram,Histogram,Histogramme
+modif_saved,Updates saved,Modifications enregistrées
+name_already_used,This name is already used,Ce nom est déjà utilisé
+new_user_configuration_added,New user configuration added,Nouvelle configuration utilisateur ajoutée
+no_user_configuration_selected,No user configuration selected,Aucune configuration utilisateur sélectionnée
+output_and_settings_side_by_side,Output and settings/editor side by side,Résultats et réglages/éditeur côte à côte
+output_type,Output type,Format de sortie
+plot_title,Plot title,Titre de la figure
+provide_valid_name,Provide valid name,Nom valide requis
+rename,Rename,Renommer
+rename_user_configuration,Rename user configuration,Renommer la configuration
+save_output_settings_and_code,Save,Sauvegarder
+show_code_editor,Code editor,Editeur de code
+show_output,Output,Résultats
+show_output_settings,Output settings,Modifier les réglages
+summary_statistics,Summary statistics,Résumé statistique
+user_configuration_delete,User configuration deleted,Configuration utilisateur supprimée
+user_configuration_renamed,User configuration renamed,Configuration renommée
+variables,Variables,Variables
