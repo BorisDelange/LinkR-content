@@ -553,7 +553,7 @@ observe_event(input$load_configuration_%widget_id%, {
                         toggle_value <- as.logical(setting_value_num)
                         if (!is.na(toggle_value)) {
                             shiny.fluent::updateToggle.shinyInput(session, input_id, value = toggle_value)
-                            if (setting_name == "auto_update" && toggle_value) auto_update <- TRUE
+                            if (setting_name == "automatically_update_output" && toggle_value) auto_update <- TRUE
                         }
                     },
                     "code" = {
@@ -630,8 +630,8 @@ observe_event(input$load_configuration_%widget_id%, {
             },
             "toggle" = {
                 shiny.fluent::updateToggle.shinyInput(session, input_id_full, value = input_def$default)
-                # Check if auto_update default is TRUE
-                if (input_id_short == "auto_update" && isTRUE(input_def$default)) {
+                # Check if automatically_update_output default is TRUE
+                if (input_id_short == "automatically_update_output" && isTRUE(input_def$default)) {
                     auto_update <- TRUE
                 }
             },

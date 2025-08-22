@@ -76,52 +76,48 @@ div(
     ),
     
     # ====================
-    # CONCEPTS SELECTION METHOD
+    # CONCEPTS CONFIGURATION SECTION
     # ====================
     div(
+        # Concepts selection method dropdown
         div(
-            shiny.fluent::Dropdown.shinyInput(
-                ns("concepts_choice_%widget_id%"), 
-                options = list(
-                    list(key = "selected_concept_classes", text = i18np$t("selected_concept_classes")),
-                    list(key = "selected_concepts", text = i18np$t("selected_concepts"))
-                ), 
-                value = "selected_concepts",         # Default to selected concepts
-                label = i18np$t("concepts_to_display")
-            ),
-            style = "width: 200px;"
-        ),
-        style = "margin-top: 5px;"
-    ),
-    
-    # ====================
-    # CONCEPT CLASSES SELECTION (HIDDEN BY DEFAULT)
-    # ====================
-    shinyjs::hidden(
-        div(
-            id = ns("concept_classes_div_%widget_id%"),
             div(
                 shiny.fluent::Dropdown.shinyInput(
-                    ns("concept_classes_%widget_id%"), 
-                    label = i18np$t("concept_classes"),
-                    options = list(),               # Will be populated dynamically
-                    multiSelect = TRUE
+                    ns("concepts_choice_%widget_id%"), 
+                    options = list(
+                        list(key = "selected_concept_classes", text = i18np$t("selected_concept_classes")),
+                        list(key = "selected_concepts", text = i18np$t("selected_concepts"))
+                    ), 
+                    value = "selected_concepts",         # Default to selected concepts
+                    label = i18np$t("concepts_to_display")
                 ),
                 style = "width: 200px;"
             ),
-            style = "margin-top: 5px;"
-        )
-    ),
-    
-    # ====================
-    # INDIVIDUAL CONCEPTS SELECTION
-    # ====================
-    div(
-        id = ns("concepts_div_%widget_id%"),
+            style = "flex: 0 0 auto; margin-right: 15px;"
+        ),
+        
+        # Concept classes selection (hidden by default)
+        shinyjs::hidden(
+            div(
+                id = ns("concept_classes_div_%widget_id%"),
+                div(
+                    shiny.fluent::Dropdown.shinyInput(
+                        ns("concept_classes_%widget_id%"), 
+                        label = i18np$t("concept_classes"),
+                        options = list(),               # Will be populated dynamically
+                        multiSelect = TRUE
+                    ),
+                    style = "width: 200px;"
+                ),
+                style = "flex: 0 0 auto;"
+            )
+        ),
+        
+        # Individual concepts selection
         div(
+            id = ns("concepts_div_%widget_id%"),
             div(
                 # Multi-select dropdown for medical concepts
-                # Domain filter will be updated based on chart type
                 shiny.fluent::Dropdown.shinyInput(
                     ns("concepts_%widget_id%"), 
                     label = i18np$t("concepts"),
@@ -146,33 +142,37 @@ div(
                 style = "margin: 27px 0 0 5px; display: flex;"
             ),
             class = "small_icon_button",
-            style = "display: flex;"
+            style = "display: flex; flex: 0 0 auto;"
         ),
-        style = "margin-top: 5px;"
+        
+        style = "margin-top: 5px; display: flex; flex-wrap: wrap; gap: 5px; padding-bottom: 15px; border-bottom: solid 1px #808080;"
     ),
     
     # ====================
-    # TIMELINE SYNCHRONIZATION
+    # TIMELINE OPTIONS
     # ====================
     div(
-        shiny.fluent::Toggle.shinyInput(
-            ns("synchronize_timelines_%widget_id%"), 
-            label = i18np$t("synchronize_timelines"),
-            value = FALSE
+        # Timeline synchronization toggle
+        div(
+            shiny.fluent::Toggle.shinyInput(
+                ns("synchronize_timelines_%widget_id%"), 
+                label = i18np$t("synchronize_timelines"),
+                value = FALSE
+            ),
+            style = "flex: 0 0 auto;"
         ),
-        style = "margin-top: 15px;"
-    ),
-    
-    # ====================
-    # AUTOMATIC OUTPUT UPDATES
-    # ====================
-    div(
-        shiny.fluent::Toggle.shinyInput(
-            ns("automatically_update_output_%widget_id%"), 
-            label = i18np$t("automatically_update_output"),
-            value = TRUE
+        
+        # Automatic updates toggle
+        div(
+            shiny.fluent::Toggle.shinyInput(
+                ns("automatically_update_output_%widget_id%"), 
+                label = i18np$t("automatically_update_output"),
+                value = TRUE
+            ),
+            style = "flex: 0 0 auto;"
         ),
-        style = "margin-top: 15px;"
+        
+        style = "margin-top: 15px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center;"
     ),
     
     # ====================
