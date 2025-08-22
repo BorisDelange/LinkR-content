@@ -59,6 +59,7 @@ all_inputs_%widget_id% <- list(
     list(id = "chart_type", type = "dropdown", default = "dygraphs"),
     list(id = "concepts_choice", type = "dropdown", default = "selected_concepts"),
     list(id = "concept_classes", type = "multiselect", default = c()),
+    list(id = "omop_table", type = "multiselect", default = c("measurement")),
     list(id = "concepts", type = "multiselect", default = "all_available"),
     list(id = "synchronize_timelines", type = "toggle", default = FALSE),
     list(id = "automatically_update_output", type = "toggle", default = TRUE),
@@ -75,8 +76,35 @@ observe_event(input$chart_type_%widget_id%, {
     # Define allowed domains based on chart type
     if (input$chart_type_%widget_id% == "dygraphs") {
         allowed_domains <- c("Measurement", "Observation")
+        
+        # For dygraphs: force concepts choice to "selected_concepts" and hide concept classes option
+        shiny.fluent::updateDropdown.shinyInput(
+            session, 
+            "concepts_choice_%widget_id%", 
+            options = list(
+                list(key = "selected_concepts", text = i18np$t("selected_concepts"))
+            ),
+            value = "selected_concepts"
+        )
+        
+        # Hide concept classes div and show concepts div
+        shinyjs::hide("concept_classes_div_%widget_id%")
+        shinyjs::show("concepts_div_%widget_id%")
+        
     } else if (input$chart_type_%widget_id% == "plotly") {
         allowed_domains <- c("Measurement", "Observation", "Condition", "Procedure", "Drug")
+        
+        # For plotly: restore both options in concepts choice dropdown
+        shiny.fluent::updateDropdown.shinyInput(
+            session, 
+            "concepts_choice_%widget_id%", 
+            options = list(
+                list(key = "selected_concept_classes", text = i18np$t("selected_concept_classes")),
+                list(key = "selected_concepts", text = i18np$t("selected_concepts"))
+            ),
+            value = "selected_concepts"  # Keep current selection if possible
+        )
+        
     } else {
         allowed_domains <- c("Measurement", "Observation")
     }
@@ -101,26 +129,31 @@ observe_event(input$concepts_choice_%widget_id%, {
     
     if (input$concepts_choice_%widget_id% == "selected_concepts") {
         shinyjs::hide("concept_classes_div_%widget_id%")
+        shinyjs::hide("omop_table_div_%widget_id%")
         shinyjs::show("concepts_div_%widget_id%")
     }
     else if (input$concepts_choice_%widget_id% == "selected_concept_classes") {
         
-        # Define allowed domains based on current chart type
-        chart_type <- if (length(input$chart_type_%widget_id%) > 0) {
-            input$chart_type_%widget_id%
+        # Get selected OMOP tables to determine relevant domain_ids
+        omop_tables <- if (length(input$omop_table_%widget_id%) > 0) {
+            input$omop_table_%widget_id%
         } else {
-            "dygraphs"
+            c("measurement")  # Default fallback
         }
         
-        if (chart_type == "dygraphs") {
-            allowed_domains <- c("Measurement", "Observation")
-        } else if (chart_type == "plotly") {
-            allowed_domains <- c("Measurement", "Observation", "Condition", "Procedure", "Drug")
-        } else {
-            allowed_domains <- c("Measurement", "Observation")
-        }
+        # Map OMOP tables to their corresponding domain_ids
+        table_to_domain_mapping <- list(
+            "measurement" = "Measurement",
+            "observation" = "Observation", 
+            "procedure_occurrence" = "Procedure",
+            "condition_occurrence" = "Condition",
+            "drug_exposure" = "Drug"
+        )
         
-        # Update concept class IDs for the selected chart type
+        # Get allowed domains based on selected OMOP tables
+        allowed_domains <- unlist(table_to_domain_mapping[omop_tables])
+        
+        # Update concept class IDs for the selected OMOP tables
         concept_class_ids <- tibble::tibble(concept_class_id = character())
         if (length(d$dataset_concept) > 0) {
             if (nrow(d$dataset_concept) > 0) {
@@ -142,11 +175,68 @@ observe_event(input$concepts_choice_%widget_id%, {
         )
         
         shinyjs::hide("concepts_div_%widget_id%")
+        shinyjs::show("omop_table_div_%widget_id%")
         shinyjs::show("concept_classes_div_%widget_id%")
     }
     else {
-        # Hide both if invalid selection
-        sapply(c("concepts_div_%widget_id%", "concept_classes_div_%widget_id%"), shinyjs::hide)
+        # Hide all if invalid selection
+        sapply(c("concepts_div_%widget_id%", "concept_classes_div_%widget_id%", "omop_table_div_%widget_id%"), shinyjs::hide)
+    }
+})
+
+# Update concept classes when OMOP table selection changes
+observe_event(input$omop_table_%widget_id%, {
+    
+    # Only update if we're in concept classes mode
+    concepts_choice <- if (length(input$concepts_choice_%widget_id%) > 0) {
+        input$concepts_choice_%widget_id%
+    } else {
+        "selected_concepts"
+    }
+    
+    if (concepts_choice == "selected_concept_classes") {
+        
+        # Get selected OMOP tables
+        omop_tables <- if (length(input$omop_table_%widget_id%) > 0) {
+            input$omop_table_%widget_id%
+        } else {
+            c("measurement")  # Default fallback
+        }
+        
+        # Map OMOP tables to their corresponding domain_ids
+        table_to_domain_mapping <- list(
+            "measurement" = "Measurement",
+            "observation" = "Observation", 
+            "procedure_occurrence" = "Procedure",
+            "condition_occurrence" = "Condition",
+            "drug_exposure" = "Drug"
+        )
+        
+        # Get allowed domains based on selected OMOP tables
+        allowed_domains <- unlist(table_to_domain_mapping[omop_tables])
+        
+        # Update concept class IDs for the selected OMOP tables
+        concept_class_ids <- tibble::tibble(concept_class_id = character())
+        if (length(d$dataset_concept) > 0) {
+            if (nrow(d$dataset_concept) > 0) {
+                concept_class_ids <- d$dataset_concept %>%
+                    dplyr::filter(domain_id %in% allowed_domains) %>%
+                    dplyr::distinct(concept_class_id) %>%
+                    dplyr::arrange(concept_class_id)
+            }
+        }
+        
+        # Update the concept classes dropdown
+        shiny.fluent::updateDropdown.shinyInput(
+            session, 
+            "concept_classes_%widget_id%", 
+            options = convert_tibble_to_list(
+                concept_class_ids, 
+                key_col = "concept_class_id", 
+                text_col = "concept_class_id"
+            ),
+            value = c()  # Reset selection when table changes
+        )
     }
 })
 

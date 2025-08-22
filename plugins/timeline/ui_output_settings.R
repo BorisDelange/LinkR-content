@@ -51,7 +51,7 @@ div(
                 value = "person",                    # Default to patient data
                 label = i18np$t("data_to_display")
             ),
-            style = "width: 200px;"
+            style = "width: 250px;"
         ),
         style = "padding-bottom: 15px; border-bottom: solid 1px #808080;"
     ),
@@ -85,15 +85,38 @@ div(
                 shiny.fluent::Dropdown.shinyInput(
                     ns("concepts_choice_%widget_id%"), 
                     options = list(
-                        list(key = "selected_concept_classes", text = i18np$t("selected_concept_classes")),
                         list(key = "selected_concepts", text = i18np$t("selected_concepts"))
                     ), 
-                    value = "selected_concepts",         # Default to selected concepts
+                    value = "selected_concepts",         # Default to selected concepts (dygraphs default)
                     label = i18np$t("concepts_to_display")
                 ),
-                style = "width: 200px;"
+                style = "width: 250px;"
             ),
             style = "flex: 0 0 auto; margin-right: 15px;"
+        ),
+        
+        # OMOP table selection (hidden by default, only for plotly + concept classes)
+        shinyjs::hidden(
+            div(
+                id = ns("omop_table_div_%widget_id%"),
+                div(
+                    shiny.fluent::Dropdown.shinyInput(
+                        ns("omop_table_%widget_id%"), 
+                        label = i18np$t("omop_table"),
+                        options = list(
+                            list(key = "measurement", text = "Measurement (Biologie, constantes)"),
+                            list(key = "observation", text = "Observation (Observations)"),
+                            list(key = "procedure_occurrence", text = "Procedure (Actes)"),
+                            list(key = "condition_occurrence", text = "Condition (Diagnostics)"),
+                            list(key = "drug_exposure", text = "Drug (Traitements)")
+                        ),
+                        value = "measurement",           # Default to measurement
+                        multiSelect = TRUE
+                    ),
+                    style = "width: 250px;"
+                ),
+                style = "flex: 0 0 auto; margin-right: 15px;"
+            )
         ),
         
         # Concept classes selection (hidden by default)
@@ -107,7 +130,7 @@ div(
                         options = list(),               # Will be populated dynamically
                         multiSelect = TRUE
                     ),
-                    style = "width: 200px;"
+                    style = "width: 250px;"
                 ),
                 style = "flex: 0 0 auto;"
             )
@@ -134,7 +157,7 @@ div(
                         dplyr::pull(concept_id),        # Pre-select available concepts
                     multiSelect = TRUE                  # Allow multiple selections
                 ),
-                style = "width: 200px;"
+                style = "width: 250px;"
             ),
             div(
                 create_hover_card(ui = shiny.fluent::IconButton.shinyInput(ns("concepts_check_all_%widget_id%"), iconProps = list(iconName = "CheckboxComposite")), text = i18np$t("select_all_concepts")),

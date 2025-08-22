@@ -16,13 +16,17 @@
 
 # Generate plotly specific output code
 # This function creates the complete code for a plotly timeline visualization
-generate_plotly_output_code_%widget_id% <- function(data_source, concepts, synchronize_timelines) {
+generate_plotly_output_code_%widget_id% <- function(data_source, concepts_choice, concepts = NULL, concept_classes = NULL, omop_tables = NULL, synchronize_timelines) {
     
     # Initialize code blocks list to store different sections of generated code
     code <- list()
     
-    # Build concepts table - creates a table with selected medical concepts
-    code$block_1 <- generate_concepts_block_%widget_id%(concepts)
+    # Build concepts table or skip if using concept classes
+    if (concepts_choice == "selected_concepts" && !is.null(concepts)) {
+        code$block_1 <- generate_concepts_block_%widget_id%(concepts)
+    } else {
+        code$block_1 <- "# Using concept classes selection - no predefined concepts table needed"
+    }
     
     # Initialize data structures for plotly visualization
     # Creates empty containers for the data and date ranges
@@ -34,14 +38,14 @@ generate_plotly_output_code_%widget_id% <- function(data_source, concepts, synch
     
     # Build SQL query for all OMOP tables
     # Creates complex SQL to fetch data from multiple OMOP CDM tables
-    code$block_3 <- generate_plotly_sql_block_%widget_id%(data_source)
+    code$block_3 <- generate_plotly_sql_block_%widget_id%(data_source, concepts_choice, concept_classes, omop_tables)
     
     # Date range processing - determines the time window for visualization
     code$block_4 <- generate_date_range_block_%widget_id%(data_source, synchronize_timelines)
     
     # Data processing for plotly timeline
     # Processes raw data into format suitable for timeline visualization
-    code$block_5 <- generate_plotly_data_processing_block_%widget_id%(concepts)
+    code$block_5 <- generate_plotly_data_processing_block_%widget_id%(concepts_choice, concepts)
     
     # Chart generation - creates the actual plotly visualization
     code$block_6 <- generate_plotly_chart_block_%widget_id%(synchronize_timelines)
@@ -54,7 +58,7 @@ generate_plotly_output_code_%widget_id% <- function(data_source, concepts, synch
 
 # Generate SQL query for plotly (all OMOP data types)
 # This function creates a comprehensive SQL query that fetches data from all OMOP tables
-generate_plotly_sql_block_%widget_id% <- function(data_source) {
+generate_plotly_sql_block_%widget_id% <- function(data_source, concepts_choice, concept_classes = NULL, omop_tables = NULL) {
     
     # Define OMOP version handling for procedure columns
     # Different OMOP versions have different column names for procedure end dates
@@ -184,51 +188,53 @@ generate_plotly_sql_block_%widget_id% <- function(data_source) {
     
     # Build the main SQL query with concept filtering
     # Creates a UNION query that combines data from all OMOP tables
-    if (data_source == "person") {
-        main_sql <- paste0(
-            "# Build comprehensive SQL query for person-level data\n",
-            "# This query combines data from all OMOP tables using UNION ALL\n",
-            "sql <- glue::glue_sql(\"\n",
-            "    -- Fetch procedure occurrences\n",
-            "    SELECT {`procedure_sql_cols`}\n",
-            "    FROM procedure_occurrence\n",
-            "    WHERE person_id = {m$selected_person}\n",
-            "    AND (procedure_concept_id IN ({concepts$concept_id*}) OR procedure_source_concept_id IN ({concepts$concept_id*}))\n",
-            "    \n",
-            "    UNION ALL\n",
-            "    \n",
-            "    -- Fetch condition occurrences\n",
-            "    SELECT {`condition_sql_cols`}\n",
-            "    FROM condition_occurrence\n",
-            "    WHERE person_id = {m$selected_person}\n",
-            "    AND (condition_concept_id IN ({concepts$concept_id*}) OR condition_source_concept_id IN ({concepts$concept_id*}))\n",
-            "    \n",
-            "    UNION ALL\n",
-            "    \n",
-            "    -- Fetch observations\n",
-            "    SELECT {`observation_sql_cols`}\n",
-            "    FROM observation\n",
-            "    WHERE person_id = {m$selected_person}\n",
-            "    AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))\n",
-            "    \n",
-            "    UNION ALL\n",
-            "    \n",
-            "    -- Fetch measurements\n",
-            "    SELECT {`measurement_sql_cols`}\n",
-            "    FROM measurement\n",
-            "    WHERE person_id = {m$selected_person}\n",
-            "    AND (measurement_concept_id IN ({concepts$concept_id*}) OR measurement_source_concept_id IN ({concepts$concept_id*}))\n",
-            "    \n",
-            "    UNION ALL\n",
-            "    \n",
-            "    -- Fetch drug exposures\n",
-            "    SELECT {`drug_sql_cols`}\n",
-            "    FROM drug_exposure\n",
-            "    WHERE person_id = {m$selected_person}\n",
-            "    AND (drug_concept_id IN ({concepts$concept_id*}) OR drug_source_concept_id IN ({concepts$concept_id*}))\n",
-            "\", .con = d$con)"
-        )
-    } else if (data_source == "visit_detail") {
+    if (concepts_choice == "selected_concepts") {
+        # Original logic: filter by specific concept IDs
+        if (data_source == "person") {
+            main_sql <- paste0(
+                "# Build comprehensive SQL query for person-level data\n",
+                "# This query combines data from all OMOP tables using UNION ALL\n",
+                "sql <- glue::glue_sql(\"\n",
+                "    -- Fetch procedure occurrences\n",
+                "    SELECT {`procedure_sql_cols`}\n",
+                "    FROM procedure_occurrence\n",
+                "    WHERE person_id = {m$selected_person}\n",
+                "    AND (procedure_concept_id IN ({concepts$concept_id*}) OR procedure_source_concept_id IN ({concepts$concept_id*}))\n",
+                "    \n",
+                "    UNION ALL\n",
+                "    \n",
+                "    -- Fetch condition occurrences\n",
+                "    SELECT {`condition_sql_cols`}\n",
+                "    FROM condition_occurrence\n",
+                "    WHERE person_id = {m$selected_person}\n",
+                "    AND (condition_concept_id IN ({concepts$concept_id*}) OR condition_source_concept_id IN ({concepts$concept_id*}))\n",
+                "    \n",
+                "    UNION ALL\n",
+                "    \n",
+                "    -- Fetch observations\n",
+                "    SELECT {`observation_sql_cols`}\n",
+                "    FROM observation\n",
+                "    WHERE person_id = {m$selected_person}\n",
+                "    AND (observation_concept_id IN ({concepts$concept_id*}) OR observation_source_concept_id IN ({concepts$concept_id*}))\n",
+                "    \n",
+                "    UNION ALL\n",
+                "    \n",
+                "    -- Fetch measurements\n",
+                "    SELECT {`measurement_sql_cols`}\n",
+                "    FROM measurement\n",
+                "    WHERE person_id = {m$selected_person}\n",
+                "    AND (measurement_concept_id IN ({concepts$concept_id*}) OR measurement_source_concept_id IN ({concepts$concept_id*}))\n",
+                "    \n",
+                "    UNION ALL\n",
+                "    \n",
+                "    -- Fetch drug exposures\n",
+                "    SELECT {`drug_sql_cols`}\n",
+                "    FROM drug_exposure\n",
+                "    WHERE person_id = {m$selected_person}\n",
+                "    AND (drug_concept_id IN ({concepts$concept_id*}) OR drug_source_concept_id IN ({concepts$concept_id*}))\n",
+                "\", .con = d$con)"
+            )
+        } else if (data_source == "visit_detail") {
         main_sql <- paste0(
             "# Build comprehensive SQL query for visit detail-level data\n",
             "# This query combines data from all OMOP tables using UNION ALL\n",
@@ -271,7 +277,130 @@ generate_plotly_sql_block_%widget_id% <- function(data_source) {
             "    WHERE visit_detail_id = {m$selected_visit_detail}\n",
             "    AND (drug_concept_id IN ({concepts$concept_id*}) OR drug_source_concept_id IN ({concepts$concept_id*}))\n",
             "\", .con = d$con)"
+            )
+        }
+    } else if (concepts_choice == "selected_concept_classes" && !is.null(concept_classes) && !is.null(omop_tables)) {
+        # New logic: filter by concept classes and selected OMOP tables
+        
+        # Define concept classes variable for SQL interpolation
+        concept_classes_definition <- paste0(
+            "# Define concept classes for SQL filtering\n",
+            "concept_classes <- c(", paste0('"', concept_classes, '"', collapse = ", "), ")"
         )
+        
+        # Build dynamic UNION query based on selected OMOP tables
+        union_parts <- c()
+        
+        if ("procedure_occurrence" %in% omop_tables && data_source == "person") {
+            union_parts <- c(union_parts, paste0(
+                "    -- Fetch procedure occurrences filtered by concept classes\n",
+                "    SELECT {`procedure_sql_cols`}\n",
+                "    FROM procedure_occurrence p\n",
+                "    INNER JOIN concept c ON p.procedure_concept_id = c.concept_id AND c.concept_class_id IN ({concept_classes*})\n",
+                "    WHERE p.person_id = {m$selected_person}"
+            ))
+        }
+        if ("procedure_occurrence" %in% omop_tables && data_source == "visit_detail") {
+            union_parts <- c(union_parts, paste0(
+                "    -- Fetch procedure occurrences filtered by concept classes\n",
+                "    SELECT {`procedure_sql_cols`}\n",
+                "    FROM procedure_occurrence p\n",
+                "    INNER JOIN concept c ON p.procedure_concept_id = c.concept_id AND c.concept_class_id IN ({concept_classes*})\n",
+                "    WHERE p.visit_detail_id = {m$selected_visit_detail}"
+            ))
+        }
+        
+        if ("condition_occurrence" %in% omop_tables && data_source == "person") {
+            union_parts <- c(union_parts, paste0(
+                "    -- Fetch condition occurrences filtered by concept classes\n",
+                "    SELECT {`condition_sql_cols`}\n",
+                "    FROM condition_occurrence co\n",
+                "    INNER JOIN concept c ON co.condition_concept_id = c.concept_id AND c.concept_class_id IN ({concept_classes*})\n",
+                "    WHERE co.person_id = {m$selected_person}"
+            ))
+        }
+        if ("condition_occurrence" %in% omop_tables && data_source == "visit_detail") {
+            union_parts <- c(union_parts, paste0(
+                "    -- Fetch condition occurrences filtered by concept classes\n",
+                "    SELECT {`condition_sql_cols`}\n",
+                "    FROM condition_occurrence co\n",
+                "    INNER JOIN concept c ON co.condition_concept_id = c.concept_id AND c.concept_class_id IN ({concept_classes*})\n",
+                "    WHERE co.visit_detail_id = {m$selected_visit_detail}"
+            ))
+        }
+        
+        if ("observation" %in% omop_tables && data_source == "person") {
+            union_parts <- c(union_parts, paste0(
+                "    -- Fetch observations filtered by concept classes\n",
+                "    SELECT {`observation_sql_cols`}\n",
+                "    FROM observation o\n",
+                "    INNER JOIN concept c ON o.observation_concept_id = c.concept_id AND c.concept_class_id IN ({concept_classes*})\n",
+                "    WHERE o.person_id = {m$selected_person}"
+            ))
+        }
+        if ("observation" %in% omop_tables && data_source == "visit_detail") {
+            union_parts <- c(union_parts, paste0(
+                "    -- Fetch observations filtered by concept classes\n",
+                "    SELECT {`observation_sql_cols`}\n",
+                "    FROM observation o\n",
+                "    INNER JOIN concept c ON o.observation_concept_id = c.concept_id AND c.concept_class_id IN ({concept_classes*})\n",
+                "    WHERE o.visit_detail_id = {m$selected_visit_detail}"
+            ))
+        }
+        
+        if ("measurement" %in% omop_tables && data_source == "person") {
+            union_parts <- c(union_parts, paste0(
+                "    -- Fetch measurements filtered by concept classes\n",
+                "    SELECT {`measurement_sql_cols`}\n",
+                "    FROM measurement m\n",
+                "    INNER JOIN concept c ON m.measurement_concept_id = c.concept_id AND c.concept_class_id IN ({concept_classes*})\n",
+                "    WHERE m.person_id = {m$selected_person}"
+            ))
+        }
+        if ("measurement" %in% omop_tables && data_source == "visit_detail") {
+            union_parts <- c(union_parts, paste0(
+                "    -- Fetch measurements filtered by concept classes\n",
+                "    SELECT {`measurement_sql_cols`}\n",
+                "    FROM measurement m\n",
+                "    INNER JOIN concept c ON m.measurement_concept_id = c.concept_id AND c.concept_class_id IN ({concept_classes*})\n",
+                "    WHERE m.visit_detail_id = {m$selected_visit_detail}"
+            ))
+        }
+        
+        if ("drug_exposure" %in% omop_tables && data_source == "person") {
+            union_parts <- c(union_parts, paste0(
+                "    -- Fetch drug exposures filtered by concept classes\n",
+                "    SELECT {`drug_sql_cols`}\n",
+                "    FROM drug_exposure d\n",
+                "    INNER JOIN concept c ON d.drug_concept_id = c.concept_id AND c.concept_class_id IN ({concept_classes*})\n",
+                "    WHERE d.person_id = {m$selected_person}"
+            ))
+        }
+        if ("drug_exposure" %in% omop_tables && data_source == "visit_detail") {
+            union_parts <- c(union_parts, paste0(
+                "    -- Fetch drug exposures filtered by concept classes\n",
+                "    SELECT {`drug_sql_cols`}\n",
+                "    FROM drug_exposure d\n",
+                "    INNER JOIN concept c ON d.drug_concept_id = c.concept_id AND c.concept_class_id IN ({concept_classes*})\n",
+                "    WHERE d.visit_detail_id = {m$selected_visit_detail}"
+            ))
+        }
+        
+        # Combine union parts with UNION ALL
+        if (length(union_parts) > 0) {
+            main_sql <- paste0(
+                concept_classes_definition, "\n\n",
+                "# Build dynamic SQL query for selected OMOP tables with concept classes filtering\n",
+                "sql <- glue::glue_sql(\"\n",
+                paste(union_parts, collapse = "\n    \n    UNION ALL\n    \n"),
+                "\n\", .con = d$con)"
+            )
+        } else {
+            main_sql <- paste0(
+                "# No OMOP tables selected - create empty query\n",
+                "sql <- \"SELECT NULL LIMIT 0\""
+            )
+        }
     }
     
     # Combine all SQL parts into final executable code
@@ -292,10 +421,15 @@ generate_plotly_sql_block_%widget_id% <- function(data_source) {
 
 # Generate data processing block for plotly timeline
 # This function processes the raw data into a format suitable for timeline visualization
-generate_plotly_data_processing_block_%widget_id% <- function(concepts) {
+generate_plotly_data_processing_block_%widget_id% <- function(concepts_choice, concepts = NULL) {
     
     # Check if Drug concepts are selected to determine if drug processing is needed
-    has_drug_concepts <- any(concepts$domain_id == "Drug", na.rm = TRUE)
+    has_drug_concepts <- if (concepts_choice == "selected_concepts" && !is.null(concepts)) {
+        any(concepts$domain_id == "Drug", na.rm = TRUE)
+    } else {
+        # For concept classes mode, we'll determine this dynamically from the data
+        TRUE  # We'll check the actual data content later
+    }
     
     # Basic data filtering and processing
     processing_block <- paste0(

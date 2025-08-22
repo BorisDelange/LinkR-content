@@ -103,12 +103,44 @@ observe_event(input$display_output_%widget_id%, {
                 synchronize_timelines = isTRUE(input$synchronize_timelines_%widget_id%)
             )
         } else {
-            generated_code <- generate_plotly_output_code_%widget_id%(
-                data_source = data_source,
-                concepts = filtered_concepts %>% 
-                    dplyr::filter(concept_id %in% input$concepts_%widget_id%),
-                synchronize_timelines = isTRUE(input$synchronize_timelines_%widget_id%)
-            )
+            # Get concepts choice (default to selected_concepts)
+            concepts_choice <- if (length(input$concepts_choice_%widget_id%) > 0) {
+                input$concepts_choice_%widget_id%
+            } else {
+                "selected_concepts"
+            }
+            
+            # Get parameters based on concepts choice
+            if (concepts_choice == "selected_concepts") {
+                generated_code <- generate_plotly_output_code_%widget_id%(
+                    data_source = data_source,
+                    concepts_choice = concepts_choice,
+                    concepts = filtered_concepts %>% 
+                        dplyr::filter(concept_id %in% input$concepts_%widget_id%),
+                    synchronize_timelines = isTRUE(input$synchronize_timelines_%widget_id%)
+                )
+            } else {
+                # For concept classes mode
+                concept_classes <- if (length(input$concept_classes_%widget_id%) > 0) {
+                    input$concept_classes_%widget_id%
+                } else {
+                    c()
+                }
+                
+                omop_tables <- if (length(input$omop_table_%widget_id%) > 0) {
+                    input$omop_table_%widget_id%
+                } else {
+                    c("measurement")
+                }
+                
+                generated_code <- generate_plotly_output_code_%widget_id%(
+                    data_source = data_source,
+                    concepts_choice = concepts_choice,
+                    concept_classes = concept_classes,
+                    omop_tables = omop_tables,
+                    synchronize_timelines = isTRUE(input$synchronize_timelines_%widget_id%)
+                )
+            }
         }
         
         # Update ACE editor with generated code
