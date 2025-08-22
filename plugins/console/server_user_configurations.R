@@ -1,10 +1,73 @@
 # ==========================================
 # server_user_configurations.R - User Configurations Server Logic
 # ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  ⚠️  DO NOT MODIFY - CORE PLUGIN FRAMEWORK  ⚠️                             ██
+# ██                                                                            ██
+# ██  This file is part of the plugin framework and works automatically.        ██
+# ██  Modifications are NOT required and may break functionality.               ██
+# ██  Only modify if you have specific advanced requirements.                   ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# PLUGIN TEMPLATE - USER CONFIGURATIONS SERVER FILE
 # 
-# Manages user configuration files including creation, deletion, selection, renaming,
-# and persistence of configuration preferences in the database
-#
+# This file handles the server-side logic for user configuration management.
+# It provides comprehensive functionality for creating, selecting, renaming, 
+# deleting, persisting, loading, and saving user configuration presets, 
+# allowing users to save and quickly switch between different analysis scenarios.
+# 
+# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
+# - This file should work without modification for most plugins
+# - The configuration system automatically integrates with your plugin's settings
+# - Database operations are handled automatically by the template framework
+# - Validation and UI styling are already implemented
+# - No customization typically needed unless adding special configuration features
+# 
+# CORE FUNCTIONALITY:
+# - Create new configuration presets with validation
+# - Select and load existing configurations from database
+# - Rename configurations with validation and duplicate checking
+# - Delete configurations with confirmation dialogs
+# - Automatic database persistence of all configuration operations
+# - Save current widget settings to selected configuration
+# - Load saved configuration settings and apply to UI components
+# - Manual and automatic save triggers for configuration updates
+# - UI state management and visual feedback
+# - Integration with the main widget's settings system
+# 
+# USER WORKFLOW:
+# 1. User configures widget settings in output_settings panel
+# 2. User creates a new configuration to save current settings
+# 3. User can switch between configurations via dropdown
+# 4. Selected configurations are automatically loaded from database
+# 5. User can rename configurations to better organize their presets
+# 6. User can manually save changes to current configuration
+# 7. User can delete configurations they no longer need
+# 8. All settings persist across sessions via database storage
+# 
+# DATABASE INTEGRATION:
+# - All operations automatically saved to widgets_options table
+# - Configurations linked to specific widgets via widget_id
+# - Settings persistence handled by automated save/load mechanisms
+# - Configuration loading retrieves all saved widget settings
+# - Configuration saving stores current UI state to database
+# - Configuration renaming updates database records in real-time
+# - Save triggers handle both manual and automatic persistence
+# - No additional setup required - works out of the box
+# 
+# CONFIGURATION PERSISTENCE FEATURES:
+# - Automatic loading of saved settings when configuration selected
+# - Smart defaults applied when no saved configuration exists
+# - Support for multiple setting types (dropdowns, toggles, text, code)
+# - Manual save triggers via user action
+# - Automatic save capabilities for real-time persistence
+# - Cross-session configuration availability
+# - Configuration name validation and duplicate prevention
+# - Seamless renaming with immediate UI updates
+
 # ======================================
 # UI STYLING CONFIGURATION
 # ======================================
@@ -52,6 +115,11 @@ observe_event(input$show_user_configurations_tab_%widget_id%, {
 # Show modal dialog for creating new user configuration
 observe_event(input$create_user_configuration_%widget_id%, {
     shinyjs::show("add_user_configuration_modal_%widget_id%")
+    
+    # Focus on the text field after a small delay to ensure modal is visible
+    shinyjs::delay(50, {
+        shinyjs::runjs(paste0("document.getElementById('", id, "-user_configuration_name_add_%widget_id%').focus();"))
+    })
 })
 
 # Close create user configuration modal
@@ -178,8 +246,7 @@ add_user_configuration_%widget_id% <- function(configuration_name, notification 
     )
     
     # Reset code editor to empty state for new configuration
-    default_code <- get_default_code("console")
-    shinyAce::updateAceEditor(session, "code_%widget_id%", value = default_code)
+    shinyAce::updateAceEditor(session, "code_%widget_id%", value = "")
     
     # Close modal
     shinyjs::hide("add_user_configuration_modal_%widget_id%")
@@ -191,7 +258,7 @@ add_user_configuration_%widget_id% <- function(configuration_name, notification 
 }
 
 # Auto-create default configuration when widget loads
-shinyjs::delay(500, add_user_configuration_%widget_id%(i18np$t("configuration_1"), notification = FALSE))
+shinyjs::delay(1000, add_user_configuration_%widget_id%(i18np$t("configuration_1"), notification = FALSE))
 
 # Handle user confirmation to create new configuration
 observe_event(input$add_user_configuration_%widget_id%, {
@@ -490,9 +557,8 @@ observe_event(input$load_configuration_%widget_id%, {
                         }
                     },
                     "code" = {
-                        # Only update ACE editor if value is not null or empty
-                        if (!is.na(setting_value) && setting_value != "") {
-                            m$code_%widget_id% <- setting_value
+                        if (!is.na(setting_value)) {
+                            m[[paste0("code_%widget_id%")]] <- setting_value
                             shinyAce::updateAceEditor(session, input_id, value = setting_value)
                         }
                     },
@@ -542,9 +608,8 @@ observe_event(input$load_configuration_%widget_id%, {
                 }
             },
             "code" = {
-                default_code <- get_default_code("console")
-                m$code_%widget_id% <- default_code
-                shinyAce::updateAceEditor(session, input_id_full, value = default_code)
+                m[[paste0("code_%widget_id%")]] <- input_def$default
+                shinyAce::updateAceEditor(session, input_id_full, value = input_def$default)
             },
             "date" = {
                 # Handle date defaults (could be Date object or function call)
@@ -677,4 +742,20 @@ observe_event(input$save_output_settings_and_code_%widget_id%, {
     
     # Notify user
     show_message_bar("modif_saved", "success")
+})
+
+# ======================================
+# DISPLAY AND SAVE BUTTON HANDLER
+# ======================================
+
+# Create a reactive value to track when save should happen after display
+save_after_display_%widget_id% <- reactiveVal(FALSE)
+
+# Handle the combined Display + Save button
+observe_event(input$display_and_save_%widget_id%, {
+    # Set flag to save after display completes
+    save_after_display_%widget_id%(TRUE)
+    
+    # Trigger the display output action (which will generate the code)
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
 })

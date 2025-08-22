@@ -1,13 +1,35 @@
 # ==========================================
 # server_code.R - Code Editor Server Logic
 # ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 CONSOLE PLUGIN - CUSTOMIZED IMPLEMENTATION  🔧                         ██
+# ██                                                                            ██
+# ██  This file implements the Console plugin functionality with multi-language ██
+# ██  support and multiple output types. Based on the plugin template structure.██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# CONSOLE PLUGIN - CODE EDITOR SERVER FILE
 # 
-# Handles code editor functionality including:
-# - Common initialization and keyboard shortcuts
-# - Code execution controller
-# - Auto-execution triggers based on data updates
-# - Chart type specific logic imported from separate files
-#
+# This file handles the server-side logic for the Console plugin code editor.
+# It provides multi-language code execution (R and Python) with various output types.
+# 
+# CONSOLE PLUGIN FEATURES:
+# - Multi-language support: R and Python
+# - Multiple output types: console, ui, figure, table, datatable, dygraphs, plotly, rmarkdown
+# - Default code templates for each output type
+# - Advanced code execution with error handling
+# - Auto-execution triggers and language switching
+# 
+# CORE FUNCTIONALITY:
+# - Code editor with syntax highlighting for R/Python
+# - Default code templates that change based on output type selection
+# - Multi-language code execution with appropriate output routing
+# - Error handling and display for both R and Python
+# - Integration with the widget's configuration system
+
 # ======================================
 # INITIALIZATION
 # ======================================
@@ -127,11 +149,12 @@ table(iris$Species)
 ```
 
 ## Visualization
-```{r}
+```{r, fig.width=6, fig.height=4, dpi=300, out.width=\"500px\", fig.cap=\"\"}
 ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
   ggplot2::geom_point(size = 2) +
   ggplot2::theme_minimal() +
-  ggplot2::labs(title = 'Sepal Dimensions by Species')
+  ggplot2::labs(title = 'Sepal Dimensions by Species') +
+  ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
 ```",
     
     "ui" = "# Simple UI metric display
@@ -170,20 +193,37 @@ div(
 # OUTPUT TYPE CHANGE HANDLER
 # ======================================
 
-# Provide default code when output type changes and editor is empty
+# Provide default code when output type changes
 observe_event(input$output_%widget_id%, {
-    # Only set default code if current editor is empty or contains only whitespace
+    # Get current code from editor
     current_code <- trimws(if(is.null(input$code_%widget_id%)) "" else input$code_%widget_id%)
     
-    if (current_code == "" && !is.null(input$output_%widget_id%)) {
-        default_code <- get_default_code(input$output_%widget_id%)
+    if (!is.null(input$output_%widget_id%)) {
+        # Check if current code is empty OR is a default template from any output type
+        is_empty <- current_code == ""
+        is_default_template <- FALSE
         
-        # Update the ACE editor with default code
-        shinyAce::updateAceEditor(
-            session = session,
-            editorId = paste0("code_%widget_id%"),
-            value = default_code
-        )
+        # Check if current code matches any default template
+        all_output_types <- c("console", "ui", "figure", "table", "datatable", "dygraphs", "plotly", "rmarkdown")
+        for (output_type in all_output_types) {
+            template_code <- trimws(get_default_code(output_type))
+            if (current_code == template_code) {
+                is_default_template <- TRUE
+                break
+            }
+        }
+        
+        # Update code if it's empty or a default template
+        if (is_empty || is_default_template) {
+            default_code <- get_default_code(input$output_%widget_id%)
+            
+            # Update the ACE editor with new default code
+            shinyAce::updateAceEditor(
+                session = session,
+                editorId = paste0("code_%widget_id%"),
+                value = default_code
+            )
+        }
     }
 })
 
@@ -314,7 +354,31 @@ observe_event(input$run_code_%widget_id%, {
             shinyjs::show("console_output_div_%widget_id%")
         }
         
-        # Other output types - with error handling
+        # Special handling for rmarkdown - don't evaluate as R code
+        else if (code_output == "rmarkdown") {
+            tryCatch({
+                # Set required variables for create_rmarkdown_file
+                user_id <- m$user_id
+                app_folder <- m$app_folder
+                
+                output_file <- create_rmarkdown_file(code, interpret_code = TRUE)
+                output$rmarkdown_output_%widget_id% <- renderUI(div(class = "markdown", withMathJax(includeMarkdown(output_file))))
+                
+                # Show the rmarkdown output container
+                shinyjs::show("rmarkdown_output_div_%widget_id%")
+                
+            }, error = function(e) {
+                # If there's an error, display it in console format
+                error_message <- paste("Rmarkdown Error:", e$message)
+                
+                shinyjs::show("console_output_div_%widget_id%")
+                
+                # Display the error message in console output
+                output$console_output_%widget_id% <- renderText(error_message)
+            })
+        }
+        
+        # Other output types - with R code evaluation
         else {
             tryCatch({
                 # Execute the code and get the result
@@ -358,10 +422,6 @@ observe_event(input$run_code_%widget_id%, {
                 }
                 else if (code_output == "plotly") {
                     output$plotly_output_%widget_id% <- plotly::renderPlotly(result)
-                }
-                else if (code_output == "rmarkdown") {
-                    output_file <- create_rmarkdown_file(code, interpret_code = TRUE)
-                    output$rmarkdown_output_%widget_id% <- renderUI(div(class = "markdown", withMathJax(includeMarkdown(output_file))))
                 }
                 
                 # Show the selected output container

@@ -2,6 +2,36 @@
 # ui_output.R - Output Display Interface
 # ==========================================
 
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 CONSOLE PLUGIN - CUSTOMIZED IMPLEMENTATION  🔧                         ██
+# ██                                                                            ██
+# ██  This file provides the Console plugin output display interface with      ██
+# ██  support for multiple output types. Based on the plugin template.         ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# CONSOLE PLUGIN - OUTPUT DISPLAY UI FILE
+# 
+# This file defines the output display containers for the Console plugin.
+# It provides specialized containers for each supported output type across multiple languages.
+# 
+# CONSOLE PLUGIN OUTPUT TYPES:
+# - Console: Text output for R and Python code execution
+# - UI: Dynamic Shiny UI components generated from R code
+# - Figure: Static plots from R (ggplot2, base R, etc.)
+# - Table: Basic HTML tables for data display
+# - Datatable: Interactive tables with search and pagination
+# - Dygraphs: Interactive time series charts
+# - Plotly: Interactive visualizations and 3D plots
+# - R Markdown: Formatted markdown with MathJax support
+# - Matplotlib: Python plotting (placeholder for future implementation)
+# 
+# IMPORTANT NOTES:
+# - All output containers are initially hidden and shown dynamically by server logic
+# - Each container is optimized for its specific content type
+# - Output routing is handled by server_code.R based on result type
+
 div(
     # ====================
     # CONSOLE OUTPUT
@@ -150,20 +180,21 @@ div(
                 uiOutput(ns("rmarkdown_output_%widget_id%")),
                 style = paste(
                     "background-color: white;",
-                    "padding: 15px;",
+                    "padding: 0 15px;",
                     "border: 1px solid #ddd;",
                     "border-radius: 4px;",
                     "box-shadow: 0 2px 4px rgba(0,0,0,0.1);",
-                    "height: 100%;"
+                    "height: 100%;",
+                    "overflow-x: auto;",
+                    "overflow-y: auto;"
                 )
             ),
             style = paste(
                 "width: 100%;",
-                "height: calc(100% - 20px);",
+                "height: 100%;",
                 "padding: 10px;",
                 "box-sizing: border-box;",
-                "max-height: 600px;",
-                "overflow-y: auto;"
+                "overflow: hidden;"
             )
         )
     ),

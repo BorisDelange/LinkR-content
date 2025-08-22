@@ -2,6 +2,40 @@
 # ui_code.R - Code Editor Interface
 # ==========================================
 
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 OPTIONAL CUSTOMIZATION - PLUGIN ENHANCEMENT  🔧                        ██
+# ██                                                                            ██
+# ██  This file provides default functionality that works out-of-the-box.       ██
+# ██  Customize only if you need specific features or modifications.            ██
+# ██  Safe to use as-is for standard plugin requirements.                       ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# PLUGIN TEMPLATE - CODE EDITOR UI FILE
+# 
+# This file defines the code editor interface for the widget plugin template.
+# It provides a full-featured R code editor with syntax highlighting, keyboard shortcuts,
+# and integration with the main widget interface.
+# 
+# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
+# - The default configuration should work for most R-based widgets
+# - Customize keyboard shortcuts if needed for specific plugin requirements
+# - Adjust editor settings (font size, theme, etc.) based on plugin needs
+# - Consider changing the mode if your plugin uses a different language
+# 
+# FEATURES:
+# - R syntax highlighting and auto-completion
+# - Keyboard shortcuts for common operations (save, run, comment)
+# - Auto-scrolling and responsive layout
+# - Integration with the main UI's resizable panel system
+# 
+# CUSTOMIZATION OPTIONS:
+# - mode: Change from "r" to other languages (javascript, sql, python, etc.)
+# - fontSize: Adjust for better readability
+# - theme: Can be customized via aceEditor themes
+# - hotkeys: Add or modify keyboard shortcuts for plugin-specific actions
+
 # R Code Editor with syntax highlighting and keyboard shortcuts
 shinyAce::aceEditor(
     ns("code_%widget_id%"), 

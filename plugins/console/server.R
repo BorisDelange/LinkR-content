@@ -2,6 +2,33 @@
 # Server - Main file
 # ==========================================
 
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 OPTIONAL CUSTOMIZATION - PLUGIN ENHANCEMENT  🔧                        ██
+# ██                                                                            ██
+# ██  This file provides default functionality that works out-of-the-box.       ██
+# ██  Customize only if you need specific features or modifications.            ██
+# ██  Safe to use as-is for standard plugin requirements.                       ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# PLUGIN TEMPLATE - SERVER MAIN FILE
+# 
+# This file serves as the main server logic controller for the widget plugin template.
+# It manages tab navigation and coordinates between different functional modules.
+# 
+# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
+# Add your new server script files in the "IMPORT SERVER MODULES" section at the bottom
+# of this file using the %import_script('your_new_server_file.R')% syntax.
+# 
+# TAB SYSTEM OVERVIEW:
+# - output: Displays the execution result of the code (typically a chart, plot, or visualization)
+# - output_settings: No-code interface with graphical controls to configure the output parameters
+# - code: Code editor where users can write/modify code. Connected to output_settings in a 
+# low-code approach where output_settings parameters automatically generate code
+# - user_configurations: Interface to create, save, and manage different configurations 
+# (saves both output_settings parameters and code content)
+
 # ======================================
 # TAB NAVIGATION SYSTEM
 # ======================================
