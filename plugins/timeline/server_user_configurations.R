@@ -532,48 +532,73 @@ observe_event(input$load_configuration_%widget_id%, {
                 # Track which inputs were loaded from saved settings
                 loaded_input_ids <- c(loaded_input_ids, setting_name)
                 
+                # Check for auto_update setting (needed for later execution)
+                if (setting_name == "automatically_update_output" && input_def$type == "toggle") {
+                    toggle_value <- as.logical(setting_value_num)
+                    if (!is.na(toggle_value) && toggle_value) auto_update <- TRUE
+                }
+                
                 # Apply setting based on input type
-                switch(
-                    input_def$type,
-                    "dropdown" = {
-                        shiny.fluent::updateDropdown.shinyInput(session, input_id, value = setting_value)
-                    },
-                    "multiselect" = {
-                        if (!is.na(setting_value) && setting_value != "") {
-                            variables_vector <- unlist(strsplit(setting_value, ", ?"))
-                            shiny.fluent::updateDropdown.shinyInput(session, input_id, value = variables_vector)
+                # Use delay for all inputs except chart_type to avoid conflicts with reactive observers
+                if (setting_name == "chart_type") {
+                    # Apply chart_type immediately (no delay)
+                    switch(
+                        input_def$type,
+                        "dropdown" = {
+                            shiny.fluent::updateDropdown.shinyInput(session, input_id, value = setting_value)
                         }
-                    },
-                    "text" = {
-                        if (!is.na(setting_value)) {
-                            shiny.fluent::updateTextField.shinyInput(session, input_id, value = setting_value)
-                        }
-                    },
-                    "toggle" = {
-                        toggle_value <- as.logical(setting_value_num)
-                        if (!is.na(toggle_value)) {
-                            shiny.fluent::updateToggle.shinyInput(session, input_id, value = toggle_value)
-                            if (setting_name == "automatically_update_output" && toggle_value) auto_update <- TRUE
-                        }
-                    },
-                    "code" = {
-                        if (!is.na(setting_value)) {
-                            m[[paste0("code_%widget_id%")]] <- setting_value
-                            shinyAce::updateAceEditor(session, input_id, value = setting_value)
-                        }
-                    },
-                    "date" = {
-                        if (!is.na(setting_value) && setting_value != "") {
-                            date_value <- as.Date(setting_value)
-                            shiny.fluent::updateDatePicker.shinyInput(session, input_id, value = date_value)
-                        }
-                    },
-                    "number" = {
-                        if (!is.na(setting_value_num)) {
-                            shiny.fluent::updateSpinButton.shinyInput(session, input_id, value = setting_value_num)
-                        }
-                    }
-                )
+                    )
+                } else {
+                    # Apply other inputs with delay to avoid interference
+                    shinyjs::delay(500, {
+                        switch(
+                            input_def$type,
+                            "dropdown" = {
+                                shiny.fluent::updateDropdown.shinyInput(session, input_id, value = setting_value)
+                            },
+                            "multiselect" = {
+                                if (!is.na(setting_value) && setting_value != "") {
+                                    variables_vector <- unlist(strsplit(setting_value, ", ?"))
+                                    
+                                    # Convertir en numeric pour les champs qui contiennent des IDs numériques
+                                    if (setting_name %in% c("concepts", "concept_classes")) {
+                                        variables_vector <- as.numeric(variables_vector)
+                                    }
+                                    
+                                    shiny.fluent::updateDropdown.shinyInput(session, input_id, value = variables_vector)
+                                }
+                            },
+                            "text" = {
+                                if (!is.na(setting_value)) {
+                                    shiny.fluent::updateTextField.shinyInput(session, input_id, value = setting_value)
+                                }
+                            },
+                            "toggle" = {
+                                toggle_value <- as.logical(setting_value_num)
+                                if (!is.na(toggle_value)) {
+                                    shiny.fluent::updateToggle.shinyInput(session, input_id, value = toggle_value)
+                                }
+                            },
+                            "code" = {
+                                if (!is.na(setting_value)) {
+                                    m[[paste0("code_%widget_id%")]] <- setting_value
+                                    shinyAce::updateAceEditor(session, input_id, value = setting_value)
+                                }
+                            },
+                            "date" = {
+                                if (!is.na(setting_value) && setting_value != "") {
+                                    date_value <- as.Date(setting_value)
+                                    shiny.fluent::updateDatePicker.shinyInput(session, input_id, value = date_value)
+                                }
+                            },
+                            "number" = {
+                                if (!is.na(setting_value_num)) {
+                                    shiny.fluent::updateSpinButton.shinyInput(session, input_id, value = setting_value_num)
+                                }
+                            }
+                        )
+                    })
+                }
             }
         }
     }

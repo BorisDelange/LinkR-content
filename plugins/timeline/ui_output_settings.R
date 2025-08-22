@@ -85,6 +85,7 @@ div(
                 shiny.fluent::Dropdown.shinyInput(
                     ns("concepts_choice_%widget_id%"), 
                     options = list(
+                        list(key = "selected_concept_classes", text = i18np$t("selected_concept_classes")),
                         list(key = "selected_concepts", text = i18np$t("selected_concepts"))
                     ), 
                     value = "selected_concepts",         # Default to selected concepts (dygraphs default)

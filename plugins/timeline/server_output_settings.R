@@ -102,7 +102,7 @@ observe_event(input$chart_type_%widget_id%, {
                 list(key = "selected_concept_classes", text = i18np$t("selected_concept_classes")),
                 list(key = "selected_concepts", text = i18np$t("selected_concepts"))
             ),
-            value = "selected_concepts"  # Keep current selection if possible
+            value = "selected_concepts"
         )
         
     } else {
