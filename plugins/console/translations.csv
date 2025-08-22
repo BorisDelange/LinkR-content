@@ -1,0 +1,40 @@
+base,en,fr
+add,Add,Ajouter
+auto_update_output,Automatically update output,Mettre à jour automatiquement les résultats
+configuration,Configuration,Configuration
+configuration_1,Configuration 1,Configuration 1
+configuration_name,Configuration name,Nom de la configuration
+console,Console,Console
+create_user_configuration,Create new user configuration,Créer une nouvelle configuration
+datatable,DataTable,DataTable
+delete,Delete,Supprimer
+display_and_save,Display + Save,Afficher + sauvegarder
+delete_user_configuration_text,Confirm deletion of the user configuration?,Confirmer la suppression de la configuration utilisateur ?
+delete_user_configuration_title,Delete user configuration,Supprimer la configuration utilisateur
+display_output,Display output,Afficher le résultat
+dont_delete,Cancel,Annuler
+dygraphs,Dygraphs,Dygraphs
+figure,Figure,Figure
+language,Language,Langage
+matplotlib,Matplotlib,Matplotlib
+modif_saved,Updates saved,Modifications enregistrées
+name_already_used,This name is already used,Ce nom est déjà utilisé
+new_user_configuration_added,New user configuration added,Nouvelle configuration utilisateur ajoutée
+no_user_configuration_selected,No user configuration selected,Aucune configuration utilisateur sélectionnée
+output,Output,Résultat
+output_and_settings_side_by_side,Output and settings/editor side by side,Résultats et réglages/éditeur côte à côte
+plotly,Plotly,Plotly
+provide_valid_name,Provide valid name,Nom valide requis
+python,Python,Python
+r,R,R
+rename,Rename,Renommer
+rename_user_configuration,Rename user configuration,Renommer la configuration
+rmarkdown,RMarkdown,RMarkdown
+save_output_settings_and_code,Save,Sauvegarder
+show_code_editor,Code editor,Editeur de code
+show_output,Output,Résultats
+show_output_settings,Output settings,Modifier les réglages
+table,Table,Table
+ui_html,UI (HTML),UI (HTML)
+user_configuration_delete,User configuration deleted,Configuration utilisateur supprimée
+user_configuration_renamed,User configuration renamed,Configuration renommée
