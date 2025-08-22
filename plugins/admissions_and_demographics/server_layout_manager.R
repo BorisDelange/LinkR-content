@@ -163,8 +163,28 @@ panel_layout_manager <- paste0("
     }
 ")
 
-# Initialize the panel layout system with a longer delay for better reliability
-shinyjs::delay(2000, shinyjs::runjs(panel_layout_manager))
+# Query database for saved side-by-side layout preference
+sql <- glue::glue_sql(
+    "SELECT value_num 
+     FROM widgets_options 
+     WHERE widget_id = %widget_id% AND category = 'general_settings' AND name = 'output_and_settings_side_by_side'", 
+    .con = m$db
+)
+side_by_side_result <- DBI::dbGetQuery(m$db, sql)
+
+# Set default or load saved preference
+side_by_side <- TRUE  # Default to side-by-side mode
+if (nrow(side_by_side_result) > 0) {
+    saved_value <- side_by_side_result %>% dplyr::pull(value_num) %>% as.logical()
+    if (!is.na(saved_value)) {
+        side_by_side <- saved_value
+    }
+}
+
+# Initialize the panel layout system ONLY if starting in side-by-side mode
+if (side_by_side) {
+    shinyjs::delay(2000, shinyjs::runjs(panel_layout_manager))
+}
 
 # ======================================
 # SIDE-BY-SIDE TOGGLE BUTTON HANDLER
@@ -211,17 +231,25 @@ observe_event(input$side_by_side_button_%widget_id%, {
     
     if (new_side_by_side) {
         # Enable side-by-side mode
-        shinyjs::runjs(panel_layout_manager)  # Reinitialize the layout system
         shinyjs::hide("output_button_div_%widget_id%")  # Hide output button (not needed in side-by-side)
-        shinyjs::show("resizer_%widget_id%")  # Show drag-to-resize handle
+        sapply(c("resizer_%widget_id%", "settings_container_%widget_id%"), shinyjs::show)  # Show resizer and settings container
         
-        # Force application of correct panel widths after a short delay
-        shinyjs::delay(150, shinyjs::runjs("if (typeof setPanelWidths_%widget_id% === 'function') setPanelWidths_%widget_id%();"))
+        # Initialize the layout system ONLY if not already initialized - WITH DELAY to let shinyjs::show() work
+        shinyjs::delay(200, shinyjs::runjs(paste0("
+            if (!window.resizingInitialized_%widget_id%) {
+                ", panel_layout_manager, "
+            } else {
+                // Just apply panel widths if already initialized
+                if (typeof setPanelWidths_%widget_id% === 'function') {
+                    setTimeout(function() { setPanelWidths_%widget_id%(); }, 150);
+                }
+            }
+        ")))
         
     } else {
         # Enable full-width mode
         shinyjs::show("output_button_div_%widget_id%")  # Show output button for navigation
-        shinyjs::hide("resizer_%widget_id%")  # Hide resize handle (not needed in full-width)
+        sapply(c("resizer_%widget_id%", "settings_container_%widget_id%"), shinyjs::hide)  # Hide resizer and settings container
     }
     
     # ==========================================
