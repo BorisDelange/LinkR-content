@@ -115,6 +115,11 @@ observe_event(input$show_user_configurations_tab_%widget_id%, {
 # Show modal dialog for creating new user configuration
 observe_event(input$create_user_configuration_%widget_id%, {
     shinyjs::show("add_user_configuration_modal_%widget_id%")
+    
+    # Focus on the text field after a small delay to ensure modal is visible
+    shinyjs::delay(50, {
+        shinyjs::runjs(paste0("document.getElementById('", id, "-user_configuration_name_add_%widget_id%').focus();"))
+    })
 })
 
 # Close create user configuration modal
