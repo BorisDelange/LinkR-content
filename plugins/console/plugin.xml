@@ -3,20 +3,397 @@
   <plugin>
     <app_version>0.3.1.9012</app_version>
     <unique_id>d7662fb4dde4f229baff062dd673177ced4375168b5c9ef0782717d89769efb6</unique_id>
-    <version>0.0.1.9021</version>
+    <version>0.0.1.9022</version>
     <name_en>Console</name_en>
     <name_fr>Console</name_fr>
     <category_en>NA</category_en>
     <category_fr>NA</category_fr>
-    <description_en>NA</description_en>
-    <description_fr>NA</description_fr>
+    <description_en>## Introduction
+
+The Console plugin is an advanced code execution environment designed for users with programming experience. **This plugin requires solid knowledge of R programming language and data manipulation techniques**. It provides a powerful interface for executing custom R code directly within the LinkR platform, offering complete flexibility for data analysis and visualization.
+
+*Screenshot of general plugin interface*
+
+## Prerequisites
+
+**Important**: This plugin is intended for data scientists, statisticians, and researchers with:
+- Strong R programming skills
+- Understanding of data manipulation and visualization libraries
+- Experience with healthcare data analysis (preferred)
+- Knowledge of the OMOP Common Data Model (recommended)
+
+Users without programming experience should consider using other specialized LinkR plugins that provide no-code interfaces for specific analyses.
+
+## Key Features
+
+### 1. Multi-Language Code Execution
+
+The Console plugin supports R programming language with plans for Python integration:
+
+- **R Language**: Full support with access to all R packages and libraries
+- **Comprehensive Output Types**: Execute code and display results in multiple formats
+- **Syntax Highlighting**: Advanced code editor with R syntax highlighting and auto-completion
+- **Error Handling**: Detailed error messages and debugging information
+
+### 2. Flexible Output Types
+
+Choose from eight different output formats to display your analysis results:
+
+#### Console Output
+Execute R code and display text-based results, ideal for data exploration, statistical summaries, and debugging.
+
+*Screenshot of console output with data exploration code*
+
+#### Interactive UI Elements
+Create custom HTML interfaces with interactive elements, metrics displays, and formatted content.
+
+*Screenshot of custom UI output with metrics display*
+
+#### Static Plots
+Generate publication-ready static visualizations using ggplot2 and other R plotting libraries.
+
+*Screenshot of ggplot2 histogram with custom styling*
+
+#### Data Tables
+Display data in clean, formatted tables perfect for presenting summary statistics and results.
+
+*Screenshot of formatted data table output*
+
+#### Interactive Data Tables
+Create searchable, sortable, and filterable data tables for exploring large datasets.
+
+*Screenshot of interactive datatable with filtering options*
+
+#### Time Series Visualizations
+Build interactive time series charts with zoom, pan, and range selection capabilities using dygraphs.
+
+*Screenshot of dygraphs time series with range selector*
+
+#### Interactive Plotly Charts
+Create highly interactive visualizations with hover effects, zooming, and dynamic filtering using plotly.
+
+*Screenshot of plotly scatter plot with hover information*
+
+#### R Markdown Reports
+Generate comprehensive reports combining code, text, and visualizations in a single document.
+
+*Screenshot of rendered R Markdown report with mixed content*
+
+### 3. Smart Code Templates
+
+When you select an output type, the plugin automatically provides intelligent code templates:
+
+- **Context-Aware Examples**: Templates tailored to each output format
+- **Best Practices**: Code examples following R programming best practices
+- **OMOP Integration**: Templates that work with LinkR's OMOP CDM data structure
+- **Customizable Starting Points**: Modify templates to suit your specific analysis needs
+
+*Screenshot of code editor with template switching between output types*
+
+## Configuration and Settings
+
+### Programming Language Selection
+
+Currently supports R with comprehensive package support. Python integration is planned for future releases.
+
+### Output Type Configuration
+
+Select from eight output formats based on your analysis requirements:
+
+1. **Console**: Text-based output for data exploration and debugging
+2. **UI**: Custom HTML interfaces and interactive elements
+3. **Figure**: Static plots and visualizations
+4. **Table**: Formatted data tables
+5. **DataTable**: Interactive, searchable data tables
+6. **Dygraphs**: Interactive time series visualizations
+7. **Plotly**: Advanced interactive charts and plots
+8. **R Markdown**: Comprehensive reports with mixed content
+
+### Automatic Execution
+
+The "Automatic Updates" toggle controls code execution behavior:
+
+- **Enabled**: Code runs automatically when settings change or data updates
+- **Disabled**: Manual execution required via "Display Result" button
+
+*Screenshot of configuration panel with language and output type selection*
+
+## Advanced Features
+
+### Data Access
+
+The Console plugin provides access to your project's OMOP CDM data through LinkR's reactive system:
+
+- **d**: Project OMOP CDM data tables (person, visit_occurrence, condition_occurrence, etc.)
+- **Database Access**: Direct database queries through d$con connection
+
+### Code Isolation
+
+When automatic updates are disabled, code execution is wrapped in `isolate()` to prevent unwanted reactive updates, giving you full control over when your analysis runs.
+
+## Configuration Management
+
+### Save and Load Configurations
+
+The plugin supports saving your analysis configurations for reuse:
+
+1. **Create Configuration**: Save current settings including code, language, and output type
+2. **Load Configuration**: Quickly switch between different analysis scenarios
+3. **Rename and Organize**: Manage your configurations with descriptive names
+4. **Team Sharing**: Configurations can be shared between team members with project access
+
+*Screenshot of user configuration management interface*
+
+### Code Persistence
+
+Your code is automatically saved with each configuration, ensuring:
+- No loss of work when switching between analyses
+- Version control for different analysis approaches
+- Easy reproduction of previous results
+- Seamless collaboration with team members
+
+## Integration with LinkR Ecosystem
+
+### OMOP CDM Compatibility
+
+The Console plugin is designed to work seamlessly with OMOP Common Data Model:
+- **Version Support**: Compatible with both OMOP CDM 5.3 and 5.4
+- **Standard Vocabularies**: Access to OMOP concepts and standardized terminologies
+- **Healthcare Contexts**: Pre-built examples for common healthcare analyses
+
+## Example Use Cases
+
+### Data Exploration
+```r
+# Explore patient demographics
+d$person %&gt;%
+  dplyr::count(gender_concept_id) %&gt;%
+  dplyr::arrange(desc(n))
+```
+
+### Statistical Analysis
+```r
+# Calculate length of stay statistics
+visit_stats &lt;- d$visit_occurrence %&gt;%
+  dplyr::mutate(los = as.numeric(visit_end_date - visit_start_date)) %&gt;%
+  dplyr::summarise(
+    mean_los = mean(los, na.rm = TRUE),
+    median_los = median(los, na.rm = TRUE),
+    sd_los = sd(los, na.rm = TRUE)
+  )
+```
+
+### Custom Visualizations
+```r
+# Create condition prevalence chart
+d$condition_occurrence %&gt;%
+  dplyr::inner_join(d$concept, by = c("condition_concept_id" = "concept_id")) %&gt;%
+  dplyr::count(concept_name, sort = TRUE) %&gt;%
+  dplyr::slice_head(n = 10) %&gt;%
+  ggplot2::ggplot(ggplot2::aes(x = reorder(concept_name, n), y = n)) +
+  ggplot2::geom_col() +
+  ggplot2::coord_flip() +
+  ggplot2::labs(title = "Top 10 Conditions", x = "Condition", y = "Count")
+```
+
+The Console plugin provides unlimited flexibility for healthcare data analysis.
+</description_en>
+    <description_fr>## Introduction
+
+Le plugin Console est un environnement d'ex&#xE9;cution de code avanc&#xE9; con&#xE7;u pour les utilisateurs ayant une exp&#xE9;rience en programmation. **Ce plugin n&#xE9;cessite une solide connaissance du langage de programmation R et des techniques de manipulation de donn&#xE9;es**. Il fournit une interface puissante pour ex&#xE9;cuter du code R personnalis&#xE9; directement dans la plateforme LinkR, offrant une flexibilit&#xE9; compl&#xE8;te pour l'analyse et la visualisation de donn&#xE9;es.
+
+*Capture d'&#xE9;cran de l'interface g&#xE9;n&#xE9;rale du plugin*
+
+## Pr&#xE9;requis
+
+**Important** : Ce plugin est destin&#xE9; aux data scientists, statisticiens et chercheurs poss&#xE9;dant :
+- De solides comp&#xE9;tences en programmation R
+- Une compr&#xE9;hension des biblioth&#xE8;ques de manipulation et de visualisation de donn&#xE9;es
+- Une exp&#xE9;rience de l'analyse de donn&#xE9;es de sant&#xE9; (pr&#xE9;f&#xE9;rable)
+- Une connaissance du mod&#xE8;le de donn&#xE9;es commun OMOP (recommand&#xE9;e)
+
+Les utilisateurs sans exp&#xE9;rience en programmation devraient consid&#xE9;rer l'utilisation d'autres plugins LinkR sp&#xE9;cialis&#xE9;s qui fournissent des interfaces sans code pour des analyses sp&#xE9;cifiques.
+
+## Fonctionnalit&#xE9;s cl&#xE9;s
+
+### 1. Ex&#xE9;cution de code multi-langage
+
+Le plugin Console prend en charge le langage de programmation R avec des plans d'int&#xE9;gration Python :
+
+- **Langage R** : Support complet avec acc&#xE8;s &#xE0; tous les packages et biblioth&#xE8;ques R
+- **Types de sortie complets** : Ex&#xE9;cutez du code et affichez les r&#xE9;sultats en plusieurs formats
+- **Coloration syntaxique** : &#xC9;diteur de code avanc&#xE9; avec coloration syntaxique R et auto-compl&#xE9;tion
+- **Gestion des erreurs** : Messages d'erreur d&#xE9;taill&#xE9;s et informations de d&#xE9;bogage
+
+### 2. Types de sortie flexibles
+
+Choisissez parmi huit formats de sortie diff&#xE9;rents pour afficher vos r&#xE9;sultats d'analyse :
+
+#### Sortie console
+Ex&#xE9;cutez du code R et affichez des r&#xE9;sultats textuels, id&#xE9;al pour l'exploration de donn&#xE9;es, les r&#xE9;sum&#xE9;s statistiques et le d&#xE9;bogage.
+
+*Capture d'&#xE9;cran de la sortie console avec du code d'exploration de donn&#xE9;es*
+
+#### &#xC9;l&#xE9;ments d'interface interactive
+Cr&#xE9;ez des interfaces HTML personnalis&#xE9;es avec des &#xE9;l&#xE9;ments interactifs, des affichages de m&#xE9;triques et du contenu format&#xE9;.
+
+*Capture d'&#xE9;cran de la sortie d'interface personnalis&#xE9;e avec affichage de m&#xE9;triques*
+
+#### Graphiques statiques
+G&#xE9;n&#xE9;rez des visualisations statiques pr&#xEA;tes pour publication en utilisant ggplot2 et d'autres biblioth&#xE8;ques de trac&#xE9; R.
+
+*Capture d'&#xE9;cran d'un histogramme ggplot2 avec un style personnalis&#xE9;*
+
+#### Tableaux de donn&#xE9;es
+Affichez les donn&#xE9;es dans des tableaux propres et format&#xE9;s, parfaits pour pr&#xE9;senter des statistiques sommaires et des r&#xE9;sultats.
+
+*Capture d'&#xE9;cran de la sortie de tableau de donn&#xE9;es format&#xE9;*
+
+#### Tableaux de donn&#xE9;es interactifs
+Cr&#xE9;ez des tableaux de donn&#xE9;es consultables, triables et filtrables pour explorer de grands ensembles de donn&#xE9;es.
+
+*Capture d'&#xE9;cran d'un datatable interactif avec options de filtrage*
+
+#### Visualisations de s&#xE9;ries temporelles
+Construisez des graphiques de s&#xE9;ries temporelles interactifs avec zoom, panoramique et capacit&#xE9;s de s&#xE9;lection de plage en utilisant dygraphs.
+
+*Capture d'&#xE9;cran d'une s&#xE9;rie temporelle dygraphs avec s&#xE9;lecteur de plage*
+
+#### Graphiques plotly interactifs
+Cr&#xE9;ez des visualisations hautement interactives avec effets de survol, zoom et filtrage dynamique en utilisant plotly.
+
+*Capture d'&#xE9;cran d'un graphique de dispersion plotly avec informations de survol*
+
+#### Rapports r markdown
+G&#xE9;n&#xE9;rez des rapports complets combinant code, texte et visualisations dans un seul document.
+
+*Capture d'&#xE9;cran d'un rapport R Markdown rendu avec contenu mixte*
+
+### 3. Mod&#xE8;les de code intelligents
+
+Lorsque vous s&#xE9;lectionnez un type de sortie, le plugin fournit automatiquement des mod&#xE8;les de code intelligents :
+
+- **Exemples contextuels** : Mod&#xE8;les adapt&#xE9;s &#xE0; chaque format de sortie
+- **Meilleures pratiques** : Exemples de code suivant les meilleures pratiques de programmation R
+- **Int&#xE9;gration OMOP** : Mod&#xE8;les qui fonctionnent avec la structure de donn&#xE9;es OMOP CDM de LinkR
+- **Points de d&#xE9;part personnalisables** : Modifiez les mod&#xE8;les pour s'adapter &#xE0; vos besoins d'analyse sp&#xE9;cifiques
+
+**_Capture d'&#xE9;cran de l'&#xE9;diteur de code avec commutation de mod&#xE8;les entre les types de sortie_**
+
+## Configuration et param&#xE8;tres
+
+### S&#xE9;lection du langage de programmation
+
+Prend actuellement en charge R avec un support complet des packages. L'int&#xE9;gration Python est pr&#xE9;vue pour les futures versions.
+
+### Configuration du type de sortie
+
+S&#xE9;lectionnez parmi huit formats de sortie en fonction de vos exigences d'analyse :
+
+1. **Console** : Sortie textuelle pour l'exploration de donn&#xE9;es et le d&#xE9;bogage
+2. **Interface** : Interfaces HTML personnalis&#xE9;es et &#xE9;l&#xE9;ments interactifs
+3. **Figure** : Graphiques et visualisations statiques
+4. **Tableau** : Tableaux de donn&#xE9;es format&#xE9;s
+5. **Datatable** : Tableaux de donn&#xE9;es interactifs et consultables
+6. **Dygraphs** : Visualisations de s&#xE9;ries temporelles interactives
+7. **Plotly** : Graphiques et trac&#xE9;s interactifs avanc&#xE9;s
+8. **R markdown** : Rapports complets avec contenu mixte
+
+### Ex&#xE9;cution automatique
+
+Le bouton "Mises &#xE0; jour automatiques" contr&#xF4;le le comportement d'ex&#xE9;cution du code :
+
+- **Activ&#xE9;** : Le code s'ex&#xE9;cute automatiquement lorsque les param&#xE8;tres changent ou que les donn&#xE9;es se mettent &#xE0; jour
+- **D&#xE9;sactiv&#xE9;** : Ex&#xE9;cution manuelle requise via le bouton "Afficher le r&#xE9;sultat"
+
+**_Capture d'&#xE9;cran du panneau de configuration avec s&#xE9;lection de langage et de type de sortie_**
+
+## Fonctionnalit&#xE9;s avanc&#xE9;es
+
+### Acc&#xE8;s aux donn&#xE9;es
+
+Le plugin Console fournit un acc&#xE8;s aux donn&#xE9;es OMOP CDM de votre projet via le syst&#xE8;me r&#xE9;actif de LinkR :
+
+- **d** : Tables de donn&#xE9;es OMOP CDM du projet (person, visit_occurrence, condition_occurrence, etc.)
+- **Acc&#xE8;s &#xE0; la base de donn&#xE9;es** : Requ&#xEA;tes directes &#xE0; la base de donn&#xE9;es via la connexion d$con
+
+### Isolation du code
+
+Lorsque les mises &#xE0; jour automatiques sont d&#xE9;sactiv&#xE9;es, l'ex&#xE9;cution du code est encapsul&#xE9;e dans `isolate()` pour &#xE9;viter les mises &#xE0; jour r&#xE9;actives non d&#xE9;sir&#xE9;es, vous donnant un contr&#xF4;le total sur le moment o&#xF9; votre analyse s'ex&#xE9;cute.
+
+## Gestion de la configuration
+
+### Sauvegarder et charger les configurations
+
+Le plugin prend en charge la sauvegarde de vos configurations d'analyse pour la r&#xE9;utilisation :
+
+1. **Cr&#xE9;er une configuration** : Sauvegardez les param&#xE8;tres actuels incluant le code, le langage et le type de sortie
+2. **Charger une configuration** : Basculez rapidement entre diff&#xE9;rents sc&#xE9;narios d'analyse
+3. **Renommer et organiser** : G&#xE9;rez vos configurations avec des noms descriptifs
+4. **Partage d'&#xE9;quipe** : Les configurations peuvent &#xEA;tre partag&#xE9;es entre les membres de l'&#xE9;quipe ayant acc&#xE8;s au projet
+
+**_Capture d'&#xE9;cran de l'interface de gestion de configuration utilisateur_**
+
+### Persistance du code
+
+Votre code est automatiquement sauvegard&#xE9; avec chaque configuration, garantissant :
+- Aucune perte de travail lors du basculement entre analyses
+- Contr&#xF4;le de version pour diff&#xE9;rentes approches d'analyse
+- Reproduction facile des r&#xE9;sultats pr&#xE9;c&#xE9;dents
+- Collaboration transparente avec les membres de l'&#xE9;quipe
+
+## Int&#xE9;gration avec l'&#xE9;cosyst&#xE8;me linkr
+
+### Compatibilit&#xE9; omop cdm
+
+Le plugin Console est con&#xE7;u pour fonctionner de mani&#xE8;re transparente avec le mod&#xE8;le de donn&#xE9;es commun OMOP :
+- **Support de version** : Compatible avec OMOP CDM 5.3 et 5.4
+- **Vocabulaires standard** : Acc&#xE8;s aux concepts OMOP et terminologies standardis&#xE9;es
+- **Contextes de sant&#xE9;** : Exemples pr&#xE9;-construits pour les analyses de sant&#xE9; courantes
+
+## Exemples de cas d'usage
+
+### Exploration de donn&#xE9;es
+```r
+# Explorer les donn&#xE9;es d&#xE9;mographiques des patients
+d$person %&gt;%
+  dplyr::count(gender_concept_id) %&gt;%
+  dplyr::arrange(desc(n))
+```
+
+### Analyse statistique
+```r
+# Calculer les statistiques de dur&#xE9;e de s&#xE9;jour
+visit_stats &lt;- d$visit_occurrence %&gt;%
+  dplyr::mutate(los = as.numeric(visit_end_date - visit_start_date)) %&gt;%
+  dplyr::summarise(
+    mean_los = mean(los, na.rm = TRUE),
+    median_los = median(los, na.rm = TRUE),
+    sd_los = sd(los, na.rm = TRUE)
+  )
+```
+
+### Visualisations personnalis&#xE9;es
+```r
+# Cr&#xE9;er un graphique de pr&#xE9;valence des conditions
+d$condition_occurrence %&gt;%
+  dplyr::inner_join(d$concept, by = c("condition_concept_id" = "concept_id")) %&gt;%
+  dplyr::count(concept_name, sort = TRUE) %&gt;%
+  dplyr::slice_head(n = 10) %&gt;%
+  ggplot2::ggplot(ggplot2::aes(x = reorder(concept_name, n), y = n)) +
+  ggplot2::geom_col() +
+  ggplot2::coord_flip() +
+  ggplot2::labs(title = "Top 10 des conditions", x = "Condition", y = "Nombre")
+```
+
+Le plugin Console fournit une flexibilit&#xE9; illimit&#xE9;e pour l'analyse de donn&#xE9;es de sant&#xE9;.</description_fr>
     <short_description_en>R and Python console, with choice of output (console, figure, datatable etc)</short_description_en>
     <short_description_fr>Une console R et Python, avec choix de l'output (console, figure, datatable etc)</short_description_fr>
     <authors>
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-07-07 13:21:53</creation_datetime>
-    <update_datetime>2025-08-22 11:39:02</update_datetime>
+    <update_datetime>2025-08-22 11:47:03</update_datetime>
     <type>12</type>
   </plugin>
 </plugins>
