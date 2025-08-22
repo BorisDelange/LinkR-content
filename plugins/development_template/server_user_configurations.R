@@ -253,7 +253,7 @@ add_user_configuration_%widget_id% <- function(configuration_name, notification 
 }
 
 # Auto-create default configuration when widget loads
-shinyjs::delay(500, add_user_configuration_%widget_id%(i18np$t("configuration_1"), notification = FALSE))
+shinyjs::delay(1000, add_user_configuration_%widget_id%(i18np$t("configuration_1"), notification = FALSE))
 
 # Handle user confirmation to create new configuration
 observe_event(input$add_user_configuration_%widget_id%, {

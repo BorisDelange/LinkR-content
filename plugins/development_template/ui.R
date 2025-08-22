@@ -370,6 +370,7 @@ tagList(
         Shiny.setInputValue('", id, "-output_and_settings_side_by_side_%widget_id%', ", tolower(side_by_side), ");
     "))),
     
+    
     # Unified navigation control script
     tags$script(HTML(paste0("
         (function() {

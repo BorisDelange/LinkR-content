@@ -3,20 +3,593 @@
   <plugin>
     <app_version>0.3.1.9012</app_version>
     <unique_id>b205c8c15d31cdbb8e160bea4b2a938c5e3157079efc813965212b31b9cc82e2</unique_id>
-    <version>0.0.1.9020</version>
+    <version>0.0.1.9021</version>
     <name_en>Development template</name_en>
     <name_fr>Template de d&#xE9;veloppement</name_fr>
     <category_en></category_en>
     <category_fr></category_fr>
-    <description_en></description_en>
-    <description_fr></description_fr>
+    <description_en># LinkR Plugin Development Template
+A comprehensive template for creating LinkR healthcare data visualization and analysis plugins.
+
+## Plugin Types
+Before starting, determine your plugin type:
+- **Individual data plugins**: Work patient by patient
+- **Aggregated data plugins**: Work on groups of patients  
+- **Mixed plugins**: Can handle both types
+
+Most visualization plugins work with aggregated data, while detailed patient analysis typically uses individual data.
+
+## Quick Start
+1. **Navigate to Plugins &gt; Create Plugin &gt; From Existing Plugin** and select this template
+2. **Choose your plugin type** (individual, aggregated, or both)
+3. **Modify the 5 required files** (marked with REQUIRES CUSTOMIZATION)
+4. **Test your plugin** using the Test tab with sample concepts
+5. **Document and share** your plugin with the community
+
+## File Structure &amp; Customization Guide
+
+### &#x1F527; MUST CUSTOMIZE (Required for all plugins)
+| File | Purpose | What to Modify |
+|------|---------|----------------|
+| `server_code.R` | Code generation logic | `generate_output_code_%widget_id%()` function |
+| `server_output_settings.R` | Configuration logic | `all_inputs_%widget_id%` list matching your UI |
+| `ui_output.R` | Output display | Choose appropriate output type (plot, table, etc.) |
+| `ui_output_settings.R` | Settings interface | Add your plugin's configuration controls |
+| `translations.csv` | Internationalization | Add your plugin-specific text translations |
+
+### &#x1F527; OPTIONAL CUSTOMIZATION (Enhance if needed)
+| File | Purpose | When to Modify |
+|------|---------|----------------|
+| `server.R` | Main controller | Add custom tab logic or navigation |
+| `ui.R` | Main interface | Modify layout or add custom components |
+| `ui_code.R` | Code editor | Change language mode or shortcuts |
+
+### &#x26A0;&#xFE0F; DO NOT MODIFY (Core framework files)
+| File | Purpose |
+|------|---------|
+| `server_layout_manager.R` | Panel resizing system |
+| `server_user_configurations.R` | Save/load configurations |
+| `ui_user_configurations.R` | Configuration management UI |
+
+## Development Workflow
+
+### Step 1: Define Your UI Controls
+Use Shiny Fluent components for consistency with LinkR's interface:
+```r
+# ui_output_settings.R
+div(
+    strong(i18np$t("my_parameter")), 
+    style="margin-bottom:10px;"
+),
+div(
+    shiny.fluent::Dropdown.shinyInput(
+        ns("my_parameter_%widget_id%"),
+        options = list(...)
+    ),
+    style="width:300px;"
+)
+```
+
+### Step 2: Register Inputs for Persistence
+```r
+# server_output_settings.R
+all_inputs_%widget_id% &lt;- list(
+    list(id = "my_parameter", type = "dropdown", default = "value")
+)
+```
+
+### Step 3: Implement Code Generation
+```r
+# server_code.R
+generate_output_code_%widget_id% &lt;- function(...) {
+    # Generate R/Python code based on UI settings
+    # This code will be executed when the widget runs
+}
+```
+
+## Working with OMOP Data
+
+### Understanding selected_concepts
+When users create a widget, they select concepts that become available in `selected_concepts`:
+- `concept_id`: Standard (from Athena) or non-standard (&gt;2B) concept ID
+- `concept_name`: Display name of the concept  
+- `domain_id`: OMOP domain (often corresponds to table name)
+- `vocabulary_id`: Terminology source (LOINC, SNOMED, etc.)
+
+### Accessing OMOP Tables
+Data is available through the `d$` object:
+- `d$person` - Demographics
+- `d$measurement` - Lab results, vital signs
+- `d$condition_occurrence` - Diagnoses
+- `d$drug_exposure` - Medications
+- `d$procedure_occurrence` - Procedures
+- `d$observation` - Other clinical facts
+
+### Example: Filtering by Selected Concepts
+```r
+# Filter measurement data for selected concepts
+data &lt;- d$measurement %&gt;%
+    dplyr::filter(measurement_concept_id %in% selected_concepts$concept_id)
+```
+
+## Common Plugin Patterns
+
+### Data Visualization Plugin
+```r
+# ui_output.R - Use plot output
+plotOutput(ns("plot_%widget_id%"))
+
+# server_code.R - Generate ggplot2 code
+plot &lt;- data %&gt;%
+    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+    ggplot2::geom_histogram(bins = input$num_bins_%widget_id%) +
+    ggplot2::theme_minimal()
+```
+
+### Statistical Analysis Plugin
+```r
+# ui_output.R - Use table output
+DT::DTOutput(ns("results_%widget_id%"))
+
+# server_code.R - Generate analysis results
+results &lt;- data %&gt;%
+    dplyr::group_by(concept_name) %&gt;%
+    dplyr::summarise(
+        mean_value = mean(value_as_number, na.rm = TRUE),
+        std_dev = sd(value_as_number, na.rm = TRUE)
+    )
+```
+
+### OMOP Query Plugin
+```r
+# Generate complex OMOP queries
+query_code &lt;- paste0(
+    "data &lt;- d$measurement %&gt;%\n",
+    "  dplyr::filter(measurement_concept_id == ", selected_concept_id, ") %&gt;%\n",
+    "  dplyr::inner_join(d$person, by = 'person_id') %&gt;%\n",
+    "  dplyr::filter(gender_concept_id == ", gender_filter, ")"
+)
+```
+
+## Internationalization
+All user-facing text must be translatable:
+
+### In Code
+```r
+# Use i18np$t() for all text (not i18n$t())
+strong(i18np$t("concept_to_show"))
+```
+
+### In translations.csv
+```csv
+base,en,fr
+concept_to_show,Concept to show,Concept &#xE0; afficher
+num_bins,Number of bins,Nombre de barres
+no_data_available,No data available,Pas de donn&#xE9;es disponibles
+```
+
+## Testing Your Plugin
+
+### Using the Test Tab
+1. Click "Select concepts" to choose test data
+2. Select relevant concepts from OMOP terminologies
+3. Click "Execute plugin" to run with test data
+4. Check the console output for debugging information
+
+### Testing with Different OMOP Versions
+```r
+# Handle version differences
+omop_cols &lt;- get_omop_col_names("measurement")
+if ("measurement_datetime" %in% omop_cols) {
+    # OMOP 5.4 logic
+} else {
+    # OMOP 5.3 logic  
+}
+```
+
+## Best Practices
+
+### Code Structure
+1. **Always use `%widget_id%` suffix** for all element IDs to ensure uniqueness
+2. **Wrap IDs in `ns()`** for proper Shiny module scoping
+3. **Use `observe_event()` instead of `observeEvent()`** for better error handling
+4. **Follow the reactive pattern** with clear separation of UI and server logic
+
+### Error Handling
+```r
+observe_event(input$show_plot_%widget_id%, {
+    tryCatch({
+        # Your plot generation code
+        if (nrow(data) == 0) {
+            # Handle empty data case
+            plot &lt;- create_empty_plot()
+        }
+    }, error = function(e) {
+        # Error will be logged automatically
+        plot &lt;- create_error_plot(e$message)
+    })
+})
+```
+
+### Performance
+- Filter data early to reduce processing time
+- Use `dplyr` for efficient data manipulation  
+- Consider data size when designing visualizations
+- Implement loading indicators for long-running operations
+
+## Advanced Features
+
+### Custom Validation
+```r
+# Validate domain compatibility
+valid_domains &lt;- c("Measurement", "Observation")
+selected_concept &lt;- selected_concepts %&gt;%
+    dplyr::filter(concept_id == input$concept_%widget_id%)
+
+if (!selected_concept$domain_id %in% valid_domains) {
+    # Show error message
+    return()
+}
+```
+
+### Dynamic UI Updates
+```r
+# Update dropdown options based on other selections
+shinyjs::delay(500, {
+    shiny.fluent::updateDropdown.shinyInput(
+        session, 
+        "concept_%widget_id%",
+        options = concept_options,
+        value = default_value
+    )
+})
+```
+
+## Common Pitfalls to Avoid
+
+### Technical Issues
+- Forgetting the `%widget_id%` suffix on element IDs
+- Using `conditionalPanel()` instead of `shinyjs::show/hide`
+- Modifying core framework files (layout manager, etc.)
+- Hardcoding text instead of using translations
+- Assuming specific OMOP version without checking
+
+### Design Issues  
+- Creating overly complex interfaces
+- Not handling empty data gracefully
+- Ignoring mobile/responsive design
+- Poor error messaging for users
+
+### Data Issues
+- Not validating concept domains before processing
+- Assuming data types without checking
+- Not handling NULL/missing values
+- Processing too much data without pagination
+
+## Sharing Your Plugin
+
+### Documentation Requirements
+1. **Plugin Summary**: Brief description of functionality
+2. **Detailed Description**: Markdown documentation with:
+   - Purpose and use cases
+   - Required concept types/domains  
+   - Configuration options
+   - Example outputs
+   - Known limitations
+
+### Publishing Process
+1. Complete plugin information in the Summary tab
+2. Test thoroughly with different data scenarios
+3. Add comprehensive documentation
+4. Use the Share tab to publish to the community repository
+5. Follow LinkR's contribution guidelines
+
+## Additional Resources
+- &lt;a href="https://linkr.interhop.org/en/docs/create_plugin/" target="_blank"&gt;LinkR Official Documentation&lt;/a&gt;
+- &lt;a href="https://ohdsi.github.io/CommonDataModel/" target="_blank"&gt;OMOP CDM Reference&lt;/a&gt;
+- &lt;a href="https://appsilon.github.io/shiny.fluent/" target="_blank"&gt;Shiny Fluent Components&lt;/a&gt;
+- &lt;a href="https://mastering-shiny.org/" target="_blank"&gt;Mastering Shiny Book&lt;/a&gt; - Essential for understanding reactive programming
+
+## Getting Help
+- &lt;a href="https://linkr.interhop.org/en/" target="_blank"&gt;LinkR Website&lt;/a&gt;
+- Plugin development examples in the repository
+- OMOP/OHDSI community resources
+- Shiny community documentation and examples
+</description_en>
+    <description_fr># Mod&#xE8;le de d&#xE9;veloppement de plugin LinkR
+Un mod&#xE8;le complet pour cr&#xE9;er des plugins de visualisation et d'analyse de donn&#xE9;es de sant&#xE9; LinkR.
+
+## Types de plugins
+Avant de commencer, d&#xE9;terminez votre type de plugin :
+- **Plugins de donn&#xE9;es individuelles** : Travaillent patient par patient
+- **Plugins de donn&#xE9;es agr&#xE9;g&#xE9;es** : Travaillent sur des groupes de patients  
+- **Plugins mixtes** : Peuvent g&#xE9;rer les deux types
+
+La plupart des plugins de visualisation travaillent avec des donn&#xE9;es agr&#xE9;g&#xE9;es, tandis que l'analyse d&#xE9;taill&#xE9;e des patients utilise g&#xE9;n&#xE9;ralement des donn&#xE9;es individuelles.
+
+## D&#xE9;marrage rapide
+1. **Naviguez vers Plugins &gt; Cr&#xE9;er un Plugin &gt; &#xC0; partir d'un Plugin Existant** et s&#xE9;lectionnez ce mod&#xE8;le
+2. **Choisissez votre type de plugin** (individuel, agr&#xE9;g&#xE9;, ou les deux)
+3. **Modifiez les 5 fichiers requis** (marqu&#xE9;s N&#xC9;CESSITE PERSONNALISATION)
+4. **Testez votre plugin** en utilisant l'onglet Test avec des concepts d'exemple
+5. **Documentez et partagez** votre plugin avec la communaut&#xE9;
+
+## Structure des fichiers et guide de personnalisation
+
+### &#x1F527; DOIT &#xCA;TRE PERSONNALIS&#xC9; (requis pour tous les plugins)
+| Fichier | Objectif | Quoi modifier |
+|---------|----------|---------------|
+| `server_code.R` | Logique de g&#xE9;n&#xE9;ration de code | Fonction `generate_output_code_%widget_id%()` |
+| `server_output_settings.R` | Logique de configuration | Liste `all_inputs_%widget_id%` correspondant &#xE0; votre UI |
+| `ui_output.R` | Affichage de sortie | Choisir le type de sortie appropri&#xE9; (graphique, tableau, etc.) |
+| `ui_output_settings.R` | Interface de param&#xE8;tres | Ajouter les contr&#xF4;les de configuration de votre plugin |
+| `translations.csv` | Internationalisation | Ajouter vos traductions de texte sp&#xE9;cifiques au plugin |
+
+### &#x1F527; PERSONNALISATION OPTIONNELLE (am&#xE9;liorer si n&#xE9;cessaire)
+| Fichier | Objectif | Quand modifier |
+|---------|----------|----------------|
+| `server.R` | Contr&#xF4;leur principal | Ajouter une logique d'onglet personnalis&#xE9;e ou de navigation |
+| `ui.R` | Interface principale | Modifier la mise en page ou ajouter des composants personnalis&#xE9;s |
+| `ui_code.R` | &#xC9;diteur de code | Changer le mode de langage ou les raccourcis |
+
+### &#x26A0;&#xFE0F; NE PAS MODIFIER (fichiers du framework principal)
+| Fichier | Objectif |
+|---------|----------|
+| `server_layout_manager.R` | Syst&#xE8;me de redimensionnement des panneaux |
+| `server_user_configurations.R` | Sauvegarde/chargement des configurations |
+| `ui_user_configurations.R` | Interface de gestion des configurations |
+
+## Flux de d&#xE9;veloppement
+
+### &#xC9;tape 1 : d&#xE9;finir vos contr&#xF4;les UI
+Utilisez les composants Shiny Fluent pour la coh&#xE9;rence avec l'interface LinkR :
+```r
+# ui_output_settings.R
+div(
+    strong(i18np$t("mon_parametre")), 
+    style="margin-bottom:10px;"
+),
+div(
+    shiny.fluent::Dropdown.shinyInput(
+        ns("mon_parametre_%widget_id%"),
+        options = list(...)
+    ),
+    style="width:300px;"
+)
+```
+
+### &#xC9;tape 2 : enregistrer les entr&#xE9;es pour la persistance
+```r
+# server_output_settings.R
+all_inputs_%widget_id% &lt;- list(
+    list(id = "mon_parametre", type = "dropdown", default = "valeur")
+)
+```
+
+### &#xC9;tape 3 : impl&#xE9;menter la g&#xE9;n&#xE9;ration de code
+```r
+# server_code.R
+generate_output_code_%widget_id% &lt;- function(...) {
+    # G&#xE9;n&#xE9;rer du code R/Python bas&#xE9; sur les param&#xE8;tres UI
+    # Ce code sera ex&#xE9;cut&#xE9; quand le widget s'ex&#xE9;cute
+}
+```
+
+## Travailler avec les donn&#xE9;es OMOP
+
+### Comprendre selected_concepts
+Quand les utilisateurs cr&#xE9;ent un widget, ils s&#xE9;lectionnent des concepts qui deviennent disponibles dans `selected_concepts` :
+- `concept_id` : ID de concept standard (d'Athena) ou non-standard (&gt;2B)
+- `concept_name` : Nom d'affichage du concept  
+- `domain_id` : Domaine OMOP (correspond souvent au nom de table)
+- `vocabulary_id` : Source de terminologie (LOINC, SNOMED, etc.)
+
+### Acc&#xE9;der aux tables OMOP
+Les donn&#xE9;es sont disponibles via l'objet `d$` :
+- `d$person` - D&#xE9;mographie
+- `d$measurement` - R&#xE9;sultats de laboratoire, signes vitaux
+- `d$condition_occurrence` - Diagnostics
+- `d$drug_exposure` - M&#xE9;dicaments
+- `d$procedure_occurrence` - Proc&#xE9;dures
+- `d$observation` - Autres faits cliniques
+
+### Exemple : filtrer par concepts s&#xE9;lectionn&#xE9;s
+```r
+# Filtrer les donn&#xE9;es de mesure pour les concepts s&#xE9;lectionn&#xE9;s
+data &lt;- d$measurement %&gt;%
+    dplyr::filter(measurement_concept_id %in% selected_concepts$concept_id)
+```
+
+## Mod&#xE8;les de plugin courants
+
+### Plugin de visualisation de donn&#xE9;es
+```r
+# ui_output.R - Utiliser une sortie graphique
+plotOutput(ns("plot_%widget_id%"))
+
+# server_code.R - G&#xE9;n&#xE9;rer du code ggplot2
+plot &lt;- data %&gt;%
+    ggplot2::ggplot(ggplot2::aes(x = value_as_number)) +
+    ggplot2::geom_histogram(bins = input$num_bins_%widget_id%) +
+    ggplot2::theme_minimal()
+```
+
+### Plugin d'analyse statistique
+```r
+# ui_output.R - Utiliser une sortie tableau
+DT::DTOutput(ns("results_%widget_id%"))
+
+# server_code.R - G&#xE9;n&#xE9;rer des r&#xE9;sultats d'analyse
+results &lt;- data %&gt;%
+    dplyr::group_by(concept_name) %&gt;%
+    dplyr::summarise(
+        mean_value = mean(value_as_number, na.rm = TRUE),
+        std_dev = sd(value_as_number, na.rm = TRUE)
+    )
+```
+
+### Plugin de requ&#xEA;te OMOP
+```r
+# G&#xE9;n&#xE9;rer des requ&#xEA;tes OMOP complexes
+query_code &lt;- paste0(
+    "data &lt;- d$measurement %&gt;%\n",
+    "  dplyr::filter(measurement_concept_id == ", selected_concept_id, ") %&gt;%\n",
+    "  dplyr::inner_join(d$person, by = 'person_id') %&gt;%\n",
+    "  dplyr::filter(gender_concept_id == ", gender_filter, ")"
+)
+```
+
+## Internationalisation
+Tout le texte destin&#xE9; aux utilisateurs doit &#xEA;tre traduisible :
+
+### Dans le code
+```r
+# Utiliser i18np$t() pour tout le texte (pas i18n$t())
+strong(i18np$t("concept_a_afficher"))
+```
+
+### Dans translations.csv
+```csv
+base,en,fr
+concept_a_afficher,Concept to show,Concept &#xE0; afficher
+nombre_bins,Number of bins,Nombre de barres
+pas_donnees_disponibles,No data available,Pas de donn&#xE9;es disponibles
+```
+
+## Tester votre plugin
+
+### Utiliser l'onglet test
+1. Cliquez sur "S&#xE9;lectionner des concepts" pour choisir des donn&#xE9;es de test
+2. S&#xE9;lectionnez des concepts pertinents des terminologies OMOP
+3. Cliquez sur "Ex&#xE9;cuter le plugin" pour ex&#xE9;cuter avec des donn&#xE9;es de test
+4. V&#xE9;rifiez la sortie de la console pour les informations de d&#xE9;bogage
+
+### Tester avec diff&#xE9;rentes versions OMOP
+```r
+# G&#xE9;rer les diff&#xE9;rences de version
+omop_cols &lt;- get_omop_col_names("measurement")
+if ("measurement_datetime" %in% omop_cols) {
+    # Logique OMOP 5.4
+} else {
+    # Logique OMOP 5.3  
+}
+```
+
+## Bonnes pratiques
+
+### Structure du code
+1. **Toujours utiliser le suffixe `%widget_id%`** pour tous les IDs d'&#xE9;l&#xE9;ments pour assurer l'unicit&#xE9;
+2. **Envelopper les IDs dans `ns()`** pour une port&#xE9;e de module Shiny appropri&#xE9;e
+3. **Utiliser `observe_event()` au lieu de `observeEvent()`** pour une meilleure gestion d'erreur
+4. **Suivre le mod&#xE8;le r&#xE9;actif** avec une s&#xE9;paration claire de la logique UI et serveur
+
+### Gestion d'erreur
+```r
+observe_event(input$show_plot_%widget_id%, {
+    tryCatch({
+        # Votre code de g&#xE9;n&#xE9;ration de graphique
+        if (nrow(data) == 0) {
+            # G&#xE9;rer le cas de donn&#xE9;es vides
+            plot &lt;- create_empty_plot()
+        }
+    }, error = function(e) {
+        # L'erreur sera automatiquement enregistr&#xE9;e
+        plot &lt;- create_error_plot(e$message)
+    })
+})
+```
+
+### Performance
+- Filtrer les donn&#xE9;es t&#xF4;t pour r&#xE9;duire le temps de traitement
+- Utiliser `dplyr` pour une manipulation efficace des donn&#xE9;es  
+- Consid&#xE9;rer la taille des donn&#xE9;es lors de la conception de visualisations
+- Impl&#xE9;menter des indicateurs de chargement pour les op&#xE9;rations longues
+
+## Fonctionnalit&#xE9;s avanc&#xE9;es
+
+### Validation personnalis&#xE9;e
+```r
+# Valider la compatibilit&#xE9; de domaine
+valid_domains &lt;- c("Measurement", "Observation")
+selected_concept &lt;- selected_concepts %&gt;%
+    dplyr::filter(concept_id == input$concept_%widget_id%)
+
+if (!selected_concept$domain_id %in% valid_domains) {
+    # Afficher un message d'erreur
+    return()
+}
+```
+
+### Mises &#xE0; jour UI dynamiques
+```r
+# Mettre &#xE0; jour les options de dropdown bas&#xE9;es sur d'autres s&#xE9;lections
+shinyjs::delay(500, {
+    shiny.fluent::updateDropdown.shinyInput(
+        session, 
+        "concept_%widget_id%",
+        options = concept_options,
+        value = default_value
+    )
+})
+```
+
+## Pi&#xE8;ges courants &#xE0; &#xE9;viter
+
+### Probl&#xE8;mes techniques
+- Oublier le suffixe `%widget_id%` sur les IDs d'&#xE9;l&#xE9;ments
+- Utiliser `conditionalPanel()` au lieu de `shinyjs::show/hide`
+- Modifier les fichiers du framework principal (gestionnaire de mise en page, etc.)
+- Coder en dur le texte au lieu d'utiliser les traductions
+- Supposer une version OMOP sp&#xE9;cifique sans v&#xE9;rifier
+
+### Probl&#xE8;mes de conception  
+- Cr&#xE9;er des interfaces trop complexes
+- Ne pas g&#xE9;rer gracieusement les donn&#xE9;es vides
+- Ignorer la conception mobile/responsive
+- Mauvais messages d'erreur pour les utilisateurs
+
+### Probl&#xE8;mes de donn&#xE9;es
+- Ne pas valider les domaines de concept avant traitement
+- Supposer des types de donn&#xE9;es sans v&#xE9;rifier
+- Ne pas g&#xE9;rer les valeurs NULL/manquantes
+- Traiter trop de donn&#xE9;es sans pagination
+
+## Partager votre plugin
+
+### Exigences de documentation
+1. **R&#xE9;sum&#xE9; du Plugin** : Br&#xE8;ve description de la fonctionnalit&#xE9;
+2. **Description D&#xE9;taill&#xE9;e** : Documentation Markdown avec :
+   - Objectif et cas d'usage
+   - Types/domaines de concepts requis  
+   - Options de configuration
+   - Exemples de sorties
+   - Limitations connues
+
+### Processus de publication
+1. Compl&#xE9;ter les informations du plugin dans l'onglet R&#xE9;sum&#xE9;
+2. Tester minutieusement avec diff&#xE9;rents sc&#xE9;narios de donn&#xE9;es
+3. Ajouter une documentation compl&#xE8;te
+4. Utiliser l'onglet Partage pour publier vers le r&#xE9;f&#xE9;rentiel communautaire
+5. Suivre les directives de contribution LinkR
+
+## Ressources suppl&#xE9;mentaires
+- &lt;a href="https://linkr.interhop.org/docs/create_plugin/" target="_blank"&gt;Documentation LinkR&lt;/a&gt;
+- &lt;a href="https://ohdsi.github.io/CommonDataModel/" target="_blank"&gt;R&#xE9;f&#xE9;rence OMOP CDM&lt;/a&gt;
+- &lt;a href="https://appsilon.github.io/shiny.fluent/" target="_blank"&gt;Composants Shiny Fluent&lt;/a&gt;
+- &lt;a href="https://mastering-shiny.org/" target="_blank"&gt;Livre Mastering Shiny&lt;/a&gt; - Essentiel pour comprendre la programmation r&#xE9;active
+
+## Obtenir de l'aide
+- &lt;a href="https://linkr.interhop.org/" target="_blank"&gt;Site web LinkR&lt;/a&gt;
+- Exemples de d&#xE9;veloppement de plugins dans le r&#xE9;f&#xE9;rentiel
+- Ressources communautaires OMOP/OHDSI
+- Documentation et exemples de la communaut&#xE9; Shiny</description_fr>
     <short_description_en>This plugin is a template used as a basis for the development of plugins.</short_description_en>
     <short_description_fr>Ce plugin est un template servant de base pour le d&#xE9;veloppement de plugins</short_description_fr>
     <authors>
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-08-28 16:24:47</creation_datetime>
-    <update_datetime>2025-08-22 08:57:35</update_datetime>
+    <update_datetime>2025-08-22 09:32:55</update_datetime>
     <type>12</type>
   </plugin>
 </plugins>

@@ -52,7 +52,7 @@
 # - No additional database setup required
 
 # ======================================
-# JAVASCRIPT PANEL LAYOUT SYSTEM
+# PANEL LAYOUT REFRESH
 # ======================================
 
 # Create the JavaScript system for managing panel layouts and resizing
@@ -212,8 +212,8 @@ panel_layout_manager <- paste0("
     }
 ")
 
-# Initialize the panel layout system with a slight delay to ensure DOM is ready
-shinyjs::delay(500, shinyjs::runjs(panel_layout_manager))
+# Initialize the panel layout system with a longer delay for better reliability
+shinyjs::delay(2000, shinyjs::runjs(panel_layout_manager))
 
 # ======================================
 # SIDE-BY-SIDE TOGGLE BUTTON HANDLER
@@ -265,7 +265,7 @@ observe_event(input$side_by_side_button_%widget_id%, {
         shinyjs::show("resizer_%widget_id%")  # Show drag-to-resize handle
         
         # Force application of correct panel widths after a short delay
-        shinyjs::delay(150, shinyjs::runjs("window.setPanelWidths_%widget_id%();"))
+        shinyjs::delay(150, shinyjs::runjs("if (typeof setPanelWidths_%widget_id% === 'function') setPanelWidths_%widget_id%();"))
         
     } else {
         # Enable full-width mode
