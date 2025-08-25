@@ -36,6 +36,11 @@
 # 
 # CASCADING UPDATES:
 #   Filter available options based on previous selections (e.g., dataset affects variables)
+# 
+# UPDATE LOCK MECHANISM:
+#   Prevent automatic field updates during configuration loading using input$update_lock_%widget_id%
+#   This solves conflicts where observe_event reactions overwrite values being loaded from saved configs
+#   Pattern: Check if (isTRUE(input$update_lock_%widget_id%)) { return() } at start of observe_event
 
 # ======================================
 # CENTRALIZED INPUT DEFINITIONS
@@ -85,6 +90,17 @@ all_inputs_%widget_id% <- list(
 
 # Show/hide plot title input based on output type selection
 observe_event(input$output_type_%widget_id%, {
+    # ======================================
+    # UPDATE LOCK MECHANISM EXAMPLE
+    # ======================================
+    # Check if updates are locked (during configuration loading)
+    # This prevents automatic field updates from overwriting values being loaded from saved configurations
+    # Use this pattern when you have observe_event reactions that automatically update UI fields
+    # and you want to prevent them from interfering with configuration loading
+    if (isTRUE(input$update_lock_%widget_id%)) {
+        return()
+    }
+    
     output_type <- input$output_type_%widget_id%
     
     if (!is.null(output_type)) {
