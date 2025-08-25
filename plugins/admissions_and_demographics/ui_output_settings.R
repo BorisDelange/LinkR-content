@@ -51,7 +51,7 @@ div(
             ),
             style = "flex: 0 0 auto;"
         ),
-        style = "display: flex; flex-wrap: wrap; gap: 5px; padding-bottom: 15px; border-bottom: solid 1px #808080;"
+        style = "display: flex; flex-wrap: wrap; gap: 5px;"
     ),
     
     # ====================
@@ -85,7 +85,7 @@ div(
     # ====================
     # Responsive container for legend text fields
     div(
-        id = ns("legend_container_%widget_id%"),
+        id = ns("legend_div_%widget_id%"),
         # Legend 1
         div(
             shiny.fluent::TextField.shinyInput(
@@ -104,7 +104,7 @@ div(
             ),
             style = "width: 250px; flex: 0 0 auto;"
         ),
-        style = "display: flex; flex-wrap: wrap; gap: 5px; margin-top: 15px;"
+        style = "display: flex; flex-wrap: wrap; gap: 5px; margin-top: 15px; padding-top: 5px; border-top: solid 1px #808080;"
     ),
     
     # ====================
@@ -160,7 +160,7 @@ div(
                 ),
                 style = "display: flex; flex-wrap: wrap; gap: 5px;"
             ),
-            style = "margin-top: 15px; padding-top: 15px; border-top: solid 1px #808080;"
+            style = "margin-top: 15px; padding-top: 5px; border-top: solid 1px #808080;"
         )
     ),
     
@@ -182,7 +182,7 @@ div(
                 ),
                 style = "width: 250px;"
             ),
-            style = "margin-top: 15px; padding-top: 15px; border-top: solid 1px #808080;"
+            style = "margin-top: 15px; padding-top: 5px; border-top: solid 1px #808080;"
         )
     ),
     

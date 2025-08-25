@@ -74,6 +74,11 @@ get_hospital_unit_options_%widget_id% <- function(){
 # ======================================
 # Update legend values based on indicator and scope selection
 observe_event(c(input$indicator_%widget_id%, input$indicator_scope_%widget_id%), {
+    # Check if legend updates are locked (during configuration loading)
+    if (isTRUE(input$legend_update_lock_%widget_id%)) {
+        return()
+    }
+    
     indicator <- input$indicator_%widget_id%
     indicator_scope <- input$indicator_scope_%widget_id%
     
@@ -99,8 +104,8 @@ observe_event(c(input$indicator_%widget_id%, input$indicator_scope_%widget_id%),
                 legend_2_value <- i18np$t("in_selected_units")
             }
         } else if (indicator == "admission_timeline") {
-            # Timeline specific values will be handled by timeline update logic
-            legend_1_value <- i18np$t("admission_timeline")
+            # Timeline: no legend values needed as legends are hidden
+            legend_1_value <- ""
             legend_2_value <- ""
         } else if (indicator == "readmission_rate") {
             if (indicator_scope == "hospitalization") {

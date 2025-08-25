@@ -434,6 +434,9 @@ observe_event(input$load_configuration_%widget_id%, {
         return()
     }
     
+    # Activate legend update lock to prevent automatic overwriting during config loading
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-legend_update_lock_%widget_id%', true);"))
+    
     # Query database for saved settings
     sql <- glue::glue_sql(
         "SELECT name, value, value_num 
@@ -559,6 +562,11 @@ observe_event(input$load_configuration_%widget_id%, {
             }
         )
     }
+    
+    # Disable legend update lock after all settings are loaded
+    shinyjs::delay(100, {
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-legend_update_lock_%widget_id%', false);"))
+    })
     
     if (nrow(saved_settings) == 0) {
         # No saved configuration found - trigger output display with default settings
