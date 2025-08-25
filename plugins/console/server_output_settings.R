@@ -27,6 +27,12 @@
 # - Dynamic UI updates based on user selections
 # - Programming language-specific output type filtering
 # - Input validation and error handling
+# 
+# UPDATE LOCK MECHANISM:
+# - Available for preventing automatic field updates during configuration loading
+# - Use input$update_lock_%widget_id% to prevent observe_event conflicts
+# - Pattern: if (isTRUE(input$update_lock_%widget_id%)) { return() }
+# - Currently not needed but ready for future use if observe_event conflicts arise
 
 # ======================================
 # CENTRALIZED INPUT DEFINITIONS

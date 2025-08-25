@@ -500,6 +500,14 @@ observe_event(input$load_configuration_%widget_id%, {
         return()
     }
     
+    # ======================================
+    # UPDATE LOCK MECHANISM
+    # ======================================
+    # Activate update lock to prevent automatic field updates during configuration loading
+    # This prevents observe_event reactions in server_output_settings.R from overwriting
+    # the values we're loading from the saved configuration
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_lock_%widget_id%', true);"))
+    
     # Query database for saved settings
     sql <- glue::glue_sql(
         "SELECT name, value, value_num 
@@ -625,6 +633,15 @@ observe_event(input$load_configuration_%widget_id%, {
             }
         )
     }
+    
+    # ======================================
+    # DISABLE UPDATE LOCK
+    # ======================================
+    # Disable update lock after all settings are loaded (with small delay to ensure completion)
+    # This re-enables automatic field updates in server_output_settings.R
+    shinyjs::delay(100, {
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_lock_%widget_id%', false);"))
+    })
     
     if (nrow(saved_settings) == 0) {
         # No saved configuration found - trigger output display with default settings
