@@ -2,6 +2,34 @@
 
 This file provides guidance for working with LinkR plugins in this directory.
 
+## Plugin Directory Mapping
+
+**IMPORTANT**: At the start of each Claude Code session, create a mapping between human-readable plugin names and their SHA-256 hash directory names by following these steps:
+
+1. **List all plugin directories**: Use `LS` tool to list all directories in `/Users/borisdelange/linkr_files/plugins/`
+2. **Read plugin.xml files**: For each SHA-256 hash directory, read the `plugin.xml` file using the `Read` tool
+3. **Extract key information** from each plugin.xml:
+   - `unique_id`: The SHA-256 hash identifier
+   - `name_en`: English plugin name (human-readable)
+   - `name_fr`: French plugin name (human-readable)  
+   - `short_description_en`: Brief English description
+   - `short_description_fr`: Brief French description
+4. **Create mental mapping**: Associate readable names with directory hashes for easier communication
+
+**XML Structure Example**:
+```xml
+<plugin>
+    <unique_id>da1bc28378d0ccc42cbdef8f472e4cd0b3da3e60d7bc19832c1fb9630a3bd043</unique_id>
+    <name_en>Admissions and Demographics</name_en>
+    <name_fr>Admissions et démographie</name_fr>
+    <short_description_en>Hospital admissions and patient demographics analysis</short_description_en>
+    <short_description_fr>Analyse des admissions hospitalières et démographie des patients</short_description_fr>
+    <!-- other metadata -->
+</plugin>
+```
+
+**Usage**: After creating this mapping, you can reference plugins by their readable names (e.g., "Admissions et démographie" instead of "da1bc28378d0...") and automatically know which directory to work with.
+
 ## Plugin Architecture
 
 LinkR plugins are modular widget components that extend the application's functionality for healthcare data visualization and analysis using the OMOP Common Data Model. Each plugin follows a standardized structure with unique SHA-256 hash identifiers.
@@ -22,6 +50,8 @@ plugin_unique_id/          # SHA-256 hash directory name (e.g., b205c8c15d31cdbb
 ### Required Files
 
 #### plugin.xml
+**IMPORTANT**: Plugin.xml files are automatically generated and managed by the LinkR application. DO NOT manually modify these files as they will be overwritten by the system.
+
 XML configuration defining:
 - Plugin metadata (`unique_id`, `version`, `name_en`, `name_fr`, `type`)
 - Author information and creation/update timestamps
