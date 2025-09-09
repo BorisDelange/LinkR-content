@@ -2,6 +2,51 @@
 # ui_user_configurations.R - User Configuration Management Interface
 # ==========================================
 
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  ⚠️  DO NOT MODIFY - CORE PLUGIN FRAMEWORK  ⚠️                             ██
+# ██                                                                            ██
+# ██  This file is part of the plugin framework and works automatically.        ██
+# ██  Modifications are NOT required and may break functionality.               ██
+# ██  Only modify if you have specific advanced requirements.                   ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# ADMISSIONS AND DEMOGRAPHICS PLUGIN - USER CONFIGURATIONS UI FILE
+# 
+# This file defines the user configuration management interface for the Admissions and Demographics plugin.
+# It provides functionality for users to save, load, rename, and manage different hospital analysis presets,
+# allowing them to quickly switch between different healthcare indicators and analysis configurations.
+# 
+# HOSPITAL-SPECIFIC CONFIGURATION MANAGEMENT:
+# - Save/restore healthcare indicator settings (patient count, admissions, mortality)
+# - Preserve hospital unit selections and analysis scope choices
+# - Store legend customizations and chart parameters for medical visualizations
+# - Manage plot titles and demographic analysis preferences
+# - Database integration handled automatically by the plugin framework
+# 
+# FEATURES PROVIDED:
+# - Create new configuration presets with custom names
+# - Select and load existing configurations from dropdown
+# - Rename existing configurations with validation and duplicate checking
+# - Delete unwanted configurations with confirmation dialog
+# - Modal dialogs for user interactions (create/rename/delete)
+# - Integration with the main widget's database storage system
+# 
+# USER WORKFLOW:
+# 1. User configures healthcare indicators and parameters in the output_settings panel
+# 2. User clicks "Create Configuration" to save current hospital analysis settings
+# 3. User can switch between configurations via dropdown selection
+# 4. User can rename configurations to better organize their hospital analysis presets
+# 5. User can delete configurations they no longer need
+# 
+# DATABASE INTEGRATION:
+# - Configurations are automatically saved to the widgets_options table
+# - Each configuration stores all current widget parameters and code
+# - Configuration names are validated and updated in real-time
+# - The dropdown options are populated from database queries in ui.R
+# - No additional database setup required - handled by the template framework
+
 tagList(
     # ====================
     # CREATE AND RENAME CONFIGURATION MODALS

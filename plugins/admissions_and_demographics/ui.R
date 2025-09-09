@@ -2,6 +2,40 @@
 # UI - Main interface file
 # ==========================================
 
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 OPTIONAL CUSTOMIZATION - PLUGIN ENHANCEMENT  🔧                        ██
+# ██                                                                            ██
+# ██  This file provides default functionality that works out-of-the-box.       ██
+# ██  Customize only if you need specific features or modifications.            ██
+# ██  Safe to use as-is for standard plugin requirements.                       ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# ADMISSIONS AND DEMOGRAPHICS PLUGIN - UI MAIN FILE
+# 
+# This file defines the main user interface structure for the Admissions and Demographics plugin.
+# It creates a responsive layout with auto-hiding navigation, resizable panels, and 
+# access-controlled components based on user permissions for hospital analytics.
+# 
+# HOSPITAL-SPECIFIC UI COMPONENTS:
+# - Healthcare indicator visualization output area (charts, statistics, demographics)
+# - Hospital indicator selection interface with OMOP care site integration
+# - Analysis scope controls and hospital unit selection
+# - User configurations dropdown for saved hospital analysis presets
+# 
+# UI ARCHITECTURE:
+# - Auto-hiding top navigation bar that appears on hover
+# - Resizable split-panel layout (analytics output on left, settings/code on right)
+# - Access-controlled buttons (code editor, save functions) based on user permissions
+# - Side-by-side toggle for different viewing modes
+# 
+# MAIN COMPONENTS:
+# - output: Left panel displaying execution results (hospital indicators, charts, statistics)
+# - output_settings: Right panel with no-code configuration interface
+# - code: Code editor panel (can replace or share space with output_settings)
+# - user_configurations: Full-screen configuration management interface
+
 # ======================================
 # LOAD USER CONFIGURATIONS FROM DATABASE
 # ======================================

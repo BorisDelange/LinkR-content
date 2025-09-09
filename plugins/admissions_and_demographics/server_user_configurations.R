@@ -2,6 +2,63 @@
 # server_user_configurations.R - User Configurations Server Logic
 # ==========================================
 
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
+# ██                                                                            ██
+# ██  This file MUST be customized for plugins with complex dropdown logic.    ██
+# ██  Follow the template patterns and implement your cascade logic.           ██
+# ██  See comments and examples for guidance.                                  ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# ADMISSIONS AND DEMOGRAPHICS PLUGIN - USER CONFIGURATIONS SERVER FILE
+# 
+# This file handles the server-side logic for user configuration management.
+# It provides comprehensive functionality for creating, selecting, renaming, 
+# deleting, persisting, loading, and saving user configuration presets for hospital 
+# indicators and demographic analysis, allowing users to save and quickly switch 
+# between different analysis scenarios.
+# 
+# ADMISSIONS-SPECIFIC CONFIGURATION MANAGEMENT:
+# - Save/restore healthcare indicator selections (patient count, admissions, mortality, etc.)
+# - Preserve hospital unit selections and analysis scope settings
+# - Store legend customizations and chart parameters
+# - Manage plot title and axis label configurations
+# - Database integration handled automatically by the plugin framework
+# 
+# CORE FUNCTIONALITY:
+# - Create new configuration presets with validation
+# - Select and load existing configurations from database
+# - Rename configurations with validation and duplicate checking
+# - Delete configurations with confirmation dialogs
+# - Automatic database persistence of all configuration operations
+# - Save current widget settings to selected configuration
+# - Load saved configuration settings and apply to UI components
+# - Manual and automatic save triggers for configuration updates
+# - UI state management and visual feedback
+# - Integration with the main widget's settings system
+# 
+# USER WORKFLOW:
+# 1. User configures healthcare indicators and parameters in output_settings panel
+# 2. User creates a new configuration to save current hospital analysis settings
+# 3. User can switch between configurations via dropdown
+# 4. Selected configurations are automatically loaded from database
+# 5. User can rename configurations to better organize their hospital analysis presets
+# 6. User can manually save changes to current configuration
+# 7. User can delete configurations they no longer need
+# 8. All settings persist across sessions via database storage
+# 
+# DATABASE INTEGRATION:
+# - All operations automatically saved to widgets_options table
+# - Configurations linked to specific widgets via widget_id
+# - Settings persistence handled by automated save/load mechanisms
+# - Configuration loading retrieves all saved widget settings
+# - Configuration saving stores current UI state to database
+# - Configuration renaming updates database records in real-time
+# - Save triggers handle both manual and automatic persistence
+# - No additional setup required - works out of the box
+
 # ======================================
 # UI STYLING CONFIGURATION
 # ======================================
@@ -94,7 +151,7 @@ observe_event(input$close_rename_user_configuration_modal_%widget_id%, {
 # ======================================
 
 # Function to create new user configuration with validation
-add_user_configuration_%widget_id% <- function(configuration_name, notification = TRUE) {
+add_user_configuration_%widget_id% <- function(configuration_name, default_user_configuration = FALSE) {
     
     # Validate configuration name
     empty_name <- TRUE
@@ -179,20 +236,30 @@ add_user_configuration_%widget_id% <- function(configuration_name, notification 
         value = new_id
     )
     
-    # Reset code editor to empty state for new configuration
-    shinyAce::updateAceEditor(session, "code_%widget_id%", value = "")
-    
     # Close modal
     shinyjs::hide("add_user_configuration_modal_%widget_id%")
     
-    # Show success message if notifications enabled
-    if (notification) {
+    # Return to previous page (exit user configurations tab)
+    # Check if side-by-side mode is enabled to determine which tab to show
+    side_by_side <- length(input$output_and_settings_side_by_side_%widget_id%) > 0 && input$output_and_settings_side_by_side_%widget_id%
+    target_tab <- if (side_by_side) "output_settings" else "output"
+    
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', '", target_tab, "');"))
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());"))
+    
+    # Generate code from current settings and execute it
+    shinyjs::delay(200, {
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
+    })
+    
+    # Show success message only for manually created configurations
+    if (!default_user_configuration) {
         show_message_bar("new_user_configuration_added", "success")
     }
 }
 
 # Auto-create default configuration when widget loads
-shinyjs::delay(500, add_user_configuration_%widget_id%(i18np$t("configuration_1"), notification = FALSE))
+shinyjs::delay(1000, add_user_configuration_%widget_id%(i18np$t("configuration_1"), default_user_configuration = TRUE))
 
 # Handle user confirmation to create new configuration
 observe_event(input$add_user_configuration_%widget_id%, {
@@ -434,8 +501,8 @@ observe_event(input$load_configuration_%widget_id%, {
         return()
     }
     
-    # Activate legend update lock to prevent automatic overwriting during config loading
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-legend_update_lock_%widget_id%', true);"))
+    # Activate update lock to prevent automatic overwriting during config loading
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_lock_%widget_id%', true);"))
     
     # Query database for saved settings
     sql <- glue::glue_sql(
@@ -563,20 +630,28 @@ observe_event(input$load_configuration_%widget_id%, {
         )
     }
     
-    # Disable legend update lock after all settings are loaded
+    # Disable update lock after all settings are loaded
     shinyjs::delay(100, {
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-legend_update_lock_%widget_id%', false);"))
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_lock_%widget_id%', false);"))
     })
+    
+    # Navigate to appropriate tab after configuration loading
+    # Check if side-by-side mode is enabled to determine which tab to show
+    side_by_side <- length(input$output_and_settings_side_by_side_%widget_id%) > 0 && input$output_and_settings_side_by_side_%widget_id%
+    target_tab <- if (side_by_side) "output_settings" else "output"
+    
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', '", target_tab, "');"))
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());"))
     
     if (nrow(saved_settings) == 0) {
         # No saved configuration found - trigger output display with default settings
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
+        shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());")))
     }
     
     # Auto-execute if enabled (either from saved settings or defaults)
     else if (auto_update) {
         shinyjs::delay(500, {
-            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
         })
     }
 })

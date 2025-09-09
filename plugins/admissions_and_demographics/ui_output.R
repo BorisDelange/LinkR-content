@@ -1,6 +1,36 @@
 # ==========================================
-# ui_output.R - Output Display Interface
+# ui_output.R - Hospital Indicators Output Display Interface
 # ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  ⚠️  DO NOT MODIFY - CORE PLUGIN FRAMEWORK  ⚠️                             ██
+# ██                                                                            ██
+# ██  This file is part of the plugin framework and works automatically.        ██
+# ██  Modifications are NOT required and may break functionality.               ██
+# ██  Only modify if you have specific advanced requirements.                   ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# ADMISSIONS AND DEMOGRAPHICS PLUGIN - OUTPUT DISPLAY UI FILE
+# 
+# This file defines the output display containers for the Admissions and Demographics plugin.
+# It provides specialized containers for healthcare analytics visualizations including
+# hospital indicators, demographic charts, and medical statistics displays.
+# 
+# HOSPITAL-SPECIFIC OUTPUT CONTAINERS:
+# - UI output container for indicator cards and statistics displays
+# - Plot output container for Plotly medical visualizations (timelines, demographics)
+# - Error message container for healthcare data validation feedback
+# - Responsive layout optimized for hospital analytics and medical data presentation
+# 
+# OUTPUT TYPES SUPPORTED:
+# - Patient count and admission statistics cards
+# - Timeline charts for admission patterns
+# - Demographic visualizations (age, gender distributions)
+# - Hospital unit analysis displays
+# - Mortality and length of stay indicators
+# - Error handling for OMOP data integration issues
 
 div(
     # ====================

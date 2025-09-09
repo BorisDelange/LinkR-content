@@ -12,17 +12,18 @@
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - CODE EDITOR UI FILE
+# ADMISSIONS AND DEMOGRAPHICS PLUGIN - CODE EDITOR UI FILE
 # 
-# This file defines the code editor interface for the widget plugin template.
+# This file defines the code editor interface for the Admissions and Demographics plugin.
 # It provides a full-featured R code editor with syntax highlighting, keyboard shortcuts,
-# and integration with the main widget interface.
+# and integration with hospital analytics functionality.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - The default configuration should work for most R-based widgets
-# - Customize keyboard shortcuts if needed for specific plugin requirements
-# - Adjust editor settings (font size, theme, etc.) based on plugin needs
-# - Consider changing the mode if your plugin uses a different language
+# HOSPITAL-SPECIFIC CODE EDITOR FEATURES:
+# - Hospital indicator code generation and execution
+# - OMOP healthcare data integration
+# - Medical visualization code templates (charts, demographics, statistics)
+# - Healthcare analytics code management
+# - Real-time code updates based on hospital indicator selections
 # 
 # FEATURES:
 # - R syntax highlighting and auto-completion

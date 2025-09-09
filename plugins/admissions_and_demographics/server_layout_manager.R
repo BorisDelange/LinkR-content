@@ -2,6 +2,29 @@
 # server_layout_manager.R - Dynamic Layout Management
 # ==========================================
 
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  ⚠️  DO NOT MODIFY - CORE PLUGIN FRAMEWORK  ⚠️                             ██
+# ██                                                                            ██
+# ██  This file is part of the plugin framework and works automatically.        ██
+# ██  Modifications are NOT required and may break functionality.               ██
+# ██  Only modify if you have specific advanced requirements.                   ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# ADMISSIONS AND DEMOGRAPHICS PLUGIN - LAYOUT MANAGER SERVER FILE
+# 
+# This file manages the dynamic layout system for the Admissions and Demographics plugin.
+# It provides a sophisticated resizable panel interface optimized for hospital analytics visualization
+# by allowing flexible workspace arrangements between medical indicators output and configuration panels.
+# 
+# HOSPITAL-SPECIFIC LAYOUT FEATURES:
+# - Optimized for healthcare indicator display and hospital data configuration
+# - Automatic panel sizing for medical charts and demographic visualizations
+# - Responsive layout for hospital unit selection controls
+# - Panel width preferences automatically saved to database
+# - Framework functionality works without modification
+
 # ======================================
 # PANEL LAYOUT REFRESH
 # ======================================

@@ -1,5 +1,26 @@
 # ==========================================
-# server_code.R - Code Editor Server Logic
+# server_code.R - Hospital Indicators Code Editor Server Logic
+# ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
+# ██                                                                            ██
+# ██  This file handles hospital-specific code generation and execution.        ██
+# ██  Manages healthcare indicator routing and OMOP data integration.           ██
+# ██  Customize the generation logic for your specific use case.               ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# ADMISSIONS AND DEMOGRAPHICS PLUGIN - CODE EDITOR SERVER FILE
+# 
+# Handles hospital-specific code editor functionality including:
+# - Healthcare indicator code generation based on indicator type (patient count, admissions, demographics)
+# - OMOP medical data integration with care site filtering
+# - Code execution controller with hospital-specific parameters
+# - Auto-execution triggers based on healthcare data updates
+# - Indicator type routing to specialized generation modules (admissions, demographics)
+#
 # ==========================================
 
 # ======================================
@@ -116,10 +137,10 @@ observe_event(input$display_output_%widget_id%, {
                 indicator = indicator,
                 indicator_scope = indicator_scope,
                 hospital_units = hospital_units,
-                title = input$timeline_title_%widget_id%,        # Chart title
-                x_label = input$timeline_x_label_%widget_id%,    # X-axis label (usually time)
-                y_label = input$timeline_y_label_%widget_id%,    # Y-axis label (metric name)
-                nb_bins = input$timeline_nb_bins_%widget_id%     # Number of histogram bins
+                title = input$plot_title_%widget_id%,        # Chart title
+                x_label = input$x_label_%widget_id%,    # X-axis label (usually time)
+                y_label = input$y_label_%widget_id%,    # Y-axis label (metric name)
+                nb_bins = input$nb_bins_%widget_id%     # Number of histogram bins
             ),
             
             # ====================
@@ -138,7 +159,7 @@ observe_event(input$display_output_%widget_id%, {
                 indicator = indicator,
                 indicator_scope = indicator_scope,
                 hospital_units = hospital_units,
-                title = input$timeline_title_%widget_id%,
+                title = input$plot_title_%widget_id%,
                 legend_1 = input$legend_1_%widget_id%,
                 legend_2 = input$legend_2_%widget_id%
             ),
@@ -187,7 +208,6 @@ observe_event(m$selected_subset, {
     
     # Execute code when data context changes
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-    print("======================================= subset (%widget_id%) ========================")
 })
 
 observe_event(m$subset_dates, {
@@ -198,7 +218,6 @@ observe_event(m$subset_dates, {
     
     # Execute code when data context changes
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-    print("======================================= dates (%widget_id%) ========================")
 })
 
 # ======================================

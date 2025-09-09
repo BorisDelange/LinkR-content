@@ -1,6 +1,42 @@
 # ==========================================
-# server_output_settings.R - Output Configuration Server Logic
+# server_output_settings.R - Hospital Indicators Configuration Server Logic
 # ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
+# ██                                                                            ██
+# ██  This file implements hospital-specific dropdown cascade logic.            ██
+# ██  Healthcare indicators affect UI element visibility and parameters.        ██
+# ██  Includes OMOP data integration and hospital unit management.             ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# ADMISSIONS AND DEMOGRAPHICS PLUGIN - OUTPUT SETTINGS SERVER FILE
+# 
+# This file handles the server-side logic for the hospital indicators configuration interface.
+# It manages user interactions with the no-code settings panel for healthcare analytics
+# and hospital activity monitoring.
+# 
+# HOSPITAL-SPECIFIC FUNCTIONALITY:
+# - Healthcare indicator selection (patient count, admissions, mortality, demographics, etc.)
+# - Hospital unit selection with OMOP care_site integration
+# - Analysis scope configuration (full hospitalization vs specific units)
+# - Dynamic legend updates based on indicator and scope combinations
+# - Chart parameter management (title, axes, bins) for different visualization types
+# - Timeline configuration for admission patterns analysis
+# - Demographic analysis controls for gender and age distributions
+# 
+# DROPDOWN CASCADE LOGIC:
+# - Indicator type affects available UI sections and parameters
+# - Analysis scope affects legend values and hospital unit visibility
+# - Hospital unit selection updates available care sites from OMOP data
+# - Chart type determines which parameter sections are shown
+#
+# UPDATE LOCK MECHANISM:
+# - Prevent automatic field updates during configuration loading using input$update_lock_%widget_id%
+# - This solves conflicts where observe_event reactions overwrite values being loaded from saved configs
+# - Pattern: Check if (isTRUE(input$update_lock_%widget_id%)) { return() } at start of observe_event
 
 # ======================================
 # INPUT CONFIGURATION LIST
@@ -11,11 +47,10 @@ all_inputs_%widget_id% <- list(
     list(id = "hospital_unit", type = "multiselect", default = NULL),
     list(id = "legend_1", type = "text", default = i18np$t("hospitalized_patients")),
     list(id = "legend_2", type = "text", default = ""),
-    list(id = "timeline_title", type = "text", default = ""),
-    list(id = "timeline_x_label", type = "text", default = ""),
-    list(id = "timeline_y_label", type = "text", default = ""),
-    list(id = "timeline_nb_bins", type = "spinbutton", default = 10),
-    list(id = "histogram_nb_bins", type = "spinbutton", default = 10),
+    list(id = "plot_title", type = "text", default = ""),
+    list(id = "x_label", type = "text", default = ""),
+    list(id = "y_label", type = "text", default = ""),
+    list(id = "nb_bins", type = "spinbutton", default = 10),
     list(id = "auto_update", type = "toggle", default = TRUE),
     list(id = "code", type = "code", default = "")
 )
@@ -74,8 +109,8 @@ get_hospital_unit_options_%widget_id% <- function(){
 # ======================================
 # Update legend values based on indicator and scope selection
 observe_event(c(input$indicator_%widget_id%, input$indicator_scope_%widget_id%), {
-    # Check if legend updates are locked (during configuration loading)
-    if (isTRUE(input$legend_update_lock_%widget_id%)) {
+    # Check if updates are locked (during configuration loading)
+    if (isTRUE(input$update_lock_%widget_id%)) {
         return()
     }
     
@@ -191,45 +226,45 @@ observe_event(input$indicator_%widget_id%, {
         # Set default timeline values
         shiny.fluent::updateTextField.shinyInput(
             session, 
-            "timeline_title_%widget_id%", 
+            "plot_title_%widget_id%", 
             value = i18np$t("admission_timeline_title")
         )
         
         shiny.fluent::updateTextField.shinyInput(
             session, 
-            "timeline_x_label_%widget_id%", 
+            "x_label_%widget_id%", 
             value = i18np$t("timeline_x_axis_default")
         )
         
         shiny.fluent::updateTextField.shinyInput(
             session, 
-            "timeline_y_label_%widget_id%", 
+            "y_label_%widget_id%", 
             value = i18np$t("timeline_y_axis_default")
         )
         
         shiny.fluent::updateSpinButton.shinyInput(
             session, 
-            "timeline_nb_bins_%widget_id%", 
+            "nb_bins_%widget_id%", 
             value = 10
         )
     } else if (!is.null(indicator) && indicator == "gender") {
         # Set default values for gender pie chart
         shiny.fluent::updateTextField.shinyInput(
             session, 
-            "timeline_title_%widget_id%", 
+            "plot_title_%widget_id%", 
             value = i18np$t("gender_distribution")
         )
         
-        # Clear other timeline fields not needed for gender
+        # Clear other fields not needed for gender
         shiny.fluent::updateTextField.shinyInput(
             session, 
-            "timeline_x_label_%widget_id%", 
+            "x_label_%widget_id%", 
             value = ""
         )
         
         shiny.fluent::updateTextField.shinyInput(
             session, 
-            "timeline_y_label_%widget_id%", 
+            "y_label_%widget_id%", 
             value = ""
         )
     }
@@ -243,35 +278,25 @@ observe_event(input$indicator_%widget_id%, {
     indicator <- input$indicator_%widget_id%
     
     if (!is.null(indicator)) {
-        # Define which indicators require histogram bins
-        histogram_indicators <- c("average_length_of_stay")
-        
         if (indicator == "admission_timeline") {
-            # For timeline: hide standard legend and histogram, show all timeline fields
+            # For timeline: hide standard legend, show all plot fields
             shinyjs::hide("legend_div_%widget_id%")
-            shinyjs::hide("histogram_div_%widget_id%")
-            shinyjs::show("timeline_div_%widget_id%")
-            shinyjs::show("timeline_x_label_div_%widget_id%")
-            shinyjs::show("timeline_y_label_div_%widget_id%")
-            shinyjs::show("timeline_nb_bins_div_%widget_id%")
+            shinyjs::show("plot_text_div_%widget_id%")
+            shinyjs::show("plot_bins_div_%widget_id%")
+            shinyjs::show("x_label_div_%widget_id%")
+            shinyjs::show("y_label_div_%widget_id%")
         } else if (indicator == "gender") {
-            # For gender: show only title input, hide legend, histogram, and timeline axis/bins inputs
+            # For gender: show only title input, hide legend, axes labels and bins (pie chart has no axes)
             shinyjs::hide("legend_div_%widget_id%")
-            shinyjs::hide("histogram_div_%widget_id%")
-            shinyjs::show("timeline_div_%widget_id%")
-            shinyjs::hide("timeline_x_label_div_%widget_id%")
-            shinyjs::hide("timeline_y_label_div_%widget_id%")
-            shinyjs::hide("timeline_nb_bins_div_%widget_id%")
-        } else if (indicator %in% histogram_indicators) {
-            # For histogram indicators: show standard legend and histogram bins, hide timeline
-            shinyjs::show("legend_div_%widget_id%")
-            shinyjs::show("histogram_div_%widget_id%")
-            shinyjs::hide("timeline_div_%widget_id%")
+            shinyjs::show("plot_text_div_%widget_id%")
+            shinyjs::hide("plot_bins_div_%widget_id%")
+            shinyjs::hide("x_label_div_%widget_id%")
+            shinyjs::hide("y_label_div_%widget_id%")
         } else {
             # For other indicators: show standard legend only
             shinyjs::show("legend_div_%widget_id%")
-            shinyjs::hide("histogram_div_%widget_id%")
-            shinyjs::hide("timeline_div_%widget_id%")
+            shinyjs::hide("plot_text_div_%widget_id%")
+            shinyjs::hide("plot_bins_div_%widget_id%")
         }
     }
 })

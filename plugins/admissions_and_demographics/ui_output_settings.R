@@ -1,6 +1,42 @@
 # ==========================================
-# ui_output_settings.R - Output Configuration Panel
+# ui_output_settings.R - Hospital Indicators Configuration Panel
 # ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
+# ██                                                                            ██
+# ██  This file defines hospital-specific healthcare indicators UI.             ██
+# ██  Handles OMOP care site selection and hospital analysis parameters.       ██
+# ██  Implements complex healthcare domain filtering and indicator controls.    ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# ADMISSIONS AND DEMOGRAPHICS PLUGIN - OUTPUT SETTINGS UI FILE
+# 
+# This file defines the no-code configuration interface for the Admissions and Demographics plugin.
+# It provides user-friendly controls that automatically generate and modify the underlying
+# R code for hospital activity analysis and demographic visualization based on user selections.
+# 
+# HOSPITAL-SPECIFIC INTERACTIVE CONTROLS:
+# - Healthcare indicator selection (patient count, admissions, mortality, demographics, etc.)
+# - Hospital analysis scope choice (full hospitalization vs specific units)
+# - Hospital unit selection with OMOP care_site integration and multi-select support
+# - Dynamic legend configuration that adapts to selected indicators and scope
+# - Chart parameters for timeline analysis (title, axes, bins)
+# - Demographic controls for age and gender distribution analysis
+# - Auto-update preferences for real-time healthcare data integration
+# 
+# IMPORTANT NOTES:
+# - AVOID using conditionalPanel() to show/hide UI elements. Instead, manage this logic
+#   in the server file (server_output_settings.R) using shinyjs::show and shinyjs::hide functions.
+#   This provides better control and maintains consistency with the reactive framework.
+# - Each div element includes an ID attribute to enable dynamic show/hide functionality
+#   using shinyjs::show() and shinyjs::hide() from the server logic. This allows for
+#   conditional display of UI elements based on healthcare indicator selections.
+# - When adding or removing configuration elements, make sure to update both the
+#   CONFIGURATION LOADING FROM DATABASE and CONFIGURATION SAVING TO DATABASE sections
+#   in server_user_configurations.R to ensure user choices are properly saved and restored.
 
 div(
     # ====================
@@ -108,18 +144,18 @@ div(
     ),
     
     # ====================
-    # TIMELINE CONFIGURATION
+    # PLOT TEXT CONFIGURATION
     # ====================
-    # Responsive container for timeline configuration (hidden by default)
+    # Responsive container for plot text fields (title and axis labels)
     shinyjs::hidden(
         div(
-            id = ns("timeline_div_%widget_id%"),
-            # All timeline fields on one responsive row
+            id = ns("plot_text_div_%widget_id%"),
+            # Timeline text fields row
             div(
-                # Timeline title
+                # Plot title
                 div(
                     shiny.fluent::TextField.shinyInput(
-                        ns("timeline_title_%widget_id%"),
+                        ns("plot_title_%widget_id%"),
                         label = i18np$t("plot_title"),
                         value = ""
                     ),
@@ -127,9 +163,9 @@ div(
                 ),
                 # X-axis label
                 div(
-                    id = ns("timeline_x_label_div_%widget_id%"),
+                    id = ns("x_label_div_%widget_id%"),
                     shiny.fluent::TextField.shinyInput(
-                        ns("timeline_x_label_%widget_id%"),
+                        ns("x_label_%widget_id%"),
                         label = i18np$t("x_axis_legend"),
                         value = ""
                     ),
@@ -137,26 +173,13 @@ div(
                 ),
                 # Y-axis label
                 div(
-                    id = ns("timeline_y_label_div_%widget_id%"),
+                    id = ns("y_label_div_%widget_id%"),
                     shiny.fluent::TextField.shinyInput(
-                        ns("timeline_y_label_%widget_id%"),
+                        ns("y_label_%widget_id%"),
                         label = i18np$t("y_axis_legend"),
                         value = ""
                     ),
-                    style = "width: 250px; flex: 0 0 auto; margin-right: 15px;"
-                ),
-                # Number of bins
-                div(
-                    id = ns("timeline_nb_bins_div_%widget_id%"),
-                    div(i18np$t("nb_bins"), style = "font-weight: 600; margin-bottom: 5px;"),
-                    shiny.fluent::SpinButton.shinyInput(
-                        ns("timeline_nb_bins_%widget_id%"),
-                        value = 10,
-                        min = 1,
-                        max = 200,
-                        step = 5
-                    ),
-                    style = "width: 250px; flex: 0 0 auto; margin-top: 5px;"
+                    style = "width: 250px; flex: 0 0 auto;"
                 ),
                 style = "display: flex; flex-wrap: wrap; gap: 5px;"
             ),
@@ -165,19 +188,19 @@ div(
     ),
     
     # ====================
-    # HISTOGRAM BINS CONFIGURATION
+    # PLOT BINS CONFIGURATION
     # ====================
-    # Number of bins for histogram charts (hidden by default)
+    # Number of bins for plot charts (separate section)
     shinyjs::hidden(
         div(
-            id = ns("histogram_div_%widget_id%"),
+            id = ns("plot_bins_div_%widget_id%"),
             div(
                 div(i18np$t("nb_bins"), style = "font-weight: 600; margin-bottom: 5px;"),
                 shiny.fluent::SpinButton.shinyInput(
-                    ns("histogram_nb_bins_%widget_id%"),
+                    ns("nb_bins_%widget_id%"),
                     value = 10,
-                    min = 5,
-                    max = 100,
+                    min = 1,
+                    max = 200,
                     step = 5
                 ),
                 style = "width: 250px;"
@@ -185,6 +208,7 @@ div(
             style = "margin-top: 15px; padding-top: 5px; border-top: solid 1px #808080;"
         )
     ),
+    
     
     # ====================
     # AUTOMATIC UPDATES TOGGLE
