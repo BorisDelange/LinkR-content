@@ -12,17 +12,17 @@
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - LAYOUT MANAGER SERVER FILE
+# CONSOLE PLUGIN - LAYOUT MANAGER SERVER FILE
 # 
-# This file manages the dynamic layout system for the widget plugin template.
-# It provides a sophisticated resizable panel interface that enhances user experience
-# by allowing flexible workspace arrangements.
+# This file manages the dynamic layout system for the Console plugin.
+# It provides a sophisticated resizable panel interface that enhances the coding experience
+# by allowing flexible workspace arrangements for code editing and output viewing.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - This file should work without modification for most plugins
-# - The layout system automatically adapts to different panel configurations
-# - Panel width preferences are automatically saved to the database
-# - No customization typically needed unless adding new panel types
+# CONSOLE-SPECIFIC LAYOUT FEATURES:
+# - Optimized for code editor and output panel arrangements
+# - Supports multiple output types with appropriate panel sizing
+# - Remembers layout preferences for different programming languages
+# - Provides optimal defaults for code development workflows
 # 
 # FEATURES PROVIDED:
 # - Side-by-side vs full-width layout modes for optimal screen real estate usage

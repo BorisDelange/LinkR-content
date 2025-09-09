@@ -83,6 +83,15 @@ output_types$python <- list(
 
 # Update output type options when programming language changes
 observe_event(input$prog_language_%widget_id%, {
+    # ======================================
+    # UPDATE LOCK MECHANISM
+    # ======================================
+    # Check if updates are locked (during configuration loading)
+    # This prevents automatic field updates from overwriting values being loaded from saved configurations
+    if (isTRUE(input$update_lock_%widget_id%)) {
+        return()
+    }
+    
     if (!is.null(input$prog_language_%widget_id%)) {
         language <- input$prog_language_%widget_id%
         
@@ -111,6 +120,11 @@ if (!("projects_widgets_settings" %in% user_accesses)) {
 # Optional: Add conditional UI logic based on selections
 # Example: Show/hide specific settings based on output type
 observe_event(input$output_%widget_id%, {
+    # Check if updates are locked (during configuration loading)
+    if (isTRUE(input$update_lock_%widget_id%)) {
+        return()
+    }
+    
     output_type <- input$output_%widget_id%
     
     if (!is.null(output_type)) {
@@ -132,6 +146,11 @@ observe_event(input$output_%widget_id%, {
 
 # Validate output type when language changes to ensure compatibility
 observe_event(input$prog_language_%widget_id%, {
+    # Check if updates are locked (during configuration loading)
+    if (isTRUE(input$update_lock_%widget_id%)) {
+        return()
+    }
+    
     if (!is.null(input$prog_language_%widget_id%) && !is.null(input$output_%widget_id%)) {
         language <- input$prog_language_%widget_id%
         current_output <- input$output_%widget_id%

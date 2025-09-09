@@ -4,27 +4,27 @@
 
 # ████████████████████████████████████████████████████████████████████████████████
 # ██                                                                            ██
-# ██  ⚠️  DO NOT MODIFY - CORE PLUGIN FRAMEWORK  ⚠️                             ██
+# ██  🔧 CONSOLE PLUGIN - OPTIMIZED CONFIGURATION SYSTEM  🔧                    ██
 # ██                                                                            ██
-# ██  This file is part of the plugin framework and works automatically.        ██
-# ██  Modifications are NOT required and may break functionality.               ██
-# ██  Only modify if you have specific advanced requirements.                   ██
+# ██  This file implements the configuration management for the Console plugin. ██
+# ██  Handles code presets for different programming languages and outputs.    ██
+# ██  Based on the plugin template with Console-specific optimizations.        ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - USER CONFIGURATIONS SERVER FILE
+# CONSOLE PLUGIN - USER CONFIGURATIONS SERVER FILE
 # 
 # This file handles the server-side logic for user configuration management.
 # It provides comprehensive functionality for creating, selecting, renaming, 
 # deleting, persisting, loading, and saving user configuration presets, 
 # allowing users to save and quickly switch between different analysis scenarios.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - This file should work without modification for most plugins
-# - The configuration system automatically integrates with your plugin's settings
-# - Database operations are handled automatically by the template framework
-# - Validation and UI styling are already implemented
-# - No customization typically needed unless adding special configuration features
+# CONSOLE-SPECIFIC CONFIGURATION FEATURES:
+# - Saves complete code editor contents for each configuration
+# - Preserves programming language selection (R/Python)
+# - Maintains output type preferences per configuration
+# - Supports different code presets for various analysis scenarios
+# - Handles language-specific output type cascading during configuration loading
 # 
 # CORE FUNCTIONALITY:
 # - Create new configuration presets with validation
@@ -114,6 +114,14 @@ observe_event(input$show_user_configurations_tab_%widget_id%, {
 
 # Show modal dialog for creating new user configuration
 observe_event(input$create_user_configuration_%widget_id%, {
+    # Clear the text field and remove any error message
+    shiny.fluent::updateTextField.shinyInput(
+        session, 
+        "user_configuration_name_add_%widget_id%", 
+        value = "",
+        errorMessage = NULL
+    )
+    
     shinyjs::show("add_user_configuration_modal_%widget_id%")
     
     # Focus on the text field after a small delay to ensure modal is visible
@@ -160,7 +168,23 @@ observe_event(input$close_rename_user_configuration_modal_%widget_id%, {
 # ======================================
 
 # Function to create new user configuration with validation
-add_user_configuration_%widget_id% <- function(configuration_name, notification = TRUE) {
+add_user_configuration_%widget_id% <- function(configuration_name, default_user_configuration = FALSE) {
+    
+    # For default configuration, check if any configuration already exists
+    if (default_user_configuration) {
+        # Check if configurations already exist
+        sql <- glue::glue_sql(
+            "SELECT COUNT(*) as count FROM widgets_options 
+             WHERE widget_id = %widget_id% AND category = 'user_configurations' AND name = 'configuration_name'", 
+            .con = m$db
+        )
+        existing_count <- DBI::dbGetQuery(m$db, sql)$count[1]
+        
+        if (existing_count > 0) {
+            # Configurations already exist, don't create default
+            return()
+        }
+    }
     
     # Validate configuration name
     empty_name <- TRUE
@@ -251,14 +275,27 @@ add_user_configuration_%widget_id% <- function(configuration_name, notification 
     # Close modal
     shinyjs::hide("add_user_configuration_modal_%widget_id%")
     
-    # Show success message if notifications enabled
-    if (notification) {
+    # Return to previous page (exit user configurations tab)
+    # Check if side-by-side mode is enabled to determine which tab to show
+    side_by_side <- length(input$output_and_settings_side_by_side_%widget_id%) > 0 && input$output_and_settings_side_by_side_%widget_id%
+    target_tab <- if (side_by_side) "output_settings" else "output"
+    
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', '", target_tab, "');"))
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());"))
+    
+    # Generate code from current settings and execute it
+    shinyjs::delay(200, {
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
+    })
+    
+    # Show success message only for manually created configurations
+    if (!default_user_configuration) {
         show_message_bar("new_user_configuration_added", "success")
     }
 }
 
 # Auto-create default configuration when widget loads
-shinyjs::delay(1000, add_user_configuration_%widget_id%(i18np$t("configuration_1"), notification = FALSE))
+shinyjs::delay(1000, add_user_configuration_%widget_id%(i18np$t("configuration_1"), default_user_configuration = TRUE))
 
 # Handle user confirmation to create new configuration
 observe_event(input$add_user_configuration_%widget_id%, {
@@ -413,6 +450,14 @@ observe_event(input$user_configuration_%widget_id%, {
     )
     DBI::dbAppendTable(m$db, "widgets_options", new_data)
     
+    # Return to previous page (exit user configurations tab)
+    # Check if side-by-side mode is enabled to determine which tab to show
+    side_by_side <- length(input$output_and_settings_side_by_side_%widget_id%) > 0 && input$output_and_settings_side_by_side_%widget_id%
+    target_tab <- if (side_by_side) "output_settings" else "output"
+    
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', '", target_tab, "');"))
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());"))
+    
     # Trigger loading of output settings and code from selected configuration
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-load_configuration_%widget_id%', Math.random());"))
 })
@@ -506,6 +551,8 @@ observe_event(input$load_configuration_%widget_id%, {
     # Activate update lock to prevent automatic field updates during configuration loading
     # This prevents observe_event reactions in server_output_settings.R from overwriting
     # the values we're loading from the saved configuration
+    # Example: if loading saved legend values, prevent dropdown change reactions from
+    # automatically updating those same legend fields with default values
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_lock_%widget_id%', true);"))
     
     # Query database for saved settings
@@ -645,7 +692,7 @@ observe_event(input$load_configuration_%widget_id%, {
     
     if (nrow(saved_settings) == 0) {
         # No saved configuration found - trigger output display with default settings
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
+        shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());")))
     }
     
     # Auto-execute if enabled (either from saved settings or defaults)

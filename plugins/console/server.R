@@ -4,30 +4,30 @@
 
 # ████████████████████████████████████████████████████████████████████████████████
 # ██                                                                            ██
-# ██  🔧 OPTIONAL CUSTOMIZATION - PLUGIN ENHANCEMENT  🔧                        ██
+# ██  ⚠️ DO NOT MODIFY - CORE FRAMEWORK FILE  ⚠️                                ██
 # ██                                                                            ██
-# ██  This file provides default functionality that works out-of-the-box.       ██
-# ██  Customize only if you need specific features or modifications.            ██
-# ██  Safe to use as-is for standard plugin requirements.                       ██
+# ██  This file works automatically and requires no customization.             ██
+# ██  It handles core navigation, layout management, and module integration.   ██
+# ██  Modifying this file may break the plugin framework functionality.        ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - SERVER MAIN FILE
+# CONSOLE PLUGIN - SERVER MAIN FILE
 # 
-# This file serves as the main server logic controller for the widget plugin template.
+# This file serves as the main server logic controller for the Console plugin.
 # It manages tab navigation and coordinates between different functional modules.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# Add your new server script files in the "IMPORT SERVER MODULES" section at the bottom
-# of this file using the %import_script('your_new_server_file.R')% syntax.
+# CONSOLE PLUGIN TAB SYSTEM:
+# - output: Displays the execution result of R or Python code with multiple output formats
+# - output_settings: Programming language and output type selection interface
+# - code: Advanced code editor supporting R and Python with syntax highlighting
+# - user_configurations: Save and manage different code presets and language configurations
 # 
-# TAB SYSTEM OVERVIEW:
-# - output: Displays the execution result of the code (typically a chart, plot, or visualization)
-# - output_settings: No-code interface with graphical controls to configure the output parameters
-# - code: Code editor where users can write/modify code. Connected to output_settings in a 
-# low-code approach where output_settings parameters automatically generate code
-# - user_configurations: Interface to create, save, and manage different configurations 
-# (saves both output_settings parameters and code content)
+# CONSOLE-SPECIFIC FEATURES:
+# - Multi-language code execution (R and Python)
+# - Dynamic output routing based on selected output type
+# - Language-aware code templates and examples
+# - Cross-language configuration management
 
 # ======================================
 # TAB NAVIGATION SYSTEM
