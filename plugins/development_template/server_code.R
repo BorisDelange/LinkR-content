@@ -325,7 +325,7 @@ observe_event(input$run_code_%widget_id%, {
         display_message <- if (!is.null(error_message)) {
             error_message
         } else {
-            "No output generated. Please check your code and settings."
+            i18np$t("no_output_generated")
         }
         
         output$error_message_%widget_id% <- renderUI(

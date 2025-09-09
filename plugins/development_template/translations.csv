@@ -17,6 +17,7 @@ histogram,Histogram,Histogramme
 modif_saved,Updates saved,Modifications enregistrées
 name_already_used,This name is already used,Ce nom est déjà utilisé
 new_user_configuration_added,New user configuration added,Nouvelle configuration utilisateur ajoutée
+no_output_generated,No output generated. Please check your code and settings.,Aucun résultat généré. Veuillez vérifier votre code et vos réglages.
 no_user_configuration_selected,No user configuration selected,Aucune configuration utilisateur sélectionnée
 output_and_settings_side_by_side,Output and settings/editor side by side,Résultats et réglages/éditeur côte à côte
 output_type,Output type,Format de sortie
