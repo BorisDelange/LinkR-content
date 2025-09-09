@@ -972,7 +972,7 @@ observe_event(input$load_configuration_%widget_id%, {
     
     if (nrow(saved_settings) == 0) {
         # No saved configuration found - trigger output display with default settings
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
+        shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());")))
     }
     
     # Auto-execute if enabled (either from saved settings or defaults)
