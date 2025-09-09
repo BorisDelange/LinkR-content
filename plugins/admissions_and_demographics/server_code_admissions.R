@@ -1,6 +1,66 @@
 # ==========================================
-# server_code_admissions.R
+# server_code_admissions.R - Hospital Admissions Code Generation
 # ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 REQUIRES CUSTOMIZATION - ADMISSIONS LOGIC  🔧                          ██
+# ██                                                                            ██
+# ██  This file generates R code for hospital admission indicators.             ██
+# ██  Customize the indicator calculations for your healthcare needs.           ██
+# ██  Handles OMOP data queries and hospital unit filtering.                    ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# ADMISSIONS AND DEMOGRAPHICS PLUGIN - HOSPITAL ADMISSIONS CODE GENERATION
+# 
+# This file contains specialized functions for generating R code that analyzes 
+# hospital admission indicators using OMOP Common Data Model data. It focuses
+# on admission-related metrics such as patient counts, admission volumes,
+# mortality rates, length of stay analysis, and occupancy metrics.
+# 
+# CORE FUNCTIONALITY:
+# - Hospital admission indicator code generation with OMOP data integration
+# - Interactive card-based visualizations with tooltips and hover effects
+# - Timeline charts for admission patterns and trends over time
+# - Care site and hospital unit filtering for targeted analysis
+# - Patient cohort subsetting and temporal data filtering
+# 
+# SUPPORTED ADMISSION INDICATORS:
+# - patient_count: Unique patient count with hospital unit breakdown
+# - admission_count: Total admission volume with readmission analysis
+# - mortality_rate: In-hospital mortality statistics and trends
+# - average_length_of_stay: Length of stay calculations with statistical summaries
+# - bed_occupancy_rate: Hospital capacity utilization and occupancy metrics
+# - readmission_rate: 30-day readmission analysis and quality indicators
+# - admission_timeline: Time-series analysis of admission patterns
+# 
+# VISUALIZATION FEATURES:
+# - Responsive card layouts with healthcare-appropriate color schemes
+# - Dynamic tooltips showing detailed breakdowns by hospital units
+# - Interactive hover effects with real-time positioning
+# - Timeline charts with customizable binning and axis labels
+# - Statistical summary cards with confidence intervals and trend indicators
+# 
+# OMOP INTEGRATION:
+# - VISIT_OCCURRENCE table queries for admission data
+# - PERSON table joins for demographic information
+# - CARE_SITE table filtering for hospital unit selection
+# - DEATH table integration for mortality calculations
+# - Temporal filtering based on visit dates and admission timestamps
+# 
+# CODE GENERATION PATTERNS:
+# - Dynamic R code string construction with parameter substitution
+# - SQL query generation for OMOP database access
+# - HTML/CSS generation for interactive UI elements
+# - JavaScript integration for client-side interactivity
+# - Error handling and data validation code injection
+# 
+# HOSPITAL WORKFLOW INTEGRATION:
+# - Multi-unit analysis with hospital organizational hierarchy
+# - Time-period filtering for reporting cycles and quality metrics
+# - Patient subset integration for targeted population analysis
+# - Configurable legends and labeling for hospital-specific terminology
 
 # Generate HTML code for healthcare indicators using OMOP data
 generate_admissions_ui_code_%widget_id% <- function(indicator = "patient_count", indicator_scope = "hospitalization", hospital_units = c(), legend_1 = "", legend_2 = "") {

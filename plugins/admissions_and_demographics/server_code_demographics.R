@@ -1,6 +1,70 @@
 # ==========================================
-# server_code_demographics.R
+# server_code_demographics.R - Patient Demographics Code Generation
 # ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 REQUIRES CUSTOMIZATION - DEMOGRAPHICS LOGIC  🔧                        ██
+# ██                                                                            ██
+# ██  This file generates R code for patient demographic indicators.            ██
+# ██  Customize the demographic calculations for your population analysis.      ██
+# ██  Handles OMOP person data queries and demographic visualizations.          ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# ADMISSIONS AND DEMOGRAPHICS PLUGIN - PATIENT DEMOGRAPHICS CODE GENERATION
+# 
+# This file contains specialized functions for generating R code that analyzes 
+# patient demographic indicators using OMOP Common Data Model data. It focuses
+# on population characteristics such as age distributions, gender demographics,
+# and other patient attributes relevant to healthcare analytics.
+# 
+# CORE FUNCTIONALITY:
+# - Patient demographic indicator code generation with OMOP person data integration
+# - Age-based analysis with statistical summaries and distribution visualizations
+# - Gender distribution charts with pie charts and proportion analysis
+# - Hospital unit-specific demographic breakdowns and comparisons
+# - Interactive demographic cards with detailed population breakdowns
+# 
+# SUPPORTED DEMOGRAPHIC INDICATORS:
+# - average_age: Mean patient age with standard deviation and confidence intervals
+# - gender: Gender distribution with pie charts and percentage breakdowns
+# - age_distribution: Age group analysis with customizable binning and categories
+# - population_summary: Comprehensive demographic overview cards
+# 
+# VISUALIZATION FEATURES:
+# - Interactive card layouts with demographic-appropriate color schemes
+# - Pie charts for categorical demographic variables (gender, age groups)
+# - Statistical summary cards with population metrics and percentiles
+# - Dynamic tooltips showing detailed demographic breakdowns by hospital units
+# - Responsive layouts adapting to different demographic data types
+# 
+# OMOP INTEGRATION:
+# - PERSON table queries for core demographic information
+# - VISIT_OCCURRENCE table joins for hospitalization context
+# - CARE_SITE table integration for hospital unit demographic analysis
+# - Age calculations using birth_datetime or year_of_birth fields
+# - Gender concept mapping using OMOP vocabulary standards
+# 
+# AGE ANALYSIS FEATURES:
+# - Dynamic age calculation from OMOP person birth data
+# - Age group categorization with customizable ranges
+# - Statistical summary generation (mean, median, quartiles)
+# - Hospital unit comparison of age distributions
+# - Temporal age analysis for admission-specific demographics
+# 
+# GENDER ANALYSIS FEATURES:
+# - Gender distribution pie charts with interactive legends
+# - Proportional analysis with percentage calculations
+# - Hospital unit gender comparison visualizations
+# - OMOP gender concept standardization and mapping
+# 
+# CODE GENERATION PATTERNS:
+# - Demographic-specific R code construction with OMOP schema awareness
+# - Statistical calculation code for population metrics
+# - ggplot2 pie chart generation with custom styling
+# - Interactive HTML element generation for demographic cards
+# - Hospital unit filtering and demographic stratification logic
 
 # Generate HTML code for demographics indicators using OMOP data
 generate_demographics_ui_code_%widget_id% <- function(indicator = "average_age", indicator_scope = "hospitalization", hospital_units = c(), title = "", legend_1 = "", legend_2 = "") {

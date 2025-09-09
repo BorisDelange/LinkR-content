@@ -8,7 +8,7 @@
 # ██                                                                            ██
 # ██  This file handles hospital-specific code generation and execution.        ██
 # ██  Manages healthcare indicator routing and OMOP data integration.           ██
-# ██  Customize the generation logic for your specific use case.               ██
+# ██  Customize the generation logic for your specific use case.                ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 

@@ -1,6 +1,58 @@
 # ==========================================
-# Server - Main file
+# server.R - Admissions and Demographics Plugin Main Server Controller
 # ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  ⚠️ DO NOT MODIFY - CORE FRAMEWORK FILE  ⚠️                                ██
+# ██                                                                            ██
+# ██  This file works automatically and requires no customization.             ██
+# ██  It handles core navigation, layout management, and module integration.   ██
+# ██  Modifying this file may break the plugin framework functionality.        ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# ADMISSIONS AND DEMOGRAPHICS PLUGIN - MAIN SERVER CONTROLLER
+# 
+# This file manages the core server-side functionality for the hospital admissions 
+# and demographics analysis plugin. It orchestrates the four main plugin tabs:
+# output (results display), output_settings (no-code interface), code (editor),
+# and user_configurations (preset management).
+# 
+# CORE RESPONSIBILITIES:
+# - Tab navigation system with access control for code editor functionality
+# - Side-by-side vs full-width layout management with dynamic panel resizing
+# - User access permissions validation for healthcare data and console features
+# - Module integration via %import_script() for specialized server components
+# - Plugin state management and inter-tab communication coordination
+# 
+# HEALTHCARE-SPECIFIC FEATURES:
+# - Hospital unit filtering and care site selection integration
+# - OMOP medical data subset management for patient cohort analysis
+# - Healthcare indicator routing between admissions and demographics modules
+# - Medical data security and access control for sensitive hospital information
+# 
+# TAB ARCHITECTURE:
+# - output: Hospital indicator visualizations (charts, cards, timelines)
+# - output_settings: No-code interface for indicator selection and parameters
+# - code: R code editor for advanced healthcare data analysis (access-controlled)
+# - user_configurations: Save/load analysis presets for different hospital scenarios
+# 
+# LAYOUT MANAGEMENT:
+# - Dynamic split-panel resizing for optimal healthcare data visualization
+# - Responsive design adapting to different screen sizes and medical display requirements
+# - Context-sensitive panel visibility based on user workflow and data availability
+# 
+# ACCESS CONTROL:
+# - projects_widgets_console: Required for R code editor and advanced analysis features
+# - projects_widgets_settings: Required for configuration save/load functionality
+# - Automatic UI element hiding/showing based on user permission levels
+# 
+# INTEGRATION POINTS:
+# - LinkR main application for user management and project context
+# - OMOP Common Data Model for standardized healthcare data access
+# - Hospital information systems via care site and unit selection interfaces
+# - Database persistence layer for user configuration and analysis result storage
 
 # ======================================
 # TAB NAVIGATION SYSTEM
