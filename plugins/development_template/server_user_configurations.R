@@ -4,11 +4,11 @@
 
 # ████████████████████████████████████████████████████████████████████████████████
 # ██                                                                            ██
-# ██  ⚠️  DO NOT MODIFY - CORE PLUGIN FRAMEWORK  ⚠️                             ██
+# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
 # ██                                                                            ██
-# ██  This file is part of the plugin framework and works automatically.        ██
-# ██  Modifications are NOT required and may break functionality.               ██
-# ██  Only modify if you have specific advanced requirements.                   ██
+# ██  This file MUST be customized for plugins with complex dropdown logic.    ██
+# ██  Follow the template patterns and implement your cascade logic.           ██
+# ██  See comments and examples for guidance.                                  ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
@@ -20,11 +20,23 @@
 # allowing users to save and quickly switch between different analysis scenarios.
 # 
 # WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - This file should work without modification for most plugins
+# - For simple plugins: This file works without modification
+# - For complex plugins with dropdown cascades: Customize the configuration loading section
 # - The configuration system automatically integrates with your plugin's settings
 # - Database operations are handled automatically by the template framework
 # - Validation and UI styling are already implemented
-# - No customization typically needed unless adding special configuration features
+# 
+# ADVANCED CUSTOMIZATION FOR DROPDOWN CASCADES:
+# Some plugins have complex dropdown dependencies (e.g., output type affects available variables).
+# In this template example: when output_type = "summary", only numeric variables should be available,
+# but when output_type = "histogram" or "table", all variables including categorical ones are available.
+# For these plugins, you need to customize the configuration loading logic to handle:
+# - Conditional dropdown options based on other settings
+# - Cascade updates when primary dropdowns change  
+# - Default value selection for dependent dropdowns
+# - UI element show/hide logic based on selections
+# 
+# See the configuration loading section below for implementation patterns.
 # 
 # CORE FUNCTIONALITY:
 # - Create new configuration presets with validation
@@ -114,6 +126,14 @@ observe_event(input$show_user_configurations_tab_%widget_id%, {
 
 # Show modal dialog for creating new user configuration
 observe_event(input$create_user_configuration_%widget_id%, {
+    # Clear the text field and remove any error message
+    shiny.fluent::updateTextField.shinyInput(
+        session, 
+        "user_configuration_name_add_%widget_id%", 
+        value = "",
+        errorMessage = NULL
+    )
+    
     shinyjs::show("add_user_configuration_modal_%widget_id%")
     
     # Focus on the text field after a small delay to ensure modal is visible
@@ -160,7 +180,23 @@ observe_event(input$close_rename_user_configuration_modal_%widget_id%, {
 # ======================================
 
 # Function to create new user configuration with validation
-add_user_configuration_%widget_id% <- function(configuration_name, notification = TRUE) {
+add_user_configuration_%widget_id% <- function(configuration_name, default_user_configuration = FALSE) {
+    
+    # For default configuration, check if any configuration already exists
+    if (default_user_configuration) {
+        # Check if configurations already exist
+        sql <- glue::glue_sql(
+            "SELECT COUNT(*) as count FROM widgets_options 
+             WHERE widget_id = %widget_id% AND category = 'user_configurations' AND name = 'configuration_name'", 
+            .con = m$db
+        )
+        existing_count <- DBI::dbGetQuery(m$db, sql)$count[1]
+        
+        if (existing_count > 0) {
+            # Configurations already exist, don't create default
+            return()
+        }
+    }
     
     # Validate configuration name
     empty_name <- TRUE
@@ -245,20 +281,30 @@ add_user_configuration_%widget_id% <- function(configuration_name, notification 
         value = new_id
     )
     
-    # Reset code editor to empty state for new configuration
-    shinyAce::updateAceEditor(session, "code_%widget_id%", value = "")
-    
     # Close modal
     shinyjs::hide("add_user_configuration_modal_%widget_id%")
     
-    # Show success message if notifications enabled
-    if (notification) {
+    # Return to previous page (exit user configurations tab)
+    # Check if side-by-side mode is enabled to determine which tab to show
+    side_by_side <- length(input$output_and_settings_side_by_side_%widget_id%) > 0 && input$output_and_settings_side_by_side_%widget_id%
+    target_tab <- if (side_by_side) "output_settings" else "output"
+    
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', '", target_tab, "');"))
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());"))
+    
+    # Generate code from current settings and execute it
+    shinyjs::delay(200, {
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
+    })
+    
+    # Show success message only for manually created configurations
+    if (!default_user_configuration) {
         show_message_bar("new_user_configuration_added", "success")
     }
 }
 
 # Auto-create default configuration when widget loads
-shinyjs::delay(1000, add_user_configuration_%widget_id%(i18np$t("configuration_1"), notification = FALSE))
+shinyjs::delay(1000, add_user_configuration_%widget_id%(i18np$t("configuration_1"), default_user_configuration = TRUE))
 
 # Handle user confirmation to create new configuration
 observe_event(input$add_user_configuration_%widget_id%, {
@@ -413,6 +459,14 @@ observe_event(input$user_configuration_%widget_id%, {
     )
     DBI::dbAppendTable(m$db, "widgets_options", new_data)
     
+    # Return to previous page (exit user configurations tab)
+    # Check if side-by-side mode is enabled to determine which tab to show
+    side_by_side <- length(input$output_and_settings_side_by_side_%widget_id%) > 0 && input$output_and_settings_side_by_side_%widget_id%
+    target_tab <- if (side_by_side) "output_settings" else "output"
+    
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', '", target_tab, "');"))
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());"))
+    
     # Trigger loading of output settings and code from selected configuration
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-load_configuration_%widget_id%', Math.random());"))
 })
@@ -522,9 +576,16 @@ observe_event(input$load_configuration_%widget_id%, {
     # Initialize tracking variables
     auto_update <- FALSE
     loaded_input_ids <- character(0)
+    saved_values <- list()
     
-    # Apply saved settings to UI using automated logic
+    # Extract saved values if configuration has saved settings
     if (nrow(saved_settings) > 0) {
+        for (i in 1:nrow(saved_settings)) {
+            saved_values[[saved_settings$name[i]]] <- list(
+                value = saved_settings$value[i],
+                value_num = saved_settings$value_num[i]
+            )
+        }
         
         # Process each saved setting
         for (i in 1:nrow(saved_settings)) {
@@ -548,9 +609,21 @@ observe_event(input$load_configuration_%widget_id%, {
                     "dropdown" = {
                         shiny.fluent::updateDropdown.shinyInput(session, input_id, value = setting_value)
                         
+                        # ======================================
+                        # DROPDOWN CASCADE CUSTOMIZATION SECTION
+                        # ======================================
+                        # This section handles complex dropdown dependencies for configuration loading.
+                        # CUSTOMIZE THIS LOGIC for your plugin's specific dropdown relationships.
+                        # 
+                        # TEMPLATE EXAMPLE: output_type affects variables dropdown
+                        # - When output_type = "summary": only numeric variables available
+                        # - When output_type = "histogram" or "table": all variables available
+                        # - Also handles UI show/hide logic (plot title visibility)
+                        #
+                        # FOR YOUR PLUGIN: Modify this logic to match your dropdown dependencies
+                        # Examples: chart_type -> concepts, data_source -> tables, etc.
+                        
                         # Show/hide plot title input based on output type selection
-                        output_type <- input$output_type_%widget_id%
-    
                         if (setting_name == "output_type" && !is.null(setting_value)) {
                             if (setting_value == "histogram") {
                                 shinyjs::show("plot_title_div_%widget_id%")
@@ -568,11 +641,11 @@ observe_event(input$load_configuration_%widget_id%, {
                                     list(key = "Petal.Width", text = "Petal.Width")
                                 )
                                 
-                                shinyjs::delay(100, shiny.fluent::updateDropdown.shinyInput(
+                                shiny.fluent::updateDropdown.shinyInput(
                                     session, 
                                     "variables_%widget_id%", 
                                     options = numeric_options
-                                ))
+                                )
                             } else {
                                 # Show all variables for other output types
                                 all_options <- list(
@@ -583,11 +656,11 @@ observe_event(input$load_configuration_%widget_id%, {
                                     list(key = "Species", text = "Species")
                                 )
                                 
-                                shinyjs::delay(100, shiny.fluent::updateDropdown.shinyInput(
+                                shiny.fluent::updateDropdown.shinyInput(
                                     session, 
                                     "variables_%widget_id%", 
                                     options = all_options
-                                ))
+                                )
                             }
                         }
                     },
