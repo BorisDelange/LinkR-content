@@ -72,6 +72,10 @@ all_inputs_%widget_id% <- list(
 
 # Update concepts dropdown when chart type changes
 observe_event(input$chart_type_%widget_id%, {
+    # Check if updates are locked (during configuration loading)
+    if (isTRUE(input$update_lock_%widget_id%)) {
+        return()
+    }
     
     # Define allowed domains based on chart type
     if (input$chart_type_%widget_id% == "dygraphs") {
@@ -126,6 +130,10 @@ observe_event(input$chart_type_%widget_id%, {
 
 # Show/hide concept selection divs based on concepts_choice
 observe_event(input$concepts_choice_%widget_id%, {
+    # Check if updates are locked (during configuration loading)
+    if (isTRUE(input$update_lock_%widget_id%)) {
+        return()
+    }
     
     if (input$concepts_choice_%widget_id% == "selected_concepts") {
         shinyjs::hide("concept_classes_div_%widget_id%")
@@ -186,6 +194,10 @@ observe_event(input$concepts_choice_%widget_id%, {
 
 # Update concept classes when OMOP table selection changes
 observe_event(input$omop_table_%widget_id%, {
+    # Check if updates are locked (during configuration loading)
+    if (isTRUE(input$update_lock_%widget_id%)) {
+        return()
+    }
     
     # Only update if we're in concept classes mode
     concepts_choice <- if (length(input$concepts_choice_%widget_id%) > 0) {

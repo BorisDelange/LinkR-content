@@ -114,6 +114,14 @@ observe_event(input$show_user_configurations_tab_%widget_id%, {
 
 # Show modal dialog for creating new user configuration
 observe_event(input$create_user_configuration_%widget_id%, {
+    # Clear the text field and remove any error message
+    shiny.fluent::updateTextField.shinyInput(
+        session, 
+        "user_configuration_name_add_%widget_id%", 
+        value = "",
+        errorMessage = NULL
+    )
+    
     shinyjs::show("add_user_configuration_modal_%widget_id%")
     
     # Focus on the text field after a small delay to ensure modal is visible
@@ -250,6 +258,19 @@ add_user_configuration_%widget_id% <- function(configuration_name, notification 
     
     # Close modal
     shinyjs::hide("add_user_configuration_modal_%widget_id%")
+    
+    # Return to previous page (exit user configurations tab)
+    # Check if side-by-side mode is enabled to determine which tab to show
+    side_by_side <- length(input$output_and_settings_side_by_side_%widget_id%) > 0 && input$output_and_settings_side_by_side_%widget_id%
+    target_tab <- if (side_by_side) "output_settings" else "output"
+    
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', '", target_tab, "');"))
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());"))
+    
+    # Trigger figure update by running the code
+    shinyjs::delay(200, {
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    })
     
     # Show success message if notifications enabled
     if (notification) {
@@ -500,6 +521,9 @@ observe_event(input$load_configuration_%widget_id%, {
         return()
     }
     
+    # Activate update lock to prevent automatic field updates during configuration loading
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_lock_%widget_id%', true);"))
+    
     # Query database for saved settings
     sql <- glue::glue_sql(
         "SELECT name, value, value_num 
@@ -512,9 +536,16 @@ observe_event(input$load_configuration_%widget_id%, {
     # Initialize tracking variables
     auto_update <- FALSE
     loaded_input_ids <- character(0)
+    saved_values <- list()
     
-    # Apply saved settings to UI using automated logic
+    # Extract saved values if configuration has saved settings
     if (nrow(saved_settings) > 0) {
+        for (i in 1:nrow(saved_settings)) {
+            saved_values[[saved_settings$name[i]]] <- list(
+                value = saved_settings$value[i],
+                value_num = saved_settings$value_num[i]
+            )
+        }
         
         # Process each saved setting
         for (i in 1:nrow(saved_settings)) {
@@ -538,68 +569,267 @@ observe_event(input$load_configuration_%widget_id%, {
                     if (!is.na(toggle_value) && toggle_value) auto_update <- TRUE
                 }
                 
+                # Skip dropdowns handled in cascade logic but mark them as loaded
+                if (setting_name %in% c("concepts_choice", "omop_table", "concept_classes", "concepts")) {
+                    # Still track that these were loaded from saved settings
+                    loaded_input_ids <- c(loaded_input_ids, setting_name)
+                    next
+                }
+                
                 # Apply setting based on input type
-                # Use delay for all inputs except chart_type to avoid conflicts with reactive observers
                 if (setting_name == "chart_type") {
-                    # Apply chart_type immediately (no delay)
+                    # Apply chart_type setting
+                    shiny.fluent::updateDropdown.shinyInput(session, input_id, value = setting_value)
+                } else {
+                    # Apply other input types
                     switch(
                         input_def$type,
                         "dropdown" = {
                             shiny.fluent::updateDropdown.shinyInput(session, input_id, value = setting_value)
+                        },
+                        "multiselect" = {
+                            if (!is.na(setting_value) && setting_value != "") {
+                                variables_vector <- unlist(strsplit(setting_value, ", ?"))
+                                
+                                # Convert to numeric for fields containing numeric IDs
+                                if (setting_name %in% c("concepts", "concept_classes")) {
+                                    variables_vector <- as.numeric(variables_vector)
+                                }
+                                
+                                shiny.fluent::updateDropdown.shinyInput(session, input_id, value = variables_vector)
+                            }
+                        },
+                        "text" = {
+                            if (!is.na(setting_value)) {
+                                shiny.fluent::updateTextField.shinyInput(session, input_id, value = setting_value)
+                            }
+                        },
+                        "toggle" = {
+                            toggle_value <- as.logical(setting_value_num)
+                            if (!is.na(toggle_value)) {
+                                shiny.fluent::updateToggle.shinyInput(session, input_id, value = toggle_value)
+                            }
+                        },
+                        "code" = {
+                            if (!is.na(setting_value)) {
+                                m[[paste0("code_%widget_id%")]] <- setting_value
+                                shinyAce::updateAceEditor(session, input_id, value = setting_value)
+                            }
+                        },
+                        "date" = {
+                            if (!is.na(setting_value) && setting_value != "") {
+                                date_value <- as.Date(setting_value)
+                                shiny.fluent::updateDatePicker.shinyInput(session, input_id, value = date_value)
+                            }
+                        },
+                        "number" = {
+                            if (!is.na(setting_value_num)) {
+                                shiny.fluent::updateSpinButton.shinyInput(session, input_id, value = setting_value_num)
+                            }
                         }
                     )
-                } else {
-                    # Apply other inputs with delay to avoid interference
-                    shinyjs::delay(500, {
-                        switch(
-                            input_def$type,
-                            "dropdown" = {
-                                shiny.fluent::updateDropdown.shinyInput(session, input_id, value = setting_value)
-                            },
-                            "multiselect" = {
-                                if (!is.na(setting_value) && setting_value != "") {
-                                    variables_vector <- unlist(strsplit(setting_value, ", ?"))
-                                    
-                                    # Convertir en numeric pour les champs qui contiennent des IDs numériques
-                                    if (setting_name %in% c("concepts", "concept_classes")) {
-                                        variables_vector <- as.numeric(variables_vector)
-                                    }
-                                    
-                                    shiny.fluent::updateDropdown.shinyInput(session, input_id, value = variables_vector)
-                                }
-                            },
-                            "text" = {
-                                if (!is.na(setting_value)) {
-                                    shiny.fluent::updateTextField.shinyInput(session, input_id, value = setting_value)
-                                }
-                            },
-                            "toggle" = {
-                                toggle_value <- as.logical(setting_value_num)
-                                if (!is.na(toggle_value)) {
-                                    shiny.fluent::updateToggle.shinyInput(session, input_id, value = toggle_value)
-                                }
-                            },
-                            "code" = {
-                                if (!is.na(setting_value)) {
-                                    m[[paste0("code_%widget_id%")]] <- setting_value
-                                    shinyAce::updateAceEditor(session, input_id, value = setting_value)
-                                }
-                            },
-                            "date" = {
-                                if (!is.na(setting_value) && setting_value != "") {
-                                    date_value <- as.Date(setting_value)
-                                    shiny.fluent::updateDatePicker.shinyInput(session, input_id, value = date_value)
-                                }
-                            },
-                            "number" = {
-                                if (!is.na(setting_value_num)) {
-                                    shiny.fluent::updateSpinButton.shinyInput(session, input_id, value = setting_value_num)
-                                }
-                            }
-                        )
-                    })
                 }
             }
+        }
+    }
+    
+    # Handle cascade logic - always execute whether we have saved settings or not
+    # Mark cascade dropdowns as loaded to prevent default values from being applied
+    cascade_dropdowns <- c("concepts_choice", "omop_table", "concept_classes", "concepts")
+    for (dropdown in cascade_dropdowns) {
+        if (!(dropdown %in% loaded_input_ids)) {
+            loaded_input_ids <- c(loaded_input_ids, dropdown)
+        }
+    }
+    
+    # Get values from saved settings or use defaults
+    # Create a lookup for default values
+    defaults_%widget_id% <- list()
+    for (input_def in all_inputs_%widget_id%) {
+        if (input_def$type == "multiselect" && length(input_def$default) > 0) {
+            defaults_%widget_id%[[input_def$id]] <- paste(input_def$default, collapse = ", ")
+        } else {
+            defaults_%widget_id%[[input_def$id]] <- input_def$default
+        }
+    }
+    
+    # Get actual values to use
+    chart_type_value <- if (!is.null(saved_values[["chart_type"]])) {
+        saved_values[["chart_type"]]$value
+    } else {
+        defaults_%widget_id%[["chart_type"]]
+    }
+    
+    concepts_choice_value <- if (!is.null(saved_values[["concepts_choice"]])) {
+        saved_values[["concepts_choice"]]$value
+    } else {
+        defaults_%widget_id%[["concepts_choice"]]
+    }
+    
+    omop_table_value <- if (!is.null(saved_values[["omop_table"]])) {
+        saved_values[["omop_table"]]$value
+    } else {
+        defaults_%widget_id%[["omop_table"]]
+    }
+    
+    concept_classes_value <- if (!is.null(saved_values[["concept_classes"]])) {
+        saved_values[["concept_classes"]]$value
+    } else {
+        defaults_%widget_id%[["concept_classes"]]
+    }
+    
+    concepts_value <- if (!is.null(saved_values[["concepts"]])) {
+        saved_values[["concepts"]]$value
+    } else {
+        defaults_%widget_id%[["concepts"]]
+    }
+    
+    # Apply cascade logic based on chart_type
+    if (chart_type_value == "dygraphs") {
+        # For dygraphs: force concepts_choice to selected_concepts
+        shinyjs::hide("concept_classes_div_%widget_id%")
+        shinyjs::hide("omop_table_div_%widget_id%")
+        shinyjs::show("concepts_div_%widget_id%")
+        
+        # Update concepts_choice dropdown to only show selected_concepts
+        shiny.fluent::updateDropdown.shinyInput(
+            session, 
+            "concepts_choice_%widget_id%", 
+            options = list(
+                list(key = "selected_concepts", text = i18np$t("selected_concepts"))
+            ),
+            value = "selected_concepts"
+        )
+        
+        # Update concepts dropdown to only show Measurement and Observation domains
+        allowed_domains <- c("Measurement", "Observation")
+        if (exists("selected_concepts")) {
+            filtered_concepts <- selected_concepts %>% dplyr::filter(domain_id %in% allowed_domains)
+            
+            # Parse saved concepts value
+            concepts_to_select <- c()
+            if (!is.na(concepts_value) && concepts_value != "") {
+                concepts_to_select <- as.numeric(unlist(strsplit(concepts_value, ", ?")))
+                # Filter to only keep concepts that are in the allowed domains
+                concepts_to_select <- concepts_to_select[concepts_to_select %in% filtered_concepts$concept_id]
+            }
+            
+            shiny.fluent::updateDropdown.shinyInput(
+                session, 
+                "concepts_%widget_id%", 
+                options = convert_tibble_to_list(
+                    filtered_concepts,
+                    key_col = "concept_id", 
+                    text_col = "concept_name"
+                ),
+                value = concepts_to_select
+            )
+        }
+        
+    } else if (chart_type_value == "plotly") {
+        # For plotly: handle based on concepts_choice
+        
+        # Update concepts_choice dropdown with both options
+        shiny.fluent::updateDropdown.shinyInput(
+                session, 
+                "concepts_choice_%widget_id%", 
+                options = list(
+                    list(key = "selected_concept_classes", text = i18np$t("selected_concept_classes")),
+                    list(key = "selected_concepts", text = i18np$t("selected_concepts"))
+                ),
+                value = concepts_choice_value
+        )
+        
+        if (concepts_choice_value == "selected_concepts") {
+            # Show concepts dropdown, hide others
+            shinyjs::hide("concept_classes_div_%widget_id%")
+            shinyjs::hide("omop_table_div_%widget_id%")
+            shinyjs::show("concepts_div_%widget_id%")
+                
+            # Update concepts dropdown with all allowed domains for plotly
+            allowed_domains <- c("Measurement", "Observation", "Condition", "Procedure", "Drug")
+            if (exists("selected_concepts")) {
+                filtered_concepts <- selected_concepts %>% dplyr::filter(domain_id %in% allowed_domains)
+                
+                # Parse saved concepts value
+                concepts_to_select <- c()
+                if (!is.na(concepts_value) && concepts_value != "") {
+                    concepts_to_select <- as.numeric(unlist(strsplit(concepts_value, ", ?")))
+                    # Filter to only keep concepts that are in the allowed domains
+                    concepts_to_select <- concepts_to_select[concepts_to_select %in% filtered_concepts$concept_id]
+                }
+                
+                shiny.fluent::updateDropdown.shinyInput(
+                    session, 
+                    "concepts_%widget_id%", 
+                    options = convert_tibble_to_list(
+                        filtered_concepts,
+                        key_col = "concept_id", 
+                        text_col = "concept_name"
+                    ),
+                    value = concepts_to_select
+                )
+            }
+            
+        } else if (concepts_choice_value == "selected_concept_classes") {
+            # Show concept classes and omop table dropdowns
+            shinyjs::hide("concepts_div_%widget_id%")
+            shinyjs::show("omop_table_div_%widget_id%")
+            shinyjs::show("concept_classes_div_%widget_id%")
+                
+            # Parse and update omop_table
+            omop_tables_to_select <- c()
+            if (!is.na(omop_table_value) && omop_table_value != "") {
+                omop_tables_to_select <- unlist(strsplit(omop_table_value, ", ?"))
+            }
+            
+            shiny.fluent::updateDropdown.shinyInput(
+                session, 
+                "omop_table_%widget_id%", 
+                value = omop_tables_to_select
+            )
+                
+            # Map OMOP tables to their corresponding domain_ids
+            table_to_domain_mapping <- list(
+                "measurement" = "Measurement",
+                "observation" = "Observation", 
+                "procedure_occurrence" = "Procedure",
+                "condition_occurrence" = "Condition",
+                "drug_exposure" = "Drug"
+            )
+            
+            # Get allowed domains based on selected OMOP tables
+            allowed_domains <- unlist(table_to_domain_mapping[omop_tables_to_select])
+            
+            # Update concept class IDs for the selected OMOP tables
+            concept_class_ids <- tibble::tibble(concept_class_id = character())
+            if (length(d$dataset_concept) > 0) {
+                if (nrow(d$dataset_concept) > 0) {
+                    concept_class_ids <- d$dataset_concept %>%
+                        dplyr::filter(domain_id %in% allowed_domains) %>%
+                        dplyr::distinct(concept_class_id) %>%
+                        dplyr::arrange(concept_class_id)
+                }
+            }
+            
+            # Parse saved concept_classes value
+            concept_classes_to_select <- c()
+            if (!is.na(concept_classes_value) && concept_classes_value != "") {
+                concept_classes_to_select <- unlist(strsplit(concept_classes_value, ", ?"))
+                # Filter to only keep concept classes that are available
+                concept_classes_to_select <- concept_classes_to_select[concept_classes_to_select %in% concept_class_ids$concept_class_id]
+            }
+            
+            shiny.fluent::updateDropdown.shinyInput(
+                session, 
+                "concept_classes_%widget_id%", 
+                options = convert_tibble_to_list(
+                    concept_class_ids, 
+                    key_col = "concept_class_id", 
+                    text_col = "concept_class_id"
+                ),
+                value = concept_classes_to_select
+            )
         }
     }
     
@@ -678,6 +908,11 @@ observe_event(input$load_configuration_%widget_id%, {
             }
         )
     }
+    
+    # Disable update lock to re-enable automatic field updates in server_output_settings.R
+    shinyjs::delay(100, {
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_lock_%widget_id%', false);"))
+    })
     
     if (nrow(saved_settings) == 0) {
         # No saved configuration found - trigger output display with default settings
