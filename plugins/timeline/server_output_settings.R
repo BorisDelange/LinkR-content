@@ -6,9 +6,9 @@
 # ██                                                                            ██
 # ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
 # ██                                                                            ██
-# ██  This file MUST be customized for your specific plugin.                    ██
-# ██  Follow the template structure and implement your logic.                   ██
-# ██  See comments and examples for guidance.                                   ██
+# ██  This file implements timeline-specific dropdown cascade logic.            ██
+# ██  Chart type affects concept selection and UI element visibility.           ██
+# ██  Includes OMOP domain filtering and medical concept management.            ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
@@ -17,16 +17,18 @@
 # This file handles the server-side logic for the timeline output configuration interface.
 # It manages user interactions with the no-code settings panel for medical timeline visualization.
 # 
-# CORE FUNCTIONALITY:
-# - Timeline chart type management (dygraphs vs plotly)
-# - Medical concept selection with OMOP domain filtering
-# - Data source selection (patient vs visit level)
-# - Timeline synchronization controls
-# - Dynamic UI updates based on user selections
+# TIMELINE-SPECIFIC FUNCTIONALITY:
+# - Chart type selection (dygraphs for time-series, plotly for event timelines)
+# - Medical concept selection with OMOP domain filtering (Measurement, Observation, etc.)
+# - Concept source choice (individual concepts vs concept classes)
+# - Data table selection based on chart type compatibility
+# - Timeline synchronization controls for multi-patient views
+# - Dynamic UI updates based on chart type and concept selections
 # 
-# Manages output settings including loading/saving from user configurations,
-# timeline synchronization, chart type management, and settings persistence
-# Smart defaults based on concept selection and saved configurations
+# DROPDOWN CASCADE LOGIC:
+# - Chart type affects available concept domains and UI options
+# - Concept choice affects visible input sections
+# - OMOP table selection updates available concept classes
 #
 
 # ======================================

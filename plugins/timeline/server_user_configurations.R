@@ -4,27 +4,35 @@
 
 # ████████████████████████████████████████████████████████████████████████████████
 # ██                                                                            ██
-# ██  ⚠️  DO NOT MODIFY - CORE PLUGIN FRAMEWORK  ⚠️                             ██
+# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
 # ██                                                                            ██
-# ██  This file is part of the plugin framework and works automatically.        ██
-# ██  Modifications are NOT required and may break functionality.               ██
-# ██  Only modify if you have specific advanced requirements.                   ██
+# ██  This file implements Timeline-specific dropdown cascade logic.            ██
+# ██  Based on template patterns with medical concept management.               ██
+# ██  Handles chart type cascades and OMOP domain filtering.                    ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - USER CONFIGURATIONS SERVER FILE
+# TIMELINE PLUGIN - USER CONFIGURATIONS SERVER FILE
 # 
 # This file handles the server-side logic for user configuration management.
 # It provides comprehensive functionality for creating, selecting, renaming, 
 # deleting, persisting, loading, and saving user configuration presets, 
-# allowing users to save and quickly switch between different analysis scenarios.
+# allowing users to save and quickly switch between different timeline analysis scenarios.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - This file should work without modification for most plugins
-# - The configuration system automatically integrates with your plugin's settings
-# - Database operations are handled automatically by the template framework
-# - Validation and UI styling are already implemented
-# - No customization typically needed unless adding special configuration features
+# TIMELINE-SPECIFIC CUSTOMIZATIONS:
+# - Chart type cascade logic (dygraphs vs plotly affects concept availability)
+# - Medical concept management with OMOP domain filtering
+# - Concept source selection (individual concepts vs concept classes)
+# - Automatic concept selection based on available data
+# - Navigation to appropriate tabs after configuration changes
+# 
+# ADVANCED CUSTOMIZATION FOR TIMELINE DROPDOWNS:
+# Timeline plugin has complex dropdown dependencies where chart type affects available concepts.
+# When chart_type = "dygraphs", only Measurement and Observation concepts are available.
+# When chart_type = "plotly", all concept domains (Measurement, Observation, Condition, Procedure, Drug) are available.
+# Additionally, the concepts_choice setting determines UI visibility and concept source selection.
+# 
+# See the configuration loading section below for complete cascade implementation.
 # 
 # CORE FUNCTIONALITY:
 # - Create new configuration presets with validation
@@ -283,12 +291,10 @@ add_user_configuration_%widget_id% <- function(configuration_name, default_user_
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', '", target_tab, "');"))
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());"))
     
-    # Only trigger code execution for default configuration
-    if (default_user_configuration) {
-        shinyjs::delay(200, {
-            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-        })
-    }
+    # Generate code from current settings and execute it
+    shinyjs::delay(200, {
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
+    })
     
     # Show success message only for manually created configurations
     if (!default_user_configuration) {

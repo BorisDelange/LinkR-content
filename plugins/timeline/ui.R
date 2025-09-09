@@ -12,21 +12,22 @@
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - UI MAIN FILE
+# TIMELINE PLUGIN - UI MAIN FILE
 # 
-# This file defines the main user interface structure for the widget plugin template.
+# This file defines the main user interface structure for the Timeline plugin.
 # It creates a responsive layout with auto-hiding navigation, resizable panels, and 
 # access-controlled components based on user permissions.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - Replace the %import_script()% calls with your specific UI components
-# - Add any new UI imports in their respective sections
+# TIMELINE-SPECIFIC UI COMPONENTS:
+# - Timeline visualization output area (dygraphs/plotly charts)
+# - Medical concept selection interface with OMOP domain filtering
+# - Chart type selection and timeline synchronization controls
+# - User configurations dropdown for saved timeline analysis presets
 # 
 # UI ARCHITECTURE:
 # - Auto-hiding top navigation bar that appears on hover
-# - Resizable split-panel layout (output on left, settings/code on right)
+# - Resizable split-panel layout (timeline output on left, settings/code on right)
 # - Access-controlled buttons (code editor, save functions) based on user permissions
-# - User configurations dropdown for saved presets
 # - Side-by-side toggle for different viewing modes
 # 
 # MAIN COMPONENTS:

@@ -23,7 +23,7 @@
 # 
 # TAB SYSTEM OVERVIEW:
 # - output: Displays the execution result of the code (timeline visualization)
-# - output_settings: No-code interface with graphical controls to configure the timeline parameters
+# - output_settings: No-code interface with graphical controls to configure timeline parameters
 # - code: Code editor where users can write/modify code. Connected to output_settings in a 
 # low-code approach where output_settings parameters automatically generate code
 # - user_configurations: Interface to create, save, and manage different configurations 

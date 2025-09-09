@@ -1,12 +1,25 @@
 # ==========================================
-# server_code.R - Code Editor Server Logic
+# server_code.R - Timeline Code Editor Server Logic
 # ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
+# ██                                                                            ██
+# ██  This file handles timeline-specific code generation and execution.        ██
+# ██  Manages chart type routing and medical concept integration.               ██
+# ██  Customize the generation logic for your specific use case.               ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# TIMELINE PLUGIN - CODE EDITOR SERVER FILE
 # 
-# Handles code editor functionality including:
-# - Common initialization and keyboard shortcuts
-# - Code execution controller
-# - Auto-execution triggers based on data updates
-# - Chart type specific logic imported from separate files
+# Handles timeline-specific code editor functionality including:
+# - Timeline code generation based on chart type (dygraphs vs plotly)
+# - Medical concept integration with OMOP data filtering
+# - Code execution controller with timeline-specific parameters
+# - Auto-execution triggers based on medical data updates
+# - Chart type routing to specialized generation modules
 #
 # ==========================================
 

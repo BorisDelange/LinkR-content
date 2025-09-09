@@ -12,17 +12,18 @@
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - LAYOUT MANAGER SERVER FILE
+# TIMELINE PLUGIN - LAYOUT MANAGER SERVER FILE
 # 
-# This file manages the dynamic layout system for the widget plugin template.
-# It provides a sophisticated resizable panel interface that enhances user experience
-# by allowing flexible workspace arrangements.
+# This file manages the dynamic layout system for the Timeline plugin.
+# It provides a sophisticated resizable panel interface optimized for medical timeline visualization
+# by allowing flexible workspace arrangements between output charts and configuration panels.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - This file should work without modification for most plugins
-# - The layout system automatically adapts to different panel configurations
-# - Panel width preferences are automatically saved to the database
-# - No customization typically needed unless adding new panel types
+# TIMELINE-SPECIFIC LAYOUT FEATURES:
+# - Optimized for timeline chart display and medical concept configuration
+# - Automatic panel sizing for dygraphs and plotly chart types
+# - Responsive layout for timeline synchronization controls
+# - Panel width preferences automatically saved to database
+# - Framework functionality works without modification
 # 
 # FEATURES PROVIDED:
 # - Side-by-side vs full-width layout modes for optimal screen real estate usage

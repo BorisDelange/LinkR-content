@@ -6,9 +6,9 @@
 # ██                                                                            ██
 # ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
 # ██                                                                            ██
-# ██  This file MUST be customized for your specific plugin.                    ██
-# ██  Follow the template structure and implement your logic.                   ██
-# ██  See comments and examples for guidance.                                   ██
+# ██  This file defines Timeline-specific medical data configuration UI.        ██
+# ██  Handles OMOP concept selection and timeline chart parameters.            ██
+# ██  Implements complex medical domain filtering and chart type controls.      ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
@@ -18,12 +18,13 @@
 # It provides user-friendly controls that automatically generate and modify the underlying
 # R code for medical timeline visualization based on user selections.
 # 
-# Interactive panel for configuring timeline chart settings including:
-# - Chart type selection (dygraphs vs plotly)
-# - Medical concept selection from available OMOP data
-# - Data source selection (patient vs visit level)
-# - Timeline synchronization controls
-# - Auto-update preferences
+# TIMELINE-SPECIFIC INTERACTIVE CONTROLS:
+# - Chart type selection (dygraphs for time-series, plotly for event timelines)
+# - Medical concept selection with OMOP domain filtering (Measurement, Observation, etc.)
+# - Concept source choice (individual concepts vs concept classes)
+# - OMOP data table selection based on chart type compatibility
+# - Timeline synchronization controls for multi-patient analysis
+# - Auto-update preferences for real-time data integration
 # 
 # IMPORTANT NOTES:
 # - AVOID using conditionalPanel() to show/hide UI elements. Instead, manage this logic

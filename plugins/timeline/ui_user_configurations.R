@@ -12,17 +12,18 @@
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - USER CONFIGURATIONS UI FILE
+# TIMELINE PLUGIN - USER CONFIGURATIONS UI FILE
 # 
-# This file defines the user configuration management interface for the widget plugin template.
-# It provides functionality for users to save, load, rename, and manage different configuration presets,
-# allowing them to quickly switch between different analysis scenarios or parameter sets.
+# This file defines the user configuration management interface for the Timeline plugin.
+# It provides functionality for users to save, load, rename, and manage different timeline presets,
+# allowing them to quickly switch between different medical concept analyses and chart configurations.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - The default functionality should work for most plugins without modification
-# - Customize text labels and messages if needed for your specific use case
-# - Consider adding validation logic in server.R for configuration names
-# - The database integration is handled automatically by the main UI template
+# TIMELINE-SPECIFIC CONFIGURATION MANAGEMENT:
+# - Save/restore chart type settings (dygraphs vs plotly)
+# - Preserve medical concept selections and OMOP domain filters
+# - Store timeline synchronization preferences
+# - Manage concept class vs individual concept choices
+# - Database integration handled automatically by the plugin framework
 # 
 # FEATURES PROVIDED:
 # - Create new configuration presets with custom names
