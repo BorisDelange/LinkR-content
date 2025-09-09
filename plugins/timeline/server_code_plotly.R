@@ -1,14 +1,74 @@
 # ==========================================
-# server_code_plotly.R - Plotly Specific Logic
+# server_code_plotly.R - Plotly Timeline Code Generation
 # ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 REQUIRES CUSTOMIZATION - PLOTLY TIMELINE LOGIC  🔧                   ██
+# ██                                                                            ██
+# ██  This file generates R code for plotly interactive timeline charts.       ██
+# ██  Customize the timeline visualization for your healthcare data needs.     ██
+# ██  Handles all OMOP data types with segments and marker visualizations.    ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# TIMELINE PLUGIN - PLOTLY TIMELINE CODE GENERATION
 # 
-# Handles plotly specific functionality including:
-# - Code generation for all OMOP data types (Measurement, Observation, Drug, Procedure, Condition)
-# - Timeline visualization with segments and markers
-# - Plotly chart configuration and interactivity
-# - Timeline synchronization for plotly
-#
-# ==========================================
+# This file contains specialized functions for generating R code that creates 
+# comprehensive interactive timeline visualizations using the plotly library.
+# Unlike dygraphs which focuses on continuous data, plotly timelines handle
+# discrete healthcare events, procedures, medications, and conditions with 
+# rich visual representations including segments, markers, and annotations.
+# 
+# CORE FUNCTIONALITY:
+# - Multi-modal healthcare timeline code generation with comprehensive OMOP data integration
+# - Interactive plotly timeline visualization with segments, markers, and event annotations
+# - Cross-concept timeline coordination with synchronized zoom and pan controls
+# - Dynamic healthcare event processing with temporal relationship analysis
+# - Flexible concept selection supporting both predefined concepts and concept class filtering
+# 
+# PLOTLY TIMELINE FEATURES:
+# - Interactive timeline charts with hover tooltips and click interactions
+# - Multi-track timeline visualization with separate lanes for different data types
+# - Event duration visualization using timeline segments for procedures and drug exposures
+# - Point-in-time markers for measurements, observations, and discrete events
+# - Rich legend system with concept grouping and visual hierarchy
+# - Responsive timeline layout adapting to varying data densities and time ranges
+# 
+# COMPREHENSIVE OMOP INTEGRATION:
+# - MEASUREMENT table processing for laboratory results and vital signs
+# - OBSERVATION table integration for clinical assessments and patient-reported outcomes
+# - DRUG_EXPOSURE table handling for medication timelines and dosing information
+# - PROCEDURE_OCCURRENCE table processing for surgical and diagnostic procedures
+# - CONDITION_OCCURRENCE table integration for diagnosis and comorbidity timelines
+# - CONCEPT table joins for standardized medical terminology and hierarchical relationships
+# 
+# HEALTHCARE EVENT PROCESSING:
+# - Temporal event clustering and overlap detection for timeline clarity
+# - Duration calculation for ongoing treatments and chronic conditions
+# - Event priority scoring for visual layering in dense timeline segments
+# - Clinical workflow integration with care episode grouping
+# - Multi-visit timeline continuity with hospitalization context
+# 
+# ADVANCED VISUALIZATION PATTERNS:
+# - Concept class-based filtering for dynamic healthcare domain selection
+# - Color coding systems reflecting clinical significance and data source
+# - Interactive timeline segments showing treatment duration and effectiveness
+# - Annotation layers for clinical notes and care team communications
+# - Statistical summary overlays for trend analysis and outcome correlation
+# 
+# TIMELINE SYNCHRONIZATION:
+# - Cross-widget timeline coordination for comprehensive patient view
+# - Event-driven timeline updates with real-time data integration
+# - Shared temporal navigation controls for multi-timeline analysis
+# - Persistent timeline state management across user sessions and data updates
+# 
+# CODE GENERATION ARCHITECTURE:
+# - Modular R code construction supporting multiple visualization modes
+# - Complex SQL generation for multi-table OMOP queries with concept hierarchy
+# - Plotly-specific data transformation with interactive feature optimization
+# - Healthcare-aware color schemes and styling for clinical workflow integration
+# - Error handling and data validation for robust healthcare data processing
 
 # ======================================
 # PLOTLY CODE GENERATION

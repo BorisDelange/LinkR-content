@@ -1,14 +1,65 @@
 # ==========================================
-# server_code_dygraphs.R - Dygraphs Specific Logic
+# server_code_dygraphs.R - Dygraphs Timeline Code Generation
 # ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 REQUIRES CUSTOMIZATION - DYGRAPHS TIMELINE LOGIC  🔧                 ██
+# ██                                                                            ██
+# ██  This file generates R code for dygraphs interactive timeline charts.     ██
+# ██  Customize the timeline visualization for your continuous data needs.     ██
+# ██  Handles OMOP measurement/observation data and XTS time series.           ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# TIMELINE PLUGIN - DYGRAPHS TIMELINE CODE GENERATION
 # 
-# Handles dygraphs specific functionality including:
-# - Code generation for Measurement and Observation data
-# - XTS data processing for time series
-# - Dygraphs chart configuration
-# - Timeline synchronization for dygraphs
-#
-# ==========================================
+# This file contains specialized functions for generating R code that creates 
+# interactive timeline visualizations using the dygraphs library. It processes
+# continuous healthcare data from OMOP measurement and observation tables to
+# create synchronized, zoomable timeline charts ideal for vital signs, lab
+# results, and other time-series medical data.
+# 
+# CORE FUNCTIONALITY:
+# - Interactive dygraphs timeline code generation with OMOP data integration
+# - XTS time series data processing and transformation from healthcare measurements
+# - Multi-concept timeline visualization with synchronized zoom and pan controls
+# - Dynamic date range calculation and temporal data filtering
+# - Cross-widget timeline synchronization for coordinated analysis views
+# 
+# DYGRAPHS FEATURES:
+# - Interactive timeline charts with zoom, pan, and selection capabilities
+# - Multiple time series overlay with individual concept styling
+# - Automatic legend generation with concept names and units
+# - Range selector controls for temporal navigation
+# - Responsive design adapting to different screen sizes and data densities
+# 
+# OMOP INTEGRATION:
+# - MEASUREMENT table queries for laboratory and vital sign data
+# - OBSERVATION table integration for clinical observations and assessments
+# - CONCEPT table joins for standardized medical terminology and units
+# - Patient and visit-level data filtering with temporal constraints
+# - Value standardization and unit conversion for consistent visualization
+# 
+# TIME SERIES PROCESSING:
+# - XTS (eXtensible Time Series) object creation from OMOP temporal data
+# - Automatic timestamp parsing and timezone handling
+# - Missing value interpolation and gap detection in time series
+# - Multi-resolution data aggregation for performance optimization
+# - Statistical smoothing and outlier detection for clinical data quality
+# 
+# SYNCHRONIZATION FEATURES:
+# - Cross-widget timeline synchronization using shared date range controls
+# - Coordinated zoom and pan operations across multiple timeline visualizations
+# - Event-driven timeline updates when date ranges change in linked widgets
+# - Persistent timeline state management for user workflow continuity
+# 
+# CODE GENERATION PATTERNS:
+# - Modular R code construction with reusable time series processing blocks
+# - Dynamic SQL generation for OMOP database queries with concept filtering
+# - XTS transformation code with error handling and data validation
+# - Dygraphs configuration code with customizable styling and interaction options
+# - Timeline synchronization JavaScript integration for real-time coordination
 
 # ======================================
 # DYGRAPHS CODE GENERATION
