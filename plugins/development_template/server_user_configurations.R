@@ -547,6 +547,49 @@ observe_event(input$load_configuration_%widget_id%, {
                     input_def$type,
                     "dropdown" = {
                         shiny.fluent::updateDropdown.shinyInput(session, input_id, value = setting_value)
+                        
+                        # Show/hide plot title input based on output type selection
+                        output_type <- input$output_type_%widget_id%
+    
+                        if (setting_name == "output_type" && !is.null(setting_value)) {
+                            if (setting_value == "histogram") {
+                                shinyjs::show("plot_title_div_%widget_id%")
+                            } else {
+                                shinyjs::hide("plot_title_div_%widget_id%")
+                            }
+                            
+                            # Update variables dropdown options based on output type
+                            if (setting_value == "summary") {
+                                # Only show numeric variables for summary statistics
+                                numeric_options <- list(
+                                    list(key = "Sepal.Length", text = "Sepal.Length"),
+                                    list(key = "Sepal.Width", text = "Sepal.Width"),
+                                    list(key = "Petal.Length", text = "Petal.Length"),
+                                    list(key = "Petal.Width", text = "Petal.Width")
+                                )
+                                
+                                shinyjs::delay(100, shiny.fluent::updateDropdown.shinyInput(
+                                    session, 
+                                    "variables_%widget_id%", 
+                                    options = numeric_options
+                                ))
+                            } else {
+                                # Show all variables for other output types
+                                all_options <- list(
+                                    list(key = "Sepal.Length", text = "Sepal.Length"),
+                                    list(key = "Sepal.Width", text = "Sepal.Width"),
+                                    list(key = "Petal.Length", text = "Petal.Length"),
+                                    list(key = "Petal.Width", text = "Petal.Width"),
+                                    list(key = "Species", text = "Species")
+                                )
+                                
+                                shiny.fluent::updateDropdown.shinyInput(
+                                    session, 
+                                    "variables_%widget_id%", 
+                                    options = all_options
+                                )
+                            }
+                        }
                     },
                     "multiselect" = {
                         if (!is.na(setting_value) && setting_value != "") {

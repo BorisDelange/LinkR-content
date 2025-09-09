@@ -122,10 +122,73 @@ if (!("projects_widgets_settings" %in% user_accesses)) {
 # ======================================
 
 observe_event(input$variables_check_all_%widget_id%, {
-    all_variables <- c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
+    # Get variables based on output type
+    output_type <- input$output_type_%widget_id%
+    if (!is.null(output_type) && output_type == "summary") {
+        # Only numeric variables for summary statistics
+        all_variables <- c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
+    } else {
+        # All variables for other output types
+        all_variables <- c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species")
+    }
     shiny.fluent::updateDropdown.shinyInput(session, "variables_%widget_id%", value = all_variables)
 })
 
 observe_event(input$variables_uncheck_all_%widget_id%, {
     shiny.fluent::updateDropdown.shinyInput(session, "variables_%widget_id%", value = character(0))
+})
+
+# ======================================
+# UPDATE VARIABLES BASED ON OUTPUT TYPE
+# ======================================
+
+observe_event(input$output_type_%widget_id%, {
+    # Check if updates are locked (during configuration loading)
+    if (isTRUE(input$update_lock_%widget_id%)) {
+        return()
+    }
+    
+    output_type <- input$output_type_%widget_id%
+    current_variables <- input$variables_%widget_id%
+    
+    if (!is.null(output_type)) {
+        if (output_type == "summary") {
+            # Filter to only numeric variables for summary statistics
+            numeric_variables <- c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
+            
+            # Update dropdown options to only show numeric variables
+            numeric_options <- list(
+                list(key = "Sepal.Length", text = "Sepal.Length"),
+                list(key = "Sepal.Width", text = "Sepal.Width"),
+                list(key = "Petal.Length", text = "Petal.Length"),
+                list(key = "Petal.Width", text = "Petal.Width")
+            )
+            
+            # Keep only numeric variables from current selection
+            filtered_selection <- intersect(current_variables, numeric_variables)
+            
+            shiny.fluent::updateDropdown.shinyInput(
+                session, 
+                "variables_%widget_id%", 
+                options = numeric_options,
+                value = filtered_selection
+            )
+        } else {
+            # Show all variables for other output types
+            all_options <- list(
+                list(key = "Sepal.Length", text = "Sepal.Length"),
+                list(key = "Sepal.Width", text = "Sepal.Width"),
+                list(key = "Petal.Length", text = "Petal.Length"),
+                list(key = "Petal.Width", text = "Petal.Width"),
+                list(key = "Species", text = "Species")
+            )
+            
+            shiny.fluent::updateDropdown.shinyInput(
+                session, 
+                "variables_%widget_id%", 
+                options = all_options,
+                value = current_variables
+            )
+        }
+    }
 })
