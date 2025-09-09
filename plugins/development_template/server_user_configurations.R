@@ -583,11 +583,11 @@ observe_event(input$load_configuration_%widget_id%, {
                                     list(key = "Species", text = "Species")
                                 )
                                 
-                                shiny.fluent::updateDropdown.shinyInput(
+                                shinyjs::delay(100, shiny.fluent::updateDropdown.shinyInput(
                                     session, 
                                     "variables_%widget_id%", 
                                     options = all_options
-                                )
+                                ))
                             }
                         }
                     },
