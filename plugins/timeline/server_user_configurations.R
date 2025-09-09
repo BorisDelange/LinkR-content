@@ -168,7 +168,23 @@ observe_event(input$close_rename_user_configuration_modal_%widget_id%, {
 # ======================================
 
 # Function to create new user configuration with validation
-add_user_configuration_%widget_id% <- function(configuration_name, notification = TRUE) {
+add_user_configuration_%widget_id% <- function(configuration_name, default_user_configuration = FALSE) {
+    
+    # For default configuration, check if any configuration already exists
+    if (default_user_configuration) {
+        # Check if configurations already exist
+        sql <- glue::glue_sql(
+            "SELECT COUNT(*) as count FROM widgets_options 
+             WHERE widget_id = %widget_id% AND category = 'user_configurations' AND name = 'configuration_name'", 
+            .con = m$db
+        )
+        existing_count <- DBI::dbGetQuery(m$db, sql)$count[1]
+        
+        if (existing_count > 0) {
+            # Configurations already exist, don't create default
+            return()
+        }
+    }
     
     # Validate configuration name
     empty_name <- TRUE
@@ -267,19 +283,21 @@ add_user_configuration_%widget_id% <- function(configuration_name, notification 
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', '", target_tab, "');"))
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());"))
     
-    # Trigger figure update by running the code
-    shinyjs::delay(200, {
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-    })
+    # Only trigger code execution for default configuration
+    if (default_user_configuration) {
+        shinyjs::delay(200, {
+            shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+        })
+    }
     
-    # Show success message if notifications enabled
-    if (notification) {
+    # Show success message only for manually created configurations
+    if (!default_user_configuration) {
         show_message_bar("new_user_configuration_added", "success")
     }
 }
 
 # Auto-create default configuration when widget loads
-shinyjs::delay(1000, add_user_configuration_%widget_id%(i18np$t("configuration_1"), notification = FALSE))
+shinyjs::delay(1000, add_user_configuration_%widget_id%(i18np$t("configuration_1"), default_user_configuration = TRUE))
 
 # Handle user confirmation to create new configuration
 observe_event(input$add_user_configuration_%widget_id%, {
@@ -433,6 +451,14 @@ observe_event(input$user_configuration_%widget_id%, {
         deleted = FALSE
     )
     DBI::dbAppendTable(m$db, "widgets_options", new_data)
+    
+    # Return to previous page (exit user configurations tab)
+    # Check if side-by-side mode is enabled to determine which tab to show
+    side_by_side <- length(input$output_and_settings_side_by_side_%widget_id%) > 0 && input$output_and_settings_side_by_side_%widget_id%
+    target_tab <- if (side_by_side) "output_settings" else "output"
+    
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_%widget_id%', '", target_tab, "');"))
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-current_tab_trigger_%widget_id%', Math.random());"))
     
     # Trigger loading of output settings and code from selected configuration
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-load_configuration_%widget_id%', Math.random());"))
@@ -681,7 +707,31 @@ observe_event(input$load_configuration_%widget_id%, {
     concepts_value <- if (!is.null(saved_values[["concepts"]])) {
         saved_values[["concepts"]]$value
     } else {
-        defaults_%widget_id%[["concepts"]]
+        # For new configurations, select all available concepts instead of default
+        if (exists("selected_concepts") && nrow(selected_concepts) > 0) {
+            # Get allowed domains based on chart_type
+            chart_type_for_concepts <- if (!is.null(saved_values[["chart_type"]])) {
+                saved_values[["chart_type"]]$value
+            } else {
+                defaults_%widget_id%[["chart_type"]]
+            }
+            
+            allowed_domains_for_concepts <- if (chart_type_for_concepts == "dygraphs") {
+                c("Measurement", "Observation")
+            } else if (chart_type_for_concepts == "plotly") {
+                c("Measurement", "Observation", "Condition", "Procedure", "Drug")
+            } else {
+                c("Measurement", "Observation")
+            }
+            
+            # Get all available concepts for the chart type and convert to comma-separated string
+            available_concepts <- selected_concepts %>% 
+                dplyr::filter(domain_id %in% allowed_domains_for_concepts) %>%
+                dplyr::pull(concept_id)
+            paste(available_concepts, collapse = ", ")
+        } else {
+            defaults_%widget_id%[["concepts"]]
+        }
     }
     
     # Apply cascade logic based on chart_type
