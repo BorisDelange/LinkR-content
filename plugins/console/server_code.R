@@ -263,7 +263,7 @@ observe_event(input$prog_language_%widget_id%, {
 
 # Handle comment/uncomment keyboard shortcut (Ctrl+Shift+C)
 observe_event(input$code_%widget_id%_comment, {
-    toggle_comments(
+    editor_toggle_comments(
         input_id = "code_%widget_id%", 
         code = input$code_%widget_id%,
         selection = input$code_%widget_id%_comment$range, 
@@ -391,7 +391,7 @@ observe_event(input$run_code_%widget_id%, {
                 
             }, error = function(e) {
                 # If there's an error, display it in console format
-                error_message <- paste("Rmarkdown Error:", e$message)
+                error_message <- paste("Rmarkdown", i18np$t("error_executing_code"), e$message, sep = " - ")
                 
                 shinyjs::show("console_output_div_%widget_id%")
                 
@@ -451,7 +451,7 @@ observe_event(input$run_code_%widget_id%, {
                 
             }, error = function(e) {
                 # If there's an error, display it in console format
-                error_message <- paste("Error:", e$message)
+                error_message <- paste(i18np$t("error_executing_code"), e$message, sep = ": ")
                 
                 shinyjs::show("console_output_div_%widget_id%")
                 
@@ -481,7 +481,7 @@ observe_event(input$run_code_%widget_id%, {
             
         }, error = function(e) {
             # If there's an error, display it in console format
-            error_message <- paste("Python Error:", e$message)
+            error_message <- paste("Python", i18np$t("error_executing_code"), e$message, sep = " - ")
             
             shinyjs::show("console_output_div_%widget_id%")
             
