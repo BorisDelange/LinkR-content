@@ -336,9 +336,78 @@ generate_output_code_%widget_id% <- function(data_source = "person", concepts_ch
         "    # Check if data is available",
         "    if (nrow(data) == 0) {",
         "        error_message <- i18np$t(\"no_data_to_display\")",
-        "    } else {"
+        "    } else {",
+        "        ",
+        "        # Show datatable and datetime slider",
+        "        shinyjs::hide(\"dynamic_output_div_%widget_id%\")",
+        "        sapply(c(\"datatable_div_%widget_id%\", \"datetime_slider_div_%widget_id%\"), shinyjs::show)",
+        "        ",
+        "        # Get date range for temporal filtering"
     )
     
+    # Add temporal range logic before processing modes
+    code_lines <- c(code_lines, "")
+    
+    # Add visit occurrence date range query for person data source
+    if (data_source == "person") {
+        code_lines <- c(code_lines,
+            "        range_sql <- glue::glue_sql(\"",
+            "            SELECT",
+            "                MIN(visit_start_datetime) AS min_datetime,", 
+            "                MAX(visit_end_datetime) AS max_datetime",
+            "            FROM visit_occurrence",
+            "            WHERE person_id = {m$selected_person}\", .con = d$con)"
+        )
+    } else {
+        code_lines <- c(code_lines,
+            "        range_sql <- glue::glue_sql(\"",
+            "            SELECT",
+            "                MIN(visit_detail_start_datetime) AS min_datetime,", 
+            "                MAX(visit_detail_end_datetime) AS max_datetime",
+            "            FROM visit_detail",
+            "            WHERE visit_detail_id = {m$selected_visit_detail}\", .con = d$con)"
+        )
+    }
+    
+    code_lines <- c(code_lines,
+        "        datetime_range <- DBI::dbGetQuery(d$con, range_sql)",
+        "        data_datetimes_range <- c(datetime_range$min_datetime, datetime_range$max_datetime)",
+        "        m$data_datetimes_range_%widget_id% <- data_datetimes_range",
+        "        ",
+        "        # Determine filtering datetimes (with synchronization support)",
+        "        datetimes <- data_datetimes_range",
+        "        ",
+        "        # Check for timeline synchronization",
+        "        if (isTRUE(input$synchronize_timelines_%widget_id%)) {",
+        "            if (!is.null(m$debounced_datetimes_timeline_%tab_id%)) {",
+        "                if (length(m$debounced_datetimes_timeline_%tab_id%()) > 0) {",
+        "                    datetimes <- m$debounced_datetimes_timeline_%tab_id%()",
+        "                }",
+        "            }",
+        "        } else {",
+        "            if (!is.null(m$debounced_datetime_slider_%widget_id%)) {",
+        "                if (length(m$debounced_datetime_slider_%widget_id%()) > 0) {",
+        "                    if (m$debounced_datetime_slider_%widget_id%()[[1]] >= data_datetimes_range[[1]] &",
+        "                        m$debounced_datetime_slider_%widget_id%()[[2]] <= data_datetimes_range[[2]]) {",
+        "                        datetimes <- m$debounced_datetime_slider_%widget_id%()",
+        "                    }",
+        "                }",
+        "            }",
+        "        }",
+        "        ",
+        "        if (length(datetimes) > 0) m$datetimes_%widget_id% <- datetimes",
+        "        ",
+        "        # Update datetime slider",
+        "        updateSliderInput(",
+        "            session, \"datetime_slider_%widget_id%\",",
+        "            min = data_datetimes_range[[1]], max = data_datetimes_range[[2]],",
+        "            value = datetimes,",
+        "            timeFormat = ifelse(language == \"fr\", \"%d-%m-%Y %H:%M\", \"%Y-%m-%d %H:%M\"),",
+        "            step = 3600000",
+        "        )",
+        ""
+    )
+
     if (column_organization == "regular_intervals") {
         # Regular intervals mode - existing logic
         code_lines <- c(code_lines,
@@ -399,6 +468,7 @@ generate_output_code_%widget_id% <- function(data_source = "person", concepts_ch
         "                by = \"measurement_concept_id\"",
         "            ) %>%",
         "            dplyr::mutate(measurement_concept_name = dplyr::if_else(is.na(measurement_concept_name), as.character(measurement_concept_id), measurement_concept_name)) %>%",
+        "            dplyr::filter(measurement_datetime >= datetimes[[1]] & measurement_datetime <= datetimes[[2]]) %>%",
         "            dplyr::select(measurement_concept_name, measurement_datetime, value_as_number) %>%",
         "            dplyr::arrange(measurement_concept_name, measurement_datetime) %>%",
         "            dplyr::mutate(",
@@ -496,6 +566,7 @@ generate_output_code_%widget_id% <- function(data_source = "person", concepts_ch
             "                    \" <span style='color:#0084D8'>\", format(measurement_datetime, \"%H:%M\"), \"</span>\"",
             "                )",
             "            ) %>%",
+            "            dplyr::filter(measurement_datetime >= datetimes[[1]] & measurement_datetime <= datetimes[[2]]) %>%",
             "            dplyr::select(measurement_concept_name, formatted_datetime, value_as_number, measurement_datetime) %>%",
             "            dplyr::arrange(measurement_concept_name, measurement_datetime) %>%",
             "            dplyr::select(-measurement_datetime) %>%",
@@ -640,7 +711,7 @@ observe_event(input$run_code_%widget_id%, {
     # HIDE ALL OUTPUTS INITIALLY
     # ====================
     # Hide all output containers before execution
-    sapply(c("error_message_div_%widget_id%", "plot_div_%widget_id%", "table_div_%widget_id%", "datatable_div_%widget_id%", "dynamic_output_div_%widget_id%"), shinyjs::hide)
+    sapply(c("error_message_div_%widget_id%", "plot_div_%widget_id%", "table_div_%widget_id%", "datatable_div_%widget_id%", "dynamic_output_div_%widget_id%", "datetime_slider_div_%widget_id%"), shinyjs::hide)
     
     # ====================
     # EXECUTE USER CODE
@@ -740,5 +811,32 @@ observe_event(input$run_code_%widget_id%, {
         
         # Notify user
         show_message_bar("modif_saved", "success")
+    }
+})
+
+# ======================================
+# DATETIME SLIDER MANAGEMENT
+# ======================================
+
+# Initialize reactive values for datetime slider
+if (!exists("m$debounced_datetime_slider_%widget_id%")) {
+    m$debounced_datetime_slider_%widget_id% <- reactiveVal()
+    m$datetime_slider_%widget_id% <- reactiveVal()
+    m$debounced_datetime_slider_%widget_id% <- reactive(m$datetime_slider_%widget_id%()) %>% debounce(500)
+}
+
+# Observe datetime slider changes
+observe_event(input$datetime_slider_%widget_id%, {
+    m$datetime_slider_%widget_id%(input$datetime_slider_%widget_id%)
+})
+
+# Auto-execute when datetime slider changes (debounced)
+observe_event(m$debounced_datetime_slider_%widget_id%(), {
+    # Check if auto-execution is enabled
+    if (length(input$automatically_update_output_%widget_id%) > 0 && 
+        isTRUE(input$automatically_update_output_%widget_id%)) {
+        
+        # Execute the code when slider changes
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
     }
 })
