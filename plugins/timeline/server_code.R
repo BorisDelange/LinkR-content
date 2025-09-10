@@ -317,7 +317,6 @@ observe_event(m$selected_visit_detail, {
 
 # Helper function to reset timeline synchronization variables
 reset_timeline_variables_%widget_id% <- function() {
-    m$debounced_datetimes_timeline_%tab_id% <- reactiveVal()
     m$datetimes_timeline_%tab_id% <- reactiveVal()
     m$debounced_datetimes_timeline_%tab_id% <- reactiveVal()
     m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
@@ -505,6 +504,9 @@ observe_event(input$dygraph_%widget_id%_date_window, {
         tz = "UTC"
     )
     
+    # Mark this widget as the source of the timeline change
+    m$timeline_source_%tab_id% <- %widget_id%
+    
     # Update the shared timeline reactive value
     m$datetimes_timeline_%tab_id%(datetime_values)
 }, log = FALSE)
@@ -518,6 +520,9 @@ observe_event(plotly::event_data("plotly_relayout", source = "plotly_%widget_id%
     relayout_data <- plotly::event_data("plotly_relayout", source = "plotly_%widget_id%")
     
     if (!is.null(relayout_data) && is.list(relayout_data)) {
+        
+        # Mark this widget as the source of the timeline change
+        m$timeline_source_%tab_id% <- %widget_id%
         
         if ("xaxis.autorange" %in% names(relayout_data) && relayout_data[["xaxis.autorange"]]) {
             # Auto-range was selected, use full data range
@@ -537,7 +542,7 @@ observe_event(plotly::event_data("plotly_relayout", source = "plotly_%widget_id%
             m$datetimes_timeline_%tab_id%(c(selected_min, selected_max))
         }
     }
-})
+}, log = FALSE)
 
 # Listen for timeline changes from other synchronized widgets
 observe_event(m$debounced_datetimes_timeline_%tab_id%(), {
@@ -549,6 +554,18 @@ observe_event(m$debounced_datetimes_timeline_%tab_id%(), {
         return()
     }
     
+    # Don't process if this widget was the source of the timeline change
+    if (!is.null(m$timeline_source_%tab_id%) && m$timeline_source_%tab_id% == %widget_id%) {
+        return()
+    }
+    
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    
+    # Clear the source after execution to reset state
+    shinyjs::delay(1500, {
+        if (!is.null(m$timeline_source_%tab_id%)) {
+            m$timeline_source_%tab_id% <- NULL
+        }
+    })
     
 }, ignoreInit = TRUE)
