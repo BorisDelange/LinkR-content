@@ -12,29 +12,31 @@
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - CODE EDITOR UI FILE
+# TEXT READER PLUGIN - CODE EDITOR UI FILE
 # 
-# This file defines the code editor interface for the widget plugin template.
-# It provides a full-featured R code editor with syntax highlighting, keyboard shortcuts,
-# and integration with the main widget interface.
+# This file defines the code editor interface for the text reader plugin.
+# It provides an optional R code editor for advanced clinical note processing,
+# custom text analysis, and medical data manipulation beyond the no-code interface.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - The default configuration should work for most R-based widgets
-# - Customize keyboard shortcuts if needed for specific plugin requirements
-# - Adjust editor settings (font size, theme, etc.) based on plugin needs
-# - Consider changing the mode if your plugin uses a different language
+# TEXT READER ADVANCED FEATURES:
+# - Custom R code for complex clinical note queries
+# - Advanced text processing and medical concept extraction
+# - Integration with OMOP CDM for custom note analysis
+# - Medical text mining and keyword extraction algorithms
+# - Clinical data preprocessing and transformation
 # 
-# FEATURES:
-# - R syntax highlighting and auto-completion
-# - Keyboard shortcuts for common operations (save, run, comment)
-# - Auto-scrolling and responsive layout
-# - Integration with the main UI's resizable panel system
+# MEDICAL DATA CODING CAPABILITIES:
+# - OMOP CDM note table custom queries
+# - Clinical concept vocabulary integration
+# - Patient cohort filtering and analysis
+# - Medical text preprocessing and cleaning
+# - Healthcare data transformation workflows
 # 
-# CUSTOMIZATION OPTIONS:
-# - mode: Change from "r" to other languages (javascript, sql, python, etc.)
-# - fontSize: Adjust for better readability
-# - theme: Can be customized via aceEditor themes
-# - hotkeys: Add or modify keyboard shortcuts for plugin-specific actions
+# EDITOR FEATURES:
+# - R syntax highlighting for medical data analysis
+# - Keyboard shortcuts for clinical coding workflows
+# - Auto-scrolling and responsive layout for long queries
+# - Integration with clinical data processing pipeline
 
 # R Code Editor with syntax highlighting and keyboard shortcuts
 shinyAce::aceEditor(

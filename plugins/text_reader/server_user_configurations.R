@@ -4,39 +4,40 @@
 
 # ████████████████████████████████████████████████████████████████████████████████
 # ██                                                                            ██
-# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
+# ██  🔧 OPTIONAL CUSTOMIZATION - PLUGIN ENHANCEMENT  🔧                        ██
 # ██                                                                            ██
-# ██  This file MUST be customized for plugins with complex dropdown logic.    ██
-# ██  Follow the template patterns and implement your cascade logic.           ██
-# ██  See comments and examples for guidance.                                  ██
+# ██  This file provides default functionality that works out-of-the-box.       ██
+# ██  Customize only if you need specific features or modifications.            ██
+# ██  Safe to use as-is for standard plugin requirements.                       ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - USER CONFIGURATIONS SERVER FILE
+# TEXT READER PLUGIN - USER CONFIGURATIONS SERVER FILE
 # 
-# This file handles the server-side logic for user configuration management.
-# It provides comprehensive functionality for creating, selecting, renaming, 
-# deleting, persisting, loading, and saving user configuration presets, 
-# allowing users to save and quickly switch between different analysis scenarios.
+# This file handles the server-side logic for managing text reader user configurations.
+# It allows users to save and quickly switch between different search and display 
+# configurations for clinical note analysis and keyword management.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - For simple plugins: This file works without modification
-# - For complex plugins with dropdown cascades: Customize the configuration loading section
-# - The configuration system automatically integrates with your plugin's settings
-# - Database operations are handled automatically by the template framework
-# - Validation and UI styling are already implemented
+# PLUGIN FUNCTIONALITY:
+# - Save search word set combinations and display preferences
+# - Create named configurations for different clinical research scenarios
+# - Quick switching between configurations for different analysis contexts
+# - Automatic loading of text reader specific settings
+# - Validation of word set selections and display options
 # 
-# ADVANCED CUSTOMIZATION FOR DROPDOWN CASCADES:
-# Some plugins have complex dropdown dependencies (e.g., output type affects available variables).
-# In this template example: when output_type = "summary", only numeric variables should be available,
-# but when output_type = "histogram" or "table", all variables including categorical ones are available.
-# For these plugins, you need to customize the configuration loading logic to handle:
-# - Conditional dropdown options based on other settings
-# - Cascade updates when primary dropdowns change  
-# - Default value selection for dependent dropdowns
-# - UI element show/hide logic based on selections
+# CONFIGURATION MANAGEMENT FEATURES:
+# - Word set selection persistence across sessions
+# - Note filtering and display preference storage
+# - Auto-update toggle state management
+# - Search configuration templates for clinical workflows
+# - Multi-user configuration sharing capabilities
 # 
-# See the configuration loading section below for implementation patterns.
+# TEXT READER SPECIFIC SETTINGS:
+# - Search word sets multiselect dropdown handling
+# - Filter notes with matches toggle state
+# - Display raw text preference storage
+# - Automatic update configuration management
+# - Tab navigation state persistence
 # 
 # CORE FUNCTIONALITY:
 # - Create new configuration presets with validation

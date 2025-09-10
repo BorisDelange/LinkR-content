@@ -4,25 +4,26 @@
 
 # ████████████████████████████████████████████████████████████████████████████████
 # ██                                                                            ██
-# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
+# ██  🔧 OPTIONAL CUSTOMIZATION - PLUGIN ENHANCEMENT  🔧                        ██
 # ██                                                                            ██
-# ██  This file MUST be customized for your specific plugin.                    ██
-# ██  Follow the template structure and implement your logic.                   ██
-# ██  See comments and examples for guidance.                                   ██
+# ██  This file provides default functionality that works out-of-the-box.       ██
+# ██  Customize only if you need specific features or modifications.            ██
+# ██  Safe to use as-is for standard plugin requirements.                       ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - OUTPUT SETTINGS UI FILE
+# TEXT READER PLUGIN - OUTPUT SETTINGS UI FILE
 # 
-# This file defines the no-code configuration interface for the widget plugin template.
-# It provides user-friendly controls that automatically generate and modify the underlying
-# R code based on user selections, eliminating the need for manual coding.
+# This file defines the no-code configuration interface for the text reader plugin.
+# It provides user-friendly controls for managing clinical note display, keyword search,
+# and text analysis settings without requiring manual coding.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - Remove unused configuration sections and keep only relevant controls
-# - Customize dropdown options, labels, and default values for your specific use case
-# - Add validation logic in server_output_settings.R to ensure valid configuration combinations
-# - Connect each input to code generation logic that updates the R code accordingly
+# PLUGIN INTERFACE FEATURES:
+# - Tab-based navigation between Notes, Keyword Search, and Layout sections
+# - Word set management with creation, editing, and deletion capabilities
+# - Search configuration with multi-select word set dropdown
+# - Display preferences for raw text vs formatted viewing
+# - Auto-update toggle for patient selection changes
 # 
 # IMPORTANT NOTES:
 # - AVOID using conditionalPanel() to show/hide UI elements. Instead, manage this logic

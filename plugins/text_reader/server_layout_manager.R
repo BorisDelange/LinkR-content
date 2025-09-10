@@ -12,17 +12,17 @@
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - LAYOUT MANAGER SERVER FILE
+# TEXT READER PLUGIN - LAYOUT MANAGER SERVER FILE
 # 
-# This file manages the dynamic layout system for the widget plugin template.
-# It provides a sophisticated resizable panel interface that enhances user experience
-# by allowing flexible workspace arrangements.
+# This file manages the dynamic layout system for the text reader plugin.
+# It provides a sophisticated resizable panel interface that enhances clinical workflow
+# by allowing flexible workspace arrangements for medical text analysis.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - This file should work without modification for most plugins
-# - The layout system automatically adapts to different panel configurations
-# - Panel width preferences are automatically saved to the database
-# - No customization typically needed unless adding new panel types
+# CLINICAL WORKFLOW OPTIMIZATION:
+# - Side-by-side clinical note viewing and search configuration
+# - Optimal layout for medical text analysis and keyword management
+# - Persistent layout preferences for healthcare provider workflows
+# - Automatic adaptation to different clinical documentation scenarios
 # 
 # FEATURES PROVIDED:
 # - Side-by-side vs full-width layout modes for optimal screen real estate usage

@@ -1,5 +1,5 @@
 # ==========================================
-# Server - Main file
+# Text Reader Plugin - Server Main File
 # ==========================================
 
 # ████████████████████████████████████████████████████████████████████████████████
@@ -12,22 +12,26 @@
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - SERVER MAIN FILE
+# TEXT READER PLUGIN - SERVER MAIN FILE
 # 
-# This file serves as the main server logic controller for the widget plugin template.
-# It manages tab navigation and coordinates between different functional modules.
+# This file serves as the main server logic controller for the text reader plugin.
+# It manages tab navigation and coordinates between note display, search, and configuration modules.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# Add your new server script files in the "IMPORT SERVER MODULES" section at the bottom
-# of this file using the %import_script('your_new_server_file.R')% syntax.
+# PLUGIN FEATURES:
+# - Clinical notes display with OMOP CDM integration
+# - Keyword search with customizable word sets
+# - Text highlighting and filtering capabilities
+# - Raw text vs formatted display options
+# - Patient-specific note retrieval and analysis
 # 
 # TAB SYSTEM OVERVIEW:
-# - output: Displays the execution result of the code (typically a chart, plot, or visualization)
-# - output_settings: No-code interface with graphical controls to configure the output parameters
-# - code: Code editor where users can write/modify code. Connected to output_settings in a 
-# low-code approach where output_settings parameters automatically generate code
-# - user_configurations: Interface to create, save, and manage different configurations 
-# (saves both output_settings parameters and code content)
+# - output: Displays selected clinical notes with highlighting and formatting options
+# - output_settings: No-code interface with three main sections:
+#   • Notes: DataTable showing all notes for selected patient
+#   • Keyword Search: Word set management and search configuration
+#   • Layout: Display preferences and automatic update settings
+# - code: Advanced code editor for custom note processing (optional)
+# - user_configurations: Save and manage different search and display configurations
 
 # ======================================
 # TAB NAVIGATION SYSTEM

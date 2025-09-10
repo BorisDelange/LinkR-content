@@ -1,68 +1,54 @@
 # ==========================================
-# server_code.R - Code Editor Server Logic
+# Text Reader Plugin - Code Editor Server Logic
 # ==========================================
 
 # ████████████████████████████████████████████████████████████████████████████████
 # ██                                                                            ██
-# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
+# ██  🔧 OPTIONAL CUSTOMIZATION - PLUGIN ENHANCEMENT  🔧                        ██
 # ██                                                                            ██
-# ██  This file MUST be customized for your specific plugin.                    ██
-# ██  Follow the template structure and implement your logic.                   ██
-# ██  See comments and examples for guidance.                                   ██
+# ██  This file provides default functionality that works out-of-the-box.       ██
+# ██  Customize only if you need specific features or modifications.            ██
+# ██  Safe to use as-is for standard plugin requirements.                       ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - CODE EDITOR SERVER FILE
+# TEXT READER PLUGIN - CODE EXECUTION SERVER FILE
 # 
-# This file handles the server-side logic for the code editor and output generation.
-# It provides the foundation for automatic code generation from UI settings and
-# manual code execution, creating a seamless no-code to code experience.
+# This file handles the server-side logic for clinical notes display and text processing.
+# It manages note retrieval from OMOP CDM, keyword highlighting, and patient-specific
+# text analysis for medical data review and research.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - Implement the generate_output_code_%widget_id%() function for your specific analysis
-# - Customize the code execution logic in the run_code observer
-# - Add patient selection validation following the commented example (lines 307-318)
-# - Configure UI message handling for user-friendly error display (lines 350-398)
-# - Add translations for plugin-specific messages in translations.csv
-# - Add any plugin-specific helper functions and variables
-# - Modify auto-execution triggers based on your data dependencies
+# PLUGIN FUNCTIONALITY:
+# - Retrieves clinical notes from OMOP CDM note table
+# - Displays notes in a searchable, filterable DataTable
+# - Highlights keywords based on user-defined word sets
+# - Supports both formatted and raw text display modes
+# - Automatically updates when patient selection changes
+# - Integrates with medical concept vocabularies
 # 
-# CORE FUNCTIONALITY:
-# - Automatic R code generation from UI configuration settings
-# - Code editor with syntax highlighting and keyboard shortcuts
-# - Manual code execution with error handling and output display
-# - Auto-execution when data context changes (optional)
-# - Integration with the widget's database storage system
+# CORE FEATURES:
+# - Patient-specific note filtering and display
+# - Keyword search with configurable word sets
+# - Text highlighting for medical term identification
+# - Note selection and detailed viewing
+# - Raw text vs formatted display options
+# - Auto-execution when patient context changes
+# - Integration with clinical data workflows
 # 
-# COMMON PLUGIN PATTERNS:
+# MEDICAL DATA INTEGRATION:
+# - OMOP CDM note table integration
+# - Medical concept vocabulary support
+# - Patient cohort and visit context filtering
+# - Healthcare provider and care site integration
+# - Note type classification and filtering
+# - Medical text preprocessing and analysis
 # 
-# HEALTHCARE DATA ANALYSIS PLUGINS:
-#   - Patient selection validation with user-friendly error messages
-#   - OMOP medical data integration and filtering
-#   - Healthcare indicator calculations (mortality, LOS, readmission rates)
-#   - Generate statistical analysis code (t-tests, regression, ANOVA)
-#   - Create summary statistics and descriptive analysis
-# 
-# VISUALIZATION PLUGINS:
-#   - Timeline visualizations with dygraphs and plotly
-#   - Healthcare dashboards with indicator cards
-#   - Generate ggplot2 code for various chart types
-#   - Create interactive plotly visualizations with medical data
-#   - Build custom plotting functions with user parameters
-# 
-# MEDICAL DATA PROCESSING PLUGINS:
-#   - OMOP CDM data filtering and transformation
-#   - Patient cohort and visit detail processing  
-#   - Medical concept mapping and vocabulary integration
-#   - Care site and hospital unit filtering
-#   - Generate data cleaning and preparation workflows
-# 
-# REPORTING PLUGINS:
-#   - Healthcare indicator reports and dashboards
-#   - Patient summary reports with medical timelines
-#   - Generate markdown or HTML report code
-#   - Create formatted table output code
-#   - Build export and download functionality
+# TEXT PROCESSING CAPABILITIES:
+# - Clinical note text highlighting and formatting
+# - Medical keyword search and filtering
+# - Note categorization and organization
+# - Text analysis for medical research
+# - Clinical documentation review workflows
 
 # ======================================
 # INITIALIZATION

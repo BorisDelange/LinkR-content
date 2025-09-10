@@ -12,32 +12,32 @@
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - USER CONFIGURATIONS UI FILE
+# TEXT READER PLUGIN - USER CONFIGURATIONS UI FILE
 # 
-# This file defines the user configuration management interface for the widget plugin template.
-# It provides functionality for users to save, load, rename, and manage different configuration presets,
-# allowing them to quickly switch between different analysis scenarios or parameter sets.
+# This file defines the user configuration management interface for the text reader plugin.
+# It provides functionality for users to save, load, rename, and manage different search and display 
+# configuration presets for clinical note analysis and medical text processing.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - The default functionality should work for most plugins without modification
-# - Customize text labels and messages if needed for your specific use case
-# - Consider adding validation logic in server.R for configuration names
-# - The database integration is handled automatically by the main UI template
+# TEXT READER CONFIGURATION FEATURES:
+# - Save word set combinations for different clinical research scenarios
+# - Store search and filter preferences for medical text analysis
+# - Manage display settings for clinical note formatting
+# - Quick switching between research configurations and patient cohorts
+# - Template configurations for common medical text analysis workflows
 # 
-# FEATURES PROVIDED:
-# - Create new configuration presets with custom names
-# - Select and load existing configurations from dropdown
-# - Rename existing configurations with validation and duplicate checking
-# - Delete unwanted configurations with confirmation dialog
-# - Modal dialogs for user interactions (create/rename/delete)
-# - Integration with the main widget's database storage system
+# CLINICAL WORKFLOW INTEGRATION:
+# - Research scenario configurations (oncology, cardiology, etc.)
+# - Patient cohort-specific search templates
+# - Medical terminology word set collections
+# - Clinical documentation review presets
+# - Healthcare provider workflow configurations
 # 
-# USER WORKFLOW:
-# 1. User configures widget settings in the output_settings panel
-# 2. User clicks "Create Configuration" to save current settings
-# 3. User can switch between configurations via dropdown selection
-# 4. User can rename configurations to better organize their presets
-# 5. User can delete configurations they no longer need
+# USER WORKFLOW FOR MEDICAL TEXT ANALYSIS:
+# 1. User configures word sets and search parameters for specific medical analysis
+# 2. User clicks "Create Configuration" to save clinical search template
+# 3. User can switch between medical research configurations via dropdown
+# 4. User can rename configurations to match clinical research projects
+# 5. User can delete outdated medical analysis configurations
 # 
 # DATABASE INTEGRATION:
 # - Configurations are automatically saved to the widgets_options table

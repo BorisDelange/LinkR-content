@@ -1,46 +1,47 @@
 # ==========================================
-# server_output_settings.R - Output Configuration Server Logic
+# Text Reader Plugin - Output Configuration Server Logic
 # ==========================================
 
 # ████████████████████████████████████████████████████████████████████████████████
 # ██                                                                            ██
-# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
+# ██  🔧 OPTIONAL CUSTOMIZATION - PLUGIN ENHANCEMENT  🔧                        ██
 # ██                                                                            ██
-# ██  This file MUST be customized for your specific plugin.                    ██
-# ██  Follow the template structure and implement your logic.                   ██
-# ██  See comments and examples for guidance.                                   ██
+# ██  This file provides default functionality that works out-of-the-box.       ██
+# ██  Customize only if you need specific features or modifications.            ██
+# ██  Safe to use as-is for standard plugin requirements.                       ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
-# PLUGIN TEMPLATE - OUTPUT SETTINGS SERVER FILE
+# TEXT READER PLUGIN - OUTPUT SETTINGS SERVER FILE
 # 
-# This file handles the server-side logic for the output configuration interface.
-# It manages user interactions with the no-code settings panel.
+# This file handles the server-side logic for the text reader configuration interface.
+# It manages keyword search, word set management, and display preferences for clinical notes.
 # 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - Customize the dynamic UI observers for your specific input elements
-# - Implement validation logic for your parameter combinations
+# PLUGIN SETTINGS MANAGEMENT:
+# - Word set creation, editing, and deletion
+# - Keyword search configuration and filtering
+# - Display preferences for note formatting
+# - Tab switching between Notes, Keyword Search, and Layout sections
 # 
 # CORE FUNCTIONALITY:
-# - Dynamic UI updates based on user selections
-# - Bulk selection helpers (select all/clear all functionality)
-# - Input validation and error handling
-# - Conditional UI display using shinyjs::show() and shinyjs::hide() to dynamically
-#   show or hide UI elements based on user selections (e.g., showing title inputs
-#   only when certain output types are selected)
+# - Word set management with database persistence
+# - Dynamic dropdown updates for search word sets
+# - Tab-based navigation for different configuration areas
+# - Real-time UI updates based on user selections
+# - Input validation and error handling for word set names
 # 
-# COMMON CONFIGURATION PATTERNS:
+# WORD SET MANAGEMENT:
+# - Create new word sets with unique name validation
+# - Edit existing word sets by adding/removing words
+# - Delete word sets with confirmation dialogs
+# - Dynamic word list display with removal capabilities
+# - Database integration for persistent word set storage
 # 
-# CONDITIONAL UI DISPLAY:
-#   Show/hide settings based on other selections (e.g., output type affects available options)
-# 
-# CASCADING UPDATES:
-#   Filter available options based on previous selections (e.g., dataset affects variables)
-# 
-# UPDATE LOCK MECHANISM:
-#   Prevent automatic field updates during configuration loading using input$update_lock_%widget_id%
-#   This solves conflicts where observe_event reactions overwrite values being loaded from saved configs
-#   Pattern: Check if (isTRUE(input$update_lock_%widget_id%)) { return() } at start of observe_event
+# SEARCH CONFIGURATION:
+# - Multi-select dropdown for active word sets
+# - Note filtering based on keyword matches
+# - Real-time search result highlighting
+# - Configuration persistence across sessions
 
 # ======================================
 # CENTRALIZED INPUT DEFINITIONS
