@@ -409,40 +409,15 @@ generate_output_code_%widget_id% <- function(data_source = "person", concepts_ch
     )
 
     if (column_organization == "regular_intervals") {
-        # Regular intervals mode - existing logic
+        # Regular intervals mode - using the datetimes variable from the synchronization logic above
         code_lines <- c(code_lines,
             "",
             "        # Mode: Regular intervals with aggregation",
             "        if (language == \"fr\") date_format <- \"%d-%m-%Y\"",
-            "        else date_format <- \"%Y-%m-%d\""
-        )
-    
-    if (data_source == "person") {
-        code_lines <- c(code_lines,
-            "        range_sql <- glue::glue_sql(\"",
-            "            SELECT ",
-            "                MIN(visit_start_datetime) AS min_datetime,",
-            "                MAX(visit_end_datetime) AS max_datetime",
-            "            FROM visit_occurrence",
-            "            WHERE person_id = {m$selected_person}\", .con = d$con)"
-        )
-    } else {
-        code_lines <- c(code_lines,
-            "        range_sql <- glue::glue_sql(\"",
-            "            SELECT",
-            "                MIN(visit_detail_start_datetime) AS min_datetime,", 
-            "                MAX(visit_detail_end_datetime) AS max_datetime",
-            "            FROM visit_detail",
-            "            WHERE visit_detail_id = {m$selected_visit_detail}\", .con = d$con)"
-        )
-    }
-    
-    code_lines <- c(code_lines,
-        "        datetime_range <- DBI::dbGetQuery(d$con, range_sql)",
-        "        datetimes <- c(datetime_range$min_datetime, datetime_range$max_datetime)",
-        "",
-        paste0("        # Create ", num_cols, " time intervals"),
-        paste0("        interval_duration <- as.numeric(difftime(datetimes[[2]], datetimes[[1]], units = \"secs\")) / ", num_cols),
+            "        else date_format <- \"%Y-%m-%d\"",
+            "",
+            paste0("        # Create ", num_cols, " time intervals"),
+            paste0("        interval_duration <- as.numeric(difftime(datetimes[[2]], datetimes[[1]], units = \"secs\")) / ", num_cols),
         "",
         paste0("        intervals <- tibble::tibble("),
         paste0("            interval = 0:(", num_cols, " - 1),"),
