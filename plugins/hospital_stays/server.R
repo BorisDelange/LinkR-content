@@ -88,6 +88,7 @@ observe_event(input$current_tab_trigger_%widget_id%, {
         } else {
             # Full-width mode: use settings_container structure
             shinyjs::hide("output_div_%widget_id%")
+            shinyjs::show("settings_container_%widget_id%")
             
             shinyjs::runjs(paste0("
                 var outputDiv = $('#", id, "-output_div_%widget_id%');

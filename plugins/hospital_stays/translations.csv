@@ -38,3 +38,4 @@ no_data_to_display,No data available for this patient.,Aucune donnée disponible
 hospital_unit,Hospital unit,Unité hospitalière
 datetime_start,Start date,Date de début
 datetime_end,End date,Date de fin
+error_executing_code,Error executing code,Erreur lors de l'exécution du code

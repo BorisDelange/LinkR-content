@@ -48,7 +48,7 @@ shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.disp
 
 # Handle comment/uncomment keyboard shortcut (Ctrl+Shift+C)
 observe_event(input$code_%widget_id%_comment, {
-    toggle_comments(
+    editor_toggle_comments(
         input_id = "code_%widget_id%", 
         code = input$code_%widget_id%,
         selection = input$code_%widget_id%_comment$range, 
@@ -238,7 +238,7 @@ observe_event(input$run_code_%widget_id%, {
             eval(parse(text = m$code_%widget_id%))
         }, error = function(e) {
             # Capture any execution errors
-            error_message <<- paste("Error executing code:", e$message)
+            error_message <<- paste(i18np$t("error_executing_code"), ":", e$message)
         })
     }
     
@@ -267,7 +267,8 @@ observe_event(input$run_code_%widget_id%, {
         
         if (is_ui_message) {
             # Extract the actual message without "Error executing code:" prefix if present
-            clean_message <- gsub("^Error executing code: ", "", display_message)
+            error_prefix_en <- paste0(i18np$t("error_executing_code"), ": ")
+            clean_message <- gsub(paste0("^", error_prefix_en), "", display_message)
             # Display nice message in UI output
             output$dynamic_output_%widget_id% <- renderUI({
                 div(
