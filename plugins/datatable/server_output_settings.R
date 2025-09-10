@@ -65,7 +65,7 @@ all_inputs_%widget_id% <- list(
     list(id = "num_cols", type = "number", default = 8),
     list(id = "aggregate_fct", type = "dropdown", default = "mean"),
     list(id = "synchronize_timelines", type = "toggle", default = FALSE),
-    list(id = "automatically_update_output", type = "toggle", default = TRUE),
+    list(id = "auto_update", type = "toggle", default = TRUE),
     list(id = "code", type = "code", default = "")
 )
 

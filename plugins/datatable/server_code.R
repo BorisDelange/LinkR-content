@@ -490,10 +490,10 @@ generate_output_code_%widget_id% <- function(data_source = "person", concepts_ch
     
     # Add the logic based on concepts_choice
     if (concepts_choice == "selected_concepts") {
-        # Selected concepts mode - use the selected concepts list
+        # Selected concepts mode - use only the user-selected concepts
         code_lines <- c(code_lines,
             "        all_concepts <- d$dataset_concept %>%",
-            paste0("            dplyr::filter(concept_id %in% c(", paste(selected_concepts, collapse = ", "), ")) %>%"),
+            paste0("            dplyr::filter(concept_id %in% c(", paste(concepts, collapse = ", "), ")) %>%"),
             "            dplyr::select(concept_name) %>%",
             "            dplyr::distinct() %>%",
             "            dplyr::rename(measurement_concept_name = concept_name)",
@@ -621,10 +621,10 @@ generate_output_code_%widget_id% <- function(data_source = "person", concepts_ch
         
         # Add the logic based on concepts_choice for by_timestamp mode
         if (concepts_choice == "selected_concepts") {
-            # Selected concepts mode - use the selected concepts list
+            # Selected concepts mode - use only the user-selected concepts
             code_lines <- c(code_lines,
                 "        all_concepts <- d$dataset_concept %>%",
-                paste0("            dplyr::filter(concept_id %in% c(", paste(selected_concepts, collapse = ", "), ")) %>%"),
+                paste0("            dplyr::filter(concept_id %in% c(", paste(concepts, collapse = ", "), ")) %>%"),
                 "            dplyr::select(concept_name) %>%",
                 "            dplyr::distinct() %>%",
                 "            dplyr::rename(measurement_concept_name = concept_name)",
@@ -724,7 +724,7 @@ generate_output_code_%widget_id% <- function(data_source = "person", concepts_ch
 # Auto-run code when patient selection changes
 observe_event(m$selected_person, {
     # Check if auto-run is enabled and data source matches
-    if (!isTRUE(input$automatically_update_output_%widget_id%) || 
+    if (!isTRUE(input$auto_update_%widget_id%) || 
         length(input$data_source_%widget_id%) == 0 || 
         input$data_source_%widget_id% != "person") {
         return()
@@ -737,7 +737,7 @@ observe_event(m$selected_person, {
 # Auto-run code when visit detail selection changes
 observe_event(m$selected_visit_detail, {
     # Check if auto-run is enabled and data source matches
-    if (!isTRUE(input$automatically_update_output_%widget_id%) || 
+    if (!isTRUE(input$auto_update_%widget_id%) || 
         length(input$data_source_%widget_id%) == 0 || 
         input$data_source_%widget_id% != "visit_detail") {
         return()
@@ -891,8 +891,8 @@ observe_event(input$datetime_slider_%widget_id%, {
 # Auto-execute when datetime slider changes (debounced)
 observe_event(m$debounced_datetime_slider_%widget_id%(), {
     # Check if auto-execution is enabled
-    if (length(input$automatically_update_output_%widget_id%) > 0 && 
-        isTRUE(input$automatically_update_output_%widget_id%)) {
+    if (length(input$auto_update_%widget_id%) > 0 && 
+        isTRUE(input$auto_update_%widget_id%)) {
         
         # Execute the code when slider changes
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))

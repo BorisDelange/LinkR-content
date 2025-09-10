@@ -1,7 +1,7 @@
 base,en,fr
 add,Add,Ajouter
 aggregated_function,Aggregated function,Fonction d'agrégation
-automatically_update_output,Automatically update output,Mettre à jour automatiquement les résultats
+auto_update,Automatically update output,Mettre à jour automatiquement les résultats
 by_timestamp,By timestamp,Par horodatage
 column_organization,Column organization,Organisation des colonnes
 regular_intervals,Regular intervals,Intervalles réguliers

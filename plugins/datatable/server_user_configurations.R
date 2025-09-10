@@ -603,66 +603,17 @@ observe_event(input$load_configuration_%widget_id%, {
                 # Track which inputs were loaded from saved settings
                 loaded_input_ids <- c(loaded_input_ids, setting_name)
                 
+                # Skip dropdowns handled in cascade logic but mark them as loaded
+                if (setting_name %in% c("concepts_choice", "omop_table", "concept_classes", "concepts", "column_organization", "num_cols", "aggregate_fct")) {
+                    loaded_input_ids <- c(loaded_input_ids, setting_name)
+                    next
+                }
+                
                 # Apply setting based on input type
                 switch(
                     input_def$type,
                     "dropdown" = {
                         shiny.fluent::updateDropdown.shinyInput(session, input_id, value = setting_value)
-                        
-                        # ======================================
-                        # DROPDOWN CASCADE CUSTOMIZATION SECTION
-                        # ======================================
-                        # This section handles complex dropdown dependencies for configuration loading.
-                        # CUSTOMIZE THIS LOGIC for your plugin's specific dropdown relationships.
-                        # 
-                        # TEMPLATE EXAMPLE: output_type affects variables dropdown
-                        # - When output_type = "summary": only numeric variables available
-                        # - When output_type = "histogram" or "table": all variables available
-                        # - Also handles UI show/hide logic (plot title visibility)
-                        #
-                        # FOR YOUR PLUGIN: Modify this logic to match your dropdown dependencies
-                        # Examples: chart_type -> concepts, data_source -> tables, etc.
-                        
-                        # Show/hide plot title input based on output type selection
-                        if (setting_name == "output_type" && !is.null(setting_value)) {
-                            if (setting_value == "histogram") {
-                                shinyjs::show("plot_title_div_%widget_id%")
-                            } else {
-                                shinyjs::hide("plot_title_div_%widget_id%")
-                            }
-                            
-                            # Update variables dropdown options based on output type
-                            if (setting_value == "summary") {
-                                # Only show numeric variables for summary statistics
-                                numeric_options <- list(
-                                    list(key = "Sepal.Length", text = "Sepal.Length"),
-                                    list(key = "Sepal.Width", text = "Sepal.Width"),
-                                    list(key = "Petal.Length", text = "Petal.Length"),
-                                    list(key = "Petal.Width", text = "Petal.Width")
-                                )
-                                
-                                shiny.fluent::updateDropdown.shinyInput(
-                                    session, 
-                                    "variables_%widget_id%", 
-                                    options = numeric_options
-                                )
-                            } else {
-                                # Show all variables for other output types
-                                all_options <- list(
-                                    list(key = "Sepal.Length", text = "Sepal.Length"),
-                                    list(key = "Sepal.Width", text = "Sepal.Width"),
-                                    list(key = "Petal.Length", text = "Petal.Length"),
-                                    list(key = "Petal.Width", text = "Petal.Width"),
-                                    list(key = "Species", text = "Species")
-                                )
-                                
-                                shiny.fluent::updateDropdown.shinyInput(
-                                    session, 
-                                    "variables_%widget_id%", 
-                                    options = all_options
-                                )
-                            }
-                        }
                     },
                     "multiselect" = {
                         if (!is.na(setting_value) && setting_value != "") {
@@ -704,6 +655,227 @@ observe_event(input$load_configuration_%widget_id%, {
         }
     }
     
+    # ======================================
+    # COMPREHENSIVE CASCADE LOGIC HANDLING
+    # ======================================
+    # Handle cascade logic - always execute whether we have saved settings or not
+    # Mark cascade dropdowns as loaded to prevent default values from being applied incorrectly
+    cascade_dropdowns <- c("concepts_choice", "omop_table", "concept_classes", "concepts", "column_organization", "num_cols", "aggregate_fct")
+    for (dropdown in cascade_dropdowns) {
+        if (!(dropdown %in% loaded_input_ids)) {
+            loaded_input_ids <- c(loaded_input_ids, dropdown)
+        }
+    }
+    
+    # Create a lookup for default values
+    defaults_%widget_id% <- list()
+    for (input_def in all_inputs_%widget_id%) {
+        if (input_def$type == "multiselect" && length(input_def$default) > 0) {
+            defaults_%widget_id%[[input_def$id]] <- paste(input_def$default, collapse = ", ")
+        } else {
+            defaults_%widget_id%[[input_def$id]] <- input_def$default
+        }
+    }
+    
+    # Get actual values to use (from saved settings or defaults)
+    concepts_choice_value <- if (!is.null(saved_values[["concepts_choice"]])) {
+        saved_values[["concepts_choice"]]$value
+    } else {
+        defaults_%widget_id%[["concepts_choice"]]
+    }
+    
+    omop_table_value <- if (!is.null(saved_values[["omop_table"]])) {
+        saved_values[["omop_table"]]$value
+    } else {
+        defaults_%widget_id%[["omop_table"]]
+    }
+    
+    concept_classes_value <- if (!is.null(saved_values[["concept_classes"]])) {
+        saved_values[["concept_classes"]]$value
+    } else {
+        defaults_%widget_id%[["concept_classes"]]
+    }
+    
+    concepts_value <- if (!is.null(saved_values[["concepts"]])) {
+        saved_values[["concepts"]]$value
+    } else {
+        # For new configurations, select all available concepts instead of default
+        if (exists("selected_concepts") && nrow(selected_concepts) > 0) {
+            available_concepts <- selected_concepts %>% 
+                dplyr::filter(domain_id %in% c("Measurement", "Observation")) %>%
+                dplyr::pull(concept_id)
+            paste(available_concepts, collapse = ", ")
+        } else {
+            defaults_%widget_id%[["concepts"]]
+        }
+    }
+    
+    column_organization_value <- if (!is.null(saved_values[["column_organization"]])) {
+        saved_values[["column_organization"]]$value
+    } else {
+        defaults_%widget_id%[["column_organization"]]
+    }
+    
+    num_cols_value <- if (!is.null(saved_values[["num_cols"]])) {
+        saved_values[["num_cols"]]$value_num
+    } else {
+        defaults_%widget_id%[["num_cols"]]
+    }
+    
+    aggregate_fct_value <- if (!is.null(saved_values[["aggregate_fct"]])) {
+        saved_values[["aggregate_fct"]]$value
+    } else {
+        defaults_%widget_id%[["aggregate_fct"]]
+    }
+    
+    # Apply comprehensive cascade logic for concepts_choice
+    if (concepts_choice_value == "selected_concept_classes") {
+        # Show OMOP table and concept classes selection
+        shinyjs::show("omop_table_div_%widget_id%")
+        shinyjs::show("concept_classes_div_%widget_id%")
+        shinyjs::hide("concepts_div_%widget_id%")
+        
+        # Update concepts_choice dropdown
+        shiny.fluent::updateDropdown.shinyInput(
+            session,
+            "concepts_choice_%widget_id%",
+            value = "selected_concept_classes"
+        )
+        
+        # Parse and update omop_table
+        omop_tables_to_select <- c()
+        if (!is.na(omop_table_value) && omop_table_value != "") {
+            omop_tables_to_select <- unlist(strsplit(omop_table_value, ", ?"))
+        }
+        
+        shiny.fluent::updateDropdown.shinyInput(
+            session,
+            "omop_table_%widget_id%",
+            value = omop_tables_to_select
+        )
+        
+        # Map OMOP tables to their corresponding domain_ids
+        table_to_domain_mapping <- list(
+            "measurement" = "Measurement",
+            "observation" = "Observation",
+            "procedure_occurrence" = "Procedure",
+            "condition_occurrence" = "Condition",
+            "drug_exposure" = "Drug"
+        )
+        
+        # Get allowed domains based on selected OMOP tables
+        allowed_domains <- unlist(table_to_domain_mapping[omop_tables_to_select])
+        
+        # Update concept class IDs for the selected OMOP tables
+        concept_class_ids <- tibble::tibble(concept_class_id = character())
+        if (length(d$dataset_concept) > 0) {
+            if (nrow(d$dataset_concept) > 0) {
+                concept_class_ids <- d$dataset_concept %>%
+                    dplyr::filter(domain_id %in% allowed_domains) %>%
+                    dplyr::distinct(concept_class_id) %>%
+                    dplyr::arrange(concept_class_id)
+            }
+        }
+        
+        # Parse saved concept_classes value
+        concept_classes_to_select <- c()
+        if (!is.na(concept_classes_value) && concept_classes_value != "") {
+            concept_classes_to_select <- unlist(strsplit(concept_classes_value, ", ?"))
+            # Filter to only keep concept classes that are available
+            concept_classes_to_select <- concept_classes_to_select[concept_classes_to_select %in% concept_class_ids$concept_class_id]
+        }
+        
+        shiny.fluent::updateDropdown.shinyInput(
+            session,
+            "concept_classes_%widget_id%",
+            options = convert_tibble_to_list(
+                concept_class_ids,
+                key_col = "concept_class_id",
+                text_col = "concept_class_id"
+            ),
+            value = concept_classes_to_select
+        )
+        
+    } else {
+        # concepts_choice == "selected_concepts" or default
+        shinyjs::show("concepts_div_%widget_id%")
+        shinyjs::hide("omop_table_div_%widget_id%")
+        shinyjs::hide("concept_classes_div_%widget_id%")
+        
+        # Update concepts_choice dropdown
+        shiny.fluent::updateDropdown.shinyInput(
+            session,
+            "concepts_choice_%widget_id%",
+            value = concepts_choice_value
+        )
+        
+        # Update concepts dropdown
+        if (exists("selected_concepts")) {
+            # Parse saved concepts value
+            concepts_to_select <- c()
+            if (!is.na(concepts_value) && concepts_value != "") {
+                concepts_to_select <- as.numeric(unlist(strsplit(concepts_value, ", ?")))
+                # Filter to only keep concepts that are available
+                concepts_to_select <- concepts_to_select[concepts_to_select %in% selected_concepts$concept_id]
+            }
+            
+            shiny.fluent::updateDropdown.shinyInput(
+                session,
+                "concepts_%widget_id%",
+                options = convert_tibble_to_list(
+                    selected_concepts,
+                    key_col = "concept_id",
+                    text_col = "concept_name"
+                ),
+                value = concepts_to_select
+            )
+        }
+    }
+    
+    # Apply comprehensive cascade logic for column_organization
+    if (column_organization_value == "regular_intervals") {
+        # Show aggregation controls for regular intervals mode
+        shinyjs::show("num_cols_div_%widget_id%")
+        shinyjs::show("aggregate_fct_div_%widget_id%")
+        
+        # Update column_organization dropdown
+        shiny.fluent::updateDropdown.shinyInput(
+            session,
+            "column_organization_%widget_id%",
+            value = "regular_intervals"
+        )
+        
+        # Update num_cols value
+        if (!is.na(num_cols_value)) {
+            shiny.fluent::updateSpinButton.shinyInput(
+                session,
+                "num_cols_%widget_id%",
+                value = num_cols_value
+            )
+        }
+        
+        # Update aggregate_fct value
+        if (!is.na(aggregate_fct_value) && aggregate_fct_value != "") {
+            shiny.fluent::updateDropdown.shinyInput(
+                session,
+                "aggregate_fct_%widget_id%",
+                value = aggregate_fct_value
+            )
+        }
+        
+    } else {
+        # column_organization == "by_timestamp" or default
+        shinyjs::hide("num_cols_div_%widget_id%")
+        shinyjs::hide("aggregate_fct_div_%widget_id%")
+        
+        # Update column_organization dropdown
+        shiny.fluent::updateDropdown.shinyInput(
+            session,
+            "column_organization_%widget_id%",
+            value = column_organization_value
+        )
+    }
+    
     # Apply default values for inputs that weren't loaded from saved settings
     for (input_def in all_inputs_%widget_id%) {
         input_id_short <- input_def$id
@@ -721,20 +893,7 @@ observe_event(input$load_configuration_%widget_id%, {
                 shiny.fluent::updateDropdown.shinyInput(session, input_id_full, value = input_def$default)
             },
             "multiselect" = {
-                # Special case for concepts: select all available concepts by default
-                if (input_id_short == "concepts" && input_def$default == "all_available") {
-                    # Select all available concepts for Measurement and Observation domains
-                    if (exists("selected_concepts")) {
-                        available_concepts <- selected_concepts %>% 
-                            dplyr::filter(domain_id %in% c("Measurement", "Observation")) %>%
-                            dplyr::pull(concept_id)
-                        shiny.fluent::updateDropdown.shinyInput(session, input_id_full, value = available_concepts)
-                    } else {
-                        shiny.fluent::updateDropdown.shinyInput(session, input_id_full, value = c())
-                    }
-                } else {
-                    shiny.fluent::updateDropdown.shinyInput(session, input_id_full, value = input_def$default)
-                }
+                shiny.fluent::updateDropdown.shinyInput(session, input_id_full, value = input_def$default)
             },
             "text" = {
                 shiny.fluent::updateTextField.shinyInput(session, input_id_full, value = input_def$default)

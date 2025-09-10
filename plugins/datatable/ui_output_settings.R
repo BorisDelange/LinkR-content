@@ -201,7 +201,7 @@ div(
         # Automatic updates toggle
         div(
             shiny.fluent::Toggle.shinyInput(
-                ns("automatically_update_output_%widget_id%"), 
+                ns("auto_update_%widget_id%"), 
                 label = i18np$t("automatically_update_output"),
                 value = TRUE
             ),
