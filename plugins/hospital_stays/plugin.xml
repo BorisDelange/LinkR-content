@@ -1,22 +1,179 @@
 <?xml version="1.0"?>
 <plugins>
   <plugin>
-    <app_version>0.3.1.9009</app_version>
+    <app_version>0.3.1.9013</app_version>
     <unique_id>2419f5d6196aa95e69518bb96a8ffe49390352b4bee773263cbba34b84364253</unique_id>
-    <version>0.0.1.9013</version>
+    <version>0.0.1.9014</version>
     <name_en>Hospital stays</name_en>
     <name_fr>S&#xE9;jours hospitaliers</name_fr>
     <category_en>NA</category_en>
     <category_fr>NA</category_fr>
-    <description_en>NA</description_en>
-    <description_fr>NA</description_fr>
+    <description_en># Hospital Stays Plugin
+
+## Description
+
+Visualize patient hospital stays across different care units in an interactive timeline format. This plugin helps healthcare professionals track patient care pathways and analyze hospitalization patterns.
+
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/overview.png" alt="Overview of the plugin" width="750"&gt;
+&lt;/p&gt;
+
+## How to Use
+
+1. **Select a patient** using LinkR's patient selection interface
+2. The timeline will automatically display all hospital stays for that patient
+3. **Hover over timeline segments** to see detailed information about each stay
+
+*Screenshot of patient selection and timeline interaction*
+
+## What You See
+
+### Timeline Display
+- **Horizontal timeline**: Shows the chronological sequence of hospital stays
+- **Care units**: Each hospital department appears as a separate row
+- **Stay duration**: Length of each segment represents stay duration
+- **Hover details**: Unit name, start date, end date
+
+*Screenshot of timeline with hover information*
+
+## Clinical Applications
+
+### Care Pathway Analysis
+- Track patient movement between departments
+- Identify care coordination patterns
+- Analyze readmission patterns
+
+### Quality Improvement
+- Study length of stay variations
+- Examine care transitions
+- Identify utilization patterns
+
+*Screenshot showing care pathway example*
+
+## Configuration
+
+### Settings
+- **Automatic Updates**: Enable to refresh timeline when selecting different patients
+- **Manual Mode**: Disable for manual refresh control
+
+*Screenshot of configuration panel*
+
+### Save Configurations
+Save different analysis setups for:
+- Routine patient reviews
+- Research protocols
+- Team workflows
+
+*Screenshot of configuration management*
+
+## Data Requirements
+
+- **Patient Selection**: Must select a patient first
+- **OMOP Data**: Requires visit_detail and care_site tables
+- **Permissions**: Appropriate access to patient-level data
+
+## Error Messages
+
+**"No patient selected"**: Select a patient to view hospital stays
+**"No data available"**: Selected patient has no recorded hospital stays
+
+*Screenshot of error messages*
+
+## Advanced Features
+
+### Code Editor
+For advanced users: modify the generated R code to customize analyses or add filters.
+
+*Screenshot of code editor*
+
+The Hospital Stays plugin provides a clear, visual way to understand patient care journeys through hospital systems.
+</description_en>
+    <description_fr># Plugin S&#xE9;jours Hospitaliers
+
+## Description
+
+Visualisez les s&#xE9;jours hospitaliers des patients dans les diff&#xE9;rentes unit&#xE9;s de soins sous forme de timeline interactive. Ce plugin aide les professionnels de sant&#xE9; &#xE0; suivre les parcours de soins et &#xE0; analyser les patterns d'hospitalisation.
+
+&lt;p align="center"&gt;
+  &lt;img src="%element_folder%/img/overview.png" alt="Vue g&#xE9;n&#xE9;rale du plugin" width="750"&gt;
+&lt;/p&gt;
+
+## Comment l'utiliser
+
+1. **S&#xE9;lectionnez un patient** avec l'interface de s&#xE9;lection de patient de LinkR
+2. La timeline affichera automatiquement tous les s&#xE9;jours hospitaliers de ce patient
+3. **Survolez les segments de la timeline** pour voir les informations d&#xE9;taill&#xE9;es de chaque s&#xE9;jour
+
+*Capture d'&#xE9;cran de la s&#xE9;lection patient et interaction timeline*
+
+## Ce que vous voyez
+
+### Affichage Timeline
+- **Timeline horizontale** : Montre la s&#xE9;quence chronologique des s&#xE9;jours hospitaliers
+- **Unit&#xE9;s de soins** : Chaque service hospitalier appara&#xEE;t sur une ligne s&#xE9;par&#xE9;e
+- **Dur&#xE9;e de s&#xE9;jour** : La longueur de chaque segment repr&#xE9;sente la dur&#xE9;e du s&#xE9;jour
+- **D&#xE9;tails au survol** : Nom de l'unit&#xE9;, date de d&#xE9;but, date de fin
+
+*Capture d'&#xE9;cran de la timeline avec informations au survol*
+
+## Applications Cliniques
+
+### Analyse des Parcours de Soins
+- Suivre le mouvement des patients entre les services
+- Identifier les patterns de coordination des soins
+- Analyser les patterns de r&#xE9;admission
+
+### Am&#xE9;lioration de la Qualit&#xE9;
+- &#xC9;tudier les variations de dur&#xE9;e de s&#xE9;jour
+- Examiner les transitions de soins
+- Identifier les patterns d'utilisation
+
+*Capture d'&#xE9;cran montrant un exemple de parcours de soins*
+
+## Configuration
+
+### Param&#xE8;tres
+- **Mises &#xE0; jour automatiques** : Activer pour rafra&#xEE;chir la timeline lors de la s&#xE9;lection de diff&#xE9;rents patients
+- **Mode manuel** : D&#xE9;sactiver pour un contr&#xF4;le de rafra&#xEE;chissement manuel
+
+*Capture d'&#xE9;cran du panneau de configuration*
+
+### Sauvegarder les Configurations
+Sauvegardez diff&#xE9;rents setups d'analyse pour :
+- Revues de patients routini&#xE8;res
+- Protocoles de recherche
+- Workflows d'&#xE9;quipe
+
+*Capture d'&#xE9;cran de la gestion des configurations*
+
+## Exigences de Donn&#xE9;es
+
+- **S&#xE9;lection Patient** : Doit d'abord s&#xE9;lectionner un patient
+- **Donn&#xE9;es OMOP** : N&#xE9;cessite les tables visit_detail et care_site
+- **Permissions** : Acc&#xE8;s appropri&#xE9; aux donn&#xE9;es niveau patient
+
+## Messages d'Erreur
+
+**"Aucun patient s&#xE9;lectionn&#xE9;"** : S&#xE9;lectionnez un patient pour voir les s&#xE9;jours hospitaliers
+**"Aucune donn&#xE9;e disponible"** : Le patient s&#xE9;lectionn&#xE9; n'a pas de s&#xE9;jours hospitaliers enregistr&#xE9;s
+
+*Capture d'&#xE9;cran des messages d'erreur*
+
+## Fonctionnalit&#xE9;s Avanc&#xE9;es
+
+### &#xC9;diteur de Code
+Pour les utilisateurs avanc&#xE9;s : modifiez le code R g&#xE9;n&#xE9;r&#xE9; pour personnaliser les analyses ou ajouter des filtres.
+
+*Capture d'&#xE9;cran de l'&#xE9;diteur de code*
+
+Le plugin S&#xE9;jours Hospitaliers fournit une fa&#xE7;on claire et visuelle de comprendre les parcours de soins des patients dans les syst&#xE8;mes hospitaliers.</description_fr>
     <short_description_en>Displays a patient's hospital stays</short_description_en>
     <short_description_fr>Affiche les diff&#xE9;rents s&#xE9;jours hospitaliers d'un patient</short_description_fr>
     <authors>
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-10-30 08:00:05</creation_datetime>
-    <update_datetime>2025-06-02 18:22:26</update_datetime>
+    <update_datetime>2025-09-10 12:44:11</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>
