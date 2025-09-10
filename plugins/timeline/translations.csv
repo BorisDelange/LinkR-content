@@ -23,6 +23,7 @@ dosage,Dosage,Dosage
 dose,Dose,Dose
 duration,Duration,Durée
 end,End,Fin
+error_executing_code,Error executing code,Erreur lors de l'exécution du code
 output_and_settings_side_by_side,Output and settings/editor side by side,Résultats et réglages/éditeur côte à côte
 hours,hours,heures
 measurement,Measurement,Mesure

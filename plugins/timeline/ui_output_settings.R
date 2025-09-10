@@ -7,7 +7,7 @@
 # ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
 # ██                                                                            ██
 # ██  This file defines Timeline-specific medical data configuration UI.        ██
-# ██  Handles OMOP concept selection and timeline chart parameters.            ██
+# ██  Handles OMOP concept selection and timeline chart parameters.             ██
 # ██  Implements complex medical domain filtering and chart type controls.      ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████

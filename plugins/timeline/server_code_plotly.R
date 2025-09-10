@@ -4,11 +4,11 @@
 
 # ████████████████████████████████████████████████████████████████████████████████
 # ██                                                                            ██
-# ██  🔧 REQUIRES CUSTOMIZATION - PLOTLY TIMELINE LOGIC  🔧                   ██
+# ██  🔧 REQUIRES CUSTOMIZATION - PLOTLY TIMELINE LOGIC  🔧                     ██
 # ██                                                                            ██
-# ██  This file generates R code for plotly interactive timeline charts.       ██
-# ██  Customize the timeline visualization for your healthcare data needs.     ██
-# ██  Handles all OMOP data types with segments and marker visualizations.    ██
+# ██  This file generates R code for plotly interactive timeline charts.        ██
+# ██  Customize the timeline visualization for your healthcare data needs.      ██
+# ██  Handles all OMOP data types with segments and marker visualizations.      ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 

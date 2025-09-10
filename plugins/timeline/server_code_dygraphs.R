@@ -4,11 +4,11 @@
 
 # ████████████████████████████████████████████████████████████████████████████████
 # ██                                                                            ██
-# ██  🔧 REQUIRES CUSTOMIZATION - DYGRAPHS TIMELINE LOGIC  🔧                 ██
+# ██  🔧 REQUIRES CUSTOMIZATION - DYGRAPHS TIMELINE LOGIC  🔧                   ██
 # ██                                                                            ██
-# ██  This file generates R code for dygraphs interactive timeline charts.     ██
-# ██  Customize the timeline visualization for your continuous data needs.     ██
-# ██  Handles OMOP measurement/observation data and XTS time series.           ██
+# ██  This file generates R code for dygraphs interactive timeline charts.      ██
+# ██  Customize the timeline visualization for your continuous data needs.      ██
+# ██  Handles OMOP measurement/observation data and XTS time series.            ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 

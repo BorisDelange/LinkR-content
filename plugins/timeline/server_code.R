@@ -8,7 +8,7 @@
 # ██                                                                            ██
 # ██  This file handles timeline-specific code generation and execution.        ██
 # ██  Manages chart type routing and medical concept integration.               ██
-# ██  Customize the generation logic for your specific use case.               ██
+# ██  Customize the generation logic for your specific use case.                ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
 
@@ -40,7 +40,7 @@ shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.disp
 
 # Handle comment/uncomment keyboard shortcut (Ctrl+Shift+C)
 observe_event(input$code_%widget_id%_comment, {
-    toggle_comments(
+    editor_toggle_comments(
         input_id = "code_%widget_id%", 
         code = input$code_%widget_id%,
         selection = input$code_%widget_id%_comment$range, 
@@ -340,53 +340,93 @@ reset_timeline_variables_%widget_id% <- function() {
 # Main code execution handler
 observe_event(input$run_code_%widget_id%, {
     
+    # Initialize result variables
     fig <- character()
+    error_message <- NULL
     
     # ====================
     # EXECUTE USER CODE
     # ====================
-    eval(parse(text = m$code_%widget_id%))
+    tryCatch({
+        eval(parse(text = m$code_%widget_id%))
+    }, error = function(e) {
+        # Capture any execution errors
+        error_message <<- paste(i18np$t("error_executing_code"), e$message, sep = ": ")
+    })
     
     # ====================
     # HANDLE EXECUTION RESULTS
     # ====================
     
-    # Show appropriate error message if no chart was generated
-    if (length(fig) == 0) {
-        # Determine specific error message based on context
-        data_source <- if (length(input$data_source_%widget_id%) > 0) {
-            input$data_source_%widget_id%
+    # Show error message if execution failed or no chart was generated
+    if (!is.null(error_message) || length(fig) == 0) {
+        
+        # Determine display message
+        display_message <- if (!is.null(error_message)) {
+            error_message
         } else {
-            "person"
+            # Determine specific error message based on context when no chart generated
+            data_source <- if (length(input$data_source_%widget_id%) > 0) {
+                input$data_source_%widget_id%
+            } else {
+                "person"
+            }
+            
+            # Check if patient/visit is selected
+            if (data_source == "person") {
+                patient_selected <- !is.na(m$selected_person) && length(m$selected_person) > 0
+                if (!patient_selected) {
+                    i18np$t("no_patient_selected")
+                } else {
+                    i18np$t("no_data_for_patient")
+                }
+            } else {
+                visit_selected <- !is.na(m$selected_visit_detail) && length(m$selected_visit_detail) > 0
+                if (!visit_selected) {
+                    i18np$t("no_visit_selected")
+                } else {
+                    i18np$t("no_data_for_patient")
+                }
+            }
         }
         
-        # Check if patient/visit is selected
-        if (data_source == "person") {
-            patient_selected <- !is.na(m$selected_person) && length(m$selected_person) > 0
-            error_message <- if (!patient_selected) {
-                i18np$t("no_patient_selected")
-            } else {
-                i18np$t("no_data_for_patient")
-            }
-        } else {
-            visit_selected <- !is.na(m$selected_visit_detail) && length(m$selected_visit_detail) > 0
-            error_message <- if (!visit_selected) {
-                i18np$t("no_visit_selected")
-            } else {
-                i18np$t("no_data_for_patient")
-            }
-        }
+        # Check if this is a user-friendly message that should be displayed with nice formatting
+        ui_messages <- c(
+            i18np$t("no_patient_selected"),
+            i18np$t("no_visit_selected"),
+            i18np$t("no_data_for_patient"),
+            i18np$t("no_output_generated")
+        )
         
-        # Use same styling as Admissions and Demographics plugin
-        output$error_message_%widget_id% <- renderUI({
-            div(
-                style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center;",
+        # Check if the message contains any of the UI-friendly messages
+        is_ui_message <- any(sapply(ui_messages, function(msg) grepl(msg, display_message, fixed = TRUE)))
+        
+        if (is_ui_message) {
+            # Extract the actual message without error prefix if present
+            clean_message <- gsub(paste0("^", i18np$t("error_executing_code"), ": "), "", display_message)
+            
+            # Display nice message with centered styling
+            output$error_message_%widget_id% <- renderUI({
                 div(
-                    style = "font-size: 14px; color: #6c757d;",
-                    error_message
+                    style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 10px;",
+                    div(
+                        style = "font-size: 14px; color: #6c757d;",
+                        clean_message
+                    )
+                )
+            })
+        } else {
+            # Display technical errors in MessageBar format
+            output$error_message_%widget_id% <- renderUI(
+                div(
+                    shiny.fluent::MessageBar(
+                        display_message, 
+                        messageBarType = 5  # Error type
+                    ), 
+                    style = "display: inline-block;"
                 )
             )
-        })
+        }
         
         shinyjs::show("error_message_div_%widget_id%")
         shinyjs::hide("dygraph_div_%widget_id%")
@@ -394,7 +434,7 @@ observe_event(input$run_code_%widget_id%, {
     }
     
     # Display chart if generation was successful
-    if (length(fig) > 0) {
+    if (is.null(error_message) && length(fig) > 0) {
         # Determine which output to use based on chart type
         chart_type <- if (length(input$chart_type_%widget_id%) > 0) {
             input$chart_type_%widget_id%
