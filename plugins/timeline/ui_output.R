@@ -32,8 +32,8 @@ div(
     shinyjs::hidden(
         div(
             id = ns("error_message_div_%widget_id%"),
-            uiOutput(ns("error_message_%widget_id%"), style = "height: 100%;"),
-            style = "height: 100%;"
+            uiOutput(ns("error_message_%widget_id%"), style = "height: calc(100% - 5px);"),
+            style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box;"
         )
     ),
     
@@ -41,14 +41,16 @@ div(
     # DYGRAPHS CHART DISPLAY
     # ====================
     # Interactive time series chart using dygraphs (for continuous data)
-    div(
-        id = ns("dygraph_div_%widget_id%"),
-        dygraphs::dygraphOutput(
-            ns("dygraph_%widget_id%"), 
-            height = "100%", 
-            width = "100%"
-        ),
-        style = "width: 100%; height: calc(100% - 10px); padding-top: 10px; box-sizing: border-box;"
+    shinyjs::hidden(
+        div(
+            id = ns("dygraph_div_%widget_id%"),
+            dygraphs::dygraphOutput(
+                ns("dygraph_%widget_id%"), 
+                height = "100%", 
+                width = "100%"
+            ),
+            style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box;"
+        )
     ),
     
     # ====================
@@ -63,10 +65,10 @@ div(
                 height = "100%", 
                 width = "100%"
             ),
-            style = "width: 100%; height: calc(100% - 10px); padding-top: 10px; box-sizing: border-box;"
+            style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box;"
         )
     ),
     
-    # Container styling with scrollable overflow
-    style = "width: 100%; padding: 5px; box-sizing: border-box; height: 100%; overflow-y: auto;"
+    # Container styling
+    style = "width: 100%; padding: 5px; box-sizing: border-box; height: 100%;"
 )

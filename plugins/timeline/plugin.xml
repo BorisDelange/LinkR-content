@@ -3,7 +3,7 @@
   <plugin>
     <app_version>0.3.1.9013</app_version>
     <unique_id>064e0d7fcd993a7265fe696b948e22d4d0f531a520c5f086c911e06578ce170e</unique_id>
-    <version>0.0.1.9078</version>
+    <version>0.0.1.9079</version>
     <name_en>Timeline</name_en>
     <name_fr>Timeline</name_fr>
     <category_en>NA</category_en>
@@ -237,7 +237,7 @@ Les param&#xE8;tres g&#xE9;n&#xE9;raux sont divis&#xE9;s en :
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2024-08-28 22:19:16</creation_datetime>
-    <update_datetime>2025-09-10 13:17:04</update_datetime>
+    <update_datetime>2025-09-10 14:06:27</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>
