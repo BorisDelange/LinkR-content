@@ -65,8 +65,22 @@ div(
         )
     ),
     
-    # DYNAMIC OUTPUT (Main container for plotly)
+    # PLOTLY OUTPUT (Main container for hospital stays timeline)
     # Primary output container for hospital stays timeline visualization
+    shinyjs::hidden(
+        div(
+            id = ns("plotly_output_div_%widget_id%"),
+            plotly::plotlyOutput(
+                ns("plotly_output_%widget_id%"),
+                height = "100%",
+                width = "100%"
+            ),
+            style = "width: 100%; height: calc(100% - 20px); padding: 10px; box-sizing: border-box;"
+        )
+    ),
+    
+    # DYNAMIC OUTPUT (Fallback for other content types)
+    # Used for user-friendly messages and other dynamic content
     shinyjs::hidden(
         div(
             id = ns("dynamic_output_div_%widget_id%"),

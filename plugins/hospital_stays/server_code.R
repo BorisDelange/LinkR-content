@@ -227,7 +227,7 @@ observe_event(input$run_code_%widget_id%, {
     # HIDE ALL OUTPUTS INITIALLY
     # ====================
     # Hide all output containers before execution
-    sapply(c("error_message_div_%widget_id%", "plot_div_%widget_id%", "table_div_%widget_id%", "datatable_div_%widget_id%", "dynamic_output_div_%widget_id%"), shinyjs::hide)
+    sapply(c("error_message_div_%widget_id%", "plot_div_%widget_id%", "table_div_%widget_id%", "datatable_div_%widget_id%", "dynamic_output_div_%widget_id%", "plotly_output_div_%widget_id%"), shinyjs::hide)
     
     # ====================
     # EXECUTE USER CODE
@@ -302,9 +302,9 @@ observe_event(input$run_code_%widget_id%, {
         
         if ("plotly" %in% class(result) || "htmlwidget" %in% class(result)) {
             # Handle plotly objects (main output for hospital stays)
-            output$dynamic_output_%widget_id% <- renderUI(result)
+            output$plotly_output_%widget_id% <- plotly::renderPlotly(result)
             shinyjs::hide("error_message_div_%widget_id%")
-            shinyjs::show("dynamic_output_div_%widget_id%")
+            shinyjs::show("plotly_output_div_%widget_id%")
             
         } else if ("ggplot" %in% class(result)) {
             # Handle ggplot objects
