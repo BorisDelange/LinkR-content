@@ -507,7 +507,7 @@ observe_event(input$dygraph_%widget_id%_date_window, {
     
     # Update the shared timeline reactive value
     m$datetimes_timeline_%tab_id%(datetime_values)
-})
+}, log = FALSE)
 
 # Monitor plotly relayout events for timeline synchronization
 observe_event(plotly::event_data("plotly_relayout", source = "plotly_%widget_id%"), {
