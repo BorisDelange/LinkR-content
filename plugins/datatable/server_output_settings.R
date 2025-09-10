@@ -61,6 +61,7 @@ all_inputs_%widget_id% <- list(
     list(id = "omop_table", type = "dropdown", default = "measurement"),
     list(id = "concept_classes", type = "multiselect", default = c()),
     list(id = "concepts", type = "multiselect", default = "all_available"),
+    list(id = "column_organization", type = "dropdown", default = "regular_intervals"),
     list(id = "num_cols", type = "number", default = 8),
     list(id = "aggregate_fct", type = "dropdown", default = "mean"),
     list(id = "synchronize_timelines", type = "toggle", default = FALSE),
@@ -71,6 +72,28 @@ all_inputs_%widget_id% <- list(
 # ======================================
 # CONDITIONAL UI DISPLAY LOGIC
 # ======================================
+
+# Show/hide column organization options based on column_organization selection
+observe_event(input$column_organization_%widget_id%, {
+    # Check if updates are locked (during configuration loading)
+    if (isTRUE(input$update_lock_%widget_id%)) {
+        return()
+    }
+    
+    column_organization <- input$column_organization_%widget_id%
+    
+    if (!is.null(column_organization)) {
+        if (column_organization == "regular_intervals") {
+            # Show number of columns and aggregation function
+            shinyjs::show("num_cols_div_%widget_id%")
+            shinyjs::show("aggregate_fct_div_%widget_id%")
+        } else if (column_organization == "by_timestamp") {
+            # Hide number of columns and aggregation function
+            shinyjs::hide("num_cols_div_%widget_id%")
+            shinyjs::hide("aggregate_fct_div_%widget_id%")
+        }
+    }
+})
 
 # Show/hide concept selection UI based on concepts_choice selection
 observe_event(input$concepts_choice_%widget_id%, {
@@ -234,8 +257,21 @@ if (!("projects_widgets_settings" %in% user_accesses)) {
 # INITIAL UI STATE SETUP
 # ======================================
 
-# Set initial visibility based on default concepts_choice value
+# Set initial visibility based on default values
 shinyjs::delay(100, {
+    # Column organization visibility
+    column_organization <- input$column_organization_%widget_id%
+    if (is.null(column_organization)) column_organization <- "regular_intervals"
+    
+    if (column_organization == "regular_intervals") {
+        shinyjs::show("num_cols_div_%widget_id%")
+        shinyjs::show("aggregate_fct_div_%widget_id%")
+    } else if (column_organization == "by_timestamp") {
+        shinyjs::hide("num_cols_div_%widget_id%")
+        shinyjs::hide("aggregate_fct_div_%widget_id%")
+    }
+    
+    # Concepts choice visibility
     concepts_choice <- input$concepts_choice_%widget_id%
     if (is.null(concepts_choice)) concepts_choice <- "selected_concepts"
     

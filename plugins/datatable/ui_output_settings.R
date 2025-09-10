@@ -134,11 +134,26 @@ div(
     ),
     
     # ====================
-    # TIME-BASED AGGREGATION SETTINGS
+    # TIME-BASED COLUMN ORGANIZATION SETTINGS
     # ====================
     div(
-        # Number of time columns
+        # Column organization mode selection
         div(
+            shiny.fluent::Dropdown.shinyInput(
+                ns("column_organization_%widget_id%"), 
+                label = i18np$t("column_organization"),
+                value = "regular_intervals", 
+                options = list(
+                    list(key = "regular_intervals", text = i18np$t("regular_intervals")),
+                    list(key = "by_timestamp", text = i18np$t("by_timestamp"))
+                )
+            ),
+            style = "width: 200px; flex: 0 0 auto; margin-right: 15px;"
+        ),
+        
+        # Number of time columns (only for regular intervals)
+        div(
+            id = ns("num_cols_div_%widget_id%"),
             div(i18np$t("num_cols"), style = "font-weight: 600; margin-bottom: 5px;"),
             div(
                 shiny.fluent::SpinButton.shinyInput(
@@ -149,8 +164,10 @@ div(
             ),
             style = "flex: 0 0 auto; margin-right: 15px; margin-top: 5px;"
         ),
-        # Aggregation function
+        
+        # Aggregation function (only for regular intervals)
         div(
+            id = ns("aggregate_fct_div_%widget_id%"),
             shiny.fluent::Dropdown.shinyInput(
                 ns("aggregate_fct_%widget_id%"), 
                 label = i18np$t("aggregated_function"), 

@@ -2,6 +2,9 @@ base,en,fr
 add,Add,Ajouter
 aggregated_function,Aggregated function,Fonction d'agrégation
 automatically_update_output,Automatically update output,Mettre à jour automatiquement les résultats
+by_timestamp,By timestamp,Par horodatage
+column_organization,Column organization,Organisation des colonnes
+regular_intervals,Regular intervals,Intervalles réguliers
 concept,Concept,Concept
 concept_classes,Concept classes,Classes de concepts
 concepts,Concepts,Concepts

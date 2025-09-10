@@ -161,6 +161,12 @@ observe_event(input$display_output_%widget_id%, {
             c()
         }
         
+        column_organization <- if (length(input$column_organization_%widget_id%) > 0) {
+            input$column_organization_%widget_id%
+        } else {
+            "regular_intervals"
+        }
+        
         num_cols <- if (length(input$num_cols_%widget_id%) > 0) {
             input$num_cols_%widget_id%
         } else {
@@ -180,6 +186,7 @@ observe_event(input$display_output_%widget_id%, {
             omop_table = omop_table,
             concept_classes = concept_classes,
             concepts = concepts,
+            column_organization = column_organization,
             num_cols = num_cols,
             aggregate_fct = aggregate_fct
         )
@@ -209,7 +216,8 @@ observe_event(input$display_output_%widget_id%, {
 # Generates R code for time-based measurement data aggregation and display
 generate_output_code_%widget_id% <- function(data_source = "person", concepts_choice = "selected_concepts", 
                                            omop_table = "measurement", concept_classes = c(), 
-                                           concepts = c(), num_cols = 8, aggregate_fct = "mean") {
+                                           concepts = c(), column_organization = "regular_intervals",
+                                           num_cols = 8, aggregate_fct = "mean") {
     
     code_lines <- c()
     
@@ -322,18 +330,23 @@ generate_output_code_%widget_id% <- function(data_source = "person", concepts_ch
         }
     }
     
-    # Add temporal aggregation logic
+    # Add temporal processing logic based on column organization
     code_lines <- c(code_lines,
         "",
         "    # Check if data is available",
         "    if (nrow(data) == 0) {",
         "        error_message <- i18np$t(\"no_data_to_display\")",
-        "    } else {",
-        "",
-        "        # Get datetime range for temporal aggregation",
-        "        if (language == \"fr\") date_format <- \"%d-%m-%Y\"",
-        "        else date_format <- \"%Y-%m-%d\""
+        "    } else {"
     )
+    
+    if (column_organization == "regular_intervals") {
+        # Regular intervals mode - existing logic
+        code_lines <- c(code_lines,
+            "",
+            "        # Mode: Regular intervals with aggregation",
+            "        if (language == \"fr\") date_format <- \"%d-%m-%Y\"",
+            "        else date_format <- \"%Y-%m-%d\""
+        )
     
     if (data_source == "person") {
         code_lines <- c(code_lines,
@@ -422,46 +435,137 @@ generate_output_code_%widget_id% <- function(data_source = "person", concepts_ch
         "                compact = TRUE,",
         "                hover = TRUE",
         "            ),",
-        "            escape = FALSE,",
-        "",
-        "            # CSS for datatable",
-        "            callback = htmlwidgets::JS(",
-        "              \"function applyDataTableStyling() {\",",
-        "              \"  $('.dataTable tbody tr td').css({\",",
-        "              \"    'height': '12px',\",",
-        "              \"    'padding': '2px 5px'\",",
-        "              \"  });\",",
-        "              \"  $('.dataTable thead tr td div .form-control').css('font-size', '12px');\",",
-        "              \"  $('.dataTable thead tr td').css('padding', '5px');\",",
-        "              \"  $('.dataTable tbody tr td:first-child').css({\",",
-        "              \"    'min-width': '100px',\",",
-        "              \"    'max-width': '100px',\",",
-        "              \"    'width': '100px',\",",
-        "              \"    'white-space': 'nowrap'\",",
-        "              \"  });\",",
-        "              \"  $('.dataTable thead tr th:first-child').css({\",",
-        "              \"    'min-width': '100px',\",",
-        "              \"    'max-width': '100px',\",",
-        "              \"    'width': '100px',\",",
-        "              \"    'white-space': 'nowrap'\",",
-        "              \"  });\",",
-        "              \"  $('.dataTable tbody td').each(function() {\",",
-        "              \"    var cellText = $(this).text();\",",
-        "              \"    $(this).attr('title', cellText);\",",
-        "              \"  });\",",
-        "              \"}\",",
-        "              \"table.on('init.dt', function() {\",",
-        "              \"  setTimeout(applyDataTableStyling, 100);\",",
-        "              \"  setTimeout(applyDataTableStyling, 300);\",",
-        "              \"  setTimeout(applyDataTableStyling, 500);\",",
-        "              \"});\",",
-        "              \"table.on('draw.dt', applyDataTableStyling);\",",
-        "              \"setTimeout(applyDataTableStyling, 200);\"",
-        "            )",
+        "            escape = FALSE",
         "        )",
-        "    }",
-        "}"
+        "        ",
+        "        # Define CSS styling JavaScript",
+        "        css_js <- \"",
+        "          $('.dataTable tbody tr td').css({",
+        "            'height': '12px',",
+        "            'padding': '2px 5px'",
+        "          });",
+        "          $('.dataTable thead tr td div .form-control').css('font-size', '12px');",
+        "          $('.dataTable thead tr td').css('padding', '5px');",
+        "          $('.dataTable tbody tr td:first-child').css({",
+        "            'min-width': '100px',",
+        "            'max-width': '100px',",
+        "            'width': '100px',",
+        "            'white-space': 'nowrap'",
+        "          });",
+        "          $('.dataTable thead tr th:first-child').css({",
+        "            'min-width': '100px',",
+        "            'max-width': '100px',",
+        "            'width': '100px',",
+        "            'white-space': 'nowrap'",
+        "          });",
+        "          $('.dataTable tbody td').each(function() {",
+        "            var cellText = $(this).text();",
+        "            $(this).attr('title', cellText);",
+        "          });\"",
+        "        ",
+        "        # Apply callback with CSS styling",
+        "        result <- result %>% htmlwidgets::onRender(paste0(",
+        "          \"function(el, x) {\",",
+        "          \"  var table = $(el).find('table').DataTable();\",",
+        "          \"  table.on('draw.dt', function() {\", css_js, \"});\",",
+        "          \"  setTimeout(function() {\", css_js, \"}, 200);\",",
+        "          \"}\"",
+        "        ))"
     )
+    
+    } else if (column_organization == "by_timestamp") {
+        # By timestamp mode - one column per unique datetime
+        code_lines <- c(code_lines,
+            "",
+            "        # Mode: By timestamp (no aggregation)",
+            "        if (language == \"fr\") date_format <- \"%d-%m-%Y\"",
+            "        else date_format <- \"%Y-%m-%d\"",
+            "",
+            "        # Process data without aggregation - one column per timestamp",
+            "        data <- data %>%",
+            "            dplyr::collect() %>%",
+            "            dplyr::left_join(",
+            "                d$dataset_concept %>% ",
+            "                dplyr::select(measurement_concept_id = concept_id, measurement_concept_name = concept_name),",
+            "                by = \"measurement_concept_id\"",
+            "            ) %>%",
+            "            dplyr::mutate(",
+            "                measurement_concept_name = dplyr::if_else(is.na(measurement_concept_name), as.character(measurement_concept_id), measurement_concept_name),",
+            "                formatted_datetime = paste0(",
+            "                    format(measurement_datetime, date_format),",
+            "                    \" <span style='color:#0084D8'>\", format(measurement_datetime, \"%H:%M\"), \"</span>\"",
+            "                )",
+            "            ) %>%",
+            "            dplyr::select(measurement_concept_name, formatted_datetime, value_as_number, measurement_datetime) %>%",
+            "            dplyr::arrange(measurement_concept_name, measurement_datetime) %>%",
+            "            dplyr::select(-measurement_datetime) %>%",
+            "            tidyr::pivot_wider(",
+            "                names_from = formatted_datetime,",
+            "                values_from = value_as_number,", 
+            "                values_fn = function(x) paste(x, collapse = \" | \"),",
+            "                names_sort = TRUE",
+            "            ) %>%",
+            "            dplyr::arrange(measurement_concept_name) %>%",
+            "            dplyr::rename(!!i18np$t(\"concept\") := measurement_concept_name) %>%",
+            "            dplyr::filter(!is.na(!!rlang::sym(i18np$t(\"concept\"))) & !!rlang::sym(i18np$t(\"concept\")) != \"\")",
+            "",
+            "        # Create DT datatable result with sorting only on first column",
+            "        result <- DT::datatable(",
+            "            data,",
+            "            rownames = FALSE,",
+            "            options = list(",
+            "                dom = if (nrow(data) > 10) \"<'datatable_length'l><'top't><'bottom'p>\" else \"<'top't>\",",
+            "                pageLength = if (nrow(data) > 10) 25 else 10,",
+            "                paging = nrow(data) > 10,",
+            "                compact = TRUE,",
+            "                hover = TRUE,",
+            "                # Only allow sorting on first column (Concept)",
+            "                columnDefs = list(",
+            "                    list(orderable = TRUE, targets = 0),",
+            "                    list(orderable = FALSE, targets = '_all')",
+            "                )",
+            "            ),",
+            "            escape = FALSE",
+            "        )",
+            "        ",
+            "        # Define CSS styling JavaScript",
+            "        css_js <- \"",
+            "          $('.dataTable tbody tr td').css({",
+            "            'height': '12px',",
+            "            'padding': '2px 5px'",
+            "          });",
+            "          $('.dataTable thead tr td div .form-control').css('font-size', '12px');",
+            "          $('.dataTable thead tr td').css('padding', '5px');",
+            "          $('.dataTable tbody tr td:first-child').css({",
+            "            'min-width': '100px',",
+            "            'max-width': '100px',",
+            "            'width': '100px',",
+            "            'white-space': 'nowrap'",
+            "          });",
+            "          $('.dataTable thead tr th:first-child').css({",
+            "            'min-width': '100px',",
+            "            'max-width': '100px',",
+            "            'width': '100px',",
+            "            'white-space': 'nowrap'",
+            "          });",
+            "          $('.dataTable tbody td').each(function() {",
+            "            var cellText = $(this).text();",
+            "            $(this).attr('title', cellText);",
+            "          });\"",
+            "        ",
+            "        # Apply callback with CSS styling",
+            "        result <- result %>% htmlwidgets::onRender(paste0(",
+            "          \"function(el, x) {\",",
+            "          \"  var table = $(el).find('table').DataTable();\",",
+            "          \"  table.on('draw.dt', function() {\", css_js, \"});\",",
+            "          \"  setTimeout(function() {\", css_js, \"}, 200);\",",
+            "          \"}\"",
+            "        ))"
+        )
+    }
+    
+    # Close the data processing blocks  
+    code_lines <- c(code_lines, "    }", "}")
     
     # Combine all code lines
     generated_code <- paste(code_lines, collapse = "\n")
