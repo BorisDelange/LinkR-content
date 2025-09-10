@@ -405,6 +405,7 @@ generate_output_code_%widget_id% <- function(data_source = "person", concepts_ch
         "            timeFormat = ifelse(language == \"fr\", \"%d-%m-%Y %H:%M\", \"%Y-%m-%d %H:%M\"),",
         "            step = 3600000",
         "        )",
+        "        ",
         ""
     )
 
@@ -705,6 +706,9 @@ observe_event(m$selected_person, {
         return()
     }
     
+    # Reset timeline synchronization variables
+    reset_timeline_variables_%widget_id%()
+    
     # Execute code when patient selection changes
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
 })
@@ -717,6 +721,9 @@ observe_event(m$selected_visit_detail, {
         input$data_source_%widget_id% != "visit_detail") {
         return()
     }
+    
+    # Reset timeline synchronization variables
+    reset_timeline_variables_%widget_id%()
     
     # Execute code when visit detail selection changes
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
@@ -861,7 +868,7 @@ if (!exists("m$debounced_datetime_slider_%widget_id%")) {
 # Observe datetime slider changes
 observe_event(input$datetime_slider_%widget_id%, {
     m$datetime_slider_%widget_id%(input$datetime_slider_%widget_id%)
-})
+}, log = FALSE)
 
 # Auto-execute when datetime slider changes (debounced)
 observe_event(m$debounced_datetime_slider_%widget_id%(), {
@@ -873,3 +880,62 @@ observe_event(m$debounced_datetime_slider_%widget_id%(), {
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
     }
 })
+
+# ======================================
+# TIMELINE SYNCHRONIZATION SYSTEM
+# ======================================
+
+# Function to reset timeline synchronization variables
+reset_timeline_variables_%widget_id% <- function() {
+    m$datetimes_timeline_%tab_id% <- reactiveVal()
+    m$timeline_source_%tab_id% <- NULL
+    m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
+}
+
+# Initialize timeline variables if they don't exist
+if (length(m$datetimes_timeline_%tab_id%) == 0) {
+    # Main timeline reactive value
+    m$datetimes_timeline_%tab_id% <- reactiveVal()
+    
+    # Debounced version to prevent excessive updates
+    m$debounced_datetimes_timeline_%tab_id% <- reactive(m$datetimes_timeline_%tab_id%()) %>% debounce(500)
+}
+
+# Monitor datetime slider changes and broadcast to other widgets
+observe_event(input$datetime_slider_%widget_id%, {
+    
+    # Only process if timeline synchronization is enabled
+    if (!isTRUE(input$synchronize_timelines_%widget_id%)) return()
+    
+    # Mark this widget as the source of the timeline change
+    m$timeline_source_%tab_id% <- %widget_id%
+    
+    # Update the shared timeline reactive value
+    m$datetimes_timeline_%tab_id%(input$datetime_slider_%widget_id%)
+}, log = FALSE)
+
+# Listen for timeline changes from other synchronized widgets
+observe_event(m$debounced_datetimes_timeline_%tab_id%(), {
+    
+    # Only process if synchronization is enabled and data is available
+    if (!isTRUE(input$synchronize_timelines_%widget_id%) || 
+        length(m$debounced_datetimes_timeline_%tab_id%()) == 0 || 
+        length(m$datetimes_%widget_id%) == 0) {
+        return()
+    }
+    
+    # Don't process if this widget was the source of the timeline change
+    if (!is.null(m$timeline_source_%tab_id%) && m$timeline_source_%tab_id% == %widget_id%) {
+        return()
+    }
+    
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    
+    # Clear the source after execution to reset state
+    shinyjs::delay(1500, {
+        if (!is.null(m$timeline_source_%tab_id%)) {
+            m$timeline_source_%tab_id% <- NULL
+        }
+    })
+    
+}, ignoreInit = TRUE)
