@@ -255,17 +255,13 @@ observe_event(input$run_code_%widget_id%, {
             i18np$t("no_output_generated")
         }
         
-        # Extract the actual message without error prefix if present
-        error_prefix_en <- paste0(i18np$t("error_executing_code"), ": ")
-        clean_message <- gsub(paste0("^", error_prefix_en), "", display_message)
-        
-        # Display all messages with the same simple centered style (no MessageBar)
+        # Display all messages with the same simple centered style
         output$ui_output_%widget_id% <- renderUI({
             div(
                 style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 10px;",
                 div(
                     style = "font-size: 14px; color: #6c757d;",
-                    clean_message
+                    display_message
                 )
             )
         })

@@ -52,7 +52,7 @@ div(
     # Main container for UI messages, cards, and error displays (like Admissions plugin)
     div(
         id = ns("ui_output_div_%widget_id%"),
-        uiOutput(ns("ui_output_%widget_id%"), style = "height: 100%;"),
+        uiOutput(ns("ui_output_%widget_id%"), style = "height: calc(100% - 5px);"),
         style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box;"
     ),
     
@@ -68,10 +68,10 @@ div(
             id = ns("plot_div_%widget_id%"),
             plotOutput(
                 ns("plot_%widget_id%"), 
-                height = "400px",
+                height = "100%",
                 width = "100%"
             ),
-            style = "width: 100%; padding: 10px; box-sizing: border-box;"
+            style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box;"
         )
     ),
     
@@ -85,7 +85,7 @@ div(
                 height = "100%",
                 width = "100%"
             ),
-            style = "width: 100%; height: calc(100% - 20px); padding: 10px; box-sizing: border-box;"
+            style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box;"
         )
     ),
     
