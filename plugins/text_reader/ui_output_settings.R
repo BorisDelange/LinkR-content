@@ -1,30 +1,87 @@
-# UI - Figure settings
-#
-# Insert the UI components for configuring the figure settings in this section.
+# ==========================================
+# ui_output_settings.R - Output Configuration Panel
+# ==========================================
+
+# ████████████████████████████████████████████████████████████████████████████████
+# ██                                                                            ██
+# ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
+# ██                                                                            ██
+# ██  This file MUST be customized for your specific plugin.                    ██
+# ██  Follow the template structure and implement your logic.                   ██
+# ██  See comments and examples for guidance.                                   ██
+# ██                                                                            ██
+# ████████████████████████████████████████████████████████████████████████████████
+
+# PLUGIN TEMPLATE - OUTPUT SETTINGS UI FILE
+# 
+# This file defines the no-code configuration interface for the widget plugin template.
+# It provides user-friendly controls that automatically generate and modify the underlying
+# R code based on user selections, eliminating the need for manual coding.
+# 
+# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
+# - Remove unused configuration sections and keep only relevant controls
+# - Customize dropdown options, labels, and default values for your specific use case
+# - Add validation logic in server_output_settings.R to ensure valid configuration combinations
+# - Connect each input to code generation logic that updates the R code accordingly
+# 
+# IMPORTANT NOTES:
+# - AVOID using conditionalPanel() to show/hide UI elements. Instead, manage this logic
+#   in the server file (server_output_settings.R) using shinyjs::show and shinyjs::hide functions.
+#   This provides better control and maintains consistency with the reactive framework.
+# - Each div element includes an ID attribute to enable dynamic show/hide functionality
+#   using shinyjs::show() and shinyjs::hide() from the server logic. This allows for
+#   conditional display of UI elements based on user selections.
+# - When adding or removing configuration elements, make sure to update both the
+#   CONFIGURATION LOADING FROM DATABASE and CONFIGURATION SAVING TO DATABASE sections
+#   in server_user_configurations.R to ensure user choices are properly saved and restored.
+# 
+# COMMON CONFIGURATION PATTERNS:
+# 
+# DATA SOURCE SELECTION:
+#   Use when: Plugin can work with different datasets, database tables, or file sources
+#   Examples: Patient vs Visit data, Different time periods, Various data formats
+# 
+# OUTPUT TYPE SELECTION:
+#   Use when: Plugin supports multiple visualization or analysis methods
+#   Examples: Chart types (bar, line, scatter), Statistical tests, Report formats
+# 
+# PARAMETER CONFIGURATION:
+#   Use when: Analysis requires user-specified parameters
+#   Examples: Statistical thresholds, Time ranges, Grouping variables
+# 
+# FILTERING/SELECTION CONTROLS:
+#   Use when: Users need to subset or focus on specific data elements
+#   Examples: Variable selection, Category filtering, Date ranges
+# 
+# DISPLAY OPTIONS:
+#   Use when: Output appearance can be customized
+#   Examples: Colors, Labels, Formatting options, Interactive features
+
 div(
+    # ====================
+    # TABS FOR TEXT READER
+    # ====================
     div(
         id = ns("figure_settings_tabs_%widget_id%"),
         tags$button(id = ns("select_notes_%widget_id%"), i18np$t("notes"), class = "widget_pivot_item selected_widget_pivot_item", onclick = figure_settings_tab_item_js),
         tags$button(id = ns("keyword_search_%widget_id%"), i18np$t("keyword_search"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
-        tags$button(id = ns("chatbot_%widget_id%"), i18np$t("chatbot"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
+        # tags$button(id = ns("chatbot_%widget_id%"), i18np$t("chatbot"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js), # LLM functionality commented out
         tags$button(id = ns("layout_%widget_id%"), i18np$t("layout"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
         class = "pivot"
     ),
     
-    # Notes DataTable
-    
+    # ====================
+    # NOTES DATATABLE TAB
+    # ====================
     div(
         id = ns("select_notes_div_%widget_id%"),
-        div(
-            id = ns("error_message_div_%widget_id%"),
-            div(shiny.fluent::MessageBar(i18np$t("select_a_patient"), messageBarType = 5), style = "display: inline-block;")
-        ),
         DT::DTOutput(ns("notes_datatable_%widget_id%")), 
         style = "margin-top: 15px;"
     ),
     
-    # Keyword search
-    
+    # ====================
+    # KEYWORD SEARCH TAB
+    # ====================
     shinyjs::hidden(
         div(
             id = ns("keyword_search_div_%widget_id%"),
@@ -74,8 +131,9 @@ div(
         )
     ),
     
-    # Delete word set modal
-    
+    # ====================
+    # DELETE WORD SET MODAL
+    # ====================
     shinyjs::hidden(
       div(
         id = ns("delete_word_set_modal_%widget_id%"),
@@ -93,88 +151,20 @@ div(
       )
     ),
     
-    # Chatbot
-    
-    shinyjs::hidden(
-        if(requireNamespace("ellmer", quietly = TRUE) && requireNamespace("ollamar", quietly = TRUE)){
-            div(
-                id = ns("chatbot_div_%widget_id%"),
-                div(
-                    div(
-                        shiny.fluent::Dropdown.shinyInput(ns("llm_provider_%widget_id%"), options = list(
-                                list(key = "ollama", text = "Ollama")
-                            ),
-                            label = i18np$t("llm_provider")
-                        ),
-                        style = "width: 150px;"
-                    ),
-                    div(
-                        shiny.fluent::Dropdown.shinyInput(ns("llm_model_%widget_id%"), label = i18np$t("llm_model")),
-                        style = "width: 150px;"
-                    ),
-                    div(
-                        shiny.fluent::Dropdown.shinyInput(ns("include_notes_%widget_id%"), label = i18np$t("include_notes"), options = list(
-                            list(key = "none", text = i18np$t("none")),
-                            list(key = "selected_note", text = i18np$t("selected_note")),
-                            list(key = "all_notes", text = i18np$t("all_notes"))
-                        ), value = "none"),
-                        style = "width: 150px;"
-                    ),
-                    style = "display: flex; gap: 10px; margin-top: 15px;" 
-                ),
-                div(
-                    id = ns("chat_container_%widget_id%"),
-                    div(
-                        id = ns("chat_messages_%widget_id%"),
-                        uiOutput(ns("chat_ui_%widget_id%")),
-                        style = "flex-grow: 1; overflow-y: auto;"
-                    ),
-                    div(
-                        id = ns("chat_input_%widget_id%"),
-                        textAreaInput(ns("user_input_%widget_id%"), "", width = "calc(100% - 8px)", resize = "vertical"),
-                        div(
-                            shiny.fluent::DefaultButton.shinyInput(ns("clear_chat_%widget_id%"), i18np$t("clear_chat"), iconProps = list(iconName = "Refresh")), 
-                            shiny.fluent::PrimaryButton.shinyInput(ns("send_message_%widget_id%"), i18np$t("send"), iconProps = list(iconName = "Play")), 
-                            style = "margin-top: 10px; display: flex; justify-content: flex-end; gap: 5px;"
-                        ),
-                        style = "width: 100%; margin-top: auto; padding-bottom: 2px;"
-                    ),
-                    tags$script(HTML(paste0("
-                        $(document).ready(function() {
-                            $('#", ns("user_input_%widget_id%"), "').keydown(function(event) {
-                                if (event.keyCode === 13 && !event.shiftKey) {
-                                    event.preventDefault();
-                                    
-                                    setTimeout(function() {
-                                        $('#", ns("send_message_%widget_id%"), "').click();
-                                    }, 500);
-                                    
-                                    return false;
-                                }
-                                return true;
-                            });
-                        });
-                    "))),
-                    style = "display: flex; flex-direction: column; height: calc(100% - 70px); width: 100%;"
-                ),
-                style = "display: flex; flex-direction: column; height: calc(100% - 25px); width: 100%;"
-            )
-        } else {
-            div(
-                id = ns("chatbot_div_%widget_id%"),
-                div(shiny.fluent::MessageBar(i18np$t("packages_ellmer_ollamar_needed"), messageBarType = 5), style = "display: inline-block; margin-top: 10px;")
-            )
-        }
-    ),
-    
-    # Layout
-    
+    # ====================
+    # LAYOUT TAB  
+    # ====================
     shinyjs::hidden(
         div(
             id = ns("layout_div_%widget_id%"),
             div(
                 shiny.fluent::Toggle.shinyInput(ns("display_raw_text_%widget_id%"), value = FALSE),
                 tags$label(i18np$t("display_raw_text"), `for` = ns("display_raw_text_%widget_id%"), style = "margin-left: 5px;"),
+                style = "display: flex; margin-top: 15px;" 
+            ),
+            div(
+                shiny.fluent::Toggle.shinyInput(ns("auto_update_%widget_id%"), value = TRUE),
+                tags$label(i18np$t("automatic_updates"), `for` = ns("auto_update_%widget_id%"), style = "margin-left: 5px;"),
                 style = "display: flex; margin-top: 15px;" 
             ),
             style = "height: 100%;"

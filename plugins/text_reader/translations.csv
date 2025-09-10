@@ -1,31 +1,41 @@
 base,en,fr
 add,Add,Ajouter
-code_execution,Code execution,Exécution du code
-create_settings_file,Create a settings file,Créer un fichier de sauvegarde
+automatic_updates,Automatically update output,Mettre à jour automatiquement les résultats
+configuration,Configuration,Configuration
+configuration_1,Configuration 1,Configuration 1
+configuration_name,Configuration name,Nom de la configuration
+create_user_configuration,Create new user configuration,Créer une nouvelle configuration
+data_analysis_results,Data analysis results,Résultats des analyses
+data_table,Data table,Tableau de données
 delete,Delete,Supprimer
-delete_settings_file_text,Confirm deletion of the settings file?,Confirmer la suppression du fichier de sauvegarde ?
-delete_settings_file_title,Delete a settings file,Supprimer un fichier de sauvegarde
-display,Display,Affichage
-display_figure,Display figure,Afficher la figure
+delete_user_configuration_text,Confirm deletion of the user configuration?,Confirmer la suppression de la configuration utilisateur ?
+delete_user_configuration_title,Delete user configuration,Supprimer la configuration utilisateur
+display_and_save,Display + Save,Afficher + sauvegarder
+error_executing_code,Error executing code,Erreur lors de l'exécution du code
+display_output,Display output,Afficher le résultat
 dont_delete,Cancel,Annuler
-error_displaying_figure,Error displaying figure,Erreur lors de l'affichage de la figure
-figure_and_settings_side_by_side,Figure and settings/editor side by side,Figure et paramètres/éditeur côte à côte
-file,File,Fichier
-file_name,File name,Nom du fichier
+histogram,Histogram,Histogramme
+modif_saved,Updates saved,Modifications enregistrées
 name_already_used,This name is already used,Ce nom est déjà utilisé
-new_settings_file_added,New settings file added,Nouveau fichier de sauvegarde des paramètres ajouté
-no_settings_file_selected,No settings file selected,Pas de fichier de sauvegarde sélectionné
+new_user_configuration_added,New user configuration added,Nouvelle configuration utilisateur ajoutée
+no_data_to_display,No data to display,Aucune donnée à afficher
+no_output_generated,No output generated. Please check your code and settings.,Aucun résultat généré. Veuillez vérifier votre code et vos réglages.
+no_user_configuration_selected,No user configuration selected,Aucune configuration utilisateur sélectionnée
+output_and_settings_side_by_side,Output and settings/editor side by side,Résultats et réglages/éditeur côte à côte
+output_type,Output type,Format de sortie
+plot_title,Plot title,Titre de la figure
 provide_valid_name,Provide valid name,Nom valide requis
-run_code_at_settings_file_load,Run code when a settings file is loaded,Exécuter le code au chargement d'un fichier de sauvegarde
-run_code_on_data_update,Run code on data update,Exécuter le code lors de la mise à jour des données
-save_figure_settings_and_code,Save,Sauvegarder
-save_general_settings,Save general settings,Sauvegarder les paramètres généraux
-settings_file_deleted,Settings file deleted,Fichier de sauvegarde des paramètres supprimé
-show_code_editor,Edit figure code,Editer le code de la figure
-show_figure,Figure,Figure
-show_figure_settings,Set up the figure,Paramétrer la figure
-show_general_settings,General settings,Paramètres généraux
-show_settings_file,Show settings file,Afficher le fichier de sauvegarde
+rename,Rename,Renommer
+rename_user_configuration,Rename user configuration,Renommer la configuration
+save_output_settings_and_code,Save,Sauvegarder
+select_patient,No patient selected. Please select a patient to view data.,Aucun patient sélectionné. Veuillez sélectionner un patient pour voir les données.
+show_code_editor,Code editor,Editeur de code
+show_output,Output,Résultats
+show_output_settings,Output settings,Modifier les réglages
+summary_statistics,Summary statistics,Résumé statistique
+user_configuration_delete,User configuration deleted,Configuration utilisateur supprimée
+user_configuration_renamed,User configuration renamed,Configuration renommée
+variables,Variables,Variables
 notes,Notes,Notes
 keyword_search,Keyword search,Recherche par mots-clés
 layout,Layout,Mise en page
@@ -34,26 +44,13 @@ category,Category,Catégorie
 title,Title,Titre
 datetime,Datetime,Date & heure
 display_raw_text,Display raw text,Afficher le texte brut
-llm_provider,Provider,Plateforme
-llm_model,Model,Modèle
-packages_ellmer_ollamar_needed,Packages ellmer and ollamar required. Install these packages and restart the application., Packages ellmer et ollamar requis. Installez-les et redémarrez l'application.
-select_llm_model,Select a model,Sélectionner un modèle
-select_llm_provider,Select a provider,Sélectionner une plateforme
-send,Send,Envoyer
-clear_chat,Clear chat,Effacer le chat
-include_notes,Include notes,Inclure des notes
-none,None,Aucune
-selected_note,Selected note,Note sélectionnée
-all_notes,All notes,Toutes les notes
 select_a_patient,Select a patient,Sélectionnez un patient
 search_word_sets,Search these word sets,Rechercher ces sets de mots
 create_word_set,Create a word set,Créer un set de mots
-manage_word_sets,Manage word sets,Gérer les sets de mots
 word_set_name,Word set name,Nom du set de mots
-edit_word_set,Edit a word set,Edier un set de mots
+edit_word_set,Edit a word set,Éditer un set de mots
 add_new_word,Add a new word,Ajouter un mot
 delete_word_set_text,Confirm deletion of the word set?,Confirmer la suppression du set de mots ?
 delete_word_set_title,Delete a word set,Supprimer un set de mots
 word_set_deleted,Word set deleted,Set de mots supprimé
 filter_notes_with_matches,Filter notes with matches,Filtrer les notes avec des correspondances
-modif_saved,Updates saved,Modifications enregistrées
