@@ -32,8 +32,8 @@ div(
     shinyjs::hidden(
         div(
             id = ns("dynamic_output_div_%widget_id%"),
-            uiOutput(ns("dynamic_output_%widget_id%")),
-            style = "width: 100%; box-sizing: border-box;"
+            uiOutput(ns("dynamic_output_%widget_id%"), style = "height: calc(100% - 5px);"),
+            style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box;"
         )
     ),
     
@@ -45,14 +45,14 @@ div(
         div(
             id = ns("datatable_div_%widget_id%"),
             DT::DTOutput(ns("datatable_%widget_id%")),
-            style = "padding: 5px 5px 0 5px; position: relative; z-index: 100;"
+            style = "padding: 5px 5px 5px 5px;"
         )
     ),
     
     # ====================
     # DATETIME SLIDER CONTROLS
     # ====================
-    # Optional timeline synchronization controls
+    # Optional timeline synchronization controls - positioned after datatable
     shinyjs::hidden(
         div(
             id = ns("datetime_slider_div_%widget_id%"),
@@ -66,7 +66,7 @@ div(
                 timezone = "+0000",
                 width = "100%"
             ),
-            style = "padding: 0 40px; overflow: visible; position: relative; top: -10px;"
+            style = "padding: 0 40px 10px 40px; overflow: visible;"
         )
     ),
     

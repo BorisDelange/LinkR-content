@@ -478,20 +478,45 @@ generate_output_code_%widget_id% <- function(data_source = "person", concepts_ch
         paste0("            dplyr::summarize(agg_value = round(", aggregate_fct, "(value_as_number, na.rm = TRUE), 1), n = sum(!is.na(value_as_number)), .groups = \"drop\") %>%"),
         "            dplyr::mutate(agg_value = paste0(agg_value, \" (n = \", n, \")\")) %>%",
         "            dplyr::right_join(intervals, by = \"interval\") %>%",
-        "            dplyr::select(measurement_concept_name, interval_label, agg_value) %>%",
-        "            tidyr::pivot_wider(names_from = interval_label, values_from = agg_value)",
+        "            dplyr::select(measurement_concept_name, interval_label, agg_value)",
         "",
-        "        # Ensure all selected concepts appear, even without data",
-        "        all_concepts <- d$dataset_concept %>%",
-        paste0("            dplyr::filter(concept_id %in% c(", paste(selected_concepts, collapse = ", "), ")) %>%"),
-        "            dplyr::select(concept_name) %>%",
-        "            dplyr::distinct() %>%",
-        "            dplyr::rename(measurement_concept_name = concept_name)",
+        "        # Store concept names before pivot to ensure all appear later",
+        "        concept_names_from_data <- data %>% dplyr::distinct(measurement_concept_name) %>% dplyr::pull(measurement_concept_name)",
+        "        ",
+        "        data <- data %>% tidyr::pivot_wider(names_from = interval_label, values_from = agg_value)",
         "",
-        "        data <- all_concepts %>%",
-        "            dplyr::left_join(data, by = \"measurement_concept_name\") %>%",
-        "            dplyr::arrange(measurement_concept_name) %>%",
-        "            dplyr::rename(!!i18np$t(\"concept\") := measurement_concept_name)",
+        "        # Ensure all selected concepts appear, even without data"
+    )
+    
+    # Add the logic based on concepts_choice
+    if (concepts_choice == "selected_concepts") {
+        # Selected concepts mode - use the selected concepts list
+        code_lines <- c(code_lines,
+            "        all_concepts <- d$dataset_concept %>%",
+            paste0("            dplyr::filter(concept_id %in% c(", paste(selected_concepts, collapse = ", "), ")) %>%"),
+            "            dplyr::select(concept_name) %>%",
+            "            dplyr::distinct() %>%",
+            "            dplyr::rename(measurement_concept_name = concept_name)",
+            "",
+            "        data <- all_concepts %>%",
+            "            dplyr::left_join(data, by = \"measurement_concept_name\") %>%",
+            "            dplyr::arrange(measurement_concept_name) %>%",
+            "            dplyr::rename(!!i18np$t(\"concept\") := measurement_concept_name)"
+        )
+    } else {
+        # Selected concept classes mode - use concept names from the filtered data
+        code_lines <- c(code_lines,
+            "        # Use concept names from the filtered data to ensure they all appear",
+            "        all_concepts <- tibble::tibble(measurement_concept_name = concept_names_from_data)",
+            "",
+            "        data <- all_concepts %>%",
+            "            dplyr::left_join(data, by = \"measurement_concept_name\") %>%",
+            "            dplyr::arrange(measurement_concept_name) %>%",
+            "            dplyr::rename(!!i18np$t(\"concept\") := measurement_concept_name)"
+        )
+    }
+    
+    code_lines <- c(code_lines,
         "",
         "        # Reorder date columns (works also with french date format)",
         "        date_cols <- names(data)[-1]",
@@ -579,25 +604,50 @@ generate_output_code_%widget_id% <- function(data_source = "person", concepts_ch
             "            dplyr::filter(measurement_datetime >= datetimes[[1]] & measurement_datetime <= datetimes[[2]]) %>%",
             "            dplyr::select(measurement_concept_name, formatted_datetime, value_as_number, measurement_datetime) %>%",
             "            dplyr::arrange(measurement_concept_name, measurement_datetime) %>%",
-            "            dplyr::select(-measurement_datetime) %>%",
-            "            tidyr::pivot_wider(",
+            "            dplyr::select(-measurement_datetime)",
+            "        ",
+            "        # Store concept names before pivot to ensure all appear later",
+            "        concept_names_from_data <- data %>% dplyr::distinct(measurement_concept_name) %>% dplyr::pull(measurement_concept_name)",
+            "        ",
+            "        data <- data %>% tidyr::pivot_wider(",
             "                names_from = formatted_datetime,",
             "                values_from = value_as_number,", 
             "                values_fn = function(x) paste(x, collapse = \" | \"),",
             "                names_sort = TRUE",
             "            )",
             "",
-            "        # Ensure all selected concepts appear, even without data",
-            "        all_concepts <- d$dataset_concept %>%",
-            paste0("            dplyr::filter(concept_id %in% c(", paste(selected_concepts, collapse = ", "), ")) %>%"),
-            "            dplyr::select(concept_name) %>%",
-            "            dplyr::distinct() %>%",
-            "            dplyr::rename(measurement_concept_name = concept_name)",
-            "",
-            "        data <- all_concepts %>%",
-            "            dplyr::left_join(data, by = \"measurement_concept_name\") %>%",
-            "            dplyr::arrange(measurement_concept_name) %>%",
-            "            dplyr::rename(!!i18np$t(\"concept\") := measurement_concept_name)",
+            "        # Ensure all selected concepts appear, even without data"
+        )
+        
+        # Add the logic based on concepts_choice for by_timestamp mode
+        if (concepts_choice == "selected_concepts") {
+            # Selected concepts mode - use the selected concepts list
+            code_lines <- c(code_lines,
+                "        all_concepts <- d$dataset_concept %>%",
+                paste0("            dplyr::filter(concept_id %in% c(", paste(selected_concepts, collapse = ", "), ")) %>%"),
+                "            dplyr::select(concept_name) %>%",
+                "            dplyr::distinct() %>%",
+                "            dplyr::rename(measurement_concept_name = concept_name)",
+                "",
+                "        data <- all_concepts %>%",
+                "            dplyr::left_join(data, by = \"measurement_concept_name\") %>%",
+                "            dplyr::arrange(measurement_concept_name) %>%",
+                "            dplyr::rename(!!i18np$t(\"concept\") := measurement_concept_name)"
+            )
+        } else {
+            # Selected concept classes mode - use concept names from the filtered data
+            code_lines <- c(code_lines,
+                "        # Use concept names from the filtered data to ensure they all appear",
+                "        all_concepts <- tibble::tibble(measurement_concept_name = concept_names_from_data)",
+                "",
+                "        data <- all_concepts %>%",
+                "            dplyr::left_join(data, by = \"measurement_concept_name\") %>%",
+                "            dplyr::arrange(measurement_concept_name) %>%",
+                "            dplyr::rename(!!i18np$t(\"concept\") := measurement_concept_name)"
+            )
+        }
+        
+        code_lines <- c(code_lines,
             "",
             "        # Create DT datatable result with sorting only on first column",
             "        result <- DT::datatable(",
@@ -780,19 +830,7 @@ observe_event(input$run_code_%widget_id%, {
         # Route output to appropriate renderer based on type
         # Customize this section based on your plugin's output types
         
-        if ("ggplot" %in% class(result)) {
-            # Handle ggplot objects
-            output$plot_%widget_id% <- renderPlot(result)
-            shinyjs::hide("error_message_div_%widget_id%")
-            shinyjs::show("plot_div_%widget_id%")
-            
-        } else if ("plotly" %in% class(result) || "htmlwidget" %in% class(result)) {
-            # Handle plotly/htmlwidget objects
-            output$dynamic_output_%widget_id% <- renderUI(result)
-            shinyjs::hide("error_message_div_%widget_id%")
-            shinyjs::show("dynamic_output_div_%widget_id%")
-            
-        } else if ("datatables" %in% class(result)) {
+        if ("datatables" %in% class(result) || ("htmlwidget" %in% class(result) && !is.null(attr(result, 'package')) && attr(result, 'package') == 'DT')) {
             # Handle DT datatable objects
             output$datatable_%widget_id% <- DT::renderDT(result)
             shinyjs::hide("error_message_div_%widget_id%")
