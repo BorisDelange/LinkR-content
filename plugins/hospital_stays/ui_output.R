@@ -47,6 +47,16 @@ div(
     ),
     
     # ====================
+    # UI OUTPUT CONTAINER (Always visible)
+    # ====================
+    # Main container for UI messages, cards, and error displays (like Admissions plugin)
+    div(
+        id = ns("ui_output_div_%widget_id%"),
+        uiOutput(ns("ui_output_%widget_id%"), style = "height: 100%;"),
+        style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box;"
+    ),
+    
+    # ====================
     # HOSPITAL STAYS OUTPUT CONTAINERS
     # ====================
     # Containers needed for the Hospital Stays plugin output types
@@ -116,6 +126,6 @@ div(
     # ====================
     # CONTAINER STYLING
     # ====================
-    # Main container with scrollable overflow for large content
-    style = "width: 100%; padding: 5px; box-sizing: border-box; height: 100%; overflow-y: auto;"
+    # Main container styling (like Admissions plugin - no overflow scroll)
+    style = "width: 100%; padding: 5px; box-sizing: border-box; height: 100%;"
 )

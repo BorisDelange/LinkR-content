@@ -226,7 +226,7 @@ observe_event(input$run_code_%widget_id%, {
     # ====================
     # HIDE ALL OUTPUTS INITIALLY
     # ====================
-    # Hide all output containers before execution
+    # Hide all output containers before execution (ui_output_div stays visible)
     sapply(c("error_message_div_%widget_id%", "plot_div_%widget_id%", "table_div_%widget_id%", "datatable_div_%widget_id%", "dynamic_output_div_%widget_id%", "plotly_output_div_%widget_id%"), shinyjs::hide)
     
     # ====================
@@ -255,44 +255,23 @@ observe_event(input$run_code_%widget_id%, {
             i18np$t("no_output_generated")
         }
         
-        # Check if this is a user-friendly message that should be displayed with nice formatting
-        ui_messages <- c(
-            i18np$t("select_patient"),
-            i18np$t("no_data_to_display"),
-            i18np$t("no_output_generated")
-        )
+        # Extract the actual message without error prefix if present
+        error_prefix_en <- paste0(i18np$t("error_executing_code"), ": ")
+        clean_message <- gsub(paste0("^", error_prefix_en), "", display_message)
         
-        # Check if the message contains any of the UI-friendly messages
-        is_ui_message <- any(sapply(ui_messages, function(msg) grepl(msg, display_message, fixed = TRUE)))
-        
-        if (is_ui_message) {
-            # Extract the actual message without "Error executing code:" prefix if present
-            error_prefix_en <- paste0(i18np$t("error_executing_code"), ": ")
-            clean_message <- gsub(paste0("^", error_prefix_en), "", display_message)
-            # Display nice message in UI output
-            output$dynamic_output_%widget_id% <- renderUI({
+        # Display all messages with the same simple centered style (no MessageBar)
+        output$ui_output_%widget_id% <- renderUI({
+            div(
+                style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 10px;",
                 div(
-                    style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 10px;",
-                    div(
-                        style = "font-size: 14px; color: #6c757d;",
-                        clean_message
-                    )
-                )
-            })
-            shinyjs::show("dynamic_output_div_%widget_id%")
-        } else {
-            # Display error message for actual errors
-            output$error_message_%widget_id% <- renderUI(
-                div(
-                    shiny.fluent::MessageBar(
-                        display_message, 
-                        messageBarType = 5  # Error type
-                    ), 
-                    style = "display: inline-block;"
+                    style = "font-size: 14px; color: #6c757d;",
+                    clean_message
                 )
             )
-            shinyjs::show("error_message_div_%widget_id%")
-        }
+        })
+        shinyjs::show("ui_output_div_%widget_id%")
+        shinyjs::hide("plotly_output_div_%widget_id%")
+        shinyjs::hide("dynamic_output_div_%widget_id%")
     }
     
     # Display output if execution was successful
@@ -304,19 +283,22 @@ observe_event(input$run_code_%widget_id%, {
         if ("plotly" %in% class(result) || "htmlwidget" %in% class(result)) {
             # Handle plotly objects (main output for hospital stays)
             output$plotly_output_%widget_id% <- plotly::renderPlotly(result)
-            shinyjs::hide("error_message_div_%widget_id%")
+            shinyjs::hide("ui_output_div_%widget_id%")
+            shinyjs::hide("dynamic_output_div_%widget_id%")
             shinyjs::show("plotly_output_div_%widget_id%")
             
         } else if ("ggplot" %in% class(result)) {
             # Handle ggplot objects
             output$plot_%widget_id% <- renderPlot(result)
-            shinyjs::hide("error_message_div_%widget_id%")
+            shinyjs::hide("ui_output_div_%widget_id%")
+            shinyjs::hide("dynamic_output_div_%widget_id%")
             shinyjs::show("plot_div_%widget_id%")
             
         } else if ("datatables" %in% class(result)) {
             # Handle DT datatable objects
             output$datatable_%widget_id% <- DT::renderDT(result)
-            shinyjs::hide("error_message_div_%widget_id%")
+            shinyjs::hide("ui_output_div_%widget_id%")
+            shinyjs::hide("dynamic_output_div_%widget_id%")
             shinyjs::show("datatable_div_%widget_id%")
             
         } else {
@@ -328,7 +310,7 @@ observe_event(input$run_code_%widget_id%, {
                     pre(capture.output(print(result)))
                 }
             })
-            shinyjs::hide("error_message_div_%widget_id%")
+            shinyjs::hide("ui_output_div_%widget_id%")
             shinyjs::show("dynamic_output_div_%widget_id%")
         }
     }
