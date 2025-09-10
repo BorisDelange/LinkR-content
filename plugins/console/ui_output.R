@@ -69,7 +69,7 @@ div(
     shinyjs::hidden(
         div(
             id = ns("ui_output_div_%widget_id%"),
-            uiOutput(ns("ui_output_%widget_id%")),
+            uiOutput(ns("ui_output_%widget_id%"), style = "height: calc(100% - 5px);"),
             style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box;"
         )
     ),

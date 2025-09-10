@@ -390,13 +390,20 @@ observe_event(input$run_code_%widget_id%, {
                 shinyjs::show("rmarkdown_output_div_%widget_id%")
                 
             }, error = function(e) {
-                # If there's an error, display it in console format
+                # If there's an error, display it with centered UI styling
                 error_message <- paste("Rmarkdown", i18np$t("error_executing_code"), e$message, sep = " - ")
                 
-                shinyjs::show("console_output_div_%widget_id%")
+                output$ui_output_%widget_id% <- renderUI({
+                    div(
+                        style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 10px;",
+                        div(
+                            style = "font-size: 14px; color: #6c757d;",
+                            error_message
+                        )
+                    )
+                })
                 
-                # Display the error message in console output
-                output$console_output_%widget_id% <- renderText(error_message)
+                shinyjs::show("ui_output_div_%widget_id%")
             })
         }
         
@@ -450,13 +457,20 @@ observe_event(input$run_code_%widget_id%, {
                 shinyjs::show(paste0(code_output, "_output_div_%widget_id%"))
                 
             }, error = function(e) {
-                # If there's an error, display it in console format
+                # If there's an error, display it with centered UI styling
                 error_message <- paste(i18np$t("error_executing_code"), e$message, sep = ": ")
                 
-                shinyjs::show("console_output_div_%widget_id%")
+                output$ui_output_%widget_id% <- renderUI({
+                    div(
+                        style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 10px;",
+                        div(
+                            style = "font-size: 14px; color: #6c757d;",
+                            error_message
+                        )
+                    )
+                })
                 
-                # Display the error message in console output
-                output$console_output_%widget_id% <- renderText(error_message)
+                shinyjs::show("ui_output_div_%widget_id%")
             })
         }
     }
@@ -480,13 +494,20 @@ observe_event(input$run_code_%widget_id%, {
             shinyjs::show(paste0(code_output, "_output_div_%widget_id%"))
             
         }, error = function(e) {
-            # If there's an error, display it in console format
+            # If there's an error, display it with centered UI styling
             error_message <- paste("Python", i18np$t("error_executing_code"), e$message, sep = " - ")
             
-            shinyjs::show("console_output_div_%widget_id%")
+            output$ui_output_%widget_id% <- renderUI({
+                div(
+                    style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 10px;",
+                    div(
+                        style = "font-size: 14px; color: #6c757d;",
+                        error_message
+                    )
+                )
+            })
             
-            # Display the error message in console output
-            output$console_output_%widget_id% <- renderText(error_message)
+            shinyjs::show("ui_output_div_%widget_id%")
         })
     }
     
