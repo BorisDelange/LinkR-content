@@ -39,7 +39,7 @@ div(
     # Container for standard UI outputs (cards, tables, etc.)
     div(
         id = ns("ui_output_div_%widget_id%"),
-        uiOutput(ns("ui_output_%widget_id%"), style = "height: 100%;"),
+        uiOutput(ns("ui_output_%widget_id%"), style = "height: calc(100% - 5px);"),
         style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box;"
     ),
     
@@ -52,10 +52,10 @@ div(
             id = ns("plotly_output_div_%widget_id%"),
             plotly::plotlyOutput(
                 ns("plotly_output_%widget_id%"), 
-                height = "400px",
+                height = "100%",
                 width = "100%"
             ),
-            style = "width: 100%; padding: 10px; box-sizing: border-box;"
+            style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box;"
         )
     ),
     
