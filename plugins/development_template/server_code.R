@@ -21,6 +21,9 @@
 # WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
 # - Implement the generate_output_code_%widget_id%() function for your specific analysis
 # - Customize the code execution logic in the run_code observer
+# - Add patient selection validation following the commented example (lines 307-318)
+# - Configure UI message handling for user-friendly error display (lines 350-398)
+# - Add translations for plugin-specific messages in translations.csv
 # - Add any plugin-specific helper functions and variables
 # - Modify auto-execution triggers based on your data dependencies
 # 
@@ -33,22 +36,30 @@
 # 
 # COMMON PLUGIN PATTERNS:
 # 
-# DATA ANALYSIS PLUGINS:
+# HEALTHCARE DATA ANALYSIS PLUGINS:
+#   - Patient selection validation with user-friendly error messages
+#   - OMOP medical data integration and filtering
+#   - Healthcare indicator calculations (mortality, LOS, readmission rates)
 #   - Generate statistical analysis code (t-tests, regression, ANOVA)
 #   - Create summary statistics and descriptive analysis
-#   - Build model fitting and validation code
 # 
 # VISUALIZATION PLUGINS:
+#   - Timeline visualizations with dygraphs and plotly
+#   - Healthcare dashboards with indicator cards
 #   - Generate ggplot2 code for various chart types
-#   - Create interactive plotly visualizations
+#   - Create interactive plotly visualizations with medical data
 #   - Build custom plotting functions with user parameters
 # 
-# DATA PROCESSING PLUGINS:
-#   - Generate data filtering and transformation code
-#   - Create data cleaning and preparation workflows
-#   - Build aggregation and summary code
+# MEDICAL DATA PROCESSING PLUGINS:
+#   - OMOP CDM data filtering and transformation
+#   - Patient cohort and visit detail processing  
+#   - Medical concept mapping and vocabulary integration
+#   - Care site and hospital unit filtering
+#   - Generate data cleaning and preparation workflows
 # 
 # REPORTING PLUGINS:
+#   - Healthcare indicator reports and dashboards
+#   - Patient summary reports with medical timelines
 #   - Generate markdown or HTML report code
 #   - Create formatted table output code
 #   - Build export and download functionality
@@ -70,7 +81,7 @@ shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.disp
 
 # Handle comment/uncomment keyboard shortcut (Ctrl+Shift+C)
 observe_event(input$code_%widget_id%_comment, {
-    toggle_comments(
+    editor_toggle_comments(
         input_id = "code_%widget_id%", 
         code = input$code_%widget_id%,
         selection = input$code_%widget_id%_comment$range, 
@@ -299,6 +310,25 @@ observe_event(input$run_code_%widget_id%, {
     error_message <- NULL
     
     # ====================
+    # PATIENT SELECTION VALIDATION (EXAMPLE)
+    # ====================
+    # For plugins that require patient selection, check if a patient is selected
+    # before executing code. This prevents errors and provides user-friendly messages.
+    # 
+    # EXAMPLE IMPLEMENTATION (commented out for template):
+    # patient_selected <- TRUE
+    # if (is.null(m$selected_person) || is.na(m$selected_person)) {
+    #     patient_selected <- FALSE
+    #     error_message <- i18np$t("select_patient")
+    # }
+    # 
+    # USAGE PATTERN:
+    # - Check patient selection before code execution
+    # - Set error_message instead of using stop() in generated code
+    # - Provide user-friendly messages via translations
+    # - Display messages elegantly in UI (see UI message handling below)
+    
+    # ====================
     # HIDE ALL OUTPUTS INITIALLY
     # ====================
     # Hide all output containers before execution
@@ -312,7 +342,7 @@ observe_event(input$run_code_%widget_id%, {
         eval(parse(text = m$code_%widget_id%))
     }, error = function(e) {
         # Capture any execution errors
-        error_message <<- paste("Error executing code:", e$message)
+        error_message <<- paste(i18np$t("error_executing_code"), e$message, sep = ": ")
     })
     
     # ====================
@@ -328,20 +358,54 @@ observe_event(input$run_code_%widget_id%, {
             i18np$t("no_output_generated")
         }
         
-        output$error_message_%widget_id% <- renderUI(
-            div(
-                shiny.fluent::MessageBar(
-                    display_message, 
-                    messageBarType = 5  # Error type
-                ), 
-                style = "display: inline-block;"
-            )
+        # Check if this is a user-friendly message that should be displayed with nice formatting
+        # Example UI-friendly messages that should get special treatment:
+        ui_messages <- c(
+            i18np$t("select_patient"),           # No patient selected message
+            i18np$t("no_output_generated"),      # No output generated message
+            i18np$t("no_data_to_display")        # No data available message
         )
         
-        shinyjs::show("error_message_div_%widget_id%")
-        # Hide all output containers - customize based on your UI structure
-        # shinyjs::hide("plot_div_%widget_id%")
-        # shinyjs::hide("table_div_%widget_id%")
+        # Check if the message contains any of the UI-friendly messages
+        is_ui_message <- any(sapply(ui_messages, function(msg) grepl(msg, display_message, fixed = TRUE)))
+        
+        if (is_ui_message) {
+            # Extract the actual message without error prefix if present
+            clean_message <- gsub(paste0("^", i18np$t("error_executing_code"), ": "), "", display_message)
+            
+            # Display nice message in dynamic output with centered styling
+            output$dynamic_output_%widget_id% <- renderUI({
+                div(
+                    style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 10px;",
+                    div(
+                        style = "font-size: 14px; color: #6c757d;",
+                        clean_message
+                    )
+                )
+            })
+            shinyjs::show("dynamic_output_div_%widget_id%")
+            shinyjs::hide("error_message_div_%widget_id%")
+            shinyjs::hide("plot_div_%widget_id%")
+            shinyjs::hide("table_div_%widget_id%")
+            shinyjs::hide("datatable_div_%widget_id%")
+        } else {
+            # Display technical errors in MessageBar format
+            output$error_message_%widget_id% <- renderUI(
+                div(
+                    shiny.fluent::MessageBar(
+                        display_message, 
+                        messageBarType = 5  # Error type
+                    ), 
+                    style = "display: inline-block;"
+                )
+            )
+            
+            shinyjs::show("error_message_div_%widget_id%")
+            shinyjs::hide("dynamic_output_div_%widget_id%")
+            shinyjs::hide("plot_div_%widget_id%")
+            shinyjs::hide("table_div_%widget_id%")
+            shinyjs::hide("datatable_div_%widget_id%")
+        }
     }
     
     # Display output if execution was successful
