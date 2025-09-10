@@ -34,6 +34,7 @@ display_output,Display output,Afficher le résultat
 dms_in_selected_units,Average LOS in Selected Units (days),DMS dans les unités sélectionnées (jours)
 dont_delete,Cancel,Annuler
 emergency_department,Emergency Department,Service d'urgences
+error_executing_code,Error executing code,Erreur lors de l'exécution du code
 gender_distribution,Gender distribution,Distribution par sexe
 histogram,Histogram,Histogramme
 hospital_unit,Hospital Unit,Unité hospitalière

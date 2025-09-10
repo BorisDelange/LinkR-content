@@ -40,7 +40,7 @@ shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.disp
 
 # Handle comment/uncomment keyboard shortcut (Ctrl+Shift+C)
 observe_event(input$code_%widget_id%_comment, {
-    toggle_comments(
+    editor_toggle_comments(
         input_id = "code_%widget_id%", 
         code = input$code_%widget_id%,
         selection = input$code_%widget_id%_comment$range, 
@@ -247,7 +247,7 @@ observe_event(input$run_code_%widget_id%, {
             res <- eval(parse(text = m$code_%widget_id%))
         }, error = function(e) {
             # Capture any execution errors
-            error_message <<- paste("Error executing code:", e$message)
+            error_message <<- paste(i18np$t("error_executing_code"), e$message, sep = ": ")
         })
     }
     
@@ -275,8 +275,9 @@ observe_event(input$run_code_%widget_id%, {
         is_ui_message <- any(sapply(ui_messages, function(msg) grepl(msg, display_message, fixed = TRUE)))
         
         if (is_ui_message) {
-            # Extract the actual message without "Error executing code:" prefix if present
-            clean_message <- gsub("^Error executing code: ", "", display_message)
+            # Extract the actual message without error prefix if present
+            clean_message <- gsub(paste0("^", i18np$t("error_executing_code"), ": "), "", display_message)
+            
             # Display nice message in UI output
             output$ui_output_%widget_id% <- renderUI({
                 div(
@@ -292,15 +293,23 @@ observe_event(input$run_code_%widget_id%, {
             shinyjs::hide("ggplot_output_div_%widget_id%")
             shinyjs::hide("console_output_div_%widget_id%")
         } else {
-            # Display other errors in console output
-            output$console_output_%widget_id% <- renderText(display_message)
-            shinyjs::hide("ui_output_div_%widget_id%")
+            # Display technical errors in MessageBar format
+            output$ui_output_%widget_id% <- renderUI(
+                div(
+                    style = "display: flex; justify-content: center; align-items: center; height: 100%; padding: 20px;",
+                    div(
+                        shiny.fluent::MessageBar(
+                            display_message, 
+                            messageBarType = 5  # Error type
+                        ), 
+                        style = "display: inline-block; max-width: 80%;"
+                    )
+                )
+            )
+            shinyjs::show("ui_output_div_%widget_id%")
             shinyjs::hide("plotly_output_div_%widget_id%")
             shinyjs::hide("ggplot_output_div_%widget_id%")
-            shinyjs::show("console_output_div_%widget_id%")
-            
-            # Clear UI output
-            output$ui_output_%widget_id% <- renderUI(NULL)
+            shinyjs::hide("console_output_div_%widget_id%")
         }
         
         # Clear plot outputs
