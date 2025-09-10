@@ -358,54 +358,21 @@ observe_event(input$run_code_%widget_id%, {
             i18np$t("no_output_generated")
         }
         
-        # Check if this is a user-friendly message that should be displayed with nice formatting
-        # Example UI-friendly messages that should get special treatment:
-        ui_messages <- c(
-            i18np$t("select_patient"),           # No patient selected message
-            i18np$t("no_output_generated"),      # No output generated message
-            i18np$t("no_data_to_display")        # No data available message
-        )
-        
-        # Check if the message contains any of the UI-friendly messages
-        is_ui_message <- any(sapply(ui_messages, function(msg) grepl(msg, display_message, fixed = TRUE)))
-        
-        if (is_ui_message) {
-            # Extract the actual message without error prefix if present
-            clean_message <- gsub(paste0("^", i18np$t("error_executing_code"), ": "), "", display_message)
-            
-            # Display nice message in dynamic output with centered styling
-            output$dynamic_output_%widget_id% <- renderUI({
+        # Display all messages with the same simple centered style
+        output$dynamic_output_%widget_id% <- renderUI({
+            div(
+                style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 10px;",
                 div(
-                    style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 10px;",
-                    div(
-                        style = "font-size: 14px; color: #6c757d;",
-                        clean_message
-                    )
-                )
-            })
-            shinyjs::show("dynamic_output_div_%widget_id%")
-            shinyjs::hide("error_message_div_%widget_id%")
-            shinyjs::hide("plot_div_%widget_id%")
-            shinyjs::hide("table_div_%widget_id%")
-            shinyjs::hide("datatable_div_%widget_id%")
-        } else {
-            # Display technical errors in MessageBar format
-            output$error_message_%widget_id% <- renderUI(
-                div(
-                    shiny.fluent::MessageBar(
-                        display_message, 
-                        messageBarType = 5  # Error type
-                    ), 
-                    style = "display: inline-block;"
+                    style = "font-size: 14px; color: #6c757d;",
+                    display_message
                 )
             )
-            
-            shinyjs::show("error_message_div_%widget_id%")
-            shinyjs::hide("dynamic_output_div_%widget_id%")
-            shinyjs::hide("plot_div_%widget_id%")
-            shinyjs::hide("table_div_%widget_id%")
-            shinyjs::hide("datatable_div_%widget_id%")
-        }
+        })
+        shinyjs::show("dynamic_output_div_%widget_id%")
+        shinyjs::hide("error_message_div_%widget_id%")
+        shinyjs::hide("plot_div_%widget_id%")
+        shinyjs::hide("table_div_%widget_id%")
+        shinyjs::hide("datatable_div_%widget_id%")
     }
     
     # Display output if execution was successful

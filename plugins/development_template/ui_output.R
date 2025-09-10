@@ -75,15 +75,17 @@ div(
     # Remove the outputs you don't need and customize the ones you keep
     
     # STATIC PLOT OUTPUT (Base R, ggplot2)
-    # Uncomment and customize for static visualizations
-    div(
-        id = ns("plot_div_%widget_id%"),
-        plotOutput(
-            ns("plot_%widget_id%"), 
-            height = "330px",
-            width = "100%"
-        ),
-        style = "width: 100%; padding: 10px; box-sizing: border-box;"
+    # For static visualizations that adapt to container size
+    shinyjs::hidden(
+        div(
+            id = ns("plot_div_%widget_id%"),
+            plotOutput(
+                ns("plot_%widget_id%"), 
+                height = "100%",
+                width = "100%"
+            ),
+            style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box;"
+        )
     ),
     
     # INTERACTIVE PLOT OUTPUT (plotly)
@@ -137,11 +139,13 @@ div(
     # ),
     
     # DYNAMIC HTML OUTPUT (uiOutput)
-    # Uncomment for dynamic content, reports, or conditional UI
-    div(
-        id = ns("dynamic_output_div_%widget_id%"),
-        uiOutput(ns("dynamic_output_%widget_id%")),
-        style = "width: 100%; padding: 10px; box-sizing: border-box;"
+    # Used for UI messages, cards, and error displays
+    shinyjs::hidden(
+        div(
+            id = ns("dynamic_output_div_%widget_id%"),
+            uiOutput(ns("dynamic_output_%widget_id%"), style = "height: calc(100% - 5px);"),
+            style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box;"
+        )
     ),
     
     # CONSOLE-STYLE TEXT OUTPUT (verbatimTextOutput)
