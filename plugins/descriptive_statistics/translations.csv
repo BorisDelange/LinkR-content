@@ -1,0 +1,58 @@
+base,en,fr
+add,Add,Ajouter
+automatic_updates,Automatically update output,Mettre à jour automatiquement les résultats
+configuration,Configuration,Configuration
+configuration_1,Configuration 1,Configuration 1
+configuration_name,Configuration name,Nom de la configuration
+create_user_configuration,Create new user configuration,Créer une nouvelle configuration
+data_analysis_results,Data analysis results,Résultats des analyses
+data_table,Data table,Tableau de données
+delete,Delete,Supprimer
+delete_user_configuration_text,Confirm deletion of the user configuration?,Confirmer la suppression de la configuration utilisateur ?
+delete_user_configuration_title,Delete user configuration,Supprimer la configuration utilisateur
+display_and_save,Display + Save,Afficher + sauvegarder
+error_executing_code,Error executing code,Erreur lors de l'exécution du code
+display_output,Display output,Afficher le résultat
+dont_delete,Cancel,Annuler
+histogram,Histogram,Histogramme
+modif_saved,Updates saved,Modifications enregistrées
+name_already_used,This name is already used,Ce nom est déjà utilisé
+new_user_configuration_added,New user configuration added,Nouvelle configuration utilisateur ajoutée
+no_data_to_display,No data to display,Aucune donnée à afficher
+no_output_generated,No output generated. Please check your code and settings.,Aucun résultat généré. Veuillez vérifier votre code et vos réglages.
+no_user_configuration_selected,No user configuration selected,Aucune configuration utilisateur sélectionnée
+output_and_settings_side_by_side,Output and settings/editor side by side,Résultats et réglages/éditeur côte à côte
+output_type,Output type,Format de sortie
+plot_title,Plot title,Titre de la figure
+provide_valid_name,Provide valid name,Nom valide requis
+rename,Rename,Renommer
+rename_user_configuration,Rename user configuration,Renommer la configuration
+save_output_settings_and_code,Save,Sauvegarder
+select_patient,No patient selected. Please select a patient to view data.,Aucun patient sélectionné. Veuillez sélectionner un patient pour voir les données.
+show_code_editor,Code editor,Editeur de code
+show_output,Output,Résultats
+show_output_settings,Output settings,Modifier les réglages
+summary_statistics,Summary statistics,Résumé statistique
+user_configuration_delete,User configuration deleted,Configuration utilisateur supprimée
+user_configuration_renamed,User configuration renamed,Configuration renommée
+variables,Variables,Variables
+import_data,Import,Importer
+visualization,Visualization,Visualisation
+statistics,Statistics,Statistiques
+report,Report,Rapport
+csv_file,CSV file,Fichier CSV
+x_axis,X axis,Axe X
+y_axis,Y axis,Axe Y
+plot_type,Plot type,Type de graphique
+histogram_plot,Histogram,Histogramme
+scatter_plot,Scatter plot,Nuage de points
+boxplot,Box plot,Boîte à moustaches
+barplot,Bar plot,Diagramme en barres
+statistics_type,Statistics type,Type de statistiques
+table_one,Table 1,Table 1
+variable_comparison,Variable comparison,Comparaison de variables
+grouping_variable,Grouping variable,Variable de groupe
+variable_1,Variable 1,Variable 1
+variable_2,Variable 2,Variable 2
+browse,Browse,Parcourir
+select_dataset,Select dataset,Sélectionner le jeu de données
