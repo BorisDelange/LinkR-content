@@ -89,7 +89,11 @@ all_inputs_%widget_id% <- list(
     list(id = "variable_2", type = "dropdown", default = NULL),
     # General
     list(id = "auto_update", type = "toggle", default = TRUE),
-    list(id = "code", type = "code", default = "")
+    # Code editors for each tab
+    list(id = "code_import_data", type = "code", default = ""),
+    list(id = "code_visualization", type = "code", default = ""),
+    list(id = "code_statistics", type = "code", default = ""),
+    list(id = "code_report", type = "code", default = "")
 )
 
 # ======================================
@@ -116,6 +120,11 @@ observe_event(input$current_figure_settings_tab_trigger_%widget_id%, {
             shinyjs::removeClass(class = "selected_widget_pivot_item", selector = paste0("#", id, "-", sub_tab, "_%widget_id%"))
             shinyjs::hide(paste0(sub_tab, "_div_%widget_id%"))
         }
+    })
+    
+    # Auto-execute when switching tabs
+    shinyjs::delay(100, {
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
     })
 })
 
@@ -238,6 +247,11 @@ observe_event(input$selected_dataset_%widget_id%, {
                 shinyjs::show("datatable_div_%widget_id%")
                 shinyjs::hide("plot_div_%widget_id%")
                 shinyjs::hide("dynamic_output_div_%widget_id%")
+                
+                # Auto-generate and update code in ACE editor for import_data tab
+                shinyjs::delay(200, {
+                    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
+                })
                 shinyjs::hide("error_message_div_%widget_id%")
             }
             

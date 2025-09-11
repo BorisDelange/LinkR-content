@@ -1,105 +1,179 @@
 # ==========================================
-# server_code.R - Code Editor Server Logic
+# server_code.R - Code Editor Server Logic with Multiple Tabs
 # ==========================================
 
 # ████████████████████████████████████████████████████████████████████████████████
 # ██                                                                            ██
 # ██  🔧 REQUIRES CUSTOMIZATION - PLUGIN IMPLEMENTATION  🔧                     ██
 # ██                                                                            ██
-# ██  This file MUST be customized for your specific plugin.                    ██
-# ██  Follow the template structure and implement your logic.                   ██
-# ██  See comments and examples for guidance.                                   ██
+# ██  This file has been customized for multiple tabbed ACE editors.           ██
+# ██  Each tab has its own editor with synchronized navigation.                 ██
+# ██  Tab synchronization between output_settings and code editor implemented. ██
 # ██                                                                            ██
 # ████████████████████████████████████████████████████████████████████████████████
-
-# PLUGIN TEMPLATE - CODE EDITOR SERVER FILE
-# 
-# This file handles the server-side logic for the code editor and output generation.
-# It provides the foundation for automatic code generation from UI settings and
-# manual code execution, creating a seamless no-code to code experience.
-# 
-# WHEN CREATING A NEW PLUGIN WITH THIS TEMPLATE:
-# - Implement the generate_output_code_%widget_id%() function for your specific analysis
-# - Customize the code execution logic in the run_code observer
-# - Add patient selection validation following the commented example (lines 307-318)
-# - Configure UI message handling for user-friendly error display (lines 350-398)
-# - Add translations for plugin-specific messages in translations.csv
-# - Add any plugin-specific helper functions and variables
-# - Modify auto-execution triggers based on your data dependencies
-# 
-# CORE FUNCTIONALITY:
-# - Automatic R code generation from UI configuration settings
-# - Code editor with syntax highlighting and keyboard shortcuts
-# - Manual code execution with error handling and output display
-# - Auto-execution when data context changes (optional)
-# - Integration with the widget's database storage system
-# 
-# COMMON PLUGIN PATTERNS:
-# 
-# HEALTHCARE DATA ANALYSIS PLUGINS:
-#   - Patient selection validation with user-friendly error messages
-#   - OMOP medical data integration and filtering
-#   - Healthcare indicator calculations (mortality, LOS, readmission rates)
-#   - Generate statistical analysis code (t-tests, regression, ANOVA)
-#   - Create summary statistics and descriptive analysis
-# 
-# VISUALIZATION PLUGINS:
-#   - Timeline visualizations with dygraphs and plotly
-#   - Healthcare dashboards with indicator cards
-#   - Generate ggplot2 code for various chart types
-#   - Create interactive plotly visualizations with medical data
-#   - Build custom plotting functions with user parameters
-# 
-# MEDICAL DATA PROCESSING PLUGINS:
-#   - OMOP CDM data filtering and transformation
-#   - Patient cohort and visit detail processing  
-#   - Medical concept mapping and vocabulary integration
-#   - Care site and hospital unit filtering
-#   - Generate data cleaning and preparation workflows
-# 
-# REPORTING PLUGINS:
-#   - Healthcare indicator reports and dashboards
-#   - Patient summary reports with medical timelines
-#   - Generate markdown or HTML report code
-#   - Create formatted table output code
-#   - Build export and download functionality
 
 # ======================================
 # INITIALIZATION
 # ======================================
 
-# Initialize code storage variable
-m$code_%widget_id% <- ""
+# Initialize code storage variables for each tab
+m$code_import_data_%widget_id% <- ""
+m$code_visualization_%widget_id% <- ""
+m$code_statistics_%widget_id% <- ""
+m$code_report_%widget_id% <- ""
+
+# Current active code editor tab
+current_code_tab_%widget_id% <- reactiveVal("import_data")
+
+# Sub tabs definition
+code_sub_tabs <- c("import_data", "visualization", "statistics", "report")
+
+# Initialize ACE editors visibility - show only import_data by default
+sapply(code_sub_tabs, function(sub_tab) {
+    if (sub_tab == "import_data") {
+        shinyjs::show(paste0("code_", sub_tab, "_div_%widget_id%"))
+    } else {
+        shinyjs::hide(paste0("code_", sub_tab, "_div_%widget_id%"))
+    }
+})
 
 # Fix ACE editor rendering issues on startup
 # Delay ensures DOM is fully loaded before triggering resize
 shinyjs::delay(300, shinyjs::runjs("var event = new Event('resize'); window.dispatchEvent(event);"))
 
 # ======================================
-# CODE EDITOR KEYBOARD SHORTCUTS
+# TAB SYNCHRONIZATION - OUTPUT SETTINGS CONTROLS CODE EDITORS
 # ======================================
 
-# Handle comment/uncomment keyboard shortcut (Ctrl+Shift+C)
-observe_event(input$code_%widget_id%_comment, {
+# Show/hide code editor divs when output_settings tabs change
+observe_event(input$current_figure_settings_tab_trigger_%widget_id%, {
+    
+    current_sub_tab <- 
+        input$current_figure_settings_tab_%widget_id% %>%
+        gsub(paste0(id, "-"), "", .) %>%
+        gsub("_%widget_id%", "", .)
+    
+    # Update code editor visibility
+    sapply(code_sub_tabs, function(sub_tab) {
+        if (current_sub_tab == sub_tab) {
+            shinyjs::delay(50, shinyjs::show(paste0("code_", sub_tab, "_div_%widget_id%")))
+        } else {
+            shinyjs::hide(paste0("code_", sub_tab, "_div_%widget_id%"))
+        }
+    })
+    
+    # Update current tab
+    current_code_tab_%widget_id%(current_sub_tab)
+})
+
+# Initialize default tab visibility when UI loads
+observe({
+    req(session$clientData$output_code_import_data_div_%widget_id%_width)
+    
+    # Ensure import_data tab is visible by default
+    if (is.null(input$current_figure_settings_tab_%widget_id%)) {
+        shinyjs::delay(100, {
+            shinyjs::show("code_import_data_div_%widget_id%")
+            sapply(c("visualization", "statistics", "report"), function(tab) {
+                shinyjs::hide(paste0("code_", tab, "_div_%widget_id%"))
+            })
+        })
+    }
+})
+
+# ======================================
+# CODE EDITOR KEYBOARD SHORTCUTS FOR EACH TAB
+# ======================================
+
+# Import Data Editor
+observe_event(input$code_import_data_%widget_id%_comment, {
     editor_toggle_comments(
-        input_id = "code_%widget_id%", 
-        code = input$code_%widget_id%,
-        selection = input$code_%widget_id%_comment$range, 
+        input_id = "code_import_data_%widget_id%", 
+        code = input$code_import_data_%widget_id%,
+        selection = input$code_import_data_%widget_id%_comment$range, 
         session = session
     )
 })
 
-# Handle run all code keyboard shortcut (Ctrl+Shift+Enter)
-observe_event(input$code_%widget_id%_run_all, {
-    # Only allow code execution if user has console access
+observe_event(input$code_import_data_%widget_id%_run_all, {
     if ("projects_widgets_console" %in% user_accesses) {
-        m$code_%widget_id% <- input$code_%widget_id%
+        m$code_import_data_%widget_id% <- input$code_import_data_%widget_id%
+        current_code_tab_%widget_id%("import_data")
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
     }
 })
 
-# Handle save keyboard shortcut (Ctrl+S)
-observe_event(input$code_%widget_id%_save, {
+observe_event(input$code_import_data_%widget_id%_save, {
+    m$code_import_data_%widget_id% <- input$code_import_data_%widget_id%
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_output_settings_and_code_%widget_id%', Math.random());"))
+})
+
+# Visualization Editor
+observe_event(input$code_visualization_%widget_id%_comment, {
+    editor_toggle_comments(
+        input_id = "code_visualization_%widget_id%", 
+        code = input$code_visualization_%widget_id%,
+        selection = input$code_visualization_%widget_id%_comment$range, 
+        session = session
+    )
+})
+
+observe_event(input$code_visualization_%widget_id%_run_all, {
+    if ("projects_widgets_console" %in% user_accesses) {
+        m$code_visualization_%widget_id% <- input$code_visualization_%widget_id%
+        current_code_tab_%widget_id%("visualization")
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    }
+})
+
+observe_event(input$code_visualization_%widget_id%_save, {
+    m$code_visualization_%widget_id% <- input$code_visualization_%widget_id%
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_output_settings_and_code_%widget_id%', Math.random());"))
+})
+
+# Statistics Editor
+observe_event(input$code_statistics_%widget_id%_comment, {
+    editor_toggle_comments(
+        input_id = "code_statistics_%widget_id%", 
+        code = input$code_statistics_%widget_id%,
+        selection = input$code_statistics_%widget_id%_comment$range, 
+        session = session
+    )
+})
+
+observe_event(input$code_statistics_%widget_id%_run_all, {
+    if ("projects_widgets_console" %in% user_accesses) {
+        m$code_statistics_%widget_id% <- input$code_statistics_%widget_id%
+        current_code_tab_%widget_id%("statistics")
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    }
+})
+
+observe_event(input$code_statistics_%widget_id%_save, {
+    m$code_statistics_%widget_id% <- input$code_statistics_%widget_id%
+    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_output_settings_and_code_%widget_id%', Math.random());"))
+})
+
+# Report Editor
+observe_event(input$code_report_%widget_id%_comment, {
+    editor_toggle_comments(
+        input_id = "code_report_%widget_id%", 
+        code = input$code_report_%widget_id%,
+        selection = input$code_report_%widget_id%_comment$range, 
+        session = session
+    )
+})
+
+observe_event(input$code_report_%widget_id%_run_all, {
+    if ("projects_widgets_console" %in% user_accesses) {
+        m$code_report_%widget_id% <- input$code_report_%widget_id%
+        current_code_tab_%widget_id%("report")
+        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
+    }
+})
+
+observe_event(input$code_report_%widget_id%_save, {
+    m$code_report_%widget_id% <- input$code_report_%widget_id%
     shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-save_output_settings_and_code_%widget_id%', Math.random());"))
 })
 
@@ -123,7 +197,7 @@ observe_event(input$display_output_%widget_id%, {
     if (current_tab == "output_settings") {
         
         # Get current tab from figure settings
-        current_tab <- if (length(input$current_figure_settings_tab_%widget_id%) > 0) {
+        current_sub_tab <- if (length(input$current_figure_settings_tab_%widget_id%) > 0) {
             input$current_figure_settings_tab_%widget_id% %>%
                 gsub(paste0(id, "-"), "", .) %>%
                 gsub("_%widget_id%", "", .)
@@ -190,7 +264,7 @@ observe_event(input$display_output_%widget_id%, {
         
         # Generate R code based on current configuration and tab
         generated_code <- generate_output_code_%widget_id%(
-            current_tab = current_tab,
+            current_tab = current_sub_tab,
             selected_dataset = selected_dataset,
             x_var = x_var,
             y_var = y_var,
@@ -202,19 +276,48 @@ observe_event(input$display_output_%widget_id%, {
             var2 = var2
         )
         
-        # Update ACE editor with generated code
-        shinyAce::updateAceEditor(session, "code_%widget_id%", value = generated_code)
+        # Update the appropriate ACE editor with generated code
+        editor_id <- paste0("code_", current_sub_tab, "_%widget_id%")
+        shinyAce::updateAceEditor(session, editor_id, value = generated_code)
         
-        # Store code and trigger execution
+        # Store code in the appropriate variable
+        if (current_sub_tab == "import_data") {
+            m$code_import_data_%widget_id% <- generated_code
+        } else if (current_sub_tab == "visualization") {
+            m$code_visualization_%widget_id% <- generated_code
+        } else if (current_sub_tab == "statistics") {
+            m$code_statistics_%widget_id% <- generated_code
+        } else if (current_sub_tab == "report") {
+            m$code_report_%widget_id% <- generated_code
+        }
+        
+        # Also update the main code variable for execution
         m$code_%widget_id% <- generated_code
+        
+        # Trigger execution
         shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());")))
     }
     # ====================
     # MANUAL CODE EXECUTION
     # ====================
     else if ("projects_widgets_console" %in% user_accesses) {
-        # If on code tab, run whatever is currently in the editor
-        m$code_%widget_id% <- input$code_%widget_id%
+        # If on code tab, run whatever is currently in the active editor
+        current_tab_name <- current_code_tab_%widget_id%()
+        
+        if (current_tab_name == "import_data") {
+            m$code_%widget_id% <- input$code_import_data_%widget_id%
+            m$code_import_data_%widget_id% <- input$code_import_data_%widget_id%
+        } else if (current_tab_name == "visualization") {
+            m$code_%widget_id% <- input$code_visualization_%widget_id%
+            m$code_visualization_%widget_id% <- input$code_visualization_%widget_id%
+        } else if (current_tab_name == "statistics") {
+            m$code_%widget_id% <- input$code_statistics_%widget_id%
+            m$code_statistics_%widget_id% <- input$code_statistics_%widget_id%
+        } else if (current_tab_name == "report") {
+            m$code_%widget_id% <- input$code_report_%widget_id%
+            m$code_report_%widget_id% <- input$code_report_%widget_id%
+        }
+        
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
     }
 })
@@ -381,7 +484,7 @@ generate_output_code_%widget_id% <- function(current_tab = "import_data", select
                         paste0("comparison_data <- data %>% dplyr::select(`", var1, "`, `", var2, "`)"),
                         "",
                         "# Basic correlation if both numeric",
-                        "if (is.numeric(data[['" , var1, "']]) && is.numeric(data[['", var2, "']])) {",
+                        "if (is.numeric(data[['", var1, "']]) && is.numeric(data[['", var2, "']])) {",
                         "    correlation <- cor(data[['", var1, "']], data[['", var2, "']], use = 'complete.obs')",
                         "    cat('Correlation between ", var1, " and ", var2, ":', round(correlation, 3), '\\n')",
                         "}",
@@ -416,8 +519,6 @@ generate_output_code_%widget_id% <- function(current_tab = "import_data", select
 # ======================================
 
 # Example: Auto-run code when data context changes
-# Uncomment and customize based on your plugin's data dependencies
-
 observe_event(m$selected_person, {
     # Check if auto-run is enabled
     if (!isTRUE(input$auto_update_%widget_id%)) {
@@ -438,25 +539,6 @@ observe_event(input$run_code_%widget_id%, {
     # Initialize result variable
     result <- NULL
     error_message <- NULL
-    
-    # ====================
-    # PATIENT SELECTION VALIDATION (EXAMPLE)
-    # ====================
-    # For plugins that require patient selection, check if a patient is selected
-    # before executing code. This prevents errors and provides user-friendly messages.
-    # 
-    # EXAMPLE IMPLEMENTATION (commented out for template):
-    # patient_selected <- TRUE
-    # if (is.null(m$selected_person) || is.na(m$selected_person)) {
-    #     patient_selected <- FALSE
-    #     error_message <- i18np$t("select_patient")
-    # }
-    # 
-    # USAGE PATTERN:
-    # - Check patient selection before code execution
-    # - Set error_message instead of using stop() in generated code
-    # - Provide user-friendly messages via translations
-    # - Display messages elegantly in UI (see UI message handling below)
     
     # ====================
     # HIDE ALL OUTPUTS INITIALLY

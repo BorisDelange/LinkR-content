@@ -59,18 +59,6 @@
 
 div(
     # ====================
-    # TABS FOR STATISTICS DESCRIPTIVES
-    # ====================
-    div(
-        id = ns("figure_settings_tabs_%widget_id%"),
-        tags$button(id = ns("import_data_%widget_id%"), i18np$t("import_data"), class = "widget_pivot_item selected_widget_pivot_item", onclick = figure_settings_tab_item_js),
-        tags$button(id = ns("visualization_%widget_id%"), i18np$t("visualization"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
-        tags$button(id = ns("statistics_%widget_id%"), i18np$t("statistics"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
-        tags$button(id = ns("report_%widget_id%"), i18np$t("report"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
-        class = "pivot"
-    ),
-    
-    # ====================
     # IMPORT DATA TAB
     # ====================
     div(

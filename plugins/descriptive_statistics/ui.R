@@ -108,6 +108,7 @@ figure_settings_tab_item_js <- paste0("
     Shiny.setInputValue('", id, "-current_figure_settings_tab_trigger_%widget_id%', Math.random());"
 )
 
+
 # ======================================
 # ACCESS-CONTROLLED BUTTON CONFIGURATION
 # ======================================
@@ -270,22 +271,108 @@ tagList(
                     shinyjs::hidden(
                         div(
                             id = ns("settings_container_%widget_id%"),
-                            style = "height: 100%; display: flex; flex: 0 0 20%; box-sizing: border-box; min-width: 100px;",
+                            style = "height: 100%; display: flex; flex-direction: column; flex: 0 0 20%; box-sizing: border-box; min-width: 100px;",
                             
-                            # Output settings panel
+                            # ====================
+                            # SHARED TABS FOR BOTH OUTPUT_SETTINGS AND CODE
+                            # ====================
                             div(
-                                id = ns("output_settings_div_%widget_id%"),
-                                %import_script('ui_output_settings.R')%,
-                                style = "height: 100%; padding: 0 8px; overflow: auto; flex: 1; box-sizing: border-box;"
+                                id = ns("figure_settings_tabs_%widget_id%"),
+                                tags$button(id = ns("import_data_%widget_id%"), i18np$t("import_data"), class = "widget_pivot_item selected_widget_pivot_item", onclick = figure_settings_tab_item_js),
+                                tags$button(id = ns("visualization_%widget_id%"), i18np$t("visualization"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
+                                tags$button(id = ns("statistics_%widget_id%"), i18np$t("statistics"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
+                                tags$button(id = ns("report_%widget_id%"), i18np$t("report"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
+                                class = "pivot"
                             ),
                             
-                            # Code editor panel (hidden by default)
-                            shinyjs::hidden(
+                            # Container for content below tabs
+                            div(
+                                style = "height: calc(100% - 40px); display: flex;",
+                                
+                                # Content panels container
                                 div(
-                                    id = ns("code_div_%widget_id%"),
-                                    %import_script('ui_code.R')%,
-                                    style = "height: 100%; overflow: auto; flex: 0 0 50%; box-sizing: border-box;",
-                                    class = "right-panel"
+                                    style = "display: flex; flex: 1;",
+                                    
+                                    # Output settings panel
+                                    div(
+                                        id = ns("output_settings_div_%widget_id%"),
+                                        %import_script('ui_output_settings.R')%,
+                                        style = "height: 100%; padding: 0 8px; overflow: auto; flex: 1; box-sizing: border-box;"
+                                    ),
+                                    
+                                    # Code editor panel (hidden by default)
+                                    shinyjs::hidden(
+                                        div(
+                                            id = ns("code_div_%widget_id%"),
+                                            %import_script('ui_code.R')%,
+                                            style = "height: 100%; overflow: auto; flex: 1; box-sizing: border-box;",
+                                            class = "right-panel"
+                                        )
+                                    )
+                                ),
+                                
+                                # Right sidebar with action buttons
+                                div(
+                                    id = ns("output_settings_code_sidenav_%widget_id%"),
+                                    
+                                    # Display output button
+                                    shiny.fluent::IconButton.shinyInput(
+                                        ns("display_output_%widget_id%"), 
+                                        iconProps = list(iconName = "Play"), 
+                                        title = i18np$t("display_output"), 
+                                        style = "margin: 0"
+                                    ),
+                                    
+                                    # Save output settings button (conditional)
+                                    save_output_settings_buttons,
+                                    
+                                    # Sidebar styling
+                                    class = "widget_icon",
+                                    style = "border-left: solid grey 0.5px; width: 25px; flex: 0 0 25px;"
+                                )
+                            )
+                        )
+                    )
+                } else {
+                    div(
+                        id = ns("settings_container_%widget_id%"),
+                        style = "height: 100%; display: flex; flex-direction: column; flex: 0 0 50%; box-sizing: border-box;",
+                        
+                        # ====================
+                        # SHARED TABS FOR BOTH OUTPUT_SETTINGS AND CODE
+                        # ====================
+                        div(
+                            id = ns("figure_settings_tabs_%widget_id%"),
+                            tags$button(id = ns("import_data_%widget_id%"), i18np$t("import_data"), class = "widget_pivot_item selected_widget_pivot_item", onclick = figure_settings_tab_item_js),
+                            tags$button(id = ns("visualization_%widget_id%"), i18np$t("visualization"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
+                            tags$button(id = ns("statistics_%widget_id%"), i18np$t("statistics"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
+                            tags$button(id = ns("report_%widget_id%"), i18np$t("report"), class = "widget_pivot_item", onclick = figure_settings_tab_item_js),
+                            class = "pivot"
+                        ),
+                        
+                        # Container for content below tabs
+                        div(
+                            style = "height: calc(100% - 40px); display: flex; padding-top: 10px;",
+                            
+                            # Content panels container
+                            div(
+                                style = "display: flex; flex: 1;",
+                                
+                                # Output settings panel
+                                div(
+                                    id = ns("output_settings_div_%widget_id%"),
+                                    %import_script('ui_output_settings.R')%,
+                                    style = "height: 100%; padding: 0 8px; overflow: auto; flex: 1; box-sizing: border-box;"
+                                ),
+                                
+                                # Code editor panel (hidden by default)
+                                shinyjs::hidden(
+                                    div(
+                                        id = ns("code_div_%widget_id%"),
+                                        %import_script('ui_code.R')%,
+                                        style = "height: 100%; overflow: auto; flex: 1; box-sizing: border-box;",
+                                        class = "right-panel"
+                                    )
                                 )
                             ),
                             
@@ -308,48 +395,6 @@ tagList(
                                 class = "widget_icon",
                                 style = "border-left: solid grey 0.5px; width: 25px; flex: 0 0 25px;"
                             )
-                        )
-                    )
-                } else {
-                    div(
-                        id = ns("settings_container_%widget_id%"),
-                        style = "height: 100%; display: flex; flex: 0 0 20%; box-sizing: border-box;",
-                        
-                        # Output settings panel
-                        div(
-                            id = ns("output_settings_div_%widget_id%"),
-                            %import_script('ui_output_settings.R')%,
-                            style = "height: 100%; padding: 0 8px; overflow: auto; flex: 1; box-sizing: border-box;"
-                        ),
-                        
-                        # Code editor panel (hidden by default)
-                        shinyjs::hidden(
-                            div(
-                                id = ns("code_div_%widget_id%"),
-                                %import_script('ui_code.R')%,
-                                style = "height: 100%; overflow: auto; flex: 0 0 50%; box-sizing: border-box;",
-                                class = "right-panel"
-                            )
-                        ),
-                        
-                        # Right sidebar with action buttons
-                        div(
-                            id = ns("output_settings_code_sidenav_%widget_id%"),
-                            
-                            # Display output button
-                            shiny.fluent::IconButton.shinyInput(
-                                ns("display_output_%widget_id%"), 
-                                iconProps = list(iconName = "Play"), 
-                                title = i18np$t("display_output"), 
-                                style = "margin: 0"
-                            ),
-                            
-                            # Save output settings button (conditional)
-                            save_output_settings_buttons,
-                            
-                            # Sidebar styling
-                            class = "widget_icon",
-                            style = "border-left: solid grey 0.5px; width: 25px; flex: 0 0 25px;"
                         )
                     )
                 }
