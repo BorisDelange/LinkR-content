@@ -64,23 +64,25 @@ div(
     div(
         id = ns("import_data_div_%widget_id%"),
         div(
+            class = "file-browser-button",
+            style = "height: 90px;",
             fileInput(
                 ns("csv_file_%widget_id%"),
-                i18np$t("csv_file"),
-                accept = c(".csv"),
+                label = i18np$t("csv_file"),
                 buttonLabel = i18np$t("browse"),
-                placeholder = "No file selected"
+                placeholder = i18np$t("select_csv_file"),
+                accept = ".csv",
+                width = "300px"
+            )
+        ),
+        div(
+            shiny.fluent::Dropdown.shinyInput(
+                ns("selected_dataset_%widget_id%"),
+                label = i18np$t("select_dataset"),
+                options = list(),
+                value = NULL
             ),
-            div(
-                shiny.fluent::Dropdown.shinyInput(
-                    ns("selected_dataset_%widget_id%"),
-                    label = i18np$t("select_dataset"),
-                    options = list(),
-                    value = NULL
-                ),
-                style = "width: 250px; margin-top: 15px;"
-            ),
-            style = "margin-top: 15px;"
+            style = "width: 250px;"
         )
     ),
     
@@ -90,48 +92,75 @@ div(
     shinyjs::hidden(
         div(
             id = ns("visualization_div_%widget_id%"),
+            # Variables selection section
             div(
+                style = "border: 1px solid #d1d1d1; border-radius: 8px; padding: 15px; margin-bottom: 20px; background-color: #fafafa;",
                 div(
-                    shiny.fluent::Dropdown.shinyInput(
-                        ns("x_axis_%widget_id%"),
-                        label = i18np$t("x_axis"),
-                        options = list(),
-                        value = NULL
-                    ),
-                    style = "width: 200px; margin-right: 15px;"
-                ),
-                div(
-                    shiny.fluent::Dropdown.shinyInput(
-                        ns("y_axis_%widget_id%"),
-                        label = i18np$t("y_axis"),
-                        options = list(),
-                        value = NULL
-                    ),
-                    style = "width: 200px; margin-right: 15px;"
-                ),
-                div(
-                    shiny.fluent::Dropdown.shinyInput(
-                        ns("plot_type_%widget_id%"),
-                        label = i18np$t("plot_type"),
-                        options = list(
-                            list(key = "histogram", text = i18np$t("histogram_plot")),
-                            list(key = "scatter", text = i18np$t("scatter_plot")),
-                            list(key = "boxplot", text = i18np$t("boxplot")),
-                            list(key = "barplot", text = i18np$t("barplot"))
+                    div(
+                        shiny.fluent::Dropdown.shinyInput(
+                            ns("x_axis_%widget_id%"),
+                            label = i18np$t("x_axis"),
+                            options = list(),
+                            value = NULL
                         ),
-                        value = "histogram"
+                        style = "width: 200px; margin-right: 15px;"
                     ),
-                    style = "width: 200px;"
-                ),
-                style = "display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;"
+                    div(
+                        shiny.fluent::Dropdown.shinyInput(
+                            ns("y_axis_%widget_id%"),
+                            label = i18np$t("y_axis"),
+                            options = list(list(key = "", text = i18np$t("none"))),
+                            value = ""
+                        ),
+                        style = "width: 200px; margin-right: 15px;"
+                    ),
+                    div(
+                        shiny.fluent::Dropdown.shinyInput(
+                            ns("plot_type_%widget_id%"),
+                            label = i18np$t("plot_type"),
+                            options = list(
+                                list(key = "histogram", text = i18np$t("histogram_plot")),
+                                list(key = "scatter", text = i18np$t("scatter_plot")),
+                                list(key = "boxplot", text = i18np$t("boxplot")),
+                                list(key = "barplot", text = i18np$t("barplot"))
+                            ),
+                            value = "histogram"
+                        ),
+                        style = "width: 200px;"
+                    ),
+                    style = "display: flex; flex-wrap: wrap; gap: 10px;"
+                )
             ),
+            # Labels and titles section
             div(
-                shiny.fluent::TextField.shinyInput(
-                    ns("plot_title_%widget_id%"),
-                    label = i18np$t("plot_title"),
-                    value = i18np$t("data_analysis_results")
-                ),
-                style = "width: 300px; margin-top: 15px;"
+                style = "border: 1px solid #d1d1d1; border-radius: 8px; padding: 15px; background-color: #fafafa;",
+                div(
+                    div(
+                        shiny.fluent::TextField.shinyInput(
+                            ns("plot_title_%widget_id%"),
+                            label = i18np$t("plot_title"),
+                            value = i18np$t("data_analysis_results")
+                        ),
+                        style = "width: 200px; margin-right: 15px;"
+                    ),
+                    div(
+                        shiny.fluent::TextField.shinyInput(
+                            ns("x_legend_%widget_id%"),
+                            label = i18np$t("x_axis_legend"),
+                            value = ""
+                        ),
+                        style = "width: 200px; margin-right: 15px;"
+                    ),
+                    div(
+                        shiny.fluent::TextField.shinyInput(
+                            ns("y_legend_%widget_id%"),
+                            label = i18np$t("y_axis_legend"),
+                            value = ""
+                        ),
+                        style = "width: 200px;"
+                    ),
+                    style = "display: flex; flex-wrap: wrap; gap: 10px;"
+                )
             )
         )
     ),

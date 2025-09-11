@@ -141,6 +141,15 @@ div(
     # ),
     
     # DYNAMIC HTML OUTPUT (uiOutput)
+    # Visualization helper UI (for variable analysis and recommendations)
+    shinyjs::hidden(
+        div(
+            id = ns("visualization_helper_div_%widget_id%"),
+            uiOutput(ns("visualization_helper_%widget_id%"), style = "height: calc(100% - 5px);"),
+            style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box; overflow-y: auto;"
+        )
+    ),
+    
     # Used for UI messages, cards, and error displays
     shinyjs::hidden(
         div(
@@ -161,14 +170,14 @@ div(
     # ),
     
     # SIMPLE HTML TABLE OUTPUT (tableOutput)
-    # Uncomment for basic tabular display without interactivity
-    # shinyjs::hidden(
-    #     div(
-    #         id = ns("table_div_%widget_id%"),
-    #         tableOutput(ns("table_%widget_id%")),
-    #         style = "width: 100%; padding: 10px; box-sizing: border-box; overflow: auto;"
-    #     )
-    # ),
+    # For gtsummary tables and statistics output
+    shinyjs::hidden(
+        div(
+            id = ns("table_div_%widget_id%"),
+            uiOutput(ns("table_%widget_id%")),
+            style = "width: 100%; padding: 10px; box-sizing: border-box; overflow: auto;"
+        )
+    ),
     
     # ====================
     # CONTAINER STYLING

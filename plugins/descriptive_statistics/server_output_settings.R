@@ -79,9 +79,11 @@ all_inputs_%widget_id% <- list(
     list(id = "selected_dataset", type = "dropdown", default = NULL),
     # Visualization
     list(id = "x_axis", type = "dropdown", default = NULL),
-    list(id = "y_axis", type = "dropdown", default = NULL),
+    list(id = "y_axis", type = "dropdown", default = ""),
     list(id = "plot_type", type = "dropdown", default = "histogram"),
     list(id = "plot_title", type = "text", default = i18np$t("data_analysis_results")),
+    list(id = "x_legend", type = "text", default = ""),
+    list(id = "y_legend", type = "text", default = ""),
     # Statistics
     list(id = "statistics_type", type = "dropdown", default = "table_one"),
     list(id = "grouping_variable", type = "dropdown", default = NULL),
@@ -122,10 +124,41 @@ observe_event(input$current_figure_settings_tab_trigger_%widget_id%, {
         }
     })
     
-    # Auto-execute when switching tabs
-    shinyjs::delay(100, {
-        shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());"))
-    })
+    # Show appropriate output for the current tab
+    if (current_sub_tab == "import_data") {
+        # Show datatable if dataset is loaded
+        if (length(input$selected_dataset_%widget_id%) > 0 && !is.null(input$selected_dataset_%widget_id%)) {
+            shinyjs::show("datatable_div_%widget_id%")
+            shinyjs::hide("plot_div_%widget_id%")
+            shinyjs::hide("table_div_%widget_id%")
+            shinyjs::hide("dynamic_output_div_%widget_id%")
+        }
+    } else if (current_sub_tab == "visualization") {
+        # Show visualization helper or plot depending on state
+        shinyjs::hide("datatable_div_%widget_id%")
+        shinyjs::hide("table_div_%widget_id%")
+        shinyjs::hide("dynamic_output_div_%widget_id%")
+        # Show helper by default, plot will override when executed
+        if (!is.null(input$x_axis_%widget_id%) && input$x_axis_%widget_id% != "") {
+            shinyjs::hide("plot_div_%widget_id%")
+            shinyjs::show("visualization_helper_div_%widget_id%")
+        } else {
+            shinyjs::hide("plot_div_%widget_id%")
+            shinyjs::hide("visualization_helper_div_%widget_id%")
+        }
+    } else if (current_sub_tab == "statistics") {
+        # Show statistics table
+        shinyjs::hide("datatable_div_%widget_id%")
+        shinyjs::hide("plot_div_%widget_id%")
+        shinyjs::show("table_div_%widget_id%")
+        shinyjs::hide("dynamic_output_div_%widget_id%")
+    } else if (current_sub_tab == "report") {
+        # Show report output
+        shinyjs::hide("datatable_div_%widget_id%")
+        shinyjs::hide("plot_div_%widget_id%")
+        shinyjs::hide("table_div_%widget_id%")
+        shinyjs::show("dynamic_output_div_%widget_id%")
+    }
 })
 
 # ======================================
@@ -216,9 +249,9 @@ observe_event(input$selected_dataset_%widget_id%, {
                 
                 # Update visualization dropdowns
                 shiny.fluent::updateDropdown.shinyInput(session, "x_axis_%widget_id%", options = options, value = column_names[1])
-                if(length(column_names) > 1) {
-                    shiny.fluent::updateDropdown.shinyInput(session, "y_axis_%widget_id%", options = options, value = column_names[2])
-                }
+                # Add "Aucun" option for Y axis
+                y_options <- c(list(list(key = "", text = i18np$t("none"))), options)
+                shiny.fluent::updateDropdown.shinyInput(session, "y_axis_%widget_id%", options = y_options, value = "")
                 
                 # Update statistics dropdowns
                 shiny.fluent::updateDropdown.shinyInput(session, "grouping_variable_%widget_id%", options = options, value = NULL)
@@ -285,6 +318,398 @@ observe_event(input$statistics_type_%widget_id%, {
         }
     }
 })
+
+# ======================================
+# VISUALIZATION HELPER UI
+# ======================================
+
+# Create helper UI when X variable changes
+observe_event(input$x_axis_%widget_id%, {
+    
+    # Only run if we have data
+    req(input$selected_dataset_%widget_id%)
+    req(current_dataset_%widget_id%())
+    
+    x_var <- input$x_axis_%widget_id%
+    y_var <- input$y_axis_%widget_id%
+    plot_type <- input$plot_type_%widget_id%
+    
+    # Only create helper if at least X variable is selected
+    if (!is.null(x_var) && x_var != "") {
+        
+        data <- current_dataset_%widget_id%()
+        
+        # Generate helper UI
+        helper_ui <- create_visualization_helper_ui(data, x_var, y_var, plot_type)
+        
+        # Update the visualization helper output
+        output$visualization_helper_%widget_id% <- renderUI({
+            helper_ui
+        })
+        
+        # Show helper UI when in visualization tab
+        current_sub_tab <- if (length(input$current_figure_settings_tab_%widget_id%) > 0) {
+            input$current_figure_settings_tab_%widget_id% %>%
+                gsub(paste0(id, "-"), "", .) %>%
+                gsub("_%widget_id%", "", .)
+        } else {
+            "import_data"
+        }
+        
+        if (current_sub_tab == "visualization") {
+            shinyjs::hide("plot_div_%widget_id%")
+            shinyjs::show("visualization_helper_div_%widget_id%")
+        }
+    }
+})
+
+# Update helper UI when Y variable changes
+observe_event(input$y_axis_%widget_id%, {
+    
+    # Only run if we have data and X variable
+    if (is.null(input$selected_dataset_%widget_id%) || is.null(current_dataset_%widget_id%()) || is.null(input$x_axis_%widget_id%)) {
+        return()
+    }
+    
+    x_var <- input$x_axis_%widget_id%
+    y_var <- input$y_axis_%widget_id%
+    plot_type <- input$plot_type_%widget_id%
+    
+    if (!is.null(x_var) && x_var != "") {
+        
+        data <- current_dataset_%widget_id%()
+        
+        # Generate helper UI
+        helper_ui <- create_visualization_helper_ui(data, x_var, y_var, plot_type)
+        
+        # Update the visualization helper output
+        output$visualization_helper_%widget_id% <- renderUI({
+            helper_ui
+        })
+        
+        # Show helper UI when in visualization tab
+        current_sub_tab <- if (length(input$current_figure_settings_tab_%widget_id%) > 0) {
+            input$current_figure_settings_tab_%widget_id% %>%
+                gsub(paste0(id, "-"), "", .) %>%
+                gsub("_%widget_id%", "", .)
+        } else {
+            "import_data"
+        }
+        
+        if (current_sub_tab == "visualization") {
+            shinyjs::hide("plot_div_%widget_id%")
+            shinyjs::show("visualization_helper_div_%widget_id%")
+        }
+    }
+})
+
+# Update helper UI when plot type changes
+observe_event(input$plot_type_%widget_id%, {
+    
+    # Only run if we have data and X variable
+    req(input$selected_dataset_%widget_id%)
+    req(current_dataset_%widget_id%())
+    req(input$x_axis_%widget_id%)
+    
+    x_var <- input$x_axis_%widget_id%
+    y_var <- input$y_axis_%widget_id%
+    plot_type <- input$plot_type_%widget_id%
+    
+    if (!is.null(x_var) && x_var != "") {
+        
+        data <- current_dataset_%widget_id%()
+        
+        # Generate helper UI
+        helper_ui <- create_visualization_helper_ui(data, x_var, y_var, plot_type)
+        
+        # Update the visualization helper output
+        output$visualization_helper_%widget_id% <- renderUI({
+            helper_ui
+        })
+        
+        # Show helper UI when in visualization tab (unless plot was just executed)
+        current_sub_tab <- if (length(input$current_figure_settings_tab_%widget_id%) > 0) {
+            input$current_figure_settings_tab_%widget_id% %>%
+                gsub(paste0(id, "-"), "", .) %>%
+                gsub("_%widget_id%", "", .)
+        } else {
+            "import_data"
+        }
+        
+        if (current_sub_tab == "visualization") {
+            shinyjs::hide("plot_div_%widget_id%")
+            shinyjs::show("visualization_helper_div_%widget_id%")
+        }
+    }
+})
+
+# Function to create visualization helper UI
+create_visualization_helper_ui <- function(data, x_var, y_var = NULL, plot_type = "histogram") {
+    
+    # Get variable information
+    x_info <- get_variable_info(data, x_var)
+    y_info <- if (!is.null(y_var) && y_var != "") get_variable_info(data, y_var) else NULL
+    
+    # Get plot recommendations and feasibility
+    recommendations <- get_plot_recommendations(x_info$type, if (!is.null(y_info)) y_info$type else NULL, plot_type)
+    
+    # Determine if variables work with current plot type
+    x_feasible <- is_variable_feasible_for_plot(x_info$type, if (!is.null(y_info)) y_info$type else NULL, plot_type, "x")
+    y_feasible <- if (!is.null(y_info)) is_variable_feasible_for_plot(x_info$type, y_info$type, plot_type, "y") else TRUE
+    
+    div(
+        style = "padding: 20px; border-radius: 8px; margin: 10px 0;",
+        
+        # Variable information
+        div(
+            style = "display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;",
+            
+            # X Variable info
+            div(
+                style = "flex: 1; min-width: 300px;",
+                create_variable_card("X", x_var, x_info, x_feasible)
+            ),
+            
+            # Y Variable info (if exists)
+            if (!is.null(y_info)) {
+                div(
+                    style = "flex: 1; min-width: 300px;",
+                    create_variable_card("Y", y_var, y_info, y_feasible)
+                )
+            } else {
+                div(
+                    style = "flex: 1; min-width: 300px; padding: 15px; background-color: #e1f3d8; border-radius: 6px; border-left: 4px solid #107c10;",
+                    div(
+                        style = "font-weight: bold; color: #107c10;",
+                        i18np$t("y_axis_none_selected")
+                    )
+                )
+            }
+        ),
+        
+        # Plot recommendations
+        div(
+            style = "background-color: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 4px solid #0078d4;",
+            h4(i18np$t("plot_recommendations"), style = "margin-top: 0; color: #323130;"),
+            recommendations$message
+        )
+    )
+}
+
+# Function to get variable information
+get_variable_info <- function(data, var_name) {
+    
+    if (is.null(var_name) || var_name == "" || !var_name %in% names(data)) {
+        return(NULL)
+    }
+    
+    values <- data[[var_name]]
+    
+    # Determine type
+    type <- if (is.numeric(values)) {
+        "numeric"
+    } else if (is.factor(values)) {
+        "factor"
+    } else if (is.character(values)) {
+        "character"
+    } else if (is.logical(values)) {
+        "logical"
+    } else {
+        "other"
+    }
+    
+    # Get sample values (first few unique values)
+    unique_vals <- unique(values[!is.na(values)])
+    sample_values <- if (length(unique_vals) > 5) {
+        c(head(unique_vals, 3), "...")
+    } else {
+        unique_vals
+    }
+    
+    # Get statistics for numeric variables
+    stats <- NULL
+    if (type == "numeric") {
+        stats <- list(
+            min = min(values, na.rm = TRUE),
+            max = max(values, na.rm = TRUE),
+            median = median(values, na.rm = TRUE),
+            mean = mean(values, na.rm = TRUE)
+        )
+    }
+    
+    list(
+        name = var_name,
+        type = type,
+        sample_values = sample_values,
+        stats = stats,
+        n_unique = length(unique_vals),
+        n_missing = sum(is.na(values))
+    )
+}
+
+# Function to create variable info card
+create_variable_card <- function(axis_label, var_name, var_info, is_feasible = TRUE) {
+    
+    # Feasibility-based styling (green if feasible, red if not)
+    if (is_feasible) {
+        colors <- list(bg = "#e1f3d8", text = "#107c10", label_bg = "#107c10")  # Green
+    } else {
+        colors <- list(bg = "#fef0f0", text = "#d13438", label_bg = "#d13438")  # Red
+    }
+    
+    # Use single color for all types with icons to differentiate
+    label_color <- "#0078d4"  # Blue for all types
+    
+    # Type-based FontAwesome icons
+    type_icons <- list(
+        numeric = tags$i(class = "fas fa-hashtag", style = "margin-right: 4px;"),
+        character = tags$i(class = "fas fa-font", style = "margin-right: 4px;"),
+        factor = tags$i(class = "fas fa-list", style = "margin-right: 4px;"),
+        logical = tags$i(class = "fas fa-check", style = "margin-right: 4px;"),
+        other = tags$i(class = "fas fa-question", style = "margin-right: 4px;")
+    )
+    
+    type_icon <- type_icons[[var_info$type]]
+    
+    div(
+        style = paste0("padding: 15px; background-color: ", colors$bg, "; border-radius: 6px; border-left: 4px solid ", colors$label_bg, ";"),
+        
+        # Variable name and type
+        div(
+            style = "display: flex; align-items: center; margin-bottom: 10px;",
+            div(
+                style = "font-weight: bold; margin-right: 10px; color: #323130;",
+                var_name
+            ),
+            span(
+                tagList(type_icon, var_info$type),
+                style = paste0("background-color: ", label_color, "; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;")
+            )
+        ),
+        
+        # Sample values
+        div(
+            style = paste0("margin-bottom: 8px; color: ", colors$text, ";"),
+            strong(paste0(i18np$t("sample_values"), " : ")),
+            paste(var_info$sample_values, collapse = ", ")
+        ),
+        
+        # Statistics for numeric variables
+        if (var_info$type == "numeric" && !is.null(var_info$stats)) {
+            div(
+                style = paste0("color: ", colors$text, ";"),
+                strong(paste0(i18np$t("min"), " : ")), round(var_info$stats$min, 2), " | ",
+                strong(paste0(i18np$t("max"), " : ")), round(var_info$stats$max, 2), " | ",
+                strong(paste0(i18np$t("mean"), " : ")), round(var_info$stats$mean, 2), " | ",
+                strong(paste0(i18np$t("median"), " : ")), round(var_info$stats$median, 2)
+            )
+        } else {
+            div(
+                style = paste0("color: ", colors$text, ";"),
+                strong(paste0(i18np$t("unique_values"), " : ")), var_info$n_unique
+            )
+        },
+        
+        # Missing values info
+        if (var_info$n_missing > 0) {
+            div(
+                style = "margin-top: 5px; font-size: 12px; color: #d13438;",
+                strong(paste0(i18np$t("missing_values"), " : ")), var_info$n_missing
+            )
+        }
+    )
+}
+
+# Function to determine if a variable is feasible for the current plot type
+is_variable_feasible_for_plot <- function(x_type, y_type = NULL, plot_type = "histogram", axis = "x") {
+    
+    # Single variable plots
+    if (is.null(y_type)) {
+        if (plot_type == "histogram") {
+            return(x_type == "numeric")
+        } else if (plot_type == "scatter") {
+            return(FALSE)  # Scatter needs both variables
+        } else {
+            return(TRUE)  # Bar plot and box plot work with any single variable
+        }
+    }
+    # Two variable plots
+    else {
+        if (plot_type == "histogram") {
+            return(FALSE)  # Histogram doesn't work with two variables
+        } else if (plot_type == "scatter") {
+            return(x_type == "numeric" && y_type == "numeric")
+        } else if (plot_type == "boxplot") {
+            # Box plot works with at least one numeric variable
+            return(x_type == "numeric" || y_type == "numeric")
+        } else {
+            return(TRUE)  # Bar plot works with any combination
+        }
+    }
+}
+
+# Function to get plot recommendations
+get_plot_recommendations <- function(x_type, y_type = NULL, current_plot_type = "histogram") {
+    
+    # Single variable plots
+    if (is.null(y_type)) {
+        if (x_type == "numeric") {
+            list(
+                message = div(
+                    i18np$t("with_numeric_variable_can_create"),
+                    tags$ul(
+                        tags$li(tags$b(i18np$t("histogram_plot")), " - ", i18np$t("histogram_description")),
+                        tags$li(tags$b(i18np$t("boxplot")), " - ", i18np$t("boxplot_description")),
+                        tags$li(tags$b(i18np$t("barplot")), " - ", i18np$t("barplot_numeric_description"))
+                    )
+                )
+            )
+        } else {
+            list(
+                message = div(
+                    i18np$t("with_categorical_variable_can_create"),
+                    tags$ul(
+                        tags$li(tags$b(i18np$t("barplot")), " - ", i18np$t("barplot_categorical_description")),
+                        tags$li(tags$b(i18np$t("boxplot")), " - ", i18np$t("boxplot_not_recommended_categorical"))
+                    )
+                )
+            )
+        }
+    }
+    # Two variable plots  
+    else {
+        if (x_type == "numeric" && y_type == "numeric") {
+            list(
+                message = div(
+                    i18np$t("with_numeric_x_numeric_y_can_create"),
+                    tags$ul(
+                        tags$li(tags$b(i18np$t("scatter_plot")), " - ", i18np$t("scatter_description")),
+                        tags$li(tags$b(i18np$t("boxplot")), " - ", i18np$t("boxplot_two_numeric_description"))
+                    )
+                )
+            )
+        } else if (x_type != "numeric" && y_type == "numeric") {
+            list(
+                message = div(
+                    i18np$t("with_categorical_x_numeric_y_can_create"),
+                    tags$ul(
+                        tags$li(tags$b(i18np$t("boxplot")), " - ", i18np$t("boxplot_categorical_x_description")),
+                        tags$li(tags$b(i18np$t("barplot")), " - ", i18np$t("barplot_average_description"))
+                    )
+                )
+            )
+        } else {
+            list(
+                message = div(
+                    i18np$t("with_two_categorical_variables"),
+                    tags$ul(
+                        tags$li(tags$b(i18np$t("barplot")), " - ", i18np$t("barplot_crosstab_description"))
+                    )
+                )
+            )
+        }
+    }
+}
 
 # ======================================
 # PLOT TYPE CONDITIONAL LOGIC

@@ -41,8 +41,45 @@ visualization,Visualization,Visualisation
 statistics,Statistics,Statistiques
 report,Report,Rapport
 csv_file,CSV file,Fichier CSV
+select_csv_file,Select CSV file to import,Sélectionner le fichier CSV à importer
 x_axis,X axis,Axe X
 y_axis,Y axis,Axe Y
+none,None,Aucun
+variable_selection,Variable Selection,Sélection des variables
+titles_and_legends,Titles and Legends,Titres et légendes
+figure_configuration,Figure Configuration,Configuration de la figure
+x_axis_legend,X axis legend,Légende axe X
+y_axis_legend,Y axis legend,Légende axe Y
+variable_analysis_plot_recommendations,Variable Analysis & Plot Recommendations,Analyse des variables et recommandations graphiques
+y_axis_none_selected,Y axis: None selected,Axe Y : Aucun sélectionné
+single_variable_analysis_description,Single variable analysis - suitable for histograms bar plots or summary statistics,Analyse univariée - adaptée pour histogrammes diagrammes en barres ou statistiques descriptives
+plot_recommendations,Plot Recommendations,Recommandations graphiques
+warning,Warning,Attention
+sample_values,Sample values,Exemples de valeurs
+min,Min,Min
+max,Max,Max
+mean,Mean,Moyenne
+median,Median,Médiane
+unique_values,Unique values,Valeurs uniques
+missing_values,Missing values,Valeurs manquantes
+with_numeric_variable_can_create,With a numeric variable you can create:,Avec une variable numérique vous pouvez créer :
+histogram_description,Shows distribution of values,Affiche la distribution des valeurs
+boxplot_description,Shows quartiles and outliers,Affiche les quartiles et valeurs aberrantes
+barplot_numeric_description,Shows frequency (but histogram is better for continuous data),Affiche les fréquences (mais l'histogramme est préférable pour des données continues)
+scatter_requires_both_variables,Scatter plot requires both X and Y variables,Le nuage de points nécessite des variables X et Y
+with_categorical_variable_can_create,With a categorical variable you can create:,Avec une variable catégorielle vous pouvez créer :
+barplot_categorical_description,Shows frequency of each category,Affiche la fréquence de chaque catégorie
+boxplot_not_recommended_categorical,Not recommended for categorical data,Non recommandé pour des données catégorielles
+plot_not_possible_with_selected_variables,The requested plot is not possible with the selected variables,Le graphique demandé n'est pas possible avec les variables sélectionnées
+with_numeric_x_numeric_y_can_create,With numeric X and numeric Y variables you can create:,Avec des variables X et Y numériques vous pouvez créer :
+scatter_description,Shows relationship between variables,Affiche la relation entre les variables
+boxplot_two_numeric_description,Y by X (if X has few unique values),Y par X (si X a peu de valeurs uniques)
+histogram_single_variable_warning,Histogram is designed for single variables. With two numeric variables consider a scatter plot,L'histogramme est conçu pour une seule variable. Avec deux variables numériques considérez un nuage de points
+with_categorical_x_numeric_y_can_create,With categorical X and numeric Y variables you can create:,Avec une variable X catégorielle et une variable Y numérique vous pouvez créer :
+boxplot_categorical_x_description,Shows Y distribution for each X category,Affiche la distribution de Y pour chaque catégorie de X
+barplot_average_description,Shows average Y for each X category,Affiche la moyenne de Y pour chaque catégorie de X
+with_two_categorical_variables,With two categorical variables:,Avec deux variables catégorielles :
+barplot_crosstab_description,Can show cross-tabulation,Peut afficher le tableau croisé
 plot_type,Plot type,Type de graphique
 histogram_plot,Histogram,Histogramme
 scatter_plot,Scatter plot,Nuage de points

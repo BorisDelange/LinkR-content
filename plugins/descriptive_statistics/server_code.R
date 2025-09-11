@@ -294,8 +294,17 @@ observe_event(input$display_output_%widget_id%, {
         # Also update the main code variable for execution
         m$code_%widget_id% <- generated_code
         
-        # Trigger execution
-        shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());")))
+        # Only trigger execution if code is not empty
+        if (generated_code != "") {
+            # Trigger execution
+            shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());")))
+        } else {
+            # If code is empty (plot not feasible), just stay on helper UI
+            if (current_sub_tab == "visualization") {
+                shinyjs::hide("plot_div_%widget_id%")
+                shinyjs::show("visualization_helper_div_%widget_id%")
+            }
+        }
     }
     # ====================
     # MANUAL CODE EXECUTION
@@ -372,6 +381,41 @@ generate_output_code_%widget_id% <- function(current_tab = "import_data", select
             code_lines <- c(code_lines, "# No X variable selected")
             code_lines <- c(code_lines, "result <- NULL")
         } else {
+            # Check if plot is feasible with current variables
+            data_folder <- file.path(m$app_folder, "temp_files", "projects_data")
+            file_path <- file.path(data_folder, selected_dataset)
+            if (file.exists(file_path)) {
+                data <- read.csv(file_path, stringsAsFactors = FALSE)
+                x_type <- if (is.numeric(data[[x_var]])) "numeric" else if (is.factor(data[[x_var]])) "factor" else if (is.character(data[[x_var]])) "character" else "other"
+                y_type <- if (!is.null(y_var) && y_var != "") {
+                    if (is.numeric(data[[y_var]])) "numeric" else if (is.factor(data[[y_var]])) "factor" else if (is.character(data[[y_var]])) "character" else "other"
+                } else {
+                    NULL
+                }
+                
+                # Check feasibility
+                is_feasible <- TRUE
+                if (is.null(y_type)) {
+                    # Single variable plots
+                    if (plot_type == "histogram") {
+                        is_feasible <- (x_type == "numeric")
+                    } else if (plot_type == "scatter") {
+                        is_feasible <- FALSE  # Scatter needs both variables
+                    }
+                } else {
+                    # Two variable plots
+                    if (plot_type == "histogram") {
+                        is_feasible <- FALSE  # Histogram doesn't work with two variables
+                    } else if (plot_type == "scatter") {
+                        is_feasible <- (x_type == "numeric" && y_type == "numeric")
+                    }
+                }
+                
+                if (!is_feasible) {
+                    # Don't generate code if plot is not feasible - return empty code
+                    return("")
+                }
+            }
             code_lines <- c(code_lines,
                 "# Read selected dataset",
                 "data_folder <- file.path(m$app_folder, 'temp_files', 'projects_data')",
@@ -590,37 +634,97 @@ observe_event(input$run_code_%widget_id%, {
     # Display output if execution was successful
     if (is.null(error_message) && !is.null(result)) {
         
-        # Route output to appropriate renderer based on type
-        # Customize this section based on your plugin's output types
+        # Get current tab to route output appropriately
+        current_tab_name <- current_code_tab_%widget_id%()
         
-        if ("ggplot" %in% class(result)) {
-            # Handle ggplot objects
-            output$plot_%widget_id% <- renderPlot(result)
-            shinyjs::hide("error_message_div_%widget_id%")
-            shinyjs::show("plot_div_%widget_id%")
-            
-        } else if ("plotly" %in% class(result) || "htmlwidget" %in% class(result)) {
-            # Handle plotly/htmlwidget objects
-            output$dynamic_output_%widget_id% <- renderUI(result)
-            shinyjs::hide("error_message_div_%widget_id%")
-            shinyjs::show("dynamic_output_div_%widget_id%")
-            
-        } else if ("datatables" %in% class(result)) {
-            # Handle DT datatable objects
-            output$datatable_%widget_id% <- DT::renderDT(result)
+        # Route output to appropriate renderer based on tab and result type
+        if (current_tab_name == "import_data") {
+            # Import tab - always show datatable
+            if ("datatables" %in% class(result)) {
+                output$datatable_%widget_id% <- DT::renderDT(result)
+            } else {
+                # Convert other results to datatable if possible
+                output$dynamic_output_%widget_id% <- renderUI({
+                    div("Import data result:", br(), pre(capture.output(print(result))))
+                })
+            }
+            # Show only datatable for import tab
             shinyjs::hide("error_message_div_%widget_id%")
             shinyjs::show("datatable_div_%widget_id%")
+            shinyjs::hide("plot_div_%widget_id%")
+            shinyjs::hide("table_div_%widget_id%")
             
-        } else {
-            # Handle other output types (text, HTML, etc.)
+        } else if (current_tab_name == "visualization") {
+            # Visualization tab - show plots
+            if ("ggplot" %in% class(result)) {
+                output$plot_%widget_id% <- renderPlot(result)
+            } else if ("plotly" %in% class(result) || "htmlwidget" %in% class(result)) {
+                output$dynamic_output_%widget_id% <- renderUI(result)
+                # For interactive plots, show in dynamic output instead
+                shinyjs::hide("error_message_div_%widget_id%")
+                shinyjs::hide("datatable_div_%widget_id%")
+                shinyjs::hide("plot_div_%widget_id%")
+                shinyjs::hide("table_div_%widget_id%")
+                shinyjs::hide("visualization_helper_div_%widget_id%")
+                shinyjs::show("dynamic_output_div_%widget_id%")
+                
+                return()
+            }
+            # Show only plot for visualization tab (hide helper)
+            shinyjs::hide("error_message_div_%widget_id%")
+            shinyjs::hide("datatable_div_%widget_id%")
+            shinyjs::hide("visualization_helper_div_%widget_id%")
+            shinyjs::show("plot_div_%widget_id%")
+            shinyjs::hide("table_div_%widget_id%")
+            
+            
+        } else if (current_tab_name == "statistics") {
+            # Statistics tab - show tables/text output
+            if ("gt_tbl" %in% class(result) || "gtsummary" %in% class(result)) {
+                # Handle gtsummary tables
+                output$table_%widget_id% <- renderUI({
+                    result %>% as_gt() %>% gt::as_raw_html()
+                })
+                shinyjs::hide("error_message_div_%widget_id%")
+                shinyjs::hide("datatable_div_%widget_id%")
+                shinyjs::hide("plot_div_%widget_id%")
+                shinyjs::show("table_div_%widget_id%")
+            } else if ("datatables" %in% class(result)) {
+                # DT tables for statistics
+                output$datatable_%widget_id% <- DT::renderDT(result)
+                shinyjs::hide("error_message_div_%widget_id%")
+                shinyjs::show("datatable_div_%widget_id%")
+                shinyjs::hide("plot_div_%widget_id%")
+                shinyjs::hide("table_div_%widget_id%")
+            } else {
+                # Other statistics output
+                output$dynamic_output_%widget_id% <- renderUI({
+                    if (is.character(result)) {
+                        verbatimTextOutput(ns("text_display"))
+                    } else {
+                        pre(capture.output(print(result)))
+                    }
+                })
+                shinyjs::hide("error_message_div_%widget_id%")
+                shinyjs::hide("datatable_div_%widget_id%")
+                shinyjs::hide("plot_div_%widget_id%")
+                shinyjs::hide("table_div_%widget_id%")
+                shinyjs::show("dynamic_output_div_%widget_id%")
+            }
+            
+        } else if (current_tab_name == "report") {
+            # Report tab - show in dynamic output
             output$dynamic_output_%widget_id% <- renderUI({
                 if (is.character(result)) {
-                    verbatimTextOutput(ns("text_display"))
+                    HTML(result)
                 } else {
                     pre(capture.output(print(result)))
                 }
             })
             shinyjs::hide("error_message_div_%widget_id%")
+            shinyjs::hide("datatable_div_%widget_id%")
+            shinyjs::hide("plot_div_%widget_id%")
+            shinyjs::hide("table_div_%widget_id%")
             shinyjs::show("dynamic_output_div_%widget_id%")
         }
     }
