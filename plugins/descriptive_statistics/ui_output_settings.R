@@ -189,14 +189,42 @@ div(
                 div(
                     style = "display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;",
                     div(
-                        shiny.fluent::Dropdown.shinyInput(
-                            ns("table_variables_%widget_id%"),
-                            label = i18np$t("variables_to_include"),
-                            options = list(),
-                            multiSelect = TRUE,
-                            value = NULL
+                        div(
+                            shiny.fluent::Dropdown.shinyInput(
+                                ns("table_variables_%widget_id%"),
+                                label = i18np$t("variables_to_include"),
+                                options = list(),
+                                multiSelect = TRUE,
+                                value = NULL
+                            ),
+                            style = "width: 200px;"
                         ),
-                        style = "width: 200px;"
+                        div(
+                            create_hover_card(
+                                ui = shiny.fluent::IconButton.shinyInput(
+                                    ns("table_variables_check_all_%widget_id%"), 
+                                    iconProps = list(iconName = "CheckboxComposite"),
+                                    styles = list(
+                                        root = list(color = "#000000"),
+                                        icon = list(color = "#000000")
+                                    )
+                                ), 
+                                text = i18np$t("select_all_variables")
+                            ),
+                            create_hover_card(
+                                ui = shiny.fluent::IconButton.shinyInput(
+                                    ns("table_variables_uncheck_all_%widget_id%"), 
+                                    iconProps = list(iconName = "Checkbox"),
+                                    styles = list(
+                                        root = list(color = "#000000"),
+                                        icon = list(color = "#000000")
+                                    )
+                                ), 
+                                text = i18np$t("unselect_all_variables")
+                            ),
+                            style = "margin: 27px 0 0 5px; display: flex;"
+                        ),
+                        style = "display: flex;"
                     ),
                     div(
                         shiny.fluent::Dropdown.shinyInput(

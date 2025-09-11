@@ -88,6 +88,8 @@ statistics_type,Statistics type,Type de statistiques
 table_one,Table 1,Table 1
 table_title,Table title,Titre du tableau
 variables_to_include,Variables to include,Variables à inclure
+select_all_variables,Select all variables,Sélectionner toutes les variables
+unselect_all_variables,Unselect all variables,Désélectionner toutes les variables
 variable_comparison,Variable comparison,Comparaison de variables
 grouping_variable,Grouping variable,Variable de groupe
 variable_1,Variable 1,Variable 1

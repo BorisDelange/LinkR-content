@@ -138,8 +138,24 @@ observe_event(input$current_figure_settings_tab_trigger_%widget_id%, {
         shinyjs::hide("datatable_div_%widget_id%")
         shinyjs::hide("table_div_%widget_id%")
         shinyjs::hide("dynamic_output_div_%widget_id%")
-        # Show helper by default, plot will override when executed
-        if (!is.null(input$x_axis_%widget_id%) && input$x_axis_%widget_id% != "") {
+        
+        # Generate and show visualization helper if X variable is selected
+        if (!is.null(input$x_axis_%widget_id%) && input$x_axis_%widget_id% != "" &&
+            !is.null(input$selected_dataset_%widget_id%) && !is.null(current_dataset_%widget_id%())) {
+            
+            # Generate visualization helper UI
+            data <- current_dataset_%widget_id%()
+            x_var <- input$x_axis_%widget_id%
+            y_var <- input$y_axis_%widget_id%
+            plot_type <- if (!is.null(input$plot_type_%widget_id%)) input$plot_type_%widget_id% else "histogram"
+            
+            helper_ui <- create_visualization_helper_ui(data, x_var, y_var, plot_type)
+            
+            # Update the visualization helper output
+            output$visualization_helper_%widget_id% <- renderUI({
+                helper_ui
+            })
+            
             shinyjs::hide("plot_div_%widget_id%")
             shinyjs::show("visualization_helper_div_%widget_id%")
         } else {
@@ -147,11 +163,28 @@ observe_event(input$current_figure_settings_tab_trigger_%widget_id%, {
             shinyjs::hide("visualization_helper_div_%widget_id%")
         }
     } else if (current_sub_tab == "statistics") {
-        # Show statistics table
+        # Hide other outputs
         shinyjs::hide("datatable_div_%widget_id%")
         shinyjs::hide("plot_div_%widget_id%")
-        shinyjs::show("table_div_%widget_id%")
         shinyjs::hide("dynamic_output_div_%widget_id%")
+        
+        # Show appropriate statistics output based on type
+        stats_type <- input$statistics_type_%widget_id%
+        if (!is.null(stats_type) && stats_type == "variable_comparison") {
+            # Show helper UI for variable comparison if both variables are selected
+            if (!is.null(input$variable_1_%widget_id%) && input$variable_1_%widget_id% != "" &&
+                !is.null(input$variable_2_%widget_id%) && input$variable_2_%widget_id% != "") {
+                shinyjs::hide("table_div_%widget_id%")
+                shinyjs::show("visualization_helper_div_%widget_id%")
+            } else {
+                shinyjs::hide("table_div_%widget_id%")
+                shinyjs::hide("visualization_helper_div_%widget_id%")
+            }
+        } else {
+            # Table 1 mode - show table, hide helper
+            shinyjs::show("table_div_%widget_id%")
+            shinyjs::hide("visualization_helper_div_%widget_id%")
+        }
     } else if (current_sub_tab == "report") {
         # Show report output
         shinyjs::hide("datatable_div_%widget_id%")
@@ -313,41 +346,72 @@ observe_event(input$statistics_type_%widget_id%, {
         if (stats_type == "table_one") {
             shinyjs::show("table_one_options_%widget_id%")
             shinyjs::hide("variable_comparison_options_%widget_id%")
+            
+            # Show table output and hide helper UI if on statistics tab
+            current_sub_tab <- if (length(input$current_figure_settings_tab_%widget_id%) > 0) {
+                input$current_figure_settings_tab_%widget_id% %>%
+                    gsub(paste0(id, "-"), "", .) %>%
+                    gsub("_%widget_id%", "", .)
+            } else {
+                "import_data"
+            }
+            
+            if (current_sub_tab == "statistics") {
+                shinyjs::show("table_div_%widget_id%")
+                shinyjs::hide("visualization_helper_div_%widget_id%")
+                shinyjs::hide("plot_div_%widget_id%")
+                shinyjs::hide("datatable_div_%widget_id%")
+                shinyjs::hide("dynamic_output_div_%widget_id%")
+            }
+            
         } else if (stats_type == "variable_comparison") {
             shinyjs::hide("table_one_options_%widget_id%")
             shinyjs::show("variable_comparison_options_%widget_id%")
             
-            # Generate helper UI if we have both variables selected
-            if (!is.null(input$selected_dataset_%widget_id%) && 
-                !is.null(current_dataset_%widget_id%()) &&
-                !is.null(input$variable_1_%widget_id%) && input$variable_1_%widget_id% != "" &&
-                !is.null(input$variable_2_%widget_id%) && input$variable_2_%widget_id% != "") {
+            # Always hide the table when switching to variable comparison
+            current_sub_tab <- if (length(input$current_figure_settings_tab_%widget_id%) > 0) {
+                input$current_figure_settings_tab_%widget_id% %>%
+                    gsub(paste0(id, "-"), "", .) %>%
+                    gsub("_%widget_id%", "", .)
+            } else {
+                "import_data"
+            }
+            
+            if (current_sub_tab == "statistics") {
+                shinyjs::hide("plot_div_%widget_id%")
+                shinyjs::hide("datatable_div_%widget_id%")
+                shinyjs::hide("table_div_%widget_id%")
+                shinyjs::hide("dynamic_output_div_%widget_id%")
                 
-                data <- current_dataset_%widget_id%()
-                var1 <- input$variable_1_%widget_id%
-                var2 <- input$variable_2_%widget_id%
-                
-                # Generate statistics helper UI
-                helper_ui <- create_statistics_helper_ui(data, var1, var2, stats_type)
-                
-                # Update the output (use visualization_helper for consistency)
-                output$visualization_helper_%widget_id% <- renderUI({
-                    helper_ui
-                })
-                
-                # Show helper UI when in statistics tab
-                current_sub_tab <- if (length(input$current_figure_settings_tab_%widget_id%) > 0) {
-                    input$current_figure_settings_tab_%widget_id% %>%
-                        gsub(paste0(id, "-"), "", .) %>%
-                        gsub("_%widget_id%", "", .)
+                # Check if we can show helper UI
+                if (!is.null(input$selected_dataset_%widget_id%) && 
+                    !is.null(current_dataset_%widget_id%()) &&
+                    !is.null(input$variable_1_%widget_id%) && input$variable_1_%widget_id% != "" &&
+                    !is.null(input$variable_2_%widget_id%) && input$variable_2_%widget_id% != "") {
+                    
+                    # Generate and show helper UI
+                    data <- current_dataset_%widget_id%()
+                    var1 <- input$variable_1_%widget_id%
+                    var2 <- input$variable_2_%widget_id%
+                    
+                    helper_ui <- create_statistics_helper_ui(data, var1, var2, stats_type)
+                    
+                    output$visualization_helper_%widget_id% <- renderUI({
+                        helper_ui
+                    })
+                    
+                    shinyjs::show("visualization_helper_div_%widget_id%")
                 } else {
-                    "import_data"
-                }
-                
-                if (current_sub_tab == "statistics") {
-                    shinyjs::hide("plot_div_%widget_id%")
-                    shinyjs::hide("table_div_%widget_id%")
-                    shinyjs::hide("datatable_div_%widget_id%")
+                    # Show placeholder message
+                    output$visualization_helper_%widget_id% <- renderUI({
+                        div(
+                            style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center;",
+                            div(
+                                style = "font-size: 16px; color: #6c757d;",
+                                "Sélectionnez deux variables pour voir les conseils statistiques"
+                            )
+                        )
+                    })
                     shinyjs::show("visualization_helper_div_%widget_id%")
                 }
             }
@@ -835,6 +899,196 @@ create_statistics_helper_ui <- function(data, var1, var2, statistics_type = "var
         )
     )
 }
+
+# Function to create variable info card (simplified version)
+create_variable_info_card <- function(var_info) {
+    # Determine icon and color based on variable type
+    if (var_info$type == "numeric") {
+        icon_name <- "NumberSymbol"
+        type_color <- "#0078d4"
+        type_text <- "Numérique"
+    } else {
+        icon_name <- "TextField"
+        type_color <- "#8764b8"
+        type_text <- "Catégorielle"
+    }
+    
+    div(
+        style = "background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; width: 200px;",
+        
+        # Variable name and type
+        div(
+            style = "margin-bottom: 10px;",
+            div(
+                style = "display: flex; align-items: center; margin-bottom: 5px;",
+                shiny.fluent::Icon(iconName = icon_name, style = list(color = type_color, marginRight = "8px")),
+                strong(var_info$name, style = paste0("color: ", type_color, ";"))
+            ),
+            div(
+                style = paste0("background-color: ", type_color, "; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; display: inline-block;"),
+                type_text
+            )
+        ),
+        
+        # Statistics
+        div(
+            style = "font-size: 12px; color: #6c757d;",
+            if (var_info$type == "numeric") {
+                div(
+                    div(paste0("Moyenne: ", ifelse(!is.null(var_info$stats$mean) && !is.na(var_info$stats$mean), round(var_info$stats$mean, 2), "N/A"))),
+                    div(paste0("Médiane: ", ifelse(!is.null(var_info$stats$median) && !is.na(var_info$stats$median), round(var_info$stats$median, 2), "N/A"))),
+                    div(paste0("Écart-type: ", ifelse(!is.null(var_info$stats$sd) && !is.na(var_info$stats$sd), round(var_info$stats$sd, 2), "N/A")))
+                )
+            } else {
+                div(
+                    div(paste0("Valeurs uniques: ", var_info$n_unique)),
+                    if (length(var_info$sample_values) > 0) {
+                        div(paste0("Ex: ", paste(var_info$sample_values[1:min(3, length(var_info$sample_values))], collapse = ", ")))
+                    }
+                )
+            }
+        ),
+        
+        # Missing values info
+        if (var_info$n_missing > 0) {
+            div(
+                style = "margin-top: 8px; font-size: 11px; color: #d13438;",
+                paste0("⚠️ ", var_info$n_missing, " valeurs manquantes")
+            )
+        }
+    )
+}
+
+# ======================================
+# STATISTICS VARIABLE OBSERVERS
+# ======================================
+
+# Update statistics helper when variable 1 changes
+observe_event(input$variable_1_%widget_id%, {
+    
+    # Only run if we have data and variable comparison is selected
+    if (is.null(input$selected_dataset_%widget_id%) || is.null(current_dataset_%widget_id%()) ||
+        is.null(input$statistics_type_%widget_id%) || input$statistics_type_%widget_id% != "variable_comparison") {
+        return()
+    }
+    
+    var1 <- input$variable_1_%widget_id%
+    var2 <- input$variable_2_%widget_id%
+    
+    if (!is.null(var1) && var1 != "" && !is.null(var2) && var2 != "") {
+        
+        data <- current_dataset_%widget_id%()
+        
+        # Generate statistics helper UI
+        helper_ui <- create_statistics_helper_ui(data, var1, var2, "variable_comparison")
+        
+        # Update the visualization helper output
+        output$visualization_helper_%widget_id% <- renderUI({
+            helper_ui
+        })
+        
+        # Show helper UI when in statistics tab
+        current_sub_tab <- if (length(input$current_figure_settings_tab_%widget_id%) > 0) {
+            input$current_figure_settings_tab_%widget_id% %>%
+                gsub(paste0(id, "-"), "", .) %>%
+                gsub("_%widget_id%", "", .)
+        } else {
+            "import_data"
+        }
+        
+        if (current_sub_tab == "statistics") {
+            shinyjs::hide("plot_div_%widget_id%")
+            shinyjs::hide("table_div_%widget_id%")
+            shinyjs::hide("datatable_div_%widget_id%")
+            shinyjs::hide("dynamic_output_div_%widget_id%")
+            shinyjs::show("visualization_helper_div_%widget_id%")
+        }
+    }
+})
+
+# Update statistics helper when variable 2 changes
+observe_event(input$variable_2_%widget_id%, {
+    
+    # Only run if we have data and variable comparison is selected
+    if (is.null(input$selected_dataset_%widget_id%) || is.null(current_dataset_%widget_id%()) ||
+        is.null(input$statistics_type_%widget_id%) || input$statistics_type_%widget_id% != "variable_comparison") {
+        return()
+    }
+    
+    var1 <- input$variable_1_%widget_id%
+    var2 <- input$variable_2_%widget_id%
+    
+    if (!is.null(var1) && var1 != "" && !is.null(var2) && var2 != "") {
+        
+        data <- current_dataset_%widget_id%()
+        
+        # Generate statistics helper UI
+        helper_ui <- create_statistics_helper_ui(data, var1, var2, "variable_comparison")
+        
+        # Update the visualization helper output
+        output$visualization_helper_%widget_id% <- renderUI({
+            helper_ui
+        })
+        
+        # Show helper UI when in statistics tab
+        current_sub_tab <- if (length(input$current_figure_settings_tab_%widget_id%) > 0) {
+            input$current_figure_settings_tab_%widget_id% %>%
+                gsub(paste0(id, "-"), "", .) %>%
+                gsub("_%widget_id%", "", .)
+        } else {
+            "import_data"
+        }
+        
+        if (current_sub_tab == "statistics") {
+            shinyjs::hide("plot_div_%widget_id%")
+            shinyjs::hide("table_div_%widget_id%")
+            shinyjs::hide("datatable_div_%widget_id%")
+            shinyjs::hide("dynamic_output_div_%widget_id%")
+            shinyjs::show("visualization_helper_div_%widget_id%")
+        }
+    }
+})
+
+# ======================================
+# TABLE VARIABLES SELECT/UNSELECT ALL
+# ======================================
+
+# Select all variables for Table 1
+observe_event(input$table_variables_check_all_%widget_id%, {
+    
+    # Get current column options
+    options <- column_options_%widget_id%()
+    
+    if (length(options) > 0) {
+        # Extract all variable keys/names
+        all_variables <- sapply(options, function(x) x$key)
+        
+        # Update dropdown to select all variables
+        shiny.fluent::updateDropdown.shinyInput(
+            session,
+            "table_variables_%widget_id%",
+            options = options,
+            value = all_variables
+        )
+    }
+})
+
+# Unselect all variables for Table 1
+observe_event(input$table_variables_uncheck_all_%widget_id%, {
+    
+    # Get current column options
+    options <- column_options_%widget_id%()
+    
+    if (length(options) > 0) {
+        # Update dropdown to unselect all variables
+        shiny.fluent::updateDropdown.shinyInput(
+            session,
+            "table_variables_%widget_id%",
+            options = options,
+            value = c()
+        )
+    }
+})
 
 # ======================================
 # PLOT TYPE CONDITIONAL LOGIC
