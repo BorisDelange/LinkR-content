@@ -86,6 +86,8 @@ all_inputs_%widget_id% <- list(
     list(id = "y_legend", type = "text", default = ""),
     # Statistics
     list(id = "statistics_type", type = "dropdown", default = "table_one"),
+    list(id = "table_variables", type = "multiselect", default = NULL),
+    list(id = "table_title", type = "text", default = "Table 1. Statistiques descriptives"),
     list(id = "grouping_variable", type = "dropdown", default = NULL),
     list(id = "variable_1", type = "dropdown", default = NULL),
     list(id = "variable_2", type = "dropdown", default = NULL),
@@ -252,6 +254,7 @@ observe_event(input$selected_dataset_%widget_id%, {
                 shiny.fluent::updateDropdown.shinyInput(session, "y_axis_%widget_id%", options = y_options, value = "")
                 
                 # Update statistics dropdowns
+                shiny.fluent::updateDropdown.shinyInput(session, "table_variables_%widget_id%", options = options, value = column_names)
                 shiny.fluent::updateDropdown.shinyInput(session, "grouping_variable_%widget_id%", options = options, value = NULL)
                 shiny.fluent::updateDropdown.shinyInput(session, "variable_1_%widget_id%", options = options, value = NULL)
                 shiny.fluent::updateDropdown.shinyInput(session, "variable_2_%widget_id%", options = options, value = NULL)
@@ -313,9 +316,44 @@ observe_event(input$statistics_type_%widget_id%, {
         } else if (stats_type == "variable_comparison") {
             shinyjs::hide("table_one_options_%widget_id%")
             shinyjs::show("variable_comparison_options_%widget_id%")
+            
+            # Generate helper UI if we have both variables selected
+            if (!is.null(input$selected_dataset_%widget_id%) && 
+                !is.null(current_dataset_%widget_id%()) &&
+                !is.null(input$variable_1_%widget_id%) && input$variable_1_%widget_id% != "" &&
+                !is.null(input$variable_2_%widget_id%) && input$variable_2_%widget_id% != "") {
+                
+                data <- current_dataset_%widget_id%()
+                var1 <- input$variable_1_%widget_id%
+                var2 <- input$variable_2_%widget_id%
+                
+                # Generate statistics helper UI
+                helper_ui <- create_statistics_helper_ui(data, var1, var2, stats_type)
+                
+                # Update the output (use visualization_helper for consistency)
+                output$visualization_helper_%widget_id% <- renderUI({
+                    helper_ui
+                })
+                
+                # Show helper UI when in statistics tab
+                current_sub_tab <- if (length(input$current_figure_settings_tab_%widget_id%) > 0) {
+                    input$current_figure_settings_tab_%widget_id% %>%
+                        gsub(paste0(id, "-"), "", .) %>%
+                        gsub("_%widget_id%", "", .)
+                } else {
+                    "import_data"
+                }
+                
+                if (current_sub_tab == "statistics") {
+                    shinyjs::hide("plot_div_%widget_id%")
+                    shinyjs::hide("table_div_%widget_id%")
+                    shinyjs::hide("datatable_div_%widget_id%")
+                    shinyjs::show("visualization_helper_div_%widget_id%")
+                }
+            }
         }
     }
-})
+}, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 # ======================================
 # VISUALIZATION HELPER UI
@@ -708,6 +746,94 @@ get_plot_recommendations <- function(x_type, y_type = NULL, current_plot_type = 
             )
         }
     }
+}
+
+# Function to create statistics helper UI (educational approach)
+create_statistics_helper_ui <- function(data, var1, var2, statistics_type = "variable_comparison") {
+    
+    # Get variable information
+    var1_info <- get_variable_info(data, var1)
+    var2_info <- get_variable_info(data, var2)
+    
+    # Helper content based on variable types
+    if (var1_info$type == "numeric" && var2_info$type == "numeric") {
+        # Both numeric
+        tests_list <- tags$ul(
+            tags$li(tags$b("Corrélation de Pearson"), " - Mesure la relation linéaire entre les deux variables"),
+            tags$li(tags$b("Corrélation de Spearman"), " - Corrélation de rang, moins sensible aux valeurs aberrantes"),
+            tags$li(tags$b("Test de régression linéaire"), " - Évalue si une variable prédit l'autre"),
+            tags$li(tags$b("Graphique de dispersion"), " - Visualisation recommandée")
+        )
+        
+        recommendation <- div(
+            class = "alert alert-info",
+            tags$b("Recommandation : "), "Commencez par un graphique de dispersion pour visualiser la relation, puis calculez une corrélation."
+        )
+        
+    } else if (var1_info$type == "character" && var2_info$type == "character") {
+        # Both categorical
+        tests_list <- tags$ul(
+            tags$li(tags$b("Test du Chi-deux"), " - Teste l'indépendance entre les deux variables catégorielles"),
+            tags$li(tags$b("Test exact de Fisher"), " - Alternative au Chi-deux pour petits effectifs"),
+            tags$li(tags$b("V de Cramér"), " - Mesure la force de l'association (0 = indépendance, 1 = association parfaite)"),
+            tags$li(tags$b("Tableau de contingence"), " - Visualisation recommandée")
+        )
+        
+        recommendation <- div(
+            class = "alert alert-info",
+            tags$b("Recommandation : "), "Créez un tableau de contingence et utilisez un test du Chi-deux pour évaluer l'association."
+        )
+        
+    } else {
+        # One numeric, one categorical
+        numeric_var <- if(var1_info$type == "numeric") var1 else var2
+        categ_var <- if(var1_info$type == "character") var1 else var2
+        
+        tests_list <- tags$ul(
+            tags$li(tags$b("Test t de Student"), " - Compare les moyennes entre 2 groupes (si variable catégorielle a 2 niveaux)"),
+            tags$li(tags$b("ANOVA"), " - Compare les moyennes entre 3+ groupes"),
+            tags$li(tags$b("Test de Welch"), " - Alternative au test t si variances inégales"),
+            tags$li(tags$b("Test de Mann-Whitney/Kruskal-Wallis"), " - Alternatives non-paramétriques"),
+            tags$li(tags$b("Boxplot"), " - Visualisation recommandée")
+        )
+        
+        recommendation <- div(
+            class = "alert alert-info",
+            tags$b("Recommandation : "), paste0("Créez un boxplot de ", numeric_var, " par ", categ_var, 
+                                                " puis choisissez le test approprié selon le nombre de groupes.")
+        )
+    }
+    
+    # Build the complete helper UI
+    div(
+        style = "padding: 20px;",
+        h3("Analyse de la relation entre variables", style = "color: #2c3e50; margin-bottom: 20px;"),
+        
+        # Variable info cards
+        div(
+            style = "display: flex; gap: 20px; margin-bottom: 30px;",
+            create_variable_info_card(var1_info),
+            div(style = "display: flex; align-items: center; font-size: 24px; color: #7f8c8d;", "↔"),
+            create_variable_info_card(var2_info)
+        ),
+        
+        # Statistical tests section
+        div(
+            style = "background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;",
+            h4("Tests statistiques possibles :", style = "color: #2c3e50; margin-bottom: 15px;"),
+            tests_list
+        ),
+        
+        # Recommendation
+        recommendation,
+        
+        # Action suggestion
+        div(
+            class = "alert alert-warning",
+            style = "margin-top: 20px;",
+            tags$b("💡 Suggestion : "), "Utilisez l'onglet 'Visualisation' pour créer des graphiques exploratoires avant de réaliser les tests statistiques."
+        )
+    )
 }
 
 # ======================================

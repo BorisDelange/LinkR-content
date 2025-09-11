@@ -86,6 +86,8 @@ boxplot,Box plot,Boîte à moustaches
 barplot,Bar plot,Diagramme en barres
 statistics_type,Statistics type,Type de statistiques
 table_one,Table 1,Table 1
+table_title,Table title,Titre du tableau
+variables_to_include,Variables to include,Variables à inclure
 variable_comparison,Variable comparison,Comparaison de variables
 grouping_variable,Grouping variable,Variable de groupe
 variable_1,Variable 1,Variable 1

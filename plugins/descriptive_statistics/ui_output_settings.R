@@ -181,18 +181,41 @@ div(
                     ),
                     value = "table_one"
                 ),
-                style = "width: 200px; margin-top: 15px;"
+                style = "width: 200px;"
             ),
             # TABLE ONE OPTIONS
             div(
                 id = ns("table_one_options_%widget_id%"),
-                shiny.fluent::Dropdown.shinyInput(
-                    ns("grouping_variable_%widget_id%"),
-                    label = i18np$t("grouping_variable"),
-                    options = list(),
-                    value = NULL
-                ),
-                style = "width: 200px; margin-top: 15px;"
+                div(
+                    style = "display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;",
+                    div(
+                        shiny.fluent::Dropdown.shinyInput(
+                            ns("table_variables_%widget_id%"),
+                            label = i18np$t("variables_to_include"),
+                            options = list(),
+                            multiSelect = TRUE,
+                            value = NULL
+                        ),
+                        style = "width: 200px;"
+                    ),
+                    div(
+                        shiny.fluent::Dropdown.shinyInput(
+                            ns("grouping_variable_%widget_id%"),
+                            label = i18np$t("grouping_variable"),
+                            options = list(),
+                            value = NULL
+                        ),
+                        style = "width: 200px;"
+                    ),
+                    div(
+                        shiny.fluent::TextField.shinyInput(
+                            ns("table_title_%widget_id%"),
+                            label = i18np$t("table_title"),
+                            value = "Table 1. Statistiques descriptives"
+                        ),
+                        style = "width: 200px;"
+                    )
+                )
             ),
             # VARIABLE COMPARISON OPTIONS
             shinyjs::hidden(

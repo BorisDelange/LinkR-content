@@ -259,6 +259,18 @@ observe_event(input$display_output_%widget_id%, {
             "table_one"
         }
         
+        table_variables <- if (length(input$table_variables_%widget_id%) > 0) {
+            input$table_variables_%widget_id%
+        } else {
+            NULL
+        }
+        
+        table_title <- if (length(input$table_title_%widget_id%) > 0) {
+            input$table_title_%widget_id%
+        } else {
+            "Table 1. Statistiques descriptives"
+        }
+        
         grouping_var <- if (length(input$grouping_variable_%widget_id%) > 0) {
             input$grouping_variable_%widget_id%
         } else {
@@ -288,6 +300,8 @@ observe_event(input$display_output_%widget_id%, {
             x_legend = x_legend,
             y_legend = y_legend,
             statistics_type = statistics_type,
+            table_variables = table_variables,
+            table_title = table_title,
             grouping_var = grouping_var,
             var1 = var1,
             var2 = var2
@@ -354,7 +368,7 @@ observe_event(input$display_output_%widget_id%, {
 
 # IMPLEMENT THIS FUNCTION FOR YOUR SPECIFIC PLUGIN
 # This function should generate R code based on user settings from the UI
-generate_output_code_%widget_id% <- function(current_tab = "import_data", selected_dataset = NULL, x_var = NULL, y_var = NULL, plot_type = "histogram", plot_title = "Data Analysis Results", x_legend = "", y_legend = "", statistics_type = "table_one", grouping_var = NULL, var1 = NULL, var2 = NULL) {
+generate_output_code_%widget_id% <- function(current_tab = "import_data", selected_dataset = NULL, x_var = NULL, y_var = NULL, plot_type = "histogram", plot_title = "Data Analysis Results", x_legend = "", y_legend = "", statistics_type = "table_one", table_variables = NULL, table_title = "Table 1. Statistiques descriptives", grouping_var = NULL, var1 = NULL, var2 = NULL) {
     
     code_lines <- c()
     
@@ -521,47 +535,72 @@ generate_output_code_%widget_id% <- function(current_tab = "import_data", select
             )
             
             if (statistics_type == "table_one") {
+                code_lines <- c(code_lines,
+                    "# Check if gtsummary package is available",
+                    "if (!requireNamespace('gtsummary', quietly = TRUE)) {",
+                    "    stop('Le package gtsummary est requis pour générer Table 1. Installez-le avec: install.packages(\"gtsummary\")')",
+                    "}",
+                    ""
+                )
+                
+                # Handle variable selection
+                if (!is.null(table_variables) && length(table_variables) > 0) {
+                    vars_code <- paste0("c(", paste0("\"", table_variables, "\"", collapse = ", "), ")")
+                    data_selection <- paste0("data %>% dplyr::select(all_of(", vars_code, ")")
+                    if (!is.null(grouping_var) && grouping_var != "") {
+                        data_selection <- paste0(data_selection, ", `", grouping_var, "`)")
+                    } else {
+                        data_selection <- paste0(data_selection, ")")
+                    }
+                    code_lines <- c(code_lines,
+                        paste0("# Select specific variables for Table 1"),
+                        paste0("selected_data <- ", data_selection),
+                        ""
+                    )
+                    data_var <- "selected_data"
+                } else {
+                    data_var <- "data"
+                }
+                
                 if (is.null(grouping_var) || grouping_var == "") {
                     code_lines <- c(code_lines,
-                        "# Generate Table 1 without grouping",
-                        "tbl <- data %>%",
-                        "    gtsummary::tbl_summary()",
-                        "",
-                        "result <- tbl"
+                        "# Generate Table 1 (descriptive statistics)",
+                        paste0("result <- ", data_var, " %>%"),
+                        "    gtsummary::tbl_summary(",
+                        "        statistic = list(",
+                        "            gtsummary::all_continuous() ~ \"{mean} ({sd})\",",
+                        "            gtsummary::all_categorical() ~ \"{n} ({p}%)\"",
+                        "        ),",
+                        "        missing_text = \"Manquant\"",
+                        "    ) %>%",
+                        "    gtsummary::modify_header(label ~ \"**Variable**\") %>%",
+                        paste0("    gtsummary::modify_caption(\"**", table_title, "**\")")
                     )
                 } else {
                     code_lines <- c(code_lines,
-                        "# Generate Table 1 with grouping",
-                        paste0("tbl <- data %>%"),
-                        paste0("    gtsummary::tbl_summary(by = `", grouping_var, "`) %>%"),
-                        "    gtsummary::add_p()",
-                        "",
-                        "result <- tbl"
+                        "# Generate Table 1 stratified by grouping variable",
+                        paste0("result <- ", data_var, " %>%"),
+                        paste0("    gtsummary::tbl_summary("),
+                        paste0("        by = `", grouping_var, "`,"),
+                        "        statistic = list(",
+                        "            gtsummary::all_continuous() ~ \"{mean} ({sd})\",",
+                        "            gtsummary::all_categorical() ~ \"{n} ({p}%)\"",
+                        "        ),",
+                        "        missing_text = \"Manquant\"",
+                        "    ) %>%",
+                        "    gtsummary::add_p(test = list(",
+                        "        gtsummary::all_continuous() ~ \"t.test\",",
+                        "        gtsummary::all_categorical() ~ \"chisq.test\"",
+                        "    )) %>%",
+                        "    gtsummary::add_overall() %>%",
+                        "    gtsummary::modify_header(label ~ \"**Variable**\") %>%",
+                        paste0("    gtsummary::modify_caption(\"**", table_title, "**\")")
                     )
                 }
             } else if (statistics_type == "variable_comparison") {
-                if (is.null(var1) || var1 == "" || is.null(var2) || var2 == "") {
-                    code_lines <- c(code_lines, "# Please select two variables for comparison")
-                    code_lines <- c(code_lines, "result <- NULL")
-                } else {
-                    code_lines <- c(code_lines,
-                        "# Variable comparison analysis",
-                        paste0("comparison_data <- data %>% dplyr::select(`", var1, "`, `", var2, "`)"),
-                        "",
-                        "# Basic correlation if both numeric",
-                        "if (is.numeric(data[['", var1, "']]) && is.numeric(data[['", var2, "']])) {",
-                        "    correlation <- cor(data[['", var1, "']], data[['", var2, "']], use = 'complete.obs')",
-                        "    cat('Correlation between ", var1, " and ", var2, ":', round(correlation, 3), '\\n')",
-                        "}",
-                        "",
-                        "# Summary table",
-                        "result <- DT::datatable(",
-                        "    comparison_data,",
-                        "    options = list(pageLength = 10, scrollX = TRUE),",
-                        "    rownames = FALSE",
-                        ")"
-                    )
-                }
+                # Variable comparison uses helper UI instead of generating code
+                # Return empty code - the helper UI will be shown instead
+                return("")
             }
         }
         
