@@ -574,7 +574,6 @@ observe_event(input$load_configuration_%widget_id%, {
     saved_settings <- DBI::dbGetQuery(m$db, sql)
     
     # Initialize tracking variables
-    auto_update <- FALSE
     loaded_input_ids <- character(0)
     saved_values <- list()
     
@@ -679,7 +678,6 @@ observe_event(input$load_configuration_%widget_id%, {
                         toggle_value <- as.logical(setting_value_num)
                         if (!is.na(toggle_value)) {
                             shiny.fluent::updateToggle.shinyInput(session, input_id, value = toggle_value)
-                            if (setting_name == "auto_update" && toggle_value) auto_update <- TRUE
                         }
                     },
                     "code" = {
@@ -728,10 +726,6 @@ observe_event(input$load_configuration_%widget_id%, {
             },
             "toggle" = {
                 shiny.fluent::updateToggle.shinyInput(session, input_id_full, value = input_def$default)
-                # Check if auto_update default is TRUE
-                if (input_id_short == "auto_update" && isTRUE(input_def$default)) {
-                    auto_update <- TRUE
-                }
             },
             "code" = {
                 m[[paste0("code_%widget_id%")]] <- input_def$default
@@ -761,13 +755,12 @@ observe_event(input$load_configuration_%widget_id%, {
         shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-update_lock_%widget_id%', false);"))
     })
     
+    # Always auto-execute when loading a configuration
     if (nrow(saved_settings) == 0) {
         # No saved configuration found - trigger output display with default settings
         shinyjs::delay(500, shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-display_output_%widget_id%', Math.random());")))
-    }
-    
-    # Auto-execute if enabled (either from saved settings or defaults)
-    else if (auto_update) {
+    } else {
+        # Configuration loaded - always auto-execute
         shinyjs::delay(500, {
             shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
         })

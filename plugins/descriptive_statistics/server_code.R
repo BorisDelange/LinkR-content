@@ -68,7 +68,10 @@ observe_event(input$current_figure_settings_tab_trigger_%widget_id%, {
 
 # Initialize default tab visibility when UI loads
 observe({
-    req(session$clientData$output_code_import_data_div_%widget_id%_width)
+    # Only run if UI element is ready
+    if (is.null(session$clientData$output_code_import_data_div_%widget_id%_width)) {
+        return()
+    }
     
     # Ensure import_data tab is visible by default
     if (is.null(input$current_figure_settings_tab_%widget_id%)) {
@@ -237,6 +240,18 @@ observe_event(input$display_output_%widget_id%, {
             "Data Analysis Results"
         }
         
+        x_legend <- if (length(input$x_legend_%widget_id%) > 0) {
+            input$x_legend_%widget_id%
+        } else {
+            ""
+        }
+        
+        y_legend <- if (length(input$y_legend_%widget_id%) > 0) {
+            input$y_legend_%widget_id%
+        } else {
+            ""
+        }
+        
         # Get statistics parameters
         statistics_type <- if (length(input$statistics_type_%widget_id%) > 0) {
             input$statistics_type_%widget_id%
@@ -270,6 +285,8 @@ observe_event(input$display_output_%widget_id%, {
             y_var = y_var,
             plot_type = plot_type,
             plot_title = plot_title,
+            x_legend = x_legend,
+            y_legend = y_legend,
             statistics_type = statistics_type,
             grouping_var = grouping_var,
             var1 = var1,
@@ -337,7 +354,7 @@ observe_event(input$display_output_%widget_id%, {
 
 # IMPLEMENT THIS FUNCTION FOR YOUR SPECIFIC PLUGIN
 # This function should generate R code based on user settings from the UI
-generate_output_code_%widget_id% <- function(current_tab = "import_data", selected_dataset = NULL, x_var = NULL, y_var = NULL, plot_type = "histogram", plot_title = "Data Analysis Results", statistics_type = "table_one", grouping_var = NULL, var1 = NULL, var2 = NULL) {
+generate_output_code_%widget_id% <- function(current_tab = "import_data", selected_dataset = NULL, x_var = NULL, y_var = NULL, plot_type = "histogram", plot_title = "Data Analysis Results", x_legend = "", y_legend = "", statistics_type = "table_one", grouping_var = NULL, var1 = NULL, var2 = NULL) {
     
     code_lines <- c()
     
@@ -422,20 +439,21 @@ generate_output_code_%widget_id% <- function(current_tab = "import_data", select
                 paste0("file_path <- file.path(data_folder, '", selected_dataset, "')"),
                 "data <- read.csv(file_path, stringsAsFactors = FALSE)",
                 "",
-                "# Check if variable is numeric for histogram",
-                paste0("if (!is.numeric(data[['", x_var, "']])) {"),
-                paste0("    stop('Variable ", x_var, " is not numeric. Histograms require numeric variables. Try using a bar plot instead.')"),
-                "}",
-                "",
                 "# Generate plot"
             )
             
             if (plot_type == "histogram") {
                 code_lines <- c(code_lines,
+                    "# Check if variable is numeric for histogram",
+                    paste0("if (!is.numeric(data[['", x_var, "']])) {"),
+                    paste0("    stop('Variable ", x_var, " is not numeric. Histograms require numeric variables. Try using a bar plot instead.')"),
+                    "}",
+                    "",
                     paste0("result <- ggplot2::ggplot(data, ggplot2::aes(x = `", x_var, "`)) +"),
                     "    ggplot2::geom_histogram(bins = 30, fill = 'steelblue', alpha = 0.7) +",
-                    paste0("    ggplot2::labs(title = '", plot_title, "', x = '", x_var, "', y = 'Count') +"),
-                    "    ggplot2::theme_minimal()"
+                    paste0("    ggplot2::labs(title = '", plot_title, "', x = '", if(x_legend != "") x_legend else x_var, "', y = '", if(y_legend != "") y_legend else "Count", "') +"),
+                    "    ggplot2::theme_minimal() +",
+                    "    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))"
                 )
             } else if (plot_type == "scatter") {
                 if (is.null(y_var) || y_var == "") {
@@ -444,8 +462,9 @@ generate_output_code_%widget_id% <- function(current_tab = "import_data", select
                     code_lines <- c(code_lines,
                         paste0("result <- ggplot2::ggplot(data, ggplot2::aes(x = `", x_var, "`, y = `", y_var, "`)) +"),
                         "    ggplot2::geom_point(color = 'steelblue', alpha = 0.7) +",
-                        paste0("    ggplot2::labs(title = '", plot_title, "', x = '", x_var, "', y = '", y_var, "') +"),
-                        "    ggplot2::theme_minimal()"
+                        paste0("    ggplot2::labs(title = '", plot_title, "', x = '", if(x_legend != "") x_legend else x_var, "', y = '", if(y_legend != "") y_legend else y_var, "') +"),
+                        "    ggplot2::theme_minimal() +",
+                        "    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))"
                     )
                 }
             } else if (plot_type == "boxplot") {
@@ -453,15 +472,17 @@ generate_output_code_%widget_id% <- function(current_tab = "import_data", select
                     code_lines <- c(code_lines,
                         paste0("result <- ggplot2::ggplot(data, ggplot2::aes(y = `", x_var, "`)) +"),
                         "    ggplot2::geom_boxplot(fill = 'steelblue', alpha = 0.7) +",
-                        paste0("    ggplot2::labs(title = '", plot_title, "', y = '", x_var, "') +"),
-                        "    ggplot2::theme_minimal()"
+                        paste0("    ggplot2::labs(title = '", plot_title, "', y = '", if(x_legend != "") x_legend else x_var, "') +"),
+                        "    ggplot2::theme_minimal() +",
+                        "    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))"
                     )
                 } else {
                     code_lines <- c(code_lines,
                         paste0("result <- ggplot2::ggplot(data, ggplot2::aes(x = `", x_var, "`, y = `", y_var, "`)) +"),
                         "    ggplot2::geom_boxplot(fill = 'steelblue', alpha = 0.7) +",
-                        paste0("    ggplot2::labs(title = '", plot_title, "', x = '", x_var, "', y = '", y_var, "') +"),
-                        "    ggplot2::theme_minimal()"
+                        paste0("    ggplot2::labs(title = '", plot_title, "', x = '", if(x_legend != "") x_legend else x_var, "', y = '", if(y_legend != "") y_legend else y_var, "') +"),
+                        "    ggplot2::theme_minimal() +",
+                        "    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))"
                     )
                 }
             } else if (plot_type == "barplot") {
@@ -469,17 +490,17 @@ generate_output_code_%widget_id% <- function(current_tab = "import_data", select
                     code_lines <- c(code_lines,
                         paste0("result <- ggplot2::ggplot(data, ggplot2::aes(x = `", x_var, "`)) +"),
                         "    ggplot2::geom_bar(fill = 'steelblue', alpha = 0.7) +",
-                        paste0("    ggplot2::labs(title = '", plot_title, "', x = '", x_var, "', y = 'Count') +"),
+                        paste0("    ggplot2::labs(title = '", plot_title, "', x = '", if(x_legend != "") x_legend else x_var, "', y = '", if(y_legend != "") y_legend else "Count", "') +"),
                         "    ggplot2::theme_minimal() +",
-                        "    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))"
+                        "    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1), plot.title = ggplot2::element_text(hjust = 0.5))"
                     )
                 } else {
                     code_lines <- c(code_lines,
                         paste0("result <- ggplot2::ggplot(data, ggplot2::aes(x = `", x_var, "`, y = `", y_var, "`)) +"),
                         "    ggplot2::geom_bar(stat = 'identity', fill = 'steelblue', alpha = 0.7) +",
-                        paste0("    ggplot2::labs(title = '", plot_title, "', x = '", x_var, "', y = '", y_var, "') +"),
+                        paste0("    ggplot2::labs(title = '", plot_title, "', x = '", if(x_legend != "") x_legend else x_var, "', y = '", if(y_legend != "") y_legend else y_var, "') +"),
                         "    ggplot2::theme_minimal() +",
-                        "    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))"
+                        "    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1), plot.title = ggplot2::element_text(hjust = 0.5))"
                     )
                 }
             }
@@ -562,16 +583,8 @@ generate_output_code_%widget_id% <- function(current_tab = "import_data", select
 # AUTO-EXECUTION TRIGGERS
 # ======================================
 
-# Example: Auto-run code when data context changes
-observe_event(m$selected_person, {
-    # Check if auto-run is enabled
-    if (!isTRUE(input$auto_update_%widget_id%)) {
-        return()
-    }
-    
-    # Execute code when data context changes
-    shinyjs::runjs(paste0("Shiny.setInputValue('", id, "-run_code_%widget_id%', Math.random());"))
-})
+# No auto-execution for aggregated data plugins
+# Auto-update only occurs when loading configuration files
 
 # ======================================
 # CODE EXECUTION ENGINE
@@ -588,7 +601,7 @@ observe_event(input$run_code_%widget_id%, {
     # HIDE ALL OUTPUTS INITIALLY
     # ====================
     # Hide all output containers before execution
-    sapply(c("error_message_div_%widget_id%", "plot_div_%widget_id%", "table_div_%widget_id%", "datatable_div_%widget_id%", "dynamic_output_div_%widget_id%"), shinyjs::hide)
+    sapply(c("error_message_div_%widget_id%", "plot_div_%widget_id%", "table_div_%widget_id%", "datatable_div_%widget_id%", "dynamic_output_div_%widget_id%", "visualization_helper_div_%widget_id%"), shinyjs::hide)
     
     # ====================
     # EXECUTE USER CODE
@@ -629,6 +642,7 @@ observe_event(input$run_code_%widget_id%, {
         shinyjs::hide("plot_div_%widget_id%")
         shinyjs::hide("table_div_%widget_id%")
         shinyjs::hide("datatable_div_%widget_id%")
+        shinyjs::hide("visualization_helper_div_%widget_id%")
     }
     
     # Display output if execution was successful

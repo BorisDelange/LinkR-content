@@ -89,8 +89,6 @@ all_inputs_%widget_id% <- list(
     list(id = "grouping_variable", type = "dropdown", default = NULL),
     list(id = "variable_1", type = "dropdown", default = NULL),
     list(id = "variable_2", type = "dropdown", default = NULL),
-    # General
-    list(id = "auto_update", type = "toggle", default = TRUE),
     # Code editors for each tab
     list(id = "code_import_data", type = "code", default = ""),
     list(id = "code_visualization", type = "code", default = ""),
@@ -327,15 +325,16 @@ observe_event(input$statistics_type_%widget_id%, {
 observe_event(input$x_axis_%widget_id%, {
     
     # Only run if we have data
-    req(input$selected_dataset_%widget_id%)
-    req(current_dataset_%widget_id%())
+    if (is.null(input$selected_dataset_%widget_id%) || is.null(current_dataset_%widget_id%())) {
+        return()
+    }
     
     x_var <- input$x_axis_%widget_id%
     y_var <- input$y_axis_%widget_id%
     plot_type <- input$plot_type_%widget_id%
     
-    # Only create helper if at least X variable is selected
-    if (!is.null(x_var) && x_var != "") {
+    # Only create helper if at least X variable is selected and plot_type is valid
+    if (!is.null(x_var) && x_var != "" && !is.null(plot_type) && length(plot_type) > 0) {
         
         data <- current_dataset_%widget_id%()
         
@@ -361,7 +360,7 @@ observe_event(input$x_axis_%widget_id%, {
             shinyjs::show("visualization_helper_div_%widget_id%")
         }
     }
-})
+}, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 # Update helper UI when Y variable changes
 observe_event(input$y_axis_%widget_id%, {
@@ -375,7 +374,7 @@ observe_event(input$y_axis_%widget_id%, {
     y_var <- input$y_axis_%widget_id%
     plot_type <- input$plot_type_%widget_id%
     
-    if (!is.null(x_var) && x_var != "") {
+    if (!is.null(x_var) && x_var != "" && !is.null(plot_type) && length(plot_type) > 0) {
         
         data <- current_dataset_%widget_id%()
         
@@ -401,21 +400,21 @@ observe_event(input$y_axis_%widget_id%, {
             shinyjs::show("visualization_helper_div_%widget_id%")
         }
     }
-})
+}, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 # Update helper UI when plot type changes
 observe_event(input$plot_type_%widget_id%, {
     
     # Only run if we have data and X variable
-    req(input$selected_dataset_%widget_id%)
-    req(current_dataset_%widget_id%())
-    req(input$x_axis_%widget_id%)
+    if (is.null(input$selected_dataset_%widget_id%) || is.null(current_dataset_%widget_id%()) || is.null(input$x_axis_%widget_id%)) {
+        return()
+    }
     
     x_var <- input$x_axis_%widget_id%
     y_var <- input$y_axis_%widget_id%
     plot_type <- input$plot_type_%widget_id%
     
-    if (!is.null(x_var) && x_var != "") {
+    if (!is.null(x_var) && x_var != "" && !is.null(plot_type) && length(plot_type) > 0) {
         
         data <- current_dataset_%widget_id%()
         
@@ -724,13 +723,13 @@ observe_event(input$plot_type_%widget_id%, {
     
     plot_type <- input$plot_type_%widget_id%
     
-    if (!is.null(plot_type)) {
+    if (!is.null(plot_type) && length(plot_type) > 0) {
         if (plot_type == "histogram") {
             # Histogram only needs X axis
-            shiny.fluent::updateDropdown.shinyInput(session, "y_axis_%widget_id%", value = NULL)
+            shiny.fluent::updateDropdown.shinyInput(session, "y_axis_%widget_id%", value = "")
         }
     }
-})
+}, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 
 # Hide Display + Save button if user doesn't have save permissions

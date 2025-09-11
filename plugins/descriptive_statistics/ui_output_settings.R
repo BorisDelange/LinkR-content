@@ -94,7 +94,7 @@ div(
             id = ns("visualization_div_%widget_id%"),
             # Variables selection section
             div(
-                style = "border: 1px solid #d1d1d1; border-radius: 8px; padding: 15px; margin-bottom: 20px; background-color: #fafafa;",
+                style = "border: 1px solid #d1d1d1; border-radius: 8px; padding: 5px 15px 15px 15px; margin-bottom: 20px; background-color: #fafafa;",
                 div(
                     div(
                         shiny.fluent::Dropdown.shinyInput(
@@ -133,7 +133,7 @@ div(
             ),
             # Labels and titles section
             div(
-                style = "border: 1px solid #d1d1d1; border-radius: 8px; padding: 15px; background-color: #fafafa;",
+                style = "border: 1px solid #d1d1d1; border-radius: 8px; padding: 5px 15px 15px 15px; background-color: #fafafa;",
                 div(
                     div(
                         shiny.fluent::TextField.shinyInput(
@@ -236,20 +236,6 @@ div(
         )
     ),
     
-    # ====================
-    # AUTO UPDATE TOGGLE
-    # ====================
-    div(
-        div(
-            id = ns("auto_update_div_%widget_id%"),
-            shiny.fluent::Toggle.shinyInput(
-                ns("auto_update_%widget_id%"), 
-                label = i18np$t("automatic_updates"),
-                value = TRUE
-            )
-        ),
-        style = "margin-top: 15px; display: flex; align-items: center; padding-top: 15px; border-top: solid 1px #808080;"
-    ),
     
     # ====================
     # ACTION BUTTONS
