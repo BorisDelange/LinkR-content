@@ -381,7 +381,7 @@ generate_output_code_%widget_id% <- function(current_tab = "import_data", select
         } else {
             code_lines <- c(code_lines,
                 "# Read selected dataset", 
-                "data_folder <- file.path(m$app_folder, 'temp_files', 'projects_data')",
+                "data_folder <- if (!is.null(m$selected_project_path)) file.path(m$selected_project_path, 'data') else file.path(m$app_folder, 'temp_files', 'projects_data')",
                 paste0("file_path <- file.path(data_folder, '", selected_dataset, "')"),
                 "data <- read.csv(file_path, stringsAsFactors = FALSE)",
                 "",
@@ -413,7 +413,7 @@ generate_output_code_%widget_id% <- function(current_tab = "import_data", select
             code_lines <- c(code_lines, "result <- NULL")
         } else {
             # Check if plot is feasible with current variables
-            data_folder <- file.path(m$app_folder, "temp_files", "projects_data")
+            data_folder <- if (!is.null(m$selected_project_path)) file.path(m$selected_project_path, "data") else file.path(m$app_folder, "temp_files", "projects_data")
             file_path <- file.path(data_folder, selected_dataset)
             if (file.exists(file_path)) {
                 data <- read.csv(file_path, stringsAsFactors = FALSE)
@@ -449,7 +449,7 @@ generate_output_code_%widget_id% <- function(current_tab = "import_data", select
             }
             code_lines <- c(code_lines,
                 "# Read selected dataset",
-                "data_folder <- file.path(m$app_folder, 'temp_files', 'projects_data')",
+                "data_folder <- if (!is.null(m$selected_project_path)) file.path(m$selected_project_path, 'data') else file.path(m$app_folder, 'temp_files', 'projects_data')",
                 paste0("file_path <- file.path(data_folder, '", selected_dataset, "')"),
                 "data <- read.csv(file_path, stringsAsFactors = FALSE)",
                 "",
@@ -528,7 +528,7 @@ generate_output_code_%widget_id% <- function(current_tab = "import_data", select
         } else {
             code_lines <- c(code_lines,
                 "# Read selected dataset",
-                "data_folder <- file.path(m$app_folder, 'temp_files', 'projects_data')",
+                "data_folder <- if (!is.null(m$selected_project_path)) file.path(m$selected_project_path, 'data') else file.path(m$app_folder, 'temp_files', 'projects_data')",
                 paste0("file_path <- file.path(data_folder, '", selected_dataset, "')"),
                 "data <- read.csv(file_path, stringsAsFactors = FALSE)",
                 ""

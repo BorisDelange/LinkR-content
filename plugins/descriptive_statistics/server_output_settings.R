@@ -228,11 +228,13 @@ current_dataset_%widget_id% <- reactiveVal(NULL)
 column_options_%widget_id% <- reactiveVal(list())
 
 # Get project data folder path
-get_project_data_folder <- function() {
-    # Use temp_files/projects_data folder since r$ is not accessible from plugins
-    data_folder <- file.path(m$app_folder, "temp_files", "projects_data")
+get_project_data_folder_%widget_id% <- function() {
+    if (!is.null(m$selected_project_path)) {
+        data_folder <- file.path(m$selected_project_path, "data")
+    } else {
+        data_folder <- file.path(m$app_folder, "temp_files", "projects_data")
+    }
     
-    # Create data folder if it doesn't exist
     if (!dir.exists(data_folder)) {
         dir.create(data_folder, recursive = TRUE)
     }
@@ -241,20 +243,186 @@ get_project_data_folder <- function() {
 }
 
 # Function to scan CSV files in data folder
-scan_csv_files <- function() {
-    data_folder <- get_project_data_folder()
-    csv_files <- list.files(data_folder, pattern = "\\.csv$", full.names = FALSE)
+scan_csv_files_%widget_id% <- function() {
+    data_folder <- get_project_data_folder_%widget_id%()
+    
+    if (dir.exists(data_folder)) {
+        csv_files <- list.files(data_folder, pattern = "\\.csv$", full.names = FALSE)
+    } else {
+        csv_files <- character(0)
+    }
+    
     return(csv_files)
 }
 
-# Initialize dropdown with existing CSV files
-observe({
-    csv_files <- scan_csv_files()
-    if (length(csv_files) > 0) {
-        dataset_options <- lapply(csv_files, function(x) list(key = x, text = x))
-        shiny.fluent::updateDropdown.shinyInput(session, "selected_dataset_%widget_id%", options = dataset_options)
+# Update dropdown only
+update_dropdown_%widget_id% <- function() {
+    csv_files <- scan_csv_files_%widget_id%()
+    
+    cat("DEBUG - Updating dropdown with", length(csv_files), "files\\n")
+    
+    # Create options from real files
+    dataset_options <- if (length(csv_files) > 0) {
+        lapply(csv_files, function(x) list(key = x, text = x))
+    } else {
+        list()
     }
+    
+    # Update dropdown with new options
+    shiny.fluent::updateDropdown.shinyInput(session, "selected_dataset_%widget_id%", 
+                                          options = dataset_options, 
+                                          value = NULL)
+}
+
+# Update file list UI only
+update_file_list_ui_%widget_id% <- function() {
+    csv_files <- scan_csv_files_%widget_id%()
+    
+    cat("DEBUG - Updating file list UI with", length(csv_files), "files\\n")
+    
+    # Update file list
+    output$file_list_%widget_id% <- renderUI({
+        if (length(csv_files) == 0) {
+            div(
+                style = "color: #6c757d; font-style: italic; text-align: center; padding: 20px;",
+                i18np$t("no_files_found")
+            )
+        } else {
+            div(
+                lapply(csv_files, function(file) {
+                    div(
+                        style = "display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; margin-bottom: 5px; border: 1px solid #dee2e6; border-radius: 4px; background-color: white;",
+                        span(
+                            tags$i(class = "fas fa-file-csv", style = "margin-right: 8px; color: #28a745;"),
+                            file,
+                            style = "flex: 1; font-size: 13px;"
+                        ),
+                        create_hover_card(
+                            ui = shiny.fluent::IconButton.shinyInput(
+                                ns(paste0("delete_", gsub("[^a-zA-Z0-9]", "_", file), "_%widget_id%")),
+                                iconProps = list(iconName = "Delete"),
+                                styles = list(
+                                    root = list(color = "#d13438"),
+                                    icon = list(color = "#d13438")
+                                ),
+                                onClick = htmlwidgets::JS(paste0("function() { Shiny.setInputValue('", id, "-show_delete_modal_%widget_id%', '", file, "', {priority: 'event'}); }"))
+                            ),
+                            text = i18np$t("delete_file")
+                        )
+                    )
+                })
+            )
+        }
+    })
+}
+
+# Reactive trigger for file list updates
+file_list_trigger_%widget_id% <- reactiveVal(0)
+
+# Watch for changes in project path and update file list
+observe_event(m$selected_project_path, {
+    file_list_trigger_%widget_id%(file_list_trigger_%widget_id%() + 1)
+}, ignoreNULL = FALSE, ignoreInit = TRUE)
+
+# Update file UI when trigger changes
+observe_event(file_list_trigger_%widget_id%, {
+    update_file_list_ui_%widget_id%()
+}, ignoreInit = FALSE)
+
+# Initialize UI on startup
+shinyjs::delay(100, {
+    update_file_list_ui_%widget_id%()
 })
+
+# Initialize dropdown separately with a different delay
+shinyjs::delay(300, {
+    update_dropdown_%widget_id%()
+})
+
+
+# Show delete confirmation modal
+observe_event(input$show_delete_modal_%widget_id%, {
+    file_to_delete <- input$show_delete_modal_%widget_id%
+    
+    if (!is.null(file_to_delete) && file_to_delete != "") {
+        # Store filename for deletion confirmation
+        file_to_delete_reactive_%widget_id%(file_to_delete)
+        
+        # Show modal using the same style as user configurations
+        shinyjs::show("delete_file_modal_%widget_id%")
+    }
+}, ignoreInit = TRUE)
+
+# Close delete file modal
+observe_event(input$close_delete_file_modal_%widget_id%, {
+    shinyjs::hide("delete_file_modal_%widget_id%")
+    file_to_delete_reactive_%widget_id%(NULL)
+}, ignoreInit = TRUE)
+
+# Store the file to delete in a reactive value
+file_to_delete_reactive_%widget_id% <- reactiveVal(NULL)
+
+# Handle actual file deletion after modal confirmation
+observe_event(input$confirm_delete_file_%widget_id%, {
+    file_to_delete <- file_to_delete_reactive_%widget_id%()
+    
+    if (!is.null(file_to_delete) && file_to_delete != "") {
+        data_folder <- get_project_data_folder_%widget_id%()
+        file_path <- file.path(data_folder, file_to_delete)
+        
+        if (file.exists(file_path)) {
+            file.remove(file_path)
+            
+            # Clear selection if deleted file was selected
+            if (!is.null(input$selected_dataset_%widget_id%) && 
+                input$selected_dataset_%widget_id% == file_to_delete) {
+                current_dataset_%widget_id%(NULL)
+                column_options_%widget_id%(list())
+                
+                # Re-scan files after deletion and update dropdown with remaining files
+                csv_files_after_deletion <- scan_csv_files_%widget_id%()
+                dataset_options_after_deletion <- if (length(csv_files_after_deletion) > 0) {
+                    lapply(csv_files_after_deletion, function(x) list(key = x, text = x))
+                } else {
+                    list()
+                }
+                shiny.fluent::updateDropdown.shinyInput(session, "selected_dataset_%widget_id%", 
+                                                      options = dataset_options_after_deletion, 
+                                                      value = NULL)
+                
+                # Clear visualization dropdowns
+                shiny.fluent::updateDropdown.shinyInput(session, "x_axis_%widget_id%", options = list(), value = NULL)
+                shiny.fluent::updateDropdown.shinyInput(session, "y_axis_%widget_id%", options = list(list(key = "", text = i18np$t("none"))), value = "")
+                
+                # Clear statistics dropdowns
+                shiny.fluent::updateDropdown.shinyInput(session, "table_variables_%widget_id%", options = list(), value = NULL)
+                shiny.fluent::updateDropdown.shinyInput(session, "grouping_variable_%widget_id%", options = list(), value = NULL)
+                shiny.fluent::updateDropdown.shinyInput(session, "variable_1_%widget_id%", options = list(), value = NULL)
+                shiny.fluent::updateDropdown.shinyInput(session, "variable_2_%widget_id%", options = list(), value = NULL)
+                
+                # Hide all outputs
+                shinyjs::hide("datatable_div_%widget_id%")
+                shinyjs::hide("plot_div_%widget_id%")
+                shinyjs::hide("table_div_%widget_id%")
+                shinyjs::hide("dynamic_output_div_%widget_id%")
+                shinyjs::hide("visualization_helper_div_%widget_id%")
+            }
+            
+            # Update both file list and dropdown
+            update_file_list_ui_%widget_id%()
+            update_dropdown_%widget_id%()
+            
+            # Show success message
+            show_message_bar("file_deleted", "success")
+        }
+        
+        # Close modal
+        shinyjs::hide("delete_file_modal_%widget_id%")
+        
+        # Reset reactive value
+        file_to_delete_reactive_%widget_id%(NULL)
+    }
+}, ignoreInit = TRUE)
 
 # Handle CSV file upload
 observe_event(input$csv_file_%widget_id%, {
@@ -262,25 +430,29 @@ observe_event(input$csv_file_%widget_id%, {
     file_info <- input$csv_file_%widget_id%
     
     if (!is.null(file_info)) {
-        tryCatch({
-            # Get project data folder
-            data_folder <- get_project_data_folder()
+        # Get project data folder
+        data_folder <- get_project_data_folder_%widget_id%()
+        
+        # Copy uploaded file to project data folder
+        file_destination <- file.path(data_folder, file_info$name)
+        
+        success <- file.copy(file_info$datapath, file_destination, overwrite = TRUE)
+        
+        if (success) {
+            # Update file list UI first
+            update_file_list_ui_%widget_id%()
             
-            # Copy uploaded file to project data folder
-            file_destination <- file.path(data_folder, file_info$name)
-            file.copy(file_info$datapath, file_destination, overwrite = TRUE)
-            
-            # Update dataset selection dropdown with all CSV files in folder
-            csv_files <- scan_csv_files()
-            dataset_options <- lapply(csv_files, function(x) list(key = x, text = x))
-            shiny.fluent::updateDropdown.shinyInput(session, "selected_dataset_%widget_id%", 
-                                                  options = dataset_options, 
-                                                  value = file_info$name)
-            
-        }, error = function(e) {
-            # Handle file upload errors
-            cat("Error uploading CSV file:", e$message, "\n")
-        })
+            # Update dropdown with new files and select the uploaded one
+            shinyjs::delay(100, {
+                csv_files_updated <- scan_csv_files_%widget_id%()
+                if (length(csv_files_updated) > 0) {
+                    dataset_options_updated <- lapply(csv_files_updated, function(x) list(key = x, text = x))
+                    shiny.fluent::updateDropdown.shinyInput(session, "selected_dataset_%widget_id%", 
+                                                          options = dataset_options_updated,
+                                                          value = file_info$name)
+                }
+            })
+        }
     }
 })
 
@@ -289,10 +461,12 @@ observe_event(input$selected_dataset_%widget_id%, {
     
     selected_name <- input$selected_dataset_%widget_id%
     
-    if (!is.null(selected_name)) {
+    cat("DEBUG - Dataset selection changed to:", selected_name, "\\n")
+    
+    if (!is.null(selected_name) && selected_name != "") {
         tryCatch({
             # Get project data folder and read selected CSV file
-            data_folder <- get_project_data_folder()
+            data_folder <- get_project_data_folder_%widget_id%()
             file_path <- file.path(data_folder, selected_name)
             
             if (file.exists(file_path)) {
@@ -351,8 +525,17 @@ observe_event(input$selected_dataset_%widget_id%, {
             # Handle file read errors
             cat("Error reading selected dataset:", e$message, "\n")
         })
+    } else {
+        cat("DEBUG - Dataset selection is NULL or empty, clearing other dropdowns\\n")
+        # Clear other dropdowns when no dataset is selected
+        shiny.fluent::updateDropdown.shinyInput(session, "x_axis_%widget_id%", options = list(), value = NULL)
+        shiny.fluent::updateDropdown.shinyInput(session, "y_axis_%widget_id%", options = list(list(key = "", text = i18np$t("none"))), value = "")
+        shiny.fluent::updateDropdown.shinyInput(session, "table_variables_%widget_id%", options = list(), value = NULL)
+        shiny.fluent::updateDropdown.shinyInput(session, "grouping_variable_%widget_id%", options = list(), value = NULL)
+        shiny.fluent::updateDropdown.shinyInput(session, "variable_1_%widget_id%", options = list(), value = NULL)
+        shiny.fluent::updateDropdown.shinyInput(session, "variable_2_%widget_id%", options = list(), value = NULL)
     }
-})
+}, ignoreNULL = FALSE, ignoreInit = TRUE)
 
 # ======================================
 # STATISTICS TYPE CONDITIONAL DISPLAY

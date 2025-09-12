@@ -106,3 +106,8 @@ example_label,Example,Ex
 missing_values_warning,missing values,valeurs manquantes
 browse,Browse,Parcourir
 select_dataset,Select dataset,Sélectionner le jeu de données
+manage_files,Manage files,Gérer les fichiers
+delete_file,Delete file,Supprimer le fichier
+confirm_delete_file,Are you sure you want to delete this file?,Êtes-vous sûr de vouloir supprimer ce fichier ?
+file_deleted,File deleted successfully,Fichier supprimé avec succès
+no_files_found,No CSV files found,Aucun fichier CSV trouvé

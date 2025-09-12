@@ -63,26 +63,45 @@ div(
     # ====================
     div(
         id = ns("import_data_div_%widget_id%"),
+        
+        # Dataset selection section (first)
         div(
-            class = "file-browser-button",
-            style = "height: 90px;",
-            fileInput(
-                ns("csv_file_%widget_id%"),
-                label = i18np$t("csv_file"),
-                buttonLabel = i18np$t("browse"),
-                placeholder = i18np$t("select_csv_file"),
-                accept = ".csv",
-                width = "300px"
-            )
-        ),
-        div(
+            style = "margin-bottom: 20px;",
             shiny.fluent::Dropdown.shinyInput(
                 ns("selected_dataset_%widget_id%"),
                 label = i18np$t("select_dataset"),
                 options = list(),
                 value = NULL
             ),
-            style = "width: 250px;"
+            style = "width: 300px;"
+        ),
+        
+        # File management section (separated with border)
+        div(
+            style = "border: 1px solid #d1d1d1; border-radius: 8px; padding: 15px; background-color: #fafafa;",
+            
+            # Upload new file subsection
+            div(
+                div(
+                    class = "file-browser-button",
+                    fileInput(
+                        ns("csv_file_%widget_id%"),
+                        label = NULL,
+                        buttonLabel = i18np$t("browse"),
+                        placeholder = i18np$t("select_csv_file"),
+                        accept = ".csv",
+                        width = "300px"
+                    )
+                ),
+                style = "margin-bottom: 15px;"
+            ),
+            
+            # File management subsection
+            div(
+                id = ns("file_management_div_%widget_id%"),
+                tags$h4(i18np$t("manage_files"), style = "margin-bottom: 10px; color: #323130; font-size: 14px; font-weight: 600;"),
+                uiOutput(ns("file_list_%widget_id%"))
+            )
         )
     ),
     
@@ -317,5 +336,51 @@ div(
         style = "margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap; padding-top: 15px; border-top: solid 1px #808080;"
     ),
     
-    style = "height: 100%; display: flex; flex-direction: column;"
+    style = "height: 100%; display: flex; flex-direction: column;",
+    
+    # ====================
+    # DELETE FILE CONFIRMATION MODAL
+    # ====================
+    # Hidden confirmation modal for deleting files (same style as user configurations)
+    shinyjs::hidden(
+        div(
+            id = ns("delete_file_modal_%widget_id%"),
+            div(
+                # Confirmation dialog content
+                div(
+                    # Dialog title
+                    tags$h1(i18np$t("delete_file"), style = "font-size: 14px;"),
+                    
+                    # Warning message
+                    tags$p(i18np$t("confirm_delete_file")),
+                    
+                    # Action buttons (Cancel + Delete)
+                    div(
+                        # Cancel button
+                        shiny.fluent::DefaultButton.shinyInput(
+                            ns("close_delete_file_modal_%widget_id%"), 
+                            i18np$t("dont_delete"), iconProps = list(iconName = "Cancel")
+                        ),
+                        
+                        # Delete confirmation button (styled as dangerous action)
+                        div(
+                            shiny.fluent::PrimaryButton.shinyInput(
+                                ns("confirm_delete_file_%widget_id%"), 
+                                i18np$t("delete"), iconProps = list(iconName = "Delete")
+                            ), 
+                            class = "delete_button"
+                        ),
+                        
+                        style = "position: absolute; right: 10px; bottom: 8px; display: flex; gap: 5px;"
+                    ),
+                    
+                    # Dialog content styling
+                    style = "background: #fff; padding: 5px 10px 10px 15px; position: relative; width: 400px; height: 120px;"
+                ),
+                
+                # Dialog overlay styling
+                style = "display: flex; align-items: center; justify-content: center; position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.2); z-index: 1000;"
+            )
+        )
+    )
 )

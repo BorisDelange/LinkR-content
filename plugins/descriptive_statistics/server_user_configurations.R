@@ -716,7 +716,21 @@ observe_event(input$load_configuration_%widget_id%, {
         switch(
             input_def$type,
             "dropdown" = {
-                shiny.fluent::updateDropdown.shinyInput(session, input_id_full, value = input_def$default)
+                # For selected_dataset, preserve existing options when setting default value
+                if (input_id_short == "selected_dataset") {
+                    # Get current CSV files and create options
+                    csv_files <- scan_csv_files_%widget_id%()
+                    if (length(csv_files) > 0) {
+                        dataset_options <- lapply(csv_files, function(x) list(key = x, text = x))
+                        shiny.fluent::updateDropdown.shinyInput(session, input_id_full, 
+                                                              options = dataset_options, 
+                                                              value = input_def$default)
+                    } else {
+                        shiny.fluent::updateDropdown.shinyInput(session, input_id_full, value = input_def$default)
+                    }
+                } else {
+                    shiny.fluent::updateDropdown.shinyInput(session, input_id_full, value = input_def$default)
+                }
             },
             "multiselect" = {
                 shiny.fluent::updateDropdown.shinyInput(session, input_id_full, value = input_def$default)
