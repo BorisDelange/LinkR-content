@@ -171,14 +171,39 @@ observe_event(input$current_figure_settings_tab_trigger_%widget_id%, {
         # Show appropriate statistics output based on type
         stats_type <- input$statistics_type_%widget_id%
         if (!is.null(stats_type) && stats_type == "variable_comparison") {
-            # Show helper UI for variable comparison if both variables are selected
-            if (!is.null(input$variable_1_%widget_id%) && input$variable_1_%widget_id% != "" &&
+            # Always hide table for variable comparison
+            shinyjs::hide("table_div_%widget_id%")
+            
+            # Generate statistics helper UI if both variables are selected
+            if (!is.null(input$selected_dataset_%widget_id%) && 
+                !is.null(current_dataset_%widget_id%()) &&
+                !is.null(input$variable_1_%widget_id%) && input$variable_1_%widget_id% != "" &&
                 !is.null(input$variable_2_%widget_id%) && input$variable_2_%widget_id% != "") {
-                shinyjs::hide("table_div_%widget_id%")
+                
+                # Generate statistics helper UI
+                data <- current_dataset_%widget_id%()
+                var1 <- input$variable_1_%widget_id%
+                var2 <- input$variable_2_%widget_id%
+                
+                helper_ui <- create_statistics_helper_ui(data, var1, var2, "variable_comparison")
+                
+                output$visualization_helper_%widget_id% <- renderUI({
+                    helper_ui
+                })
+                
                 shinyjs::show("visualization_helper_div_%widget_id%")
             } else {
-                shinyjs::hide("table_div_%widget_id%")
-                shinyjs::hide("visualization_helper_div_%widget_id%")
+                # Show placeholder message
+                output$visualization_helper_%widget_id% <- renderUI({
+                    div(
+                        style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center;",
+                        div(
+                            style = "font-size: 16px; color: #6c757d;",
+                            "Sélectionnez deux variables pour voir les conseils statistiques"
+                        )
+                    )
+                })
+                shinyjs::show("visualization_helper_div_%widget_id%")
             }
         } else {
             # Table 1 mode - show table, hide helper
@@ -868,65 +893,70 @@ create_statistics_helper_ui <- function(data, var1, var2, statistics_type = "var
         )
     }
     
-    # Build the complete helper UI
+    # Build the complete helper UI with similar style to visualization
     div(
         style = "padding: 20px;",
-        h3("Analyse de la relation entre variables", style = "color: #2c3e50; margin-bottom: 20px;"),
         
-        # Variable info cards
+        # Variable info cards with full width
         div(
-            style = "display: flex; gap: 20px; margin-bottom: 30px;",
-            create_variable_info_card(var1_info),
-            div(style = "display: flex; align-items: center; font-size: 24px; color: #7f8c8d;", "↔"),
-            create_variable_info_card(var2_info)
+            style = "display: flex; gap: 20px; margin-bottom: 30px; width: 100%;",
+            div(
+                create_variable_info_card(var1_info),
+                style = "flex: 1;"
+            ),
+            div(
+                create_variable_info_card(var2_info),
+                style = "flex: 1;"
+            )
         ),
         
-        # Statistical tests section
+        # Statistical tests section with blue sidebar style
         div(
-            style = "background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;",
-            h4("Tests statistiques possibles :", style = "color: #2c3e50; margin-bottom: 15px;"),
-            tests_list
-        ),
-        
-        # Recommendation
-        recommendation,
-        
-        # Action suggestion
-        div(
-            class = "alert alert-warning",
-            style = "margin-top: 20px;",
-            tags$b("💡 Suggestion : "), "Utilisez l'onglet 'Visualisation' pour créer des graphiques exploratoires avant de réaliser les tests statistiques."
+            style = "border-left: 4px solid #0078d4; background-color: #f8f9fa; padding: 20px; border-radius: 0 8px 8px 0; margin-bottom: 20px;",
+            h4(paste0(i18np$t("possible_statistical_tests"), " :"), style = "color: #2c3e50; margin-bottom: 15px;"),
+            tests_list,
+            
+            # Test selection dropdown
+            div(
+                style = "margin-top: 20px;",
+                div(
+                    i18np$t("code_generation_coming_soon"),
+                    style = "font-style: italic; color: #6c757d; font-size: 14px;"
+                )
+            )
         )
     )
 }
 
-# Function to create variable info card (simplified version)
+# Function to create variable info card (harmonized with visualization style)
 create_variable_info_card <- function(var_info) {
-    # Determine icon and color based on variable type
-    if (var_info$type == "numeric") {
-        icon_name <- "NumberSymbol"
-        type_color <- "#0078d4"
-        type_text <- "Numérique"
-    } else {
-        icon_name <- "TextField"
-        type_color <- "#8764b8"
-        type_text <- "Catégorielle"
-    }
+    # Use neutral colors for statistics (no green/red feasibility)
+    colors <- list(bg = "#f8f9fa", text = "#323130", label_bg = "#0078d4")
+    
+    # Type-based FontAwesome icons to match visualization
+    type_icons <- list(
+        numeric = tags$i(class = "fas fa-hashtag", style = "margin-right: 4px;"),
+        character = tags$i(class = "fas fa-font", style = "margin-right: 4px;"),
+        factor = tags$i(class = "fas fa-list", style = "margin-right: 4px;"),
+        logical = tags$i(class = "fas fa-check", style = "margin-right: 4px;"),
+        other = tags$i(class = "fas fa-question", style = "margin-right: 4px;")
+    )
+    
+    type_icon <- type_icons[[var_info$type]] %||% type_icons[["other"]]
     
     div(
-        style = "background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; width: 200px;",
+        style = paste0("padding: 15px; background-color: ", colors$bg, "; border-radius: 6px; border: 1px solid #dee2e6; width: 100%;"),
         
         # Variable name and type
         div(
-            style = "margin-bottom: 10px;",
+            style = "display: flex; align-items: center; margin-bottom: 10px;",
             div(
-                style = "display: flex; align-items: center; margin-bottom: 5px;",
-                shiny.fluent::Icon(iconName = icon_name, style = list(color = type_color, marginRight = "8px")),
-                strong(var_info$name, style = paste0("color: ", type_color, ";"))
+                style = "font-weight: bold; margin-right: 10px; color: #323130;",
+                var_info$name
             ),
-            div(
-                style = paste0("background-color: ", type_color, "; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; display: inline-block;"),
-                type_text
+            span(
+                tagList(type_icon, var_info$type),
+                style = paste0("background-color: ", colors$label_bg, "; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;")
             )
         ),
         
@@ -934,16 +964,20 @@ create_variable_info_card <- function(var_info) {
         div(
             style = "font-size: 12px; color: #6c757d;",
             if (var_info$type == "numeric") {
-                div(
-                    div(paste0("Moyenne: ", ifelse(!is.null(var_info$stats$mean) && !is.na(var_info$stats$mean), round(var_info$stats$mean, 2), "N/A"))),
-                    div(paste0("Médiane: ", ifelse(!is.null(var_info$stats$median) && !is.na(var_info$stats$median), round(var_info$stats$median, 2), "N/A"))),
-                    div(paste0("Écart-type: ", ifelse(!is.null(var_info$stats$sd) && !is.na(var_info$stats$sd), round(var_info$stats$sd, 2), "N/A")))
+                paste0(
+                    i18np$t("mean_label"), ": ", ifelse(!is.null(var_info$stats$mean) && !is.na(var_info$stats$mean), round(var_info$stats$mean, 2), "N/A"), " | ",
+                    i18np$t("median_label"), ": ", ifelse(!is.null(var_info$stats$median) && !is.na(var_info$stats$median), round(var_info$stats$median, 2), "N/A"), " | ",
+                    i18np$t("sd_label"), ": ", ifelse(!is.null(var_info$stats$sd) && !is.na(var_info$stats$sd), round(var_info$stats$sd, 2), "N/A")
                 )
             } else {
                 div(
-                    div(paste0("Valeurs uniques: ", var_info$n_unique)),
+                    paste0(i18np$t("unique_values_label"), ": ", var_info$n_unique),
                     if (length(var_info$sample_values) > 0) {
-                        div(paste0("Ex: ", paste(var_info$sample_values[1:min(3, length(var_info$sample_values))], collapse = ", ")))
+                        tagList(
+                            tags$br(),
+                            paste0(i18np$t("example_label"), ": ", paste(var_info$sample_values[1:min(3, length(var_info$sample_values))], collapse = ", "), 
+                                   if (length(var_info$sample_values) > 3) ", ..." else "")
+                        )
                     }
                 )
             }
@@ -953,10 +987,48 @@ create_variable_info_card <- function(var_info) {
         if (var_info$n_missing > 0) {
             div(
                 style = "margin-top: 8px; font-size: 11px; color: #d13438;",
-                paste0("⚠️ ", var_info$n_missing, " valeurs manquantes")
+                paste0("⚠️ ", var_info$n_missing, " ", i18np$t("missing_values_warning"))
             )
         }
     )
+}
+
+# Function to get test options based on variable types
+get_test_options <- function(var1_type, var2_type) {
+    if (var1_type == "numeric" && var2_type == "numeric") {
+        # Both numeric
+        list(
+            list(key = "correlation_pearson", text = "Corrélation de Pearson"),
+            list(key = "correlation_spearman", text = "Corrélation de Spearman"),
+            list(key = "linear_regression", text = "Régression linéaire")
+        )
+    } else if (var1_type == "character" && var2_type == "character") {
+        # Both categorical
+        list(
+            list(key = "chi_square", text = "Test du Chi-deux"),
+            list(key = "fisher_exact", text = "Test exact de Fisher"),
+            list(key = "cramer_v", text = "V de Cramér")
+        )
+    } else {
+        # One numeric, one categorical
+        list(
+            list(key = "t_test", text = "Test t de Student"),
+            list(key = "anova", text = "ANOVA"),
+            list(key = "welch_test", text = "Test de Welch"),
+            list(key = "mann_whitney", text = "Test de Mann-Whitney")
+        )
+    }
+}
+
+# Function to get default test based on variable types
+get_default_test <- function(var1_type, var2_type) {
+    if (var1_type == "numeric" && var2_type == "numeric") {
+        "correlation_pearson"
+    } else if (var1_type == "character" && var2_type == "character") {
+        "chi_square"
+    } else {
+        "t_test"
+    }
 }
 
 # ======================================

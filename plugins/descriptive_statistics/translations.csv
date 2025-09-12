@@ -94,5 +94,15 @@ variable_comparison,Variable comparison,Comparaison de variables
 grouping_variable,Grouping variable,Variable de groupe
 variable_1,Variable 1,Variable 1
 variable_2,Variable 2,Variable 2
+code_generation_coming_soon,Code generation for statistical tests will be available in a future version,La génération de code pour les tests statistiques sera disponible dans une prochaine version
+possible_statistical_tests,Possible statistical tests,Tests statistiques possibles
+numeric_type,Numeric,Numérique
+categorical_type,Categorical,Catégorielle
+mean_label,Mean,Moyenne
+median_label,Median,Médiane
+sd_label,Standard deviation,Écart-type
+unique_values_label,Unique values,Valeurs uniques
+example_label,Example,Ex
+missing_values_warning,missing values,valeurs manquantes
 browse,Browse,Parcourir
 select_dataset,Select dataset,Sélectionner le jeu de données
