@@ -3,7 +3,7 @@
   <plugin>
     <app_version>0.3.1.9013</app_version>
     <unique_id>de819d4ecb2f638f72e39f4afb07bbe450675f2040bb252df25428a118e15f02</unique_id>
-    <version>0.0.1.9007</version>
+    <version>0.0.1.9008</version>
     <name_en>Descriptive statistics</name_en>
     <name_fr>Statistiques descriptives</name_fr>
     <category_en></category_en>
@@ -16,7 +16,7 @@
       <author>Boris Delange</author>
     </authors>
     <creation_datetime>2025-09-11 15:17:29</creation_datetime>
-    <update_datetime>2025-09-12 13:25:42</update_datetime>
+    <update_datetime>2025-09-12 17:57:48</update_datetime>
     <type>1</type>
   </plugin>
 </plugins>

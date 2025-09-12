@@ -150,6 +150,15 @@ div(
         )
     ),
     
+    # Statistics helper UI (for statistical analysis recommendations)
+    shinyjs::hidden(
+        div(
+            id = ns("statistics_helper_div_%widget_id%"),
+            uiOutput(ns("statistics_helper_%widget_id%"), style = "height: calc(100% - 10px);"),
+            style = "width: 100%; height: 100%; padding: 10px; box-sizing: border-box; overflow-y: auto;"
+        )
+    ),
+    
     # Used for UI messages, cards, and error displays
     shinyjs::hidden(
         div(

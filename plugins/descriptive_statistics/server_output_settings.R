@@ -157,10 +157,12 @@ observe_event(input$current_figure_settings_tab_trigger_%widget_id%, {
             })
             
             shinyjs::hide("plot_div_%widget_id%")
+            shinyjs::hide("statistics_helper_div_%widget_id%")
             shinyjs::show("visualization_helper_div_%widget_id%")
         } else {
             shinyjs::hide("plot_div_%widget_id%")
             shinyjs::hide("visualization_helper_div_%widget_id%")
+            shinyjs::hide("statistics_helper_div_%widget_id%")
         }
     } else if (current_sub_tab == "statistics") {
         # Hide other outputs
@@ -187,14 +189,16 @@ observe_event(input$current_figure_settings_tab_trigger_%widget_id%, {
                 
                 helper_ui <- create_statistics_helper_ui(data, var1, var2, "variable_comparison")
                 
-                output$visualization_helper_%widget_id% <- renderUI({
+                output$statistics_helper_%widget_id% <- renderUI({
                     helper_ui
                 })
                 
-                shinyjs::show("visualization_helper_div_%widget_id%")
+                shinyjs::hide("visualization_helper_div_%widget_id%")
+                shinyjs::hide("statistics_helper_div_%widget_id%")
+                shinyjs::show("statistics_helper_div_%widget_id%")
             } else {
                 # Show placeholder message
-                output$visualization_helper_%widget_id% <- renderUI({
+                output$statistics_helper_%widget_id% <- renderUI({
                     div(
                         style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center;",
                         div(
@@ -203,12 +207,15 @@ observe_event(input$current_figure_settings_tab_trigger_%widget_id%, {
                         )
                     )
                 })
-                shinyjs::show("visualization_helper_div_%widget_id%")
+                shinyjs::hide("visualization_helper_div_%widget_id%")
+                shinyjs::hide("statistics_helper_div_%widget_id%")
+                shinyjs::show("statistics_helper_div_%widget_id%")
             }
         } else {
-            # Table 1 mode - show table, hide helper
+            # Table 1 mode - show table, hide helpers
             shinyjs::show("table_div_%widget_id%")
             shinyjs::hide("visualization_helper_div_%widget_id%")
+            shinyjs::hide("statistics_helper_div_%widget_id%")
         }
     } else if (current_sub_tab == "report") {
         # Show report output
@@ -406,6 +413,7 @@ observe_event(input$confirm_delete_file_%widget_id%, {
                 shinyjs::hide("table_div_%widget_id%")
                 shinyjs::hide("dynamic_output_div_%widget_id%")
                 shinyjs::hide("visualization_helper_div_%widget_id%")
+                shinyjs::hide("statistics_helper_div_%widget_id%")
             }
             
             # Update both file list and dropdown
@@ -567,6 +575,7 @@ observe_event(input$statistics_type_%widget_id%, {
             if (current_sub_tab == "statistics") {
                 shinyjs::show("table_div_%widget_id%")
                 shinyjs::hide("visualization_helper_div_%widget_id%")
+                shinyjs::hide("statistics_helper_div_%widget_id%")
                 shinyjs::hide("plot_div_%widget_id%")
                 shinyjs::hide("datatable_div_%widget_id%")
                 shinyjs::hide("dynamic_output_div_%widget_id%")
@@ -604,14 +613,15 @@ observe_event(input$statistics_type_%widget_id%, {
                     
                     helper_ui <- create_statistics_helper_ui(data, var1, var2, stats_type)
                     
-                    output$visualization_helper_%widget_id% <- renderUI({
+                    output$statistics_helper_%widget_id% <- renderUI({
                         helper_ui
                     })
                     
-                    shinyjs::show("visualization_helper_div_%widget_id%")
+                    shinyjs::hide("visualization_helper_div_%widget_id%")
+                    shinyjs::show("statistics_helper_div_%widget_id%")
                 } else {
                     # Show placeholder message
-                    output$visualization_helper_%widget_id% <- renderUI({
+                    output$statistics_helper_%widget_id% <- renderUI({
                         div(
                             style = "display: flex; justify-content: center; align-items: center; height: 100%; text-align: center;",
                             div(
@@ -620,7 +630,8 @@ observe_event(input$statistics_type_%widget_id%, {
                             )
                         )
                     })
-                    shinyjs::show("visualization_helper_div_%widget_id%")
+                    shinyjs::hide("visualization_helper_div_%widget_id%")
+                    shinyjs::show("statistics_helper_div_%widget_id%")
                 }
             }
         }
@@ -775,19 +786,19 @@ create_visualization_helper_ui <- function(data, x_var, y_var = NULL, plot_type 
             
             # X Variable info
             div(
-                style = "flex: 1; min-width: 300px;",
+                style = "flex: 1 1 300px; min-width: 0;",
                 create_variable_card("X", x_var, x_info, x_feasible)
             ),
             
             # Y Variable info (if exists)
             if (!is.null(y_info)) {
                 div(
-                    style = "flex: 1; min-width: 300px;",
+                    style = "flex: 1 1 300px; min-width: 0;",
                     create_variable_card("Y", y_var, y_info, y_feasible)
                 )
             } else {
                 div(
-                    style = "flex: 1; min-width: 300px; padding: 15px; background-color: #e1f3d8; border-radius: 6px; border-left: 4px solid #107c10;",
+                    style = "flex: 1 1 300px; min-width: 0; padding: 15px; background-color: #e1f3d8; border-radius: 6px; border-left: 4px solid #107c10;",
                     div(
                         style = "font-weight: bold; color: #107c10;",
                         i18np$t("y_axis_none_selected")
@@ -1080,16 +1091,16 @@ create_statistics_helper_ui <- function(data, var1, var2, statistics_type = "var
     div(
         style = "padding: 20px;",
         
-        # Variable info cards with full width
+        # Variable info cards with harmonized width (same as visualization)
         div(
-            style = "display: flex; gap: 20px; margin-bottom: 30px; width: 100%;",
+            style = "display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 30px;",
             div(
                 create_variable_info_card(var1_info),
-                style = "flex: 1;"
+                style = "flex: 1 1 300px; min-width: 0;"
             ),
             div(
                 create_variable_info_card(var2_info),
-                style = "flex: 1;"
+                style = "flex: 1 1 300px; min-width: 0;"
             )
         ),
         
@@ -1128,7 +1139,7 @@ create_variable_info_card <- function(var_info) {
     type_icon <- type_icons[[var_info$type]] %||% type_icons[["other"]]
     
     div(
-        style = paste0("padding: 15px; background-color: ", colors$bg, "; border-radius: 6px; border: 1px solid #dee2e6; width: 100%;"),
+        style = paste0("padding: 15px; background-color: ", colors$bg, "; border-radius: 6px; border: 1px solid #dee2e6; width: 100%; box-sizing: border-box;"),
         
         # Variable name and type
         div(
@@ -1237,8 +1248,8 @@ observe_event(input$variable_1_%widget_id%, {
         # Generate statistics helper UI
         helper_ui <- create_statistics_helper_ui(data, var1, var2, "variable_comparison")
         
-        # Update the visualization helper output
-        output$visualization_helper_%widget_id% <- renderUI({
+        # Update the statistics helper output
+        output$statistics_helper_%widget_id% <- renderUI({
             helper_ui
         })
         
@@ -1256,7 +1267,8 @@ observe_event(input$variable_1_%widget_id%, {
             shinyjs::hide("table_div_%widget_id%")
             shinyjs::hide("datatable_div_%widget_id%")
             shinyjs::hide("dynamic_output_div_%widget_id%")
-            shinyjs::show("visualization_helper_div_%widget_id%")
+            shinyjs::hide("visualization_helper_div_%widget_id%")
+            shinyjs::show("statistics_helper_div_%widget_id%")
         }
     }
 })
@@ -1280,8 +1292,8 @@ observe_event(input$variable_2_%widget_id%, {
         # Generate statistics helper UI
         helper_ui <- create_statistics_helper_ui(data, var1, var2, "variable_comparison")
         
-        # Update the visualization helper output
-        output$visualization_helper_%widget_id% <- renderUI({
+        # Update the statistics helper output
+        output$statistics_helper_%widget_id% <- renderUI({
             helper_ui
         })
         
@@ -1299,7 +1311,8 @@ observe_event(input$variable_2_%widget_id%, {
             shinyjs::hide("table_div_%widget_id%")
             shinyjs::hide("datatable_div_%widget_id%")
             shinyjs::hide("dynamic_output_div_%widget_id%")
-            shinyjs::show("visualization_helper_div_%widget_id%")
+            shinyjs::hide("visualization_helper_div_%widget_id%")
+            shinyjs::show("statistics_helper_div_%widget_id%")
         }
     }
 })

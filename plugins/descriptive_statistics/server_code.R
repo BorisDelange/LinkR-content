@@ -640,7 +640,7 @@ observe_event(input$run_code_%widget_id%, {
     # HIDE ALL OUTPUTS INITIALLY
     # ====================
     # Hide all output containers before execution
-    sapply(c("error_message_div_%widget_id%", "plot_div_%widget_id%", "table_div_%widget_id%", "datatable_div_%widget_id%", "dynamic_output_div_%widget_id%", "visualization_helper_div_%widget_id%"), shinyjs::hide)
+    sapply(c("error_message_div_%widget_id%", "plot_div_%widget_id%", "table_div_%widget_id%", "datatable_div_%widget_id%", "dynamic_output_div_%widget_id%", "visualization_helper_div_%widget_id%", "statistics_helper_div_%widget_id%"), shinyjs::hide)
     
     # ====================
     # EXECUTE USER CODE
